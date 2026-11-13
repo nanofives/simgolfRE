@@ -381,6 +381,11 @@ bool lines_full() {
   static const bool on = std::getenv("SG_P22_LINES_FULL") && std::atoi(std::getenv("SG_P22_LINES_FULL")) == 1;
   return on;
 }
+// P26B item 7: SG_P26B_TIPBAR_OFF=1 (dev only, the before picture) keeps the tip bar's pixels opaque in the HUD layer as before
+bool tipbar_off() {
+  static const bool on = std::getenv("SG_P26B_TIPBAR_OFF") && std::atoi(std::getenv("SG_P26B_TIPBAR_OFF")) == 1;
+  return on;
+}
 bool lines_check() {
   static const bool on = std::getenv("SG_P22_LINES_CHECK") && std::atoi(std::getenv("SG_P22_LINES_CHECK")) == 1;
   return on;
@@ -532,6 +537,14 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
                      !std::strcmp(who, "drawMapLine") && g.root.w == 800 && g.root.h == 600;
   const bool still = box || tip || arc || range || ruler || staff || marks;
   const bool rec = tee || still;
+  // P26B item 7 (log/roadmap/P26/P26B_notes.md): drawPanelBackdrop's bar drawMapLine(.., 0x80000000, 10, 5) drawn while a HUD layer
+  // records (the HUD tips: the status boxes' tips, the palettes' and panels' tips): the bar darkened the root's terrain at the
+  // 800-space place, and the layer carried those terrain pixels as opaque words to its anchored place (a box of the course from
+  // elsewhere behind the tip, fb_img5). Each pixel the bar changes is recorded as the game's half-bright shade (GfxLayerPx kind 3,
+  // table 1: g_halfBrightLut's), so the presenter darkens what shows at the tip's own place: the original's look of a half-alpha
+  // black band under the tip.
+  const bool hud_bar = !rec && !bubble_bar && g.hud.any && !std::strcmp(who, "drawMapLine") && width == 10 && alpha == 5 &&
+                       colour == 0x80000000u && g.root.w == 800 && g.root.h == 600 && !tipbar_off();
   std::vector<uint16_t> before;
   // P13D item 7: a line drawn between the frame's terrain picture and the sprite queue goes on the world layer too
   LiveTerrainWorld *const world = lt->world();
@@ -540,7 +553,17 @@ void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1
   // P23E: a recorded line keeps only its rectangle too (draw_line writes nothing outside it), not a copy of the whole root per line
   if (mirror && (lines_full() || lines_check())) before = g.root.px;  // P22A: a mirrored line keeps only its rectangle
   LineTouch touch;
-  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha, mirror || rec || bubble_bar ? &touch : nullptr);
+  draw_line(g.root.px.data(), g.root.w, g.root.h, gl, x1, y1, x2, y2, colour, width, alpha,
+            mirror || rec || bubble_bar || hud_bar ? &touch : nullptr);
+  if (hud_bar && touch.xe >= touch.x0 && touch.ye >= touch.y0) {  // P26B item 7: the band as a shade of what lies beneath
+    const size_t bw = static_cast<size_t>(touch.xe - touch.x0 + 1);
+    for (int32_t y = touch.y0; y <= touch.ye; ++y)
+      for (int32_t x = touch.x0; x <= touch.xe; ++x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+        const uint16_t b = touch.before[static_cast<size_t>(y - touch.y0) * bw + static_cast<size_t>(x - touch.x0)];
+        if (b != g.root.px[i]) g.note_blend(i, b, g.root.px[i], 3, 0, 1);
+      }
+  }
   if (bubble_bar) {   // P23D fix 4: rows from the changed pixels, or (a bar wholly past the root) from the line's centre row
     const int32_t yc = gl.flip_y ? y1 : gl.screen_h - y1;
     const bool hit = touch.xe >= touch.x0 && touch.ye >= touch.y0;
