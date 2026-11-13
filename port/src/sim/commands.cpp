@@ -109,6 +109,11 @@ int g_defect_editor_cancel_stays = 1;
 //   reportScreens.anyClickCloses  fixed (0): with a graphics backend attached (the tick's box is known from its drawing), a click
 //                  outside the tick's box does not end the screen (cm::tick_close_click); a key still ends it as before
 int g_defect_report_any_click = 1;
+// P27B fix 2 (Mariano, P27: "the button answers where it is drawn"; class b): loadGameBrowserScreen draws the selected save's
+// bar at x 0x136 (width 0x1c8), from its row's text y - 1, but takes a list press only right of the text column (press x >
+// 0x140) and from the text y (y >= 0x74), its input loop's list test: the bar's left 0xb columns and top row are dead.
+//   loadGameBrowser.rowPressPastText  fixed (0): a press counts from x 0x136 and from the bar's top (rows (y - 0x73) / 16)
+int g_defect_browser_row_press = 1;
 namespace {
 int g_negctl_hire_dialog = 0;
 int g_negctl_credits = 0;
@@ -781,6 +786,10 @@ const DefectDef kDefects[] = {
      "a full-screen screen with a tick button (the reports, the routing map, the roster, the bulletin board) ends at a click "
      "anywhere; fixed: only a click on its tick (or a key) ends it",
      &g_defect_report_any_click},
+    {"loadGameBrowser.rowPressPastText", "P27B",
+     "the load browser's list takes a press only right of the text column (x > 0x140) and from the text row's top, while the "
+     "selection bar is drawn from x 0x136 and one row higher; fixed: a press over the drawn bar counts",
+     &g_defect_browser_row_press},
     {"showCharacterEditor.cancelStaysOpen", "P13B",
      "the character editor's Cancel restores the type record and stays open; fixed: Cancel restores every edit and closes the editor",
      &g_defect_editor_cancel_stays},

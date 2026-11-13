@@ -855,6 +855,7 @@ const ProfileMember kPlayProfile[] = {
     {"drawEmployeeViewPanel.scrollBarAlways", 0},  // P26E fix 1 (play-test 13 item 6: no scroll band when the golfer list fits)
     {"reportScreens.anyClickCloses", 0},            // P26C item 4b (play-test 13: the full-screen screens close only with their tick)
     {"showRoutingMapScreen.modeTopStripLeaves", 0},  // P27B fix 1: a lit routing mode button takes the press over its whole box
+    {"loadGameBrowser.rowPressPastText", 0},         // P27B fix 2: a load-list press counts over the drawn selection bar
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

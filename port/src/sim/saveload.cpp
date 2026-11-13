@@ -782,10 +782,13 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
     }
 
     // a press (or a key) at the pointer position over the list
-    if (gs.g_rootInput[kRootClickX] <= 0x140) continue;
-    const int32_t my = gs.g_rootInput[kRootClickY];
-    if (my < 0x74) continue;
-    sel = add32(sub32(my, 0x74) / (mode == 2 ? 17 : 16), scroll);
+    // P27B fix 2 (loadGameBrowser.rowPressPastText = 0): a press counts over the drawn selection bar (x from 0x136, its rows
+    // from row_y - 1), not only right of the text column (x > 0x140, rows from row_y)
+    const bool bar = !SG_DEFECT(g_defect_browser_row_press);
+    if (gs.g_rootInput[kRootClickX] <= (bar ? 0x135 : 0x140)) continue;
+    const int32_t my = gs.g_rootInput[kRootClickY], top = bar ? 0x73 : 0x74;
+    if (my < top) continue;
+    sel = add32(sub32(my, top) / (mode == 2 ? 17 : 16), scroll);
     if (sel >= add32(scroll, 0x10)) {
       scroll = clamp(add32(scroll, 4), 0, max_scroll);
       continue;

@@ -93,6 +93,7 @@ int32_t window_height(Ctx &ctx);
 extern int g_defect_esc_course_action, g_defect_esc_buy_land, g_defect_esc_char_editor, g_defect_esc_char_picker,
     g_defect_esc_popup_close, g_defect_esc_skill_points;
 extern int g_defect_report_any_click;  // P26C item 4b (commands.cpp reportScreens.anyClickCloses)
+extern int g_defect_browser_row_press;  // P27B fix 2 (commands.cpp loadGameBrowser.rowPressPastText)
 extern int g_defect_editor_cancel_stays;  // P13B item 14: showCharacterEditor.cancelStaysOpen (commands.cpp)
 }  // namespace portsim
 
