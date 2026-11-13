@@ -1841,6 +1841,33 @@ void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, i
     const int32_t k = piece_of(f, x, y);
     return k >= 0 && piece_dx_[static_cast<size_t>(k)] != 0 ? k : -1;
   };
+  // P27B fix 4 (class a): a modal screen drawn over the last in-game frame (a carried frame, GfxHudFrame::carried) keeps that
+  // frame's panel layers, which the window shows at their anchors around the screen; in the 800-space frame the screen's own
+  // drawing (a centred layer after them) covers some of their pixels, and a click on such a pixel at its anchor reached the game
+  // at the panel's 800-space point, that is on the screen's control drawn there (the happiness meter at the window's right edge
+  // scrolled showMembershipRoster's list: zone 1). over[j] = the index of the last centred layer whose own pixel (opaque word or
+  // mask blend; not a shade or the whole-frame dim, under which the original still shows the panel) is at 800-space point j; a
+  // panel pixel drawn before it there is shown but takes no click or cursor read (out of the layer's coverage)
+  std::vector<int16_t> &over = over_;
+  if (f.carried && anchor && defect_ != PresentDefect::CarriedHudClicks) {
+    if (over_serial_ != f.serial) {
+      over.assign(static_cast<size_t>(kLogicalW) * kLogicalH, -1);
+      for (size_t li = 0; li < f.layers.size(); ++li) {
+        const portsim::GfxHudLayer &c = f.layers[li];
+        if (c.id != portsim::kGfxLayerCentred) continue;
+        const int32_t bw = c.x1 - c.x0;
+        for (int32_t y = c.y0; y < c.y1; ++y)
+          for (int32_t x = c.x0; x < c.x1; ++x) {
+            const uint8_t k = c.px[static_cast<size_t>(y - c.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - c.x0)].kind;
+            if (k == 1 || k == 2) over[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] = static_cast<int16_t>(li);
+          }
+      }
+      over_serial_ = f.serial;
+    }
+  } else {
+    over.clear();
+    over_serial_ = 0;
+  }
   {
     std::vector<RemapLayer> rl;
     rl.reserve(f.layers.size());
@@ -1867,6 +1894,15 @@ void Presenter::layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, i
       r.cover.resize(l.px.size());
       for (size_t i = 0; i < l.px.size(); ++i)
         r.cover[i] = lpx[i].kind || lpx[i].k == portsim::kGfxTextCoverMark ? 1 : 0;  // P9C: a removed glyph is still the layer's
+      if (!over.empty() && l.anchor != 0 && l.id != portsim::kGfxLayerCentred) {  // P27B fix 4: overdrawn panel pixels take no click
+        const int32_t bw = l.x1 - l.x0;
+        for (int32_t y = l.y0; y < l.y1; ++y)
+          for (int32_t x = l.x0; x < l.x1; ++x) {
+            const size_t i = static_cast<size_t>(y - l.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - l.x0);
+            if (r.cover[i] && over[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] > static_cast<int32_t>(lix))
+              r.cover[i] = 0;
+          }
+      }
       // P12A fix 1: with the camera slide on, a centred layer's tool preview / tee line pixels move with the course picture: a point
       // over them is a point over the course (PanelRemap::map_impl). Made at every paint, also at offset 0, so the first tick of a
       // new slide (which sets the remap's offset before the next paint) already finds them

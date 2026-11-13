@@ -1673,6 +1673,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                      : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
+                     : o.negctl == "p27b-carried-hud-clicks" ? PresentDefect::CarriedHudClicks  // P27B fix 4
                      : o.negctl == "p27c-hover-stale" ? PresentDefect::HoverUnconfirmed  // P27C fix 1
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
@@ -4186,6 +4187,7 @@ int main(int argc, char **argv) {
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                      : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
+                     : o.negctl == "p27b-carried-hud-clicks" ? PresentDefect::CarriedHudClicks  // P27B fix 4
                      : o.negctl == "p27c-hover-stale" ? PresentDefect::HoverUnconfirmed  // P27C fix 1
                                                   : PresentDefect::None;
   Presenter presenter(pd);

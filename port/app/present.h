@@ -40,6 +40,7 @@ enum class PresentDefect : uint8_t {
   DimLocal = 7,          // P9D: a whole-frame dim layer composed per pixel at its own place only (the window not dimmed under it)
   StaleRemap = 8,        // P26C item 4a: a frame without the world or layers keeps the previous frame's click remap
   HoverUnconfirmed = 9,  // P27C fix 1: hover_confirm ignored (a predicted hover look stays where the game's pass kept its picture)
+  CarriedHudClicks = 10,  // P27B fix 4: a modal screen's carried panel pixels it overdrew still take clicks at their anchors
 };
 
 // The content rectangle for a client area of cw x ch.
@@ -710,6 +711,10 @@ class Presenter {
   void layer_pieces(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
   void layer_remap(const portsim::GfxHudFrame &f, const Viewport &vp, int32_t cw) const;
   void flat_remap_clear() const;  // P26C item 4a: a frame without world and layers remaps no point
+  // P27B fix 4 (layer_remap): per 800-space point, the index of the carried frame's last centred layer with its own pixel there
+  // (-1 none; empty = not a carried frame), kept for the frame serial it was made for
+  mutable std::vector<int16_t> over_;
+  mutable uint64_t over_serial_ = 0;
   bool pieces_on(const portsim::GfxHudFrame &f, const Viewport &vp) const;
   // compose_layers' draw-order places of the previews and the tee lines (cached per frame / content generation)
   mutable const void *order_key_ = nullptr;
