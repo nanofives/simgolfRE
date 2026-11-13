@@ -107,6 +107,27 @@ int32_t view_list_columns(Ctx &ctx) {
   const int32_t n = ctx.mem.load<int32_t>(kPortViewListColsVa);
   return n < 0 ? 0 : n > kViewListColsMax ? kViewListColsMax : n;
 }
+int g_defect_list_scroll_always = 1;  // P26E fix 1: drawEmployeeViewPanel.scrollBarAlways
+bool list_scroll_hidden(Ctx &) { return !SG_DEFECT(g_defect_list_scroll_always); }
+int32_t view_list_count(Ctx &ctx) {
+  const Memory &m = ctx.mem;
+  const uint32_t golfers = state_va(ctx, &GameState::g_golfers);
+  auto rec = [&](int32_t g) { return golfers + (static_cast<uint32_t>(g) << 8); };
+  int32_t count = 0;
+  for (int32_t g = 0; g < 0x98; ++g) {  // drawEmployeeViewPanel's filter (the order does not change the count)
+    bool show = static_cast<int8_t>(m.load<uint8_t>(rec(g) + 0x21)) > 0;
+    const uint16_t p = m.load<uint16_t>(rec(g) + 0xa2);
+    if (!show && p != 0xffff) {
+      const int32_t q = static_cast<int16_t>(p);
+      show = m.load<int16_t>(rec(q) + 0xa2) == g && static_cast<int8_t>(m.load<uint8_t>(rec(q) + 0x21)) > 0;
+    }
+    if (show) ++count;
+  }
+  return count;
+}
+bool view_list_fits(Ctx &ctx) {
+  return ctx.gs().g_ui_5aa6b8[4] == 0 && view_list_count(ctx) <= 4 * (4 + view_list_columns(ctx));
+}
 // ------------------------------------------------------------------------------------------------ course undo (P11D)
 // The original's own undo is one level per tile: setGrids keeps the tile's previous content (code) and the price charged
 // (refund), and a right click then a second right click on the tile (mainLoop ML+0xfbac..ML+0xfc4b) runs demolishObject, which
@@ -663,6 +684,14 @@ const DefectDef kDefects[] = {
      "columns) drawEmployeeViewPanel lists 4 + n columns, hitEmployeeSlot435570 hits them and the next-page arrow at its moved place "
      "(0x304 + 0x79 n), and the arrows page by 4 (4 + n); the host draws the added columns right of the panel",
      &g_defect_list_four_columns},
+    {"drawEmployeeViewPanel.scrollBarAlways", "P26E",
+     "the golfer list's scroll band (its track, the bar and the two page arrows) is drawn and its arrows page however many golfers "
+     "are listed, a click on the band below the list takes the golfer of the column's last row (hitEmployeeSlot435570 clamps the "
+     "row) and a click on an empty slot takes the list's cleared entry, golfer record 0; the staff detail panel's next arrow scrolls "
+     "while it is not drawn; fixed: neither the band nor an empty slot (past the golfers listed on the page) takes a golfer; while "
+     "every listed golfer is on the first page the arrows do nothing and the band is drawn empty (no track, bar or arrows); the "
+     "detail panel's next arrow works only while it is drawn (more than 8 employees)",
+     &g_defect_list_scroll_always},
 };
 extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
                                          sizeof(kDefects) / sizeof(kDefects[0])};

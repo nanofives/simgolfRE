@@ -129,6 +129,20 @@ constexpr uint32_t kPortViewListColsVa = kPortViewVa + 0x40u;
 constexpr int32_t kViewListColsMax = 8;
 extern int g_defect_list_four_columns;  // drawEmployeeViewPanel.fourColumns: 1 = the original (four columns, the word ignored)
 int32_t view_list_columns(Ctx &ctx);    // 0 .. kViewListColsMax
+// P26E fix 1 (Mariano's play-test 13 item 6: "if the number of players fit in one screen remove the scroll bar at the bottom, also
+// avoid clicking elements behind it"; log/roadmap/P26/P26E_notes.md). `play` switch drawEmployeeViewPanel.scrollBarAlways, 1 = the
+// original: the golfer list's scroll band (rows kListBandY0 ..) is drawn and its page arrows page however many golfers there are, and
+// a click on the band below the arrows takes the golfer of row 3 of that column (hitEmployeeSlot435570's row clamp), and a click on
+// an empty slot (past the golfers listed on the page) takes the slot's cleared entry 0, golfer record 0. At 0: neither takes a
+// golfer, and while every listed golfer is on the first page (view_list_fits) the arrows do nothing and the drawing
+// leaves the band empty; the staff detail panel's next arrow does nothing while it is not drawn (8 employees or fewer).
+constexpr int32_t kListBandY0 = 0x24b;  // MemberPanel's scroll band: the track's top row (the list area ends at row 0x24a)
+extern int g_defect_list_scroll_always;  // drawEmployeeViewPanel.scrollBarAlways: 1 = the original
+bool list_scroll_hidden(Ctx &ctx);       // the switch at 0 (and a sim attached to a view or not: drawing and clicks agree)
+// the number of golfers the list shows (drawEmployeeViewPanel's filter: on the course, or the partner of one that is)
+int32_t view_list_count(Ctx &ctx);
+// every one of them fits on the list's first page of 4 (4 + view_list_columns) and the offset is 0
+bool view_list_fits(Ctx &ctx);
 // the frame body's click point: takes a pending request (switch 0 only). 0 none, 1 an undo (run here), 2 a redo: the caller
 // runs the game's build path on course_redo_take's tiles between course_redo_begin and course_redo_end (P11D fix 2)
 int32_t course_undo_step(Ctx &ctx);

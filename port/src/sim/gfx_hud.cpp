@@ -28,6 +28,7 @@
 //   13 the detail panel's list-slot images (entries 8..15) one pixel lower   14 the detail panel's text block one pixel lower
 //   15 the detail panel's three buttons with no selection take the selection branch's images
 //   16 (P22D fix 1) the golfer list's columns past its limit drawn inside the panel's layer again (the badges cut at its right border)
+//   21 (P26E fix 1) the golfer list's scroll band drawn as the original's (track, bar, arrows) with the switch scrollBarAlways at 0
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -2058,6 +2059,28 @@ void b_meter_tips(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   gfxt::meter_tip(g, ctx, s, b.x - half - 6, b.y + b.h / 2 + 5);
 }
 
+// P26E fix 1 (play switch drawEmployeeViewPanel.scrollBarAlways = 0, bridge.h view_list_fits): the golfer list's scroll band drawn
+// empty while every listed golfer is on the first page. MemberPanel (the art cut g_sprites541a18 + 0xb0 at (0xd7, 0x1da), the art's
+// own coordinates): rows 0x24b..0x24c are the list's lower edge, with the track's top over x 0x160..0x2ed; rows 0x24d..0x256 are the
+// panel's band colour with the track over x 0x160..0x2ed and the page arrows over x 0x135..0x15f and 0x2f0..0x319. Each row's own
+// pixel outside the track and the arrows (x 0x14a on the edge rows, x 0x130 below) is repeated over them, into the root with the HUD
+// write marks, as the art's own pixels are; the list's right border (x 0x31a on) and the bottom row 0x257 stay.
+void empty_list_band(Gfx &g) {
+  Surface16 &r = g.root;
+  if (r.w < 800 || r.h < 600) return;
+  for (int32_t y = kListBandY0; y < 0x257; ++y) {
+    const bool edge = y < kListBandY0 + 2;
+    const int32_t from = edge ? 0x160 : 0x135, to = edge ? 0x2ee : 0x31a;
+    const size_t row = static_cast<size_t>(y) * static_cast<size_t>(r.w);
+    const uint16_t w = r.px[row + static_cast<size_t>(edge ? 0x14a : 0x130)];
+    for (int32_t x = from; x < to; ++x) {
+      uint16_t &o = r.px[row + static_cast<size_t>(x)];
+      o = w;
+      hud_mark(&o);
+    }
+  }
+}
+
 void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
@@ -2100,6 +2123,9 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   };
   prec(g, "Surface_stretchBlit", {va(ctx, GSO(g_sprites541a18, 0xb0)), va(ctx, GSO(g_sprites58b390, 0xb0)), 0xd7, 0x1da});
   call(g, ctx, "Surface_stretchBlit", {va(ctx, GSO(g_sprites541a18, 0xb0)), va(ctx, GSO(g_sprites58b390, 0xb0)), root, 0xd7, 0x1da, 0});
+  // P26E fix 1: the scroll band empty (no track, bar or arrows) while the list fits; control 21 draws it as the original does
+  const bool band_empty = list_scroll_hidden(ctx) && view_list_fits(ctx) && mode() != 21;
+  if (band_empty) empty_list_band(g);
   const int32_t h = static_cast<int32_t>(cm::call_peer(ctx, "hitEmployeeSlot435570", {a[0], a[1]}).eax);
   if (h == -3) img(va(ctx, GSO(g_sprites58b1a0, 0)), 0xf0, 0x1ee);
   else if (h == -4) img(va(ctx, GSO(g_sprites58b1a0, 0x2c)), 0xd9, 0x20a);
@@ -2187,7 +2213,7 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     }
     ly += compact ? 0xe : 0x15;
   }
-  if (count != 0) {
+  if (count != 0 && !band_empty) {  // P26E fix 1: no bar in the empty band
     const int32_t top = clampv(div32(mul32(skip, 400), count), 0, 0x18f);
     const int32_t page = compact ? 0x30 : 4 * (4 + ext);  // P22D fix 2 (n = 0: the original's 0x10)
     const int32_t bottom = clampv(div32(mul32(add32(skip, page), 400), count), 1, 0x190);
@@ -2215,6 +2241,7 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       for (Added &e : added) cols.emplace_back(std::move(e.draw), e.col);
       view_panel_wide(g, ctx, before, std::min(used, ext), cols, [&]() {
         call(g, ctx, "Surface_stretchBlit", {va(ctx, GSO(g_sprites541a18, 0xb0)), va(ctx, GSO(g_sprites58b390, 0xb0)), root, 0xd7, 0x1da, 0});
+        if (band_empty) empty_list_band(g);  // P26E fix 1: the added columns and the right end repeat the empty band
       });
       font(big);
     }

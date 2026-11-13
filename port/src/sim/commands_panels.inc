@@ -33,8 +33,17 @@ int32_t hit_employee_slot(Ctx &ctx, int32_t x, int32_t y) {
   if (approx_distance(sub32(x, 0x11d), sub32(y, 0x1ec)) < 20) r = -2;
   if (approx_distance(sub32(x, 0x100), sub32(y, 0x1fe)) < 20) r = -3;
   if (approx_distance(sub32(x, 0xe8), sub32(y, 0x21a)) < 20) r = -4;
-  if (approx_distance(sub32(x, 0x14c), mul32(sub32(y, 0x250), 3)) < 20) r = -5;
-  if (approx_distance(sub32(x, 0x304 + 0x79 * ext), mul32(sub32(y, 0x250), 3)) < 20) r = -6;
+  // P26E fix 1 (drawEmployeeViewPanel.scrollBarAlways = 0, bridge.h): neither the scroll band nor an empty slot takes a golfer
+  // (drawEmployeeViewPanel clears g_employeeViewList to 0: an empty slot held golfer record 0); the arrows only while the list does
+  // not fit on its first page (otherwise the band is drawn empty). Negative control mode 2: the switch is ignored here
+  const bool hide = list_scroll_hidden(ctx) && SG_NEGCTL(g_negctl_hit_employee_slot) != 2;
+  if (hide && r >= 0) {
+    const int32_t listed = clamp(sub32(view_list_count(ctx), ctx.gs().g_ui_5aa6b8[4]), 0, 4 * (4 + ext));
+    if (y >= kListBandY0 || r >= listed) r = -1;
+  }
+  const bool arrows = !hide || !view_list_fits(ctx);
+  if (arrows && approx_distance(sub32(x, 0x14c), mul32(sub32(y, 0x250), 3)) < 20) r = -5;
+  if (arrows && approx_distance(sub32(x, 0x304 + 0x79 * ext), mul32(sub32(y, 0x250), 3)) < 20) r = -6;
   return r;
 }
 
@@ -159,6 +168,9 @@ int32_t employee_action(Ctx &ctx, int32_t r) {
         gs.g_ui_5aa558 = sub32(gs.g_ui_5aa558, 2);
         return -1;
       case 3:
+        // P26E fix 1 (drawEmployeeViewPanel.scrollBarAlways = 0): the next arrow is drawn only above 8 employees (the previous
+        // count g_ui_5aa6b8[2], drawEmployeeDetailPanel); a click where it is not drawn does nothing
+        if (list_scroll_hidden(ctx) && gs.g_ui_5aa6b8[2] <= 8) return -1;
         sel = -1;
         gs.g_ui_5aa558 = add32(gs.g_ui_5aa558, 2);
         return -1;
