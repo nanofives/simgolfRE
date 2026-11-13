@@ -1842,6 +1842,37 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
 // over the whole root, the world map courseActionMenu, the course map showRoutingMapScreen; P24F fix 1 also counts a root covered
 // in pieces) has no world layer, and gets the screens' bands before a session instead of black ones: the world map's own
 // (ExtendClamp with map_bands), Extend for the others.
+// P27C fix 3 (host.h): courseActionMenu draws and refreshes its first pass before its first pump, so that present took the hint of
+// the screen before it (Extend: the side bands faded from the edge) and the next ones, made after the pump set world_map_, take
+// ExtendClamp (the edge columns repeated); the picture does not change, so present_point does not post it again and the bands
+// changed look at the first hover. Post the last present once more with the world map's hint (its frame and text runs as they are,
+// as title_menu does for the title menu's hint); its publication number makes the world thread drop an older job of that frame
+void LiveSession::map_repost(portsim::Ctx &ctx) {
+  const bool screen = in_game_ && opt_.screen_bands && !portsim::gfx_back_terrain(ctx);
+  if (!opt_.map_repost || !((!in_game_ || screen) && opt_.map_bands) || last_presented_.empty() || banner_shown_) return;
+  if (last_band_ == BandFill::ExtendClamp) return;
+  WorldImage wi;
+  portsim::GfxTextFrame tf;
+  if (opt_.text_native && take_text_frame(ctx, last_presented_, tf)) wi.text = std::move(tf);
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    frame_world_ = std::move(wi);
+    frame_slot_ = last_presented_;
+    frame_index_ = last_index_;
+    frame_band_ = BandFill::ExtendClamp;
+    frame_waiting_ = true;
+    last_band_ = BandFill::ExtendClamp;
+    shown_seq_ = ++present_seq_;
+  }
+  ++map_reposts_;
+  void *h;
+  {
+    std::lock_guard<std::mutex> lk(mu_);
+    h = hwnd_;
+  }
+  if (h) PostMessageW(static_cast<HWND>(h), kMsgPresent, 0, 0);
+}
+
 BandFill LiveSession::band_hint(portsim::Ctx &ctx) {
   const bool screen = in_game_ && opt_.screen_bands && !portsim::gfx_back_terrain(ctx);
   BandFill band = in_game_ && !screen ? BandFill::Black : BandFill::Extend;
@@ -2126,8 +2157,10 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   // P13B item 18: courseActionMenu's pass hint (saveload.cpp course_action_menu: InputSource::timed_pass(50), the only 50 ms
   // one) marks the world map; a body pump or a world load's pump ends it (track_screen's frame heads and title_menu() too)
   constexpr uint32_t kWorldMapPassMs = 50;
+  const bool map_was = world_map_;  // P27C fix 3
   if (!p.body && p.timed_pass_ms == kWorldMapPassMs) world_map_ = true;
   else if (p.body || p.kind == portsim::PumpKind::Load) world_map_ = false;
+  if (!map_was && world_map_) map_repost(ctx);  // P27C fix 3
   if (close_check(ctx, false, p.body)) {  // P5B item 3: the close button on the title menu (or after the quit prompt)
     stop_.store(true);
     return portsim::LiveReply::Stop;
@@ -2503,7 +2536,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"present_points\":{\"r\":" + std::to_string(opportunities_[0]) + ",\"w\":" + std::to_string(opportunities_[1]) +
        ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
   s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
-  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + ",\"screen\":" + std::to_string(presents_screen_) + "}";  // P7, P13B item 18, P24F
+  s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + ",\"map_reposts\":" + std::to_string(map_reposts_) + ",\"screen\":" + std::to_string(presents_screen_) + "}";  // P7, P13B item 18, P24F
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
        ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
        ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +

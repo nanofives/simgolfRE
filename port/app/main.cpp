@@ -1638,6 +1638,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   portsim::gfx_set_hr_defer_check(ho.world_thread && std::getenv("SG_P15_CHECK") && std::getenv("SG_P15_CHECK")[0] == '1');  // P15A
   ho.title_bands = o.wide && o.title_bands;           // P10C fix 1 (the band hint acts only with --wide)
   ho.map_bands = o.wide && o.map_bands;               // P13B item 18 (the world map's bands repeat its edge columns)
+  ho.map_repost = o.negctl != "p27c-map-band-first";  // P27C fix 3 (negative control: the first present keeps its hint)
   ho.screen_bands = o.wide && o.screen_bands;         // P24F fixes 2-3 (in-game full-screen screens get the pre-session bands)
   ho.text_native = text_native_on(o);                  // P9C
   ho.text_banner = ho.text_native && o.text_banner;    // P10B fix 1

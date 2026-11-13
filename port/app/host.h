@@ -199,6 +199,7 @@ struct HostOptions {
   // P13B item 18: the world map shown before a session (courseActionMenu) presents with BandFill::ExtendClamp (its own edge
   // columns repeated) instead of Extend
   bool map_bands = false;
+  bool map_repost = true;  // P27C fix 3 (LiveSession::map_repost); off = the negative control p27c-map-band-first
   // P24F fixes 2-3 (log/roadmap/P24/P24F_notes.md): an in-game frame with no terrain picture under its root (the world map, the
   // course map: a screen over the whole root, so no world layer) presents with the bands of the screens before a session
   // (LiveSession::band_hint) instead of black ones
@@ -457,6 +458,9 @@ class LiveSession : public portsim::LiveHost {
   // kWorldMapPassMs), kept through the popups it opens, cleared at a frame head, a world load's pump and the title menu
   bool world_map_ = false;
   uint64_t presents_map_ = 0;
+  // P27C fix 3: the world map's first present (made before its first pump set world_map_) posted again with the world map's hint
+  void map_repost(portsim::Ctx &ctx);
+  uint64_t map_reposts_ = 0;
   uint64_t presents_screen_ = 0;  // P24F fixes 2-3: in-game presents with the screens' bands (band_hint)
   BandFill band_hint(portsim::Ctx &ctx);  // P7, P13B item 18, P24F fixes 2-3: the side-band hint of a present
   BandFill last_band_ = BandFill::Black;  // P10C fix 1: the band hint and index of last_presented_ (sim thread)
