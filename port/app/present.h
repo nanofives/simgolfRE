@@ -39,6 +39,7 @@ enum class PresentDefect : uint8_t {
   LayerRectMove = 6,     // P9B: the layers ignored, P8B's rectangle compositor used although the frame has layers
   DimLocal = 7,          // P9D: a whole-frame dim layer composed per pixel at its own place only (the window not dimmed under it)
   StaleRemap = 8,        // P26C item 4a: a frame without the world or layers keeps the previous frame's click remap
+  HoverUnconfirmed = 9,  // P27C fix 1: hover_confirm ignored (a predicted hover look stays where the game's pass kept its picture)
 };
 
 // The content rectangle for a client area of cw x ch.
@@ -302,6 +303,7 @@ struct HoverModel;  // P10I fix 2 (hover.cpp)
 class GpuCompositor;  // P14A (gpu.cpp)
 struct HoverStats {  // P10I fix 2: session.json p10i
   uint64_t frames = 0, controls_made = 0, resets = 0, mispredicts = 0, ticks = 0, swaps = 0, paints = 0;
+  uint64_t confirms = 0;  // P27C fix 1: hover_confirm calls taken
   uint32_t controls = 0;
 };
 class Presenter {
@@ -495,6 +497,13 @@ class Presenter {
   bool hover() const { return hover_on_; }
   void hover_observe(int32_t cx, int32_t cy, const Viewport &vp);
   bool hover_tick(int32_t cx, int32_t cy, const Viewport &vp);
+  // P27C fix 1: the sim read the cursor at (cx, cy) and its pass left the picture as the current frame shows it (a present equal to
+  // the last one, LiveSession::take_hover_confirm): each control's current look is the game's own answer there. It becomes an
+  // observation of that look at that point and the frame's point, so hover_tick shows the frame's own look while the cursor stays
+  // there and predicts from it later. Without it a look predicted between frames (the nearest earlier observation's, over the
+  // whole box of a look seen only inside the control) stayed on screen at points the game's hit test rejects: on a modal screen
+  // a pass that changes nothing makes no present, so nothing corrected it.
+  bool hover_confirm(int32_t cx, int32_t cy);
   HoverStats hover_stats() const;
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }

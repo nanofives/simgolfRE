@@ -587,4 +587,18 @@ bool Presenter::hover_tick(int32_t cx, int32_t cy, const Viewport &vp) {
 
 HoverStats Presenter::hover_stats() const { return hover_ ? hover_->st : HoverStats{}; }
 
+// P27C fix 1 (present.h)
+bool Presenter::hover_confirm(int32_t cx, int32_t cy) {
+  if (!hover_on_ || !hover_ || defect_ == PresentDefect::HoverUnconfirmed) return false;
+  if (cx < 0 || cy < 0 || cx >= kLogicalW || cy >= kLogicalH) return false;
+  HoverModel &M = *hover_;
+  M.fcx = cx;
+  M.fcy = cy;
+  for (Control &c : M.controls)
+    if (c.cur >= 0) c.add(cx, cy, c.cur);
+  ++M.st.confirms;
+  if (hlog()) std::fprintf(hlog(), "confirm at %d,%d\n", cx, cy);
+  return true;
+}
+
 }  // namespace portapp

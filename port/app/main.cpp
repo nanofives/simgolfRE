@@ -1669,6 +1669,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                      : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
+                     : o.negctl == "p27c-hover-stale" ? PresentDefect::HoverUnconfirmed  // P27C fix 1
                                                   : PresentDefect::None;
   Presenter presenter(pd, scale_mode(o.scale));
   presenter.set_wide(wide_fill(o));  // P7
@@ -1966,8 +1967,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   };
   Viewport vp = win.viewport();
   uint64_t hover_paints = 0;  // P10I fix 2
+  uint32_t hover_index = ~0u;  // P27C fix 1: the index of the frame the presenter shows (the last take_frame)
   auto hover_tick = [&]() {   // P10I fix 2: the hover looks at the live cursor point (the sim's next read would get it)
     if (!presenter.hover()) return;
+    Point hc;  // P27C fix 1: a pass that kept this frame's picture at its cursor point: the game's own looks there
+    if (session.take_hover_confirm(hover_index, hc)) presenter.hover_confirm(hc.x, hc.y);
     int32_t lx = 0, ly = 0, dx = 0;
     if (!session.live_cursor(lx, ly, dx)) return;
     if (presenter.hover_tick(lx, ly, vp)) {
@@ -2065,6 +2069,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       uint64_t wl_kc = wl_scope.on ? winlog_cycles() : 0;
       if (session.take_frame(px, index, &band, &wi)) {
         if (wl_scope.on) winlog_event('K', wl_k0, wl_kc);
+        hover_index = index;  // P27C fix 1
         portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
         if (ho.world) {
           int64_t wl_s0 = wl_scope.on ? portsim::perf_now_ns() : 0;
@@ -2210,7 +2215,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          "\",\"frames\":" + std::to_string(hs.frames) + ",\"controls\":" + std::to_string(hs.controls) + ",\"made\":" +
          std::to_string(hs.controls_made) + ",\"resets\":" + std::to_string(hs.resets) + ",\"mispredicts\":" +
          std::to_string(hs.mispredicts) + ",\"ticks\":" + std::to_string(hs.ticks) + ",\"swaps\":" + std::to_string(hs.swaps) +
-         ",\"paints\":" + std::to_string(hover_paints) + "}";
+         ",\"paints\":" + std::to_string(hover_paints) + ",\"confirms\":" + std::to_string(hs.confirms) + "}";
   }
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
   s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
@@ -4173,6 +4178,7 @@ int main(int argc, char **argv) {
                      : o.negctl == "p9b-rect-move" ? PresentDefect::LayerRectMove        // P9B
                      : o.negctl == "p9d-dim-local" ? PresentDefect::DimLocal             // P9D
                      : o.negctl == "p26c-stale-remap" ? PresentDefect::StaleRemap        // P26C item 4a
+                     : o.negctl == "p27c-hover-stale" ? PresentDefect::HoverUnconfirmed  // P27C fix 1
                                                   : PresentDefect::None;
   Presenter presenter(pd);
   presenter.set_frame(std::vector<uint16_t>(static_cast<size_t>(kLogicalW) * kLogicalH, 0));  // black until a frame comes

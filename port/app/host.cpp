@@ -1547,6 +1547,15 @@ static void world_reset(WorldImage &w) {
   w.gpu.reset();         // P17B fix 2: the shared picture back to the world thread's pool
 }
 
+// P27C fix 1 (host.h)
+bool LiveSession::take_hover_confirm(uint32_t index, Point &p) {
+  std::lock_guard<std::mutex> lk(frame_mu_);
+  if (confirm_seq_ == confirm_taken_ || confirm_index_ != index) return false;
+  confirm_taken_ = confirm_seq_;
+  p = confirm_cursor_;
+  return true;
+}
+
 bool LiveSession::take_frame(std::vector<uint16_t> &px, uint32_t &index, BandFill *band, WorldImage *world) {
   std::lock_guard<std::mutex> lk(frame_mu_);
   if (!frame_waiting_) return false;
@@ -1624,7 +1633,16 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
   std::vector<uint16_t> px(static_cast<size_t>(n / 2));
   ctx.files().read("$gfx/back.555", 0, px.data(), static_cast<uint64_t>(n));
   pd_dump.stop();  // P15A
-  if (px == last_presented_) return;
+  if (px == last_presented_) {
+    // P27C fix 1: the pass read fc and kept the picture: its looks are the game's answer at fc (take_hover_confirm)
+    if (!presents_.empty() && fc.x >= 0 && fc.y >= 0) {
+      std::lock_guard<std::mutex> lk(frame_mu_);
+      confirm_cursor_ = fc;
+      confirm_index_ = presents_.back().index;
+      ++confirm_seq_;
+    }
+    return;
+  }
   ++made_[ki];
   if (kind == 'r') {
     if (was_pending) ++r_superseded_;
