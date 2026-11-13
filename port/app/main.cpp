@@ -109,6 +109,9 @@
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
+//   P26B item 3: --palette-names on|off (default on; SG_APP_P26=off: off) the Build Course palette's tool names: one font size for
+//   every name (no smaller font for a long translation), a name wider than its tile on two lines (broken at a space), the trees'
+//   names at their row's height (gfx.h gfx_set_palette_names; drawing only; log/roadmap/P26/P26B_notes.md)
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -545,6 +548,7 @@ struct Options {
   bool row_hover = true;           // P25B: --row-hover on|off (SG_APP_P25=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
+  bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1247,6 +1251,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
       if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
+      if (ok && o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
       if (ok && text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C
     }
@@ -1531,6 +1536,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
   if (o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2: the match scorecard as wide as the course (gfx.h; drawing only)
+  if (o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3: the palette's names (gfx.h; drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
   if (text_native_on(o)) portsim::gfx_set_text_capture(*ctx, true);  // P9C: the text runs (gfx.h; no GameState byte changes)
   // --negctl recorder:<mode>: the live core's recorder controls (live.cpp live.recorder)
@@ -3833,6 +3839,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.row_hover = v == "on";
     }
+    else if (a == "--palette-names") {  // P26B item 3
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.palette_names = v == "on";
+    }
     else if (a == "--tourney-hold") {  // P24G
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.tourney_hold = v == "on";
@@ -4048,6 +4058,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.card_width = false;  // P26E fix 2
       o.arrow_glide = false;  // P26A
+      o.palette_names = false;  // P26B item 3
     }
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2

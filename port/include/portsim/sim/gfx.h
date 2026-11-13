@@ -92,6 +92,12 @@ void gfx_set_row_hover(Ctx &ctx, bool on);
 // grid's and the panel's right border) moves 0x12 (18 - L) columns left and the columns it leaves show the course. Drawing only
 // (the layer's pixels; the root and the GameState are never written). Off (the default): the original's drawing.
 void gfx_set_card_width(Ctx &ctx, bool on);
+// P26B item 3 (log/roadmap/P26/P26B_notes.md; app option --palette-names, default on, SG_APP_P26=off: off). The Build Course
+// palette's tool names over the tiles (showInfoCursorPanel's label loop): every name in the HUD font itself (no smaller font of
+// the language fit), a name wider than the tile pitch broken at a space onto two lines, and the trees' names at their row's
+// height (the original puts them at the tree art's top). Drawing only: the GameState is never written. Off (the default): the
+// original's drawing.
+void gfx_set_palette_names(Ctx &ctx, bool on);
 bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);

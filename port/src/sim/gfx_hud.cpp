@@ -54,6 +54,7 @@
 #include "portsim/sim/bridge.h"  // P22D fix 2: view_list_columns
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
+#include "portsim/sim/lang.h"  // P26B item 3: lang::tr
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/util.h"
@@ -1527,6 +1528,61 @@ void amenities_panel(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
   }
 }
 
+// P26B item 3 (gfx.h gfx_set_palette_names; log/roadmap/P26/P26B_notes.md): one tool name of showInfoCursorPanel's label loop.
+// The original draws every name with drawCenteredText at (point i x + 0x20, point i y + 4) in g_fontRef_519fd8; the port's
+// translation then took a smaller font of the same face when the text ran wider than the English (lang_fit_font), so long Spanish
+// names came out smaller than the rest. Here: the name in the current language, always in the HUD font; wider than the tile
+// pitch (point 1 x - point 0 x) less kPaletteNameGap and holding a space, it is broken at the space that leaves the narrower
+// longest line, the two lines centred on the one-line position, a step of the font's ascent + a third apart. Slots 13..15 (the course type's trees, points
+// from the table after the 13 tiles) take the y of the tile row whose x lattice holds their x (the original's points there are the
+// tree art's top, above the row's other names).
+constexpr int32_t kPaletteNameGap = 4;  // P26B item 3: the least gap between two neighbours' one-line names (800-space pixels)
+void palette_name(Gfx &g, Ctx &ctx, const std::string &name, int32_t i,
+                  const std::function<int32_t(int32_t, int)> &pt) {
+  const int32_t pitch = sub32(pt(1, 0), pt(0, 0));
+  int32_t x = pt(i, 0), y = pt(i, 1);
+  if (i >= 13 && pitch > 0) {
+    if (mod32(sub32(x, pt(0, 0)), pitch) == 0) y = pt(0, 1);
+    else if (mod32(sub32(x, pt(7, 0)), pitch) == 0) y = pt(7, 1);
+  }
+  x = add32(x, 0x20);
+  y = add32(y, 4);
+  const std::string text = lang::tr(name);
+  const uint32_t font = g.fonts[0];
+  TextMetrics *tm = text_metrics(ctx);
+  auto width = [&](const std::string &s) {
+    int32_t w = 0;
+    if (!tm || font == 0 || s.empty()) return 0;
+    with_scratch_buffer(ctx, s, [&](uint32_t buf) {
+      if (!tm->glyph_width(ctx, font, buf, static_cast<int32_t>(s.size()), w)) w = 0;
+    });
+    return w;
+  };
+  auto draw = [&](const std::string &s, int32_t yy) {
+    with_scratch_buffer(ctx, s, [&](uint32_t buf) {
+      gfxb::draw_text_string(g, ctx, s, buf, x, yy, 0x80007fffu, true, "showInfoCursorPanel");
+    });
+  };
+  size_t cut = std::string::npos;
+  if (pitch > 0 && width(text) > sub32(pitch, kPaletteNameGap)) {
+    int32_t best = 0;
+    for (size_t k = 1; k + 1 < text.size(); ++k) {
+      if (text[k] != ' ') continue;
+      const int32_t w = std::max(width(text.substr(0, k)), width(text.substr(k + 1)));
+      if (cut == std::string::npos || w < best) cut = k, best = w;
+    }
+  }
+  if (cut == std::string::npos) {
+    draw(text, y);
+    return;
+  }
+  int32_t asc = 0;
+  if (!tm || font == 0 || !tm->glyph_ascent(ctx, font, asc) || asc <= 0) asc = 12;
+  const int32_t step = add32(asc, asc / 3);
+  draw(text.substr(0, cut), sub32(y, step / 2));
+  draw(text.substr(cut + 1), add32(sub32(y, step / 2), step));
+}
+
 void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   GameState &gs = ctx.gs();
@@ -1584,6 +1640,10 @@ void b_info_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     if (gs.g_difficulty != 0 && tool != b) continue;
     std::string name = gfxb::vstring(ctx.mem, va(ctx, GSO(g_tileTypeAttrs, 0)) + 0x30u * static_cast<uint32_t>(b));
     if (!name.empty()) name[0] = static_cast<char>(static_cast<uint8_t>(name[0]) + 0xe0);
+    if (g.palette_names) {  // P26B item 3 (gfx.h gfx_set_palette_names)
+      palette_name(g, ctx, name, i, pt);
+      continue;
+    }
     with_scratch_buffer(ctx, name, [&](uint32_t buf) {
       gfxb::draw_text_string(g, ctx, name, buf, add32(pt(i, 0), 0x20), add32(pt(i, 1), 4), 0x80007fffu, true, "showInfoCursorPanel");
     });

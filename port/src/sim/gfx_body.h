@@ -121,6 +121,7 @@ class Gfx {
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
+  bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   int32_t meter_prev = -1, meter_count = 0;  // P22D fix 3: the box under the cursor at the last status bar, and for how many
   std::vector<int> snap_terrain;
   // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface

@@ -2334,6 +2334,10 @@ void gfx_set_row_hover(Ctx &ctx, bool on) {
 void gfx_set_card_width(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->card_width = on;
 }
+// P26B item 3 (gfx.h gfx_set_palette_names)
+void gfx_set_palette_names(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->palette_names = on;
+}
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->tourney_hold = on;
