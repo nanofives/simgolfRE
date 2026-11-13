@@ -53,9 +53,20 @@ int g_negctl_roster = 0;
 // stack of the caller. The value is the caller's frame, which the port does not model: ON (the original) the port reports a
 // missing resource there, OFF it leaves the byte alone (U-1020).
 int g_defect_exit_remap_frame = 1;
+// P27B fix 1 (Mariano, P27: "the button answers where it is drawn"; class b): route_hit's boxes of the mode buttons 0 and 2
+// start at y 0xfe and light the button there (showRoutingMapScreen's hover test), but a press takes a mode only when the press
+// y is past 0x118, and a press at y 0x101..0x118 leaves the screen (the original's click branch: press y > 0x118, then
+// press y >= 0x101), so the top 0x1b rows of those two lit buttons close the map (or pick a hole row at y 0xfe..0x100).
+//   showRoutingMapScreen.modeTopStripLeaves  fixed (0): a press while the cursor is over mode button 0 or 2 (route_hit 0 / 2,
+//                  the lit button) takes that mode whatever the press y
+int g_defect_routing_top_strip = 1;
 const DefectDef kDefects[] = {
     {"showRoutingMapScreen.exitRemapReadsFrame", "U-1020",
      "a golfer's hole byte of 20 or more indexes past the exit's 20-entry table into the caller's frame", &g_defect_exit_remap_frame},
+    {"showRoutingMapScreen.modeTopStripLeaves", "P27B",
+     "the top rows (y 0xfe..0x118) of the lit mode buttons 0 and 2 leave the map or pick a hole row; fixed: a press there takes "
+     "the button's mode",
+     &g_defect_routing_top_strip},
 };
 
 using cm::call_peer;
@@ -550,7 +561,9 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         clicked = click != 0;
       }
       int32_t cy = gs.g_rootInput[kClickY];
-      if (clicked && cy > 0x118) {   // the button row: the mode buttons set the mode, quit ends, the rest redraws
+      // P27B fix 1 (showRoutingMapScreen.modeTopStripLeaves = 0): a press while mode button 0 or 2 is lit is that button's press
+      const bool lit_mode = !SG_DEFECT(g_defect_routing_top_strip) && (state == 0 || state == 2);
+      if (clicked && (cy > 0x118 || lit_mode)) {   // the button row: the mode buttons set the mode, quit ends, the rest redraws
         if (state >= 0) gs.g_ui_4d20dc = static_cast<uint32_t>(s.mutant == 4 ? state : state - 1);
         if (state == -2) quit = true;
         else redraw = true;
