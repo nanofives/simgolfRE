@@ -2326,6 +2326,10 @@ void gfx_set_hover_help_course(Ctx &ctx, bool on) {
 void gfx_set_meter_tips(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->meter_tips = on;
 }
+// P25B (gfx.h gfx_set_row_hover)
+void gfx_set_row_hover(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->row_hover = on;
+}
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->tourney_hold = on;

@@ -119,6 +119,7 @@ class Gfx {
   bool hover_help_course = true;  // P13A (gfx.h gfx_set_hover_help_course): and the course line with no tool among them
   bool meter_tips = false;  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips are drawn
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
+  bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   int32_t meter_prev = -1, meter_count = 0;  // P22D fix 3: the box under the cursor at the last status bar, and for how many
   std::vector<int> snap_terrain;
   // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface

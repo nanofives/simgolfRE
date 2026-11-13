@@ -79,6 +79,13 @@ void gfx_set_meter_tips(Ctx &ctx, bool on);
 // of the tournament field the game's one-line tip "Starting tournament..." sits in the panel's empty shot row. Drawing only: the
 // GameState is never written. Off (the default): the original's drawing.
 void gfx_set_tourney_hold(Ctx &ctx, bool on);
+// P25B (log/roadmap/P25/P25B_notes.md; app option --row-hover, default on, SG_APP_P25=off: off). drawAmenityRow (the benches,
+// bridges, landmarks, flowers and trees rows) picks a hover cell for the item under the cursor whose pixels equal the plain
+// cell's, so the hovered item showed no change (the terrain toolbar and the building panel do light theirs). With it on, the
+// hovered tile gets the picked cell lightened toward white (a near-white blue, brighter than the picked item's), and a hovered
+// bridge, whose art covers its tile, gets the picked cell's blue, lightened, over the bridge. Drawing only: the GameState is never written. Off (the
+// default): the original's drawing.
+void gfx_set_row_hover(Ctx &ctx, bool on);
 bool gfx_meter_tips(Ctx &ctx);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);

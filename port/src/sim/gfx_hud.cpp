@@ -1107,6 +1107,41 @@ void draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, uint32_t nx, uint32_t ny, 
   draw_b16(g, *s, px, py, n, m, d, who);
   if (g.hud.bubble_depth > 0) gfxs::bubble_scaled(g, ctx, *s, px, py, n, m, d);   // P23D fix 5
 }
+// P25B (gfx.h gfx_set_row_hover): the sprite a[0] at (a[2], a[3]) with its trims, unscaled as drawAmenityRow's tiles are,
+// blended over the root: each opaque pixel (byte < 0xfe) becomes root + (sprite - root) * alpha / 256 per 5-bit channel of the
+// RGB555 word, then that + (white - that) * lift / 256. Drawing only: the root alone is written (and marked for the HUD layers
+// as every draw is).
+constexpr int32_t kRowHoverTile = 256, kRowHoverTileLift = 120;    // the hovered tile: the picked cell, lightened toward white
+constexpr int32_t kRowHoverBridge = 112, kRowHoverBridgeLift = 32; // the hovered bridge: the picked cell's blue over its art (the art stays readable)
+void draw_scaled_blend(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t alpha, int32_t lift, const char *who) {
+  g.ensure_root(ctx);
+  const Sprite8 *s = draw_source(g, ctx, a, who, true);
+  if (!s) return;
+  const int32_t L = add32(add32(static_cast<int32_t>(a[2]), s->left), mode() == 6 ? 1 : 0);
+  const int32_t T = add32(static_cast<int32_t>(a[3]), s->top);
+  auto mix = [alpha, lift](uint16_t o, uint16_t p) {
+    uint16_t r = 0;
+    for (int sh = 0; sh <= 10; sh += 5) {
+      const int32_t c0 = (o >> sh) & 31, c1 = (p >> sh) & 31;
+      const int32_t c = c0 + (c1 - c0) * alpha / 256;
+      r = static_cast<uint16_t>(r | (static_cast<uint16_t>(c + (31 - c) * lift / 256) << sh));
+    }
+    return static_cast<uint16_t>(r | (o & 0x8000u));
+  };
+  for (int32_t yy = 0; yy < s->h; ++yy) {
+    const int32_t ry = add32(T, yy);
+    if (ry < 0 || ry >= g.root.h) continue;
+    for (int32_t xx = 0; xx < s->w; ++xx) {
+      const int32_t rx = add32(L, xx);
+      if (rx < 0 || rx >= g.root.w) continue;
+      const uint8_t b = s->px[static_cast<size_t>(yy) * static_cast<size_t>(s->w) + static_cast<size_t>(xx)];
+      if (b >= 0xfe) continue;
+      uint16_t &o = g.root.px[static_cast<size_t>(ry) * static_cast<size_t>(g.root.w) + static_cast<size_t>(rx)];
+      o = mix(o, s->pal[b]);
+      hud_mark(&o);  // P10C fix 2
+    }
+  }
+}
 void b_draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_scaled(g, ctx, a, a[4], a[5], a[6], a[7], "Surface_drawScaled"); }
 void b_draw_scaled_421b60(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   draw_scaled(g, ctx, a, a[4], a[4], a[5], a[6], "drawScaledSprite421b60");
@@ -1391,6 +1426,12 @@ int32_t amenity_row(Gfx &g, Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_
     const uint32_t b[8] = {strip + ((i & 1) ? 0x160u : 0xb0u) + 0x2cu * k, root, static_cast<uint32_t>(sub32(px, 0x16)),
                            static_cast<uint32_t>(sub32(py, 0x14)), 1, 1, 1, 0};
     draw_scaled(g, ctx, b, 1, 1, 1, 0, "drawAmenityRow");
+    // P25B (gfx.h gfx_set_row_hover): the original's hover cell (k 0) has the plain cell's pixels, so a hovered item showed no
+    // change; the picked cell (k 1) drawn over it and lightened toward white gives the hovered tile a near-white blue, brighter
+    // than the picked one
+    const bool lit_hover = g.row_hover && k == 0;
+    const uint32_t picked_cell[8] = {strip + ((i & 1) ? 0x160u : 0xb0u) + 0x2cu, root, b[2], b[3], 1, 1, 1, 0};
+    if (lit_hover) draw_scaled_blend(g, ctx, picked_cell, kRowHoverTile, kRowHoverTileLift, "drawAmenityRow.hover");
     if (p3 == 1 && id != 0x168) {
       const int32_t k2 = (id == 0x1ec || id == 0x1ca) ? add32(id, 1) : add32(id, 3);
       const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(k2)), p6, add32(i, p5)};
@@ -1400,6 +1441,8 @@ int32_t amenity_row(Gfx &g, Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_
     if (p11 & (1u << (static_cast<uint32_t>(i) & 31u))) a8 |= 0x400;
     const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(id)), p6, a8};
     gfxs::add_sprite(g, ctx, v);
+    // P25B: a bridge's art covers its whole tile (the bridges row, p2 0x226), so the hovered bridge itself takes the picked cell's blue, lightened
+    if (lit_hover && p2 == 0x226) draw_scaled_blend(g, ctx, picked_cell, kRowHoverBridge, kRowHoverBridgeLift, "drawAmenityRow.hover");
     if (p2 == 0x1a9) {
       const int32_t hi = static_cast<int32_t>((static_cast<int64_t>(add32(n, n)) * 0x55555556LL) >> 32);
       const int32_t q = hi + static_cast<int32_t>(static_cast<uint32_t>(hi) >> 31);
