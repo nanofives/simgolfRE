@@ -93,6 +93,10 @@
 //   P24G: --tourney-hold on|off (default on; SG_APP_P24=off: off) the golfer panel draws Practice Round, Play <pro> and Begin
 //   Tournament greyed while a tournament is on (the sim ignores them then) and "Starting tournament..." until the field's first stroke
 //   (gfx.h gfx_set_tourney_hold; drawing only; log/roadmap/P24/P24G_notes.md)
+//   P25C fix 2: --closed-popups hide|keep (default hide with --hud-popups; SG_APP_P25=off: keep) the pixels a closed popup left on the
+//   root (the Information or System menu under the report, map or dialog its option opens) are left out of the next screen's frames, so
+//   the course picture shows where the menu was; keep = as the original leaves them (dimmed under a report, at their 800-space place,
+//   away from the open menu's anchored place). Drawing only (gfx.h gfx_set_hud_left_hide; log/roadmap/P25/P25C_notes.md)
 //   P23E fix 1: --line-tiles on|off (default on; SG_APP_P23=off: off) the GPU presenter renders the CPU patch of each native line
 //   (--line-res native) as pieces along the line instead of the line's whole box: the same pixels, less work for long slanted lines.
 //   P23E fix 2: --wide-lines on|off (default on with --line-res native; SG_APP_P23=off: off) the swing arc and its shadow in the
@@ -525,6 +529,7 @@ struct Options {
   bool sound_limit = true;         // P24I item 9: --sound-limit on|off (SG_APP_P24=off: off)
   bool screen_bands = true;        // P24F fixes 2-3: --screen-bands on|off (SG_APP_P24=off: off)
   bool tourney_hold = true;        // P24G: --tourney-hold on|off (SG_APP_P24=off: off)
+  bool closed_popups_hide = true;  // P25C fix 2: --closed-popups hide|keep (SG_APP_P25=off: keep)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
   std::string hover_rate = "display";  // P10I fix 2: --hover-rate display|game (SG_APP_P10=off: game)
   bool strip_near = true;          // P19C item 8: --hud-strip near (SG_APP_P19=off: right)
@@ -1212,6 +1217,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B
       if (ok && hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
+      if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups && o.closed_popups_hide) portsim::gfx_set_hud_left_hide(*ctx, true);  // P25C fix 2
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
@@ -1493,6 +1499,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o)) portsim::gfx_set_hud_capture(*ctx, true);  // P9B: the HUD pixel layers (gfx.h; no GameState byte changes)
   if (hud_layers_on(o) && o.hud_modal) portsim::gfx_set_hud_modal(*ctx, true);  // P9D: the modal screens over them (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
+  if (hud_layers_on(o) && o.hud_modal && o.hud_popups && o.closed_popups_hide) portsim::gfx_set_hud_left_hide(*ctx, true);  // P25C fix 2 (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
@@ -3786,6 +3793,10 @@ bool parse(int argc, char **argv, Options &o) {
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.tourney_hold = v == "on";
     }
+    else if (a == "--closed-popups") {  // P25C fix 2
+      if (!val(v) || (v != "hide" && v != "keep")) return false;
+      o.closed_popups_hide = v == "hide";
+    }
     else if (a == "--wide-lines") {  // P23E fix 2
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wide_lines = v == "on";
@@ -3984,6 +3995,8 @@ int main(int argc, char **argv) {
       o.screen_bands = false;   // P24F fixes 2-3
       o.tourney_hold = false;   // P24G
     }
+  if (const char *ep = std::getenv("SG_APP_P25"))  // P25: the twelfth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.closed_popups_hide = false;  // P25C fix 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.smooth_camera = o.smooth_objects = false;  // P12A fixes 1 and 2
   if (const char *ep = std::getenv("SG_APP_P14"))  // P14: the GPU path off (port/test/conftest.py); flags win

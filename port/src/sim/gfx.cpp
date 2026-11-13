@@ -921,6 +921,21 @@ void text_close_segment(Gfx &g, int64_t seg, int32_t layer, const std::vector<ui
     live[order[n]].info.layer = layer;
     live[order[n]].info.vis_layer = std::move(vis[n]);
   }
+  // P25C fix 2 (gfx.h gfx_set_hud_left_hide): a closed popup's text over pixels nothing wrote since is hidden with them (its glyphs
+  // and the box beneath them; without this the System menu's lines stayed at their 800-space place under the next popup)
+  const bool left_hide = L.id == kGfxLayerCentred && g.hud.left_hide && g.hud.left_any;
+  if (left_hide)
+    for (size_t k : order) {
+      GfxTextRun &r = live[k].info;
+      const int32_t rw = r.x1 - r.x0;
+      if (rw <= 0 || r.vis_layer.size() != static_cast<size_t>(rw) * static_cast<size_t>(r.y1 - r.y0)) continue;
+      for (int32_t y = std::max(r.y0, 0); y < std::min(r.y1, g.root.h); ++y)
+        for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, g.root.w); ++x) {
+          const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+          if (g.hud_left_untouched(i, g.root.px[i]))
+            r.vis_layer[static_cast<size_t>(y - r.y0) * static_cast<size_t>(rw) + static_cast<size_t>(x - r.x0)] = 0;
+        }
+    }
   GfxTextLayerPatch patch;
   patch.layer = layer;
   const int32_t bw = L.x1 - L.x0;
@@ -932,6 +947,7 @@ void text_close_segment(Gfx &g, int64_t seg, int32_t layer, const std::vector<ui
     for (int32_t x = L.x0; x < L.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
       if (cur[i] == g.root.px[i]) continue;
+      if (left_hide && g.hud_left_untouched(i, g.root.px[i])) continue;  // P25C fix 2: left out of the layer (hud_diff)
       GfxLayerPx p;
       if (i < ref.size() && cur[i] == ref[i] && !(wr && g.hud.wr_gen[i] == g.hud.gen)) {
         p.kind = 0;
@@ -1091,6 +1107,7 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
 // gfx_scene.cpp (G32's wide scene): the queue's start forgets the scene's runs; its end peels them off `scene` into `scene_text`
 // (a copy) and keeps those not inside the frame's columns [0, 800) as world runs
 void text_frame_start(Gfx &g) {
+  g.hud_left_clear();  // P25C: a terrain picture: the root holds no closed popup's pixels any more
   g.text.frame_edge_runs.clear();
   ++g.text.frame_gen;  // P23F fix 3
 }
@@ -1250,6 +1267,9 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
     for (int32_t x = out.x0; x < out.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * w + static_cast<size_t>(x);
       if (ref[i] == now[i] && !(wr && hc.wr_gen[i] == hc.gen)) continue;
+      // P25C fix 2 (gfx.h gfx_set_hud_left_hide): a pixel a closed popup left that nothing wrote since is not the screen's: the
+      // frame beneath shows there (the Information menu is gone under the report it opened)
+      if (id == kGfxLayerCentred && use_rec && g.hud_left_untouched(i, now[i])) continue;
       GfxLayerPx &p = out.px[static_cast<size_t>(y - out.y0) * bw + static_cast<size_t>(x - out.x0)];
       p.kind = 1;
       p.px = now[i];
@@ -1469,7 +1489,23 @@ void Gfx::hud_own_sync() {
   const uint16_t *a = c.own_mark.data(), *b = root.px.data();
   for (size_t i = 0; i < n; ++i)
     if (a[i] != b[i]) c.owner[i] = o;
+  // P25C fix 1: a pixel a closed popup left that a later drawing wrote with the word it already held (the SGA report's panel over
+  // the Information menu's bullet rings) is that drawing's too: the write marks name it (cleared at the popup's close,
+  // gfx_hud_popup_end). Before, the word compare kept it the menu's, and the presenter drew it at the menu's moved place, leaving
+  // what is beneath showing through the report at its own place: the arcs at the report's left edge
+  if (c.left_any && c.wr_on && c.left.size() == n && c.wr_gen.size() == n) {
+    const uint8_t *lf = c.left.data();
+    const uint32_t *wg = c.wr_gen.data();
+    for (size_t i = 0; i < n; ++i)
+      if (lf[i] && wg[i] == c.gen) c.owner[i] = o;
+  }
   c.own_mark = root.px;
+}
+void Gfx::hud_left_clear() {
+  HudCapture &c = hud;
+  if (!c.left_any) return;
+  std::fill(c.left.begin(), c.left.end(), static_cast<uint8_t>(0));
+  c.left_any = false;
 }
 void Gfx::hud_pieces_reset() {
   HudCapture &c = hud;
@@ -1484,6 +1520,7 @@ void Gfx::hud_pieces_reset() {
   c.pieces = std::move(keep);
   c.owner.assign(root.px.size(), 0);
   c.own_mark = root.px;
+  hud_left_clear();  // P25C
 }
 void gfx_set_hud_close(Ctx &ctx, bool on) {
   Gfx *g = gfx(ctx);
@@ -1500,6 +1537,14 @@ void gfx_set_hud_popups(Ctx &ctx, bool on) {
   c.open.clear();
   c.owner.clear();
   c.own_mark.clear();
+  c.left.clear();  // P25C
+  c.left_word.clear();
+  c.left_any = false;
+}
+void gfx_set_hud_left_hide(Ctx &ctx, bool on) {  // P25C fix 2
+  Gfx *g = gfx(ctx);
+  if (!g) return;
+  g->hud.left_hide = on;
 }
 // the opener: the open panel layer (a popup a panel's own code opens); else, for a click, the popup piece that owns the clicked
 // pixel (its opener: a popup opened from a popup stays with it), nothing when the clicked pixel was drawn since the last boundary
@@ -1542,7 +1587,23 @@ void gfx_hud_popup_end(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (!g || !g->hud.on || !g->hud.popups || g->hud.open.empty()) return;
   g->hud_own_sync();
-  g->hud.open.pop_back();
+  Gfx::HudCapture &c = g->hud;
+  c.open.pop_back();
+  // P25C: the outermost popup closed: the pixels the popups own are what they left on the root (the game draws no frame before the
+  // screen an option opens); their write marks are cleared, so a mark from here on is a later drawing's (fix 1, fix 2)
+  if (c.open.empty() && c.owner.size() == g->root.px.size()) {
+    const size_t n = c.owner.size();
+    if (c.left.size() != n) c.left.assign(n, 0);
+    if (c.left_word.size() != n) c.left_word.assign(n, 0);
+    const bool wr = c.wr_gen.size() == n;
+    for (size_t i = 0; i < n; ++i) {
+      if (!c.owner[i]) continue;
+      c.left[i] = 1;
+      c.left_word[i] = g->root.px[i];
+      if (wr) c.wr_gen[i] = 0;
+      c.left_any = true;
+    }
+  }
 }
 uint16_t gfx_layer_quarter(uint16_t p, uint16_t d) {  // gfx_reports.cpp quarter_blend with its two halvings
   const uint32_t P = static_cast<uint32_t>(p) << 4, D = static_cast<uint32_t>(d) << 4;

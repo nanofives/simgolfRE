@@ -167,6 +167,13 @@ class Gfx {
     std::vector<int32_t> open;        // the open popups' piece indices (nested: innermost last)
     std::vector<uint8_t> owner;       // per root pixel: piece index + 1 of the popup open at its last observed change
     std::vector<uint16_t> own_mark;   // the root at the last ownership boundary
+    // P25C (log/roadmap/P25/P25C_notes.md): the root pixels the popups had drawn when the outermost one closed (gfx_hud_popup_end),
+    // the word each held then; their write marks (wr_gen) are cleared there, so a later mark is a later screen's write. Cleared with
+    // the pieces (hud_pieces_reset) and at each terrain picture (hud_left_clear)
+    std::vector<uint8_t> left;
+    std::vector<uint16_t> left_word;
+    bool left_any = false;
+    bool left_hide = false;  // P25C fix 2 (gfx.h gfx_set_hud_left_hide): an untouched left pixel is not the screen's
     // P9E fix 2 (gfx.h gfx_set_hud_close): the carry was armed by a publish inside an open panel scope (a modal screen the panel's
     // own code opened, the hire dialog): the next layer of the same frame continues the carried capture instead of ending it
     bool close_keep = false;
@@ -264,7 +271,8 @@ class Gfx {
       hud.rec.assign(hud.mark.size(), GfxLayerPx{});
     }
     GfxLayerPx &r = hud.rec[i];
-    if (before != hud.mark[i]) {  // over the layer's own pixel: the result is the layer's (opaque)
+    // P25C fix 2: a pixel a closed popup left, still holding its word, counts as the background (the blend of the frame beneath)
+    if (before != hud.mark[i] && !hud_left_untouched(i, before, false)) {  // over the layer's own pixel: the result is the layer's (opaque)
       r.kind = 1;
     } else {
       r.kind = kind;
@@ -282,6 +290,14 @@ class Gfx {
   void note_dim(uint16_t src);
   void hud_own_sync();     // P9E: the root's changes since own_mark become the open popup's (or nobody's)
   void hud_pieces_reset();  // P9E: a new frame picture: no popup pixels left (an open popup stays, owning nothing yet)
+  void hud_left_clear();    // P25C: no closed popup's pixels left (a terrain picture, the pieces' reset)
+  // P25C fix 2: with left_hide, pixel i (holding `word`) is one a closed popup left and nothing wrote since its close (marks = the
+  // write marks too; note_blend passes false: a blend primitive may mark the pixel it is blending before it records the blend)
+  bool hud_left_untouched(size_t i, uint16_t word, bool marks = true) const {
+    const HudCapture &c = hud;
+    if (!c.left_hide || !c.left_any || i >= c.left.size() || !c.left[i] || c.left_word[i] != word) return false;
+    return !(marks && c.wr_on && c.wr_gen.size() == c.left.size() && c.wr_gen[i] == c.gen);
+  }
   // a case the backend does not model (counted; the first occurrence of a reason is appended to `notes`)
   void unsup(const std::string &why);
   // the root surface, made at its first use (Window::create's size scaleX(0x140) x scaleX(0xf0))

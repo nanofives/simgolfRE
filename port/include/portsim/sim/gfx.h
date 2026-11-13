@@ -212,6 +212,13 @@ bool gfx_hud_modal(Ctx &ctx);
 // (GfxHudFrame::owner), and the frame publishes the pieces with their opener panel. Records only: nothing is drawn or written into
 // the GameState, the root or the back buffer. Off (the default, --hud-popups off): nothing recorded.
 void gfx_set_hud_popups(Ctx &ctx, bool on);
+// P25C fix 2 (log/roadmap/P25/P25C_notes.md, Mariano's option A, 2026-11-12): with gfx_set_hud_popups on, the root pixels a popup
+// left when it closed (the Information / System menu under the report or dialog an option opens: the original keeps them until the
+// next frame, dimmed by a report's dim) are not the next screen's while nothing writes them: the frame's centred layer leaves them out
+// and a whole-frame dim takes them as the frame beneath, so the course picture shows where the menu was. Before, they showed at the
+// menu's 800-space place, away from the anchored place the open menu had. Records only. Off (the default, the app's
+// --closed-popups keep): as the original leaves them.
+void gfx_set_hud_left_hide(Ctx &ctx, bool on);
 // P9E fix 2: the frame that closes a modal screen opened inside a panel layer (the hire dialog, drawEmployeeDetailPanel's
 // hireEmployee), set by the app's host after gfx_set_hud_modal. Its publishes inside the panel's scope arm the carry; when the
 // same frame opens another layer after the screen closed, P9D ended the carry there and took the root (dimmed, the dialog over it,
