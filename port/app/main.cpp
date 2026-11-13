@@ -1979,7 +1979,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     Point hc;  // P27C fix 1: a pass that kept this frame's picture at its cursor point: the game's own looks there
     if (session.take_hover_confirm(hover_index, hc)) presenter.hover_confirm(hc.x, hc.y);
     int32_t lx = 0, ly = 0, dx = 0;
-    if (!session.live_cursor(lx, ly, dx)) return;
+    if (!session.live_cursor(lx, ly, dx, true)) return;  // P27A fix 1: the panels' hover answer (a vacated place: none)
     if (presenter.hover_tick(lx, ly, vp)) {
       win.invalidate();
       ++hover_paints;

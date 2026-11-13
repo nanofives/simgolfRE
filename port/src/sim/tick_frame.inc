@@ -6156,7 +6156,9 @@ void P6_StatusBar(u32 F) {
     }
     StrCpy(kBuf, (GS(f_strpool_4c615c) + 80));                   // ML+0xa151..ML+0xa179
     cc("appendNumber", G32((GS(g_ui_56d1a8) + 8)));            // ML+0xa160 / ML+0xa17b appendNumber
+    io.cursor_site = kCursorSitePanels;                    // P27A fix 1: names the read for a live host (tick_hook.h); no effect here
     tc("View_toLocal", GS(g_rootWindow), FA(0xb8), FA(0xb0));   // ML+0xa198 View_toLocal
+    io.cursor_site = 0;
     if (gfx_meter_tips(ctx)) {  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips, drawing only, in the meters layer
         const uint32_t d[2] = {static_cast<uint32_t>(FD(0xb8)), static_cast<uint32_t>(FD(0xb0))};
         gfx_drop(ctx, "statusBar.tips", d, 2);

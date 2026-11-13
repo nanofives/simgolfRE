@@ -28,6 +28,11 @@ namespace portsim {
 // P8B: the site a live host receives with H1's cursor read (View_toLocal at ML+0xebb4, whose answer the edge scroll tests at
 // ML+0xebc4..ML+0xebe3): LiveHost::cursor_at. The value is mainLoop's offset of that call.
 constexpr int32_t kCursorSiteEdgeScroll = 0xebb4;
+// P27A fix 1: the HUD panels' hover read (View_toLocal at ML+0xa198 into F+0xb8 / F+0xb0): its answer goes only to the panels'
+// hover and tip tests (showMainRadialMenu, showInfoCursorPanel, drawBuildingPanel, drawEmployeeViewPanel, drawGolferActionPanel,
+// P22D's status-box tips) and to mode 5's pending-selection test, whose result does not depend on it. The course's cursor tile
+// comes from the next read (ML+0xa434, P6_Cursor). The value is mainLoop's offset of that call.
+constexpr int32_t kCursorSitePanels = 0xa198;
 
 namespace tk {
 struct LiveIo;  // roadmap S7.1 (port/src/sim/tick_hook.h)

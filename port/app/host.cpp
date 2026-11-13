@@ -1983,6 +1983,34 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
     }
   } flat_guard{*this, x, y};
   std::lock_guard<std::mutex> lk(mu_);
+  // P27A fix 1 (log/roadmap/P27/P27A_notes.md, class a): the HUD panels' hover read (kCursorSitePanels, P6_Panels' View_toLocal)
+  // of a point at a vacated place (PanelRemap::vacated: the window shows the course there, the panel was moved to the window's
+  // edge) answers a point of no HUD control, so a cursor over the course lights no button and opens no tip of the panel drawn at
+  // the edge. A press there takes the world path already (P9E fix 3); the course's own reads (P6_Cursor's tile, H1's edge
+  // scroll) keep the point.
+  if (panels_read_ && opt_.remap) {
+    bool raw = false;
+    int32_t rx = 0, ry = 0;
+    if (opt_.cursor == CursorSource::Message) {
+      raw = msg_raw_ok_;
+      rx = msg_raw_.x;
+      ry = msg_raw_.y;
+    } else if (hwnd_) {
+      POINT q = {0, 0};
+      GetCursorPos(&q);
+      ScreenToClient(static_cast<HWND>(hwnd_), &q);
+      raw = true;
+      rx = q.x;
+      ry = q.y;
+    }
+    if (raw && vacated_raw(rx, ry)) {
+      ++vacated_hover_reads_;
+      x = kVacatedHoverX;
+      y = kVacatedHoverY;
+      note_answer(Point{x, y});  // P10I fix 2: the frame's hover looks were made with this point
+      return;
+    }
+  }
   if (opt_.cursor == CursorSource::Message) {
     // P12A fix 1: H1's edge-scroll read takes the message's point without the camera slide's move (the window's own edges); any
     // other read takes the last message's client point through the remap at the read (as the system cursor's reads do), so a
@@ -2062,8 +2090,30 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
 }
 
 // P10E (host.h live_cursor): LiveSession::cursor's point without its effects (no remap answer handed on, no last_inside_, no counts)
-bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx) {
+bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx, bool hover) {
   std::lock_guard<std::mutex> lk(mu_);  // (the title menu's exit click, sim-thread state, has no tool preview to move)
+  if (hover && opt_.remap) {  // P27A fix 1: the panels' hover read's answer at a vacated place (LiveSession::cursor)
+    bool raw = false;
+    int32_t rx = 0, ry = 0;
+    if (opt_.cursor == CursorSource::Message) {
+      raw = msg_raw_ok_;
+      rx = msg_raw_.x;
+      ry = msg_raw_.y;
+    } else if (hwnd_) {
+      POINT q = {0, 0};
+      GetCursorPos(&q);
+      ScreenToClient(static_cast<HWND>(hwnd_), &q);
+      raw = true;
+      rx = q.x;
+      ry = q.y;
+    }
+    if (raw && vacated_raw(rx, ry)) {
+      x = kVacatedHoverX;
+      y = kVacatedHoverY;
+      dx = 0;
+      return true;
+    }
+  }
   if (opt_.cursor == CursorSource::Message && opt_.smooth_camera && opt_.remap && msg_raw_ok_) {
     // P12A fix 1: the last message's client point through the remap now (the slide moves the picture under a still cursor)
     int32_t rx = msg_raw_.x, ry = msg_raw_.y, slx = 0, sly = 0;
@@ -2112,8 +2162,9 @@ bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx) {
 // clamped to 1..0x31e; y is unchanged (the content rectangle has the client's full height in a wide window).
 void LiveSession::cursor_at(portsim::Ctx &ctx, bool modal, int32_t site, int32_t &x, int32_t &y) {
   edge_read_ = site == portsim::kCursorSiteEdgeScroll;  // P10E
+  panels_read_ = site == portsim::kCursorSitePanels;     // P27A fix 1
   cursor(ctx, modal, x, y);
-  edge_read_ = false;
+  edge_read_ = panels_read_ = false;
   if (!opt_.wide_edge || site != portsim::kCursorSiteEdgeScroll) return;
   Viewport vp;
   int32_t cw = 0;
@@ -2539,7 +2590,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   s += ",\"presents_band\":{\"extend\":" + std::to_string(presents_extend_) + ",\"black\":" + std::to_string(presents_black_) + ",\"world_map\":" + std::to_string(presents_map_) + ",\"map_reposts\":" + std::to_string(map_reposts_) + ",\"screen\":" + std::to_string(presents_screen_) + "}";  // P7, P13B item 18, P24F
   s += ",\"p8b\":{\"world\":" + std::to_string(opt_.world ? 1 : 0) + ",\"wide_edge\":" + std::to_string(opt_.wide_edge ? 1 : 0) +
        ",\"presents_world\":" + std::to_string(presents_world_) + ",\"presents_layered\":" + std::to_string(presents_layered_) + ",\"edge_reads\":" + std::to_string(edge_reads_) +
-       ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
+       ",\"edge_clamped\":" + std::to_string(edge_clamped_) + ",\"vacated_hover_reads\":" + std::to_string(vacated_hover_reads_) + ",\"wide\":" + std::to_string(opt_.wide ? 1 : 0) +
        ",\"view_writes\":" + std::to_string(view_writes_) + ",\"world_resizes\":" + std::to_string(world_resizes_) +
        ",\"view_width\":" + std::to_string(applied_w_) + ",\"hud_remapped\":" +
        std::to_string(opt_.remap ? opt_.remap->remapped() : 0) + "}";  // P8B / G32

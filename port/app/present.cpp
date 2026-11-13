@@ -1154,6 +1154,11 @@ void PanelRemap::set_slide(int32_t pic_dx, int32_t pic_dy, int32_t game_dx, int3
   game_dx_ = game_dx;
   game_dy_ = game_dy;
 }
+bool PanelRemap::vacated(int32_t x, int32_t y) const {  // P27A fix 1
+  bool v = false;
+  map_impl(x, y, v, false, 0);
+  return v;
+}
 uint64_t PanelRemap::slid() const {  // P12A fix 1
   std::lock_guard<std::mutex> lk(mu_);
   return slid_;

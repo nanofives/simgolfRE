@@ -291,7 +291,9 @@ class LiveSession : public portsim::LiveHost {
   // P10E: the cursor answer the sim's next cursor read would get (LiveSession::cursor's point, the same remap and logical
   // mapping), with nothing recorded or counted; false when that read would not take the live point (the edge guard's outside /
   // not-foreground answer). dx = the remap's client offset of the point.
-  bool live_cursor(int32_t &x, int32_t &y, int32_t &dx);
+  // P27A fix 1: hover = the HUD panels' hover read's answer (kCursorSitePanels: a vacated place answers kVacatedHoverX / Y), for the
+  // window's hover looks (P10I hover_tick); false = the course reads' point (the previews)
+  bool live_cursor(int32_t &x, int32_t &y, int32_t &dx, bool hover = false);
   // P10E (SG_P10E_LOG): the point of the sim's last cursor read that was not H1's edge-scroll read (site 0: P6_Cursor's
   // View_toLocal among them)
   // P10I fix 2: the 800-space point of the sim's first cursor read since the present before the frame last taken by take_frame
@@ -440,6 +442,12 @@ class LiveSession : public portsim::LiveHost {
   portsim::GfxTextFrame last_text_;  // P10B fix 1: the text runs published with last_presented_ (empty = none)
   Point last_inside_{400, 300};       // P5B item 1: the last cursor answer given inside the client area
   bool edge_read_ = false;            // P10E: cursor() runs for cursor_at's edge-scroll read (sim thread)
+  bool panels_read_ = false;          // P27A fix 1: cursor() runs for cursor_at's HUD panels' hover read (sim thread)
+  uint64_t vacated_hover_reads_ = 0;  // P27A fix 1: panels' reads answered kVacatedHoverX / Y (summary_json)
+  // P27A fix 1: the panels' hover answer at a vacated place: a point of no HUD control (left of and above the 800 x 600 frame; no
+  // panel hover test of the original takes a negative point)
+  static constexpr int32_t kVacatedHoverX = -1, kVacatedHoverY = -1;
+  bool vacated_raw(int32_t cx, int32_t cy) const { return opt_.remap && opt_.remap->vacated(cx, cy); }
   Point plain_answer_{0, 0};          // P10E: plain_answer()
   // P10I fix 2 (under mu_): the points the sim's last cursor read and its first read since the last present got
   Point last_answer_{-1, -1}, first_answer_{-1, -1};

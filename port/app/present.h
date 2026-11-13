@@ -146,6 +146,9 @@ class PanelRemap {
   void map_noslide(int32_t &x, int32_t &y) const;
   void peek(int32_t &x, int32_t &y, int32_t &slid_x, int32_t &slid_y) const;
   uint64_t slid() const;  // points moved by `map` (session.json)
+  // P27A fix 1: client point (x, y) is a vacated place (`map`'s vacated: no moved layer pixel under it, its 800-space point inside a
+  // moved layer's box): the window shows the course there while the game's tests would see the moved panel. Counts nothing.
+  bool vacated(int32_t x, int32_t y) const;
 
  private:
   // P10E; P12A: slide 0 = none, 1 = the game offset, 2 = the picture offset
