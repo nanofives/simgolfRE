@@ -1940,6 +1940,17 @@ void LiveSession::cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) 
       }
     }
   } title_guard{*this, x, y};
+  // P27C fix 2 (host.h set_flat_screen): on a flat screen a point in the side band answers (-1, -1) (runs before TitleGuard's)
+  struct FlatGuard {
+    LiveSession &s;
+    int32_t &x, &y;
+    ~FlatGuard() {
+      if (!s.edge_read_ && s.flat_screen_.load() && (x < 0 || y < 0 || x >= kLogicalW || y >= kLogicalH) && !(x == -1 && y == -1)) {
+        x = y = -1;
+        ++s.flat_answers_;
+      }
+    }
+  } flat_guard{*this, x, y};
   std::lock_guard<std::mutex> lk(mu_);
   if (opt_.cursor == CursorSource::Message) {
     // P12A fix 1: H1's edge-scroll read takes the message's point without the camera slide's move (the window's own edges); any
@@ -2484,7 +2495,8 @@ std::string LiveSession::summary_json(const Result &r) const {
          ",\"frame\":" + std::to_string(lr.frame) + "}";
   }
   s += "]";
-  s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_) + ",\"title_unguarded_reads\":" + std::to_string(title_unguarded_);
+  s += ",\"edge_guard\":" + std::to_string(opt_.edge_guard ? 1 : 0) + ",\"guarded_cursor_reads\":" + std::to_string(guarded_reads_) + ",\"title_unguarded_reads\":" + std::to_string(title_unguarded_) +
+       ",\"flat_band_answers\":" + std::to_string(flat_answers_);  // P27C fix 2
   s += ",\"presents\":" + std::to_string(presents_.size()) + ",\"idle_passes\":" + std::to_string(idle_passes_);
   s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made_[0]) + ",\"w\":" + std::to_string(made_[1]) +
        ",\"m\":" + std::to_string(made_[2]) + ",\"p\":" + std::to_string(made_[3]) + "}";

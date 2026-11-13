@@ -296,6 +296,10 @@ class LiveSession : public portsim::LiveHost {
   // P10I fix 2: the 800-space point of the sim's first cursor read since the present before the frame last taken by take_frame
   // (the frame's hover tests read it; its last read when none came; (-1, -1) before any read). Window thread, after take_frame.
   Point frame_cursor() const { return taken_cursor_; }
+  // P27C fix 2: the window's shown frame is a flat screen (Presenter::flat_now, set after each take_frame). Then a cursor answer
+  // outside the 800 x 600 content (a side band) becomes (-1, -1), a point no flat screen's hit test takes: in the original no
+  // point past the screen's edge exists. H1's edge-scroll read (cursor_at) keeps its point.
+  void set_flat_screen(bool f) { flat_screen_.store(f); }
   // P27C fix 1: the cursor point of the sim's latest present that left the picture unchanged (present_point returned at an equal
   // frame), once per such present and only while `index` is the index of the frame that picture is (the window's last take_frame):
   // the game read that point and kept the frame's looks. Window thread.
@@ -409,6 +413,8 @@ class LiveSession : public portsim::LiveHost {
   // P6B item 1 (request_close): title_seen_ the title menu's loop ran since the last frame head; exit_req_ a close press there
   // (window thread), exiting_ the menu took its exit (sim thread); exit_esc_ Esc keys posted to end the credits
   std::atomic<bool> title_seen_{false}, exit_req_{false};
+  std::atomic<bool> flat_screen_{false};  // P27C fix 2 (set_flat_screen)
+  uint64_t flat_answers_ = 0;             // P27C fix 2: cursor answers moved off a flat screen's side band (sim thread)
   std::atomic<uint64_t> rpoint_seq_{0}, title_mark_{~0ull - 1};  // P24D: present_point calls; their count at title_menu_overlay
   std::atomic<uint32_t> exit_req_ms_{0};
   bool exiting_ = false, exit_arm_ = false;

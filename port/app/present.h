@@ -504,6 +504,9 @@ class Presenter {
   // whole box of a look seen only inside the control) stayed on screen at points the game's hit test rejects: on a modal screen
   // a pass that changes nothing makes no present, so nothing corrected it.
   bool hover_confirm(int32_t cx, int32_t cy);
+  // P27C fix 2: the frame shown is a flat screen (no world, so no layers: the title menu and the full-screen modal screens; the
+  // same frames flat_remap_clear clears the click remap for)
+  bool flat_now() const { return !frame_.empty() && world_.empty(); }
   HoverStats hover_stats() const;
   // P7: the side-band fill (Off = black bands, the pre-P7 behaviour)
   void set_wide(WideFill w) { wide_ = w; }

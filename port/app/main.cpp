@@ -1715,6 +1715,9 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   if (lang_ui().available.load())  // P24D: the title menu's language selector takes its own clicks (lang_ui.h)
     wo.on_mouse = [&session](uint32_t msg, int32_t x, int32_t y) { return session.at_title() && lang_ui().mouse(msg, x, y); };
+  // P27C fix 2 (window thread: the presenter's frame); negative control --negctl p27c-band-clicks: the side bands answer as before
+  const bool band_guard = o.negctl != "p27c-band-clicks";
+  if (band_guard) wo.flat_frame = [&presenter]() { return presenter.flat_now(); };
   {  // P19A item 1: the focus-loss key-up only when the profile turns mainLoop.arrowKeyHeldRepeat on (0)
     const int d = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");
     wo.release_arrow_on_blur = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
@@ -2086,6 +2089,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
           if (wl_scope.on) winlog_event('R', wl_s0, wl_kc);
         }
         else presenter.set_frame(px, band);  // P7: the band hint (used only with --wide)
+        session.set_flat_screen(band_guard && presenter.flat_now());  // P27C fix 2: the cursor answers follow the shown frame's kind
         {
           const int64_t wl_x0 = wl_scope.on ? portsim::perf_now_ns() : 0;  // P16A: X text, L slide
           const uint64_t wl_xc = wl_scope.on ? winlog_cycles() : 0;
@@ -2186,7 +2190,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"idle_ms\":" + std::to_string(o.idle_ms) + ",\"pass_ms\":" + std::to_string(o.pass_ms) + ",\"cursor\":\"" + o.cursor + "\"";
   s += ",\"keys\":\"" + o.keys + "\",\"clock_origin\":" + std::to_string(o.clock_origin);
   s += ",\"p5b\":{\"edge_guard\":" + std::to_string(o.edge_guard ? 1 : 0) + ",\"zoom_keys\":\"" + o.zoom_keys +  // P5B
-       "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
+       "\",\"zoom_remaps\":" + std::to_string(win.zoom_remaps()) + ",\"flat_drops\":" + std::to_string(win.flat_drops()) + ",\"close_prompt\":" + std::to_string(o.close_prompt ? 1 : 0) +
        ",\"resizable\":" + std::to_string(o.resizable ? 1 : 0) + ",\"scale\":\"" + o.scale + "\"}";
   s += ",\"p7\":{\"wide\":" + std::to_string(o.wide ? 1 : 0) + ",\"wide_width\":" + std::to_string(o.wide_width) +
        ",\"wide_fill\":\"" + o.wide_fill + "\"}";  // P7

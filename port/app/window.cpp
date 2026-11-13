@@ -390,6 +390,14 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
       return 0;
     }
   }
+  // P27C fix 2 (WindowOptions::flat_frame): a press / release / double-click in a flat screen's side band reaches no game handler
+  if (opt_.flat_frame && msg >= WM_LBUTTONDOWN && msg <= WM_MBUTTONDBLCLK && opt_.flat_frame()) {
+    const Point p = Translator(viewport()).lparam_point(static_cast<uint32_t>(lp));
+    if (p.x < 0 || p.y < 0 || p.x >= kLogicalW || p.y >= kLogicalH) {
+      ++flat_drops_;
+      return 0;
+    }
+  }
   if (is_input(msg)) {
     input(msg, static_cast<uint32_t>(wp), static_cast<uint32_t>(lp));
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) return DefWindowProcW(h, msg, wp, lp);  // Alt+F4

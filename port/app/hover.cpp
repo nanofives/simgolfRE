@@ -502,7 +502,10 @@ bool Presenter::hover_tick(int32_t cx, int32_t cy, const Viewport &vp) {
   portsim::GfxHudFrame *F = lay ? (text && text_layered_ok_ ? &hud_text_ : &world_.hud) : nullptr;
   std::vector<uint16_t> *flat = !lay ? (text && text_defect_ != TextDefect::Unremoved ? &text_.clean : &frame_) : nullptr;
   bool changed = false;
-  const bool at_frame = cx == M.fcx && cy == M.fcy;
+  // P27C fix 2: on a flat screen a point past the 800 x 600 content answers no control (LiveSession's band guard gives the game
+  // (-1, -1) there), so every control shows the frame's own look, as at the frame's point
+  const bool off = !lay && (cx < 0 || cy < 0 || cx >= kLogicalW || cy >= kLogicalH) && defect_ != PresentDefect::HoverUnconfirmed;
+  const bool at_frame = (cx == M.fcx && cy == M.fcy) || off;
   for (Control &c : M.controls) {
     if (c.cur < 0) continue;
     int32_t want = c.cur;
