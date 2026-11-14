@@ -7,7 +7,8 @@ in this script: the rectangles and the words come from lang\\art_es.tsv.
     ~/bin/py -3.12 scripts/lang/redraw_art.py [--install original] [--spec lang/art_es.tsv] [--out lang/es] [--preview <dir>]
 
 lang\\art_es.tsv rows: `image<TAB>x,y,w,h<TAB>text[<TAB>options]` (UTF-8; image relative to the install; options `size=N`,
-`font=manu|klepto`, `pad=N`, `color=r,g,b`). Per rectangle: each row of the plate is refilled with the colour of its text-free
+`font=manu|klepto`, `pad=N`, `color=r,g,b`, `alpha=<mask image>`: P30A, the image's alpha mask is written too, each such rectangle
+redrawn from the new letters' coverage; see write_alpha). Per rectangle: each row of the plate is refilled with the colour of its text-free
 end columns (the plates are horizontal gradients), then the text is drawn centred in the colour of the darkest pixels the
 English had (or `color=`), shrunk until it fits. The image keeps its palette (8-bit PCX: every pixel mapped back to the nearest
 palette entry), size and format."""
@@ -17,7 +18,7 @@ import argparse
 import pathlib
 import sys
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 FONTS = {"manu": "manu3_.TTF", "klepto": "KLEPTO__.TTF"}
@@ -51,7 +52,9 @@ def plates(im: Image.Image, min_w: int = 60, min_h: int = 8, max_h: int = 24):
     return found
 
 
-def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path, info: list | None = None) -> Image.Image:
+def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path, info: list | None = None,
+           cover: Image.Image | None = None) -> Image.Image:
+    """`cover` (an "L" image of im's size, P30A): the drawn letters' coverage (0..255) is written into it, inside the rectangle."""
     x, y, w, h = rect
     rgb = im.convert("RGB")
     px = rgb.load()
@@ -158,6 +161,11 @@ def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path,
                 d.text((tx + k + 1, ty + 1), s, font=f, fill=sc)
         for k in range(1 + bold):  # bold=1: drawn twice, one pixel apart (the plates' heavy capitals)
             d.text((tx + k, ty), s, font=f, fill=col)
+            if cover is not None and not rot:  # P30A: the same letters' coverage, for the alpha mask (alpha=)
+                lay = Image.new("L", cover.size, 0)
+                ImageDraw.Draw(lay).text((tx + k, ty), s, font=f, fill=255)
+                box = (x, y, x + w, y + h)
+                cover.paste(ImageChops.lighter(cover.crop(box), lay.crop(box)), box)
         if info is not None and not rot:  # P26C (--sharp): the line as a text run: its ink box, pen origin, baseline, size
             l2, t2, r2, b2 = d.textbbox((tx, ty), s, font=f)
             info.append({"box": (l2, t2, r2 + bold, b2), "x": tx, "base": ty + f.getmetrics()[0], "size": size,
@@ -172,6 +180,37 @@ def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path,
         out.info.update(im.info)
         return out
     return rgb
+
+
+def write_alpha(mask: Image.Image, cover: Image.Image, rects) -> Image.Image:
+    """P30A (log/roadmap/P30/P30A_notes.md, item 1): the mask image with each rectangle redrawn from the Spanish letters' coverage.
+    The board's blit (Surface_stretchBlit) leaves a pixel alone where the mask's index k is 0xff and elsewhere writes
+    d * k / 256 + s, so a mask is the letters' alpha (k = 255 - coverage, 0 under full ink) over the colour image's letters
+    premultiplied on black. Every pixel of a rectangle without ink becomes 0xff (the English strokes go)."""
+    out = mask.copy()
+    mp, cp = out.load(), cover.load()
+    for x, y, w, h in rects:
+        for yy in range(y, y + h):
+            for xx in range(x, x + w):
+                c = cp[xx, yy]
+                mp[xx, yy] = 0xFF if c == 0 else min(0xFE, 0xFF - c)
+    out.info.update(mask.info)
+    return out
+
+
+def keep_partial(im: Image.Image, orig: Image.Image, mask: Image.Image, rect) -> Image.Image:
+    """P30A: inside rect, the install's pixel wherever the mask is not fully opaque (index k != 0). The board's blit writes
+    d * k / 256 + s there, so a redrawn (brighter) s over a partly transparent rim overflows a 5-bit channel into the next one
+    (the blue dashes around the note's heading); only the opaque pixels may change."""
+    out = im.copy()
+    op, rp, mp = out.load(), orig.load(), mask.load()
+    x, y, w, h = rect
+    for yy in range(y, y + h):
+        for xx in range(x, x + w):
+            if mp[xx, yy] != 0:
+                op[xx, yy] = rp[xx, yy]
+    out.info.update(im.info)
+    return out
 
 
 def main() -> int:
@@ -204,10 +243,14 @@ def main() -> int:
     if a.sharp:
         for img, items in rows.items():
             im, blank, runs = Image.open(inst / img), Image.open(inst / img), []
+            orig = im.copy()
             for rect, text, opts in items:
                 info = []
                 im = redraw(im, rect, text, opts, inst, info)
                 blank = redraw(blank, rect, text if float(opts.get("rot", 0)) else "~", opts, inst)
+                if "opaque" in opts:  # P30A (keep_partial)
+                    msk = Image.open(inst / opts["opaque"])
+                    im, blank = keep_partial(im, orig, msk, rect), keep_partial(blank, orig, msk, rect)
                 runs += info
             src = pathlib.Path(img)
             dst = pathlib.Path(a.out) / src.parent / (src.stem + ".blank" + src.suffix)
@@ -222,11 +265,24 @@ def main() -> int:
         return 0
     for img, items in rows.items():
         im = Image.open(inst / img)
+        masks = {}  # P30A: alpha=<mask image> -> (the install's mask, the letters' coverage, the rectangles)
+        orig = im.copy()
         for rect, text, opts in items:
-            im = redraw(im, rect, text, opts, inst)
+            cover = None
+            if "alpha" in opts:
+                m = masks.setdefault(opts["alpha"], [Image.open(inst / opts["alpha"]), Image.new("L", im.size, 0), []])
+                cover = m[1]
+                m[2].append(rect)
+            im = redraw(im, rect, text, opts, inst, cover=cover)
+            if "opaque" in opts:
+                im = keep_partial(im, orig, Image.open(inst / opts["opaque"]), rect)
         dst = pathlib.Path(a.out) / img
         dst.parent.mkdir(parents=True, exist_ok=True)
         im.save(dst)
+        for mname, (mask, cover, rects) in masks.items():
+            mdst = pathlib.Path(a.out) / mname
+            write_alpha(mask, cover, rects).save(mdst)
+            print(f"{img}: alpha mask of {len(rects)} rows -> {mdst}")
         if a.preview:
             pv = pathlib.Path(a.preview)
             pv.mkdir(parents=True, exist_ok=True)
