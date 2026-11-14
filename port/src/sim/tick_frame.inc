@@ -412,6 +412,8 @@ bool ML_T(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_type) && p28_off(x,
 bool ML_F(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_no_flags) && p28_off(x, y); }
 bool P1_offT(int d, int ebp, int ebx) { return ML_T(P1_t78(d) + ebp, P1_t98(d) + ebx); }
 bool P1_offF(int d, int ebp, int ebx) { return ML_F(P1_t78(d) + ebp, P1_t98(d) + ebx); }
+// P28A fix 2: g_tileWallMask of neighbour d; under mainLoop.edgeNeighbourNoFlags at 0 an outside cell's mask is 0 (no read)
+int P1_wm(int d, int ebp, int ebx) { return P1_offF(d, ebp, ebx) ? 0 : G8(GS(g_tileWallMask) + P1_nb(d, ebp, ebx)); }
 
 // ---- ML+0x108e..ML+0x11fe: grid overlay (flag 2 of g_flags, g_ui_542f20 != 3): two edges of the cell as
 // rectangles on the Widget g_rootWindow+0x274, and with flag 0x20 the cell's g_tileLevel byte as a number.
@@ -445,7 +447,7 @@ void P1_t11_4109fb(u32 F, int ebp, int ebx) {
     int r = cc("cornerHeights", P1_t78(eax) + ebp, P1_t98(eax) + ebx, ecx, 0);         // ML+0x1484 cornerHeights
     eax = cc("clamp", r, 0, 0xa);                                               // ML+0x148d clamp
     ecx = G32(GS(g_cameraRot)) & 7;                                                     // ML+0x1492
-    if (FD(0x90) & G8(GS(g_tileWallMask) + P1_nb(ecx, ebp, ebx))) esi = 2;                 // ML+0x14c8
+    if (FD(0x90) & P1_wm(ecx, ebp, ebx)) esi = 2;                                       // ML+0x14c8 (P28A: 0 outside)
     if (FD(0x84) & G8(GS(g_tileWallMask) + FD(0x14))) esi = 4;                             // ML+0x14e1
     if (eax > edi) {                                                               // ML+0x14ea
         int edx = FD(0x44) - FD(0x40);
@@ -457,7 +459,7 @@ void P1_t11_4109fb(u32 F, int ebp, int ebx) {
     // ML+0x1545
     ecx = (G32(GS(g_cameraRot)) + 3) & 7;
     if (FD(0xb4) & G8(GS(g_tileWallMask) + FD(0x14))) return;                              // ML+0x1564 -> ML+0x161e
-    if ((FD(0x84) & G8(GS(g_tileWallMask) + P1_nb(ecx, ebp, ebx))) == 0) return;           // ML+0x1594
+    if ((FD(0x84) & P1_wm(ecx, ebp, ebx)) == 0) return;                                 // ML+0x1594 (P28A: 0 outside)
     ecx = G32(GS(g_cameraRot));                                                         // ML+0x159a
     eax = (ecx + 2) & 7;
     ecx = (ecx - 3) & 7;
@@ -481,7 +483,7 @@ void P1_t11_410bde(u32 F, int ebp, int ebx) {
     int r = cc("cornerHeights", P1_t78(eax) + ebp, P1_t98(eax) + ebx, ecx, 0);         // ML+0x168a cornerHeights
     eax = cc("clamp", r, 0, 0xa);                                               // ML+0x1693 clamp
     ecx = (G32(GS(g_cameraRot)) - 2) & 7;                                               // ML+0x1698
-    if (FD(0x84) & G8(GS(g_tileWallMask) + P1_nb(ecx, ebp, ebx))) esi = 5;                 // ML+0x16d1
+    if (FD(0x84) & P1_wm(ecx, ebp, ebx)) esi = 5;                                       // ML+0x16d1 (P28A: 0 outside)
     if (FD(0x90) & G8(GS(g_tileWallMask) + FD(0x14))) eax = 0;                             // ML+0x16ec
     if (esi != 0 && eax > edi) {                                                   // ML+0x16f2, ML+0x16f6
         ecx = G8(GS(g_courseType)) * 8 - edi + eax;
@@ -491,7 +493,7 @@ void P1_t11_410bde(u32 F, int ebp, int ebx) {
     }
     // ML+0x1753
     eax = (2 - G32(GS(g_cameraRot))) & 7;
-    if (FD(0x84) & G8(GS(g_tileWallMask) + P1_nb(eax, ebp, ebx))) return;                  // ML+0x178d -> ML+0x1814
+    if (FD(0x84) & P1_wm(eax, ebp, ebx)) return;                                        // ML+0x178d -> ML+0x1814 (P28A: 0 outside)
     ecx = G32(GS(g_cameraRot));                                                         // ML+0x1793
     eax = ecx & 7;
     ecx = (ecx + 3) & 7;
@@ -507,7 +509,7 @@ void P1_t11_410dd4(u32 F, int ebp, int ebx) {
     int ecx = (G32(GS(g_cameraRot)) - 1) & 7;                                           // ML+0x181d
     int eax = G8(GS(g_tileWallMask) + FD(0x14));                                           // ML+0x1820
     if ((eax & FD(0xcc)) == 0) return;                                             // ML+0x1833 -> ML+0x18e4
-    if ((G8(GS(g_tileWallMask) + P1_nb(ecx, ebp, ebx)) & FD(0xb4)) == 0) return;           // ML+0x1863
+    if ((P1_wm(ecx, ebp, ebx) & FD(0xb4)) == 0) return;                                 // ML+0x1863 (P28A: 0 outside)
     ecx = G32(GS(g_cameraRot));                                                         // ML+0x1865
     eax = (ecx - 2) & 7;
     ecx = (ecx + 1) & 7;

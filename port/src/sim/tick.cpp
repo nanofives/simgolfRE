@@ -132,8 +132,10 @@ int g_defect_golfer_edge_type = 1;
 // (tileBlocked / typeAtPos, which mainLoop itself calls to skip outside neighbours elsewhere), so no class test passes there.
 int g_defect_ml_edge_type = 1;
 // mainLoop.edgeNeighbourNoFlags: the path-sprite neighbour mask and its (x - 1, y - 1) test (flag 1 << 12), the object kind 2
-// mask (flag 1 << 12) and the flag-0x20 neighbour masks read tile_flags by index with no grid test. Fixed (0): a cell outside the
-// grid has no flags (it does not exist), so a path ends at the map edge. Orchestrator's choice (class b), vetoable alone.
+// mask (flag 1 << 12) and the flag-0x20 neighbour masks read tile_flags by index with no grid test, and the type-0x11 side
+// sprites read a neighbour's g_tileWallMask the same way. Fixed (0): a cell outside the grid has no flags and a wall mask of 0
+// (it does not exist; calcTileWallMask writes masks for inside cells only), so a path ends at the map edge. Orchestrator's
+// choice (class b), vetoable alone, not derived from the code.
 int g_defect_ml_edge_no_flags = 1;
 // true when tile (x, y) is outside the 50 x 50 grid (the P28A switches above)
 inline bool p28_off(int x, int y) { return x < 0 || x >= 50 || y < 0 || y >= 50; }
@@ -2238,8 +2240,9 @@ const DefectDef kDefects[] = {
      "mainLoop's neighbour type tests (water decoration and side sprites, hole points, the edit's neighbour flag write) read "
      "tile_type with no grid test; fixed: a neighbour outside the grid has type 0x14", &g_defect_ml_edge_type},
     {"mainLoop.edgeNeighbourNoFlags", "model_defects#5",
-     "the path, object kind 2 and flag-0x20 neighbour masks read tile_flags with no grid test; fixed: a cell outside the grid "
-     "has no flags (orchestrator's choice)", &g_defect_ml_edge_no_flags},
+     "the path, object kind 2 and flag-0x20 neighbour masks read tile_flags, and the water side sprites read a neighbour's wall "
+     "mask, with no grid test; fixed: a cell outside the grid has no flags and a wall mask of 0 (orchestrator's choice)",
+     &g_defect_ml_edge_no_flags},
     {"updateGolfers.partnerWaitBlocksTee", "P20A",
      "a golfer holds its shot while a golfer of its hole with more strokes stands near the tee, also one that already played and "
      "only waits there for its partner, whose own shot is held by the group ahead: they wait for each other for good; fixed: a "
