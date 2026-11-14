@@ -8644,7 +8644,10 @@ a41e400:
     FD(0x28) = -eax;                                   // ML+0xee8e neg eax; mov [F+0x28],eax
     goto a41c54e;                                      // ML+0xee94
 a41e459:
-    if (ecx <= 0x1E0) goto a41e4b8;                    // ML+0xee99 cmp ecx,0x1e0; jle (signed)
+    // P27A fix 4 (mainLoop.panelTopRowsToWorld = 0): a press in the panel art's top rows (0x1da..0x1e0) that the open panel's own
+    // hit test claims goes to the panel, as a lower one does
+    if (ecx <= 0x1E0 &&                               // ML+0xee99 cmp ecx,0x1e0; jle (signed)
+        (SG_DEFECT(g_defect_panel_top_rows) || ecx < 0x1DA || !panel_claims_press(ctx, eax, ecx))) goto a41e4b8;
     edx = G32(GS(g_panelListMode));                             // ML+0xeea1
     if (edx == ebp) goto a41eab0;                      // ML+0xeea7 cmp edx,ebp; je
     if (edx == ebx) goto a41ec8b;                      // ML+0xeeaf cmp edx,ebx; je
@@ -10071,7 +10074,20 @@ int Ph_0041ecbb(u32 F, const int* in) {
     }
     // ML+0xfd35
     if (cc("tileBlocked", FD(0x1c), FD(0x24)) != 0) return kFrame;   // ML+0xfd3f tileBlocked / ML+0xfd49
-    if (GU8(GS(g_ui_569498)) != 0) {                       // ML+0xfd4f / ML+0xfd56
+    if (GU8(GS(g_ui_569498)) != 0 && !SG_DEFECT(g_defect_msg_dismiss_band)) {
+        // P27A fix 6 (mainLoop.messageDismissBand = 0): the press dismisses the message only on its drawn frame. tickMessage draws it
+        // with drawWindow(0xf0, -8, ..): drawWindowFrame(x - 8, y - 8, 0x1a0, h), h = H + 0x10 settled, (H * step) / 4 while the
+        // slide counter unk_005a9ccc is below 3; with a golfer or picture (f_w_4c2e00 + 8 != -1) the window moves by (0x1c, 0x2c)
+        const int px = G32((GS(g_rootInput) + 8)), py = G32((GS(g_rootInput) + 12));
+        const bool pic = G32((GS(f_w_4c2e00) + 8)) != -1;
+        const int H = G32(GS(g_value587ea0)), step = G32(GS(unk_005a9ccc));
+        const int fx0 = 0xf0 - 8 + (pic ? 0x1c : 0), fy0 = -8 - 8 + (pic ? 0x2c : 0);
+        const int fh = !pic && step < 3 ? (H * step) / 4 : H + 0x10;
+        if (px >= fx0 && px < fx0 + 0x1a0 && py >= fy0 && py < fy0 + fh) {
+            G8(GS(g_ui_569498)) = 0;
+            return kFrame;
+        }
+    } else if (GU8(GS(g_ui_569498)) != 0) {                // ML+0xfd4f / ML+0xfd56
         if (G32((GS(g_rootInput) + 12)) < G32(GS(g_value587ea0)) + 8) {  // ML+0xfd58..ML+0xfd68
             int d = G32((GS(g_rootInput) + 8)) - 0x190;          // ML+0xfd6a / ML+0xfd70
             u32 s = (u32)(d >> 31);                   // ML+0xfd76 cdq

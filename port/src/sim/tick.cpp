@@ -98,6 +98,18 @@ int g_defect_title_hotspot_range = 1;
 // vacated place (bridge.h view_click_vacated, view block word +4) takes the world path; with the word 0 (the original's window,
 // every replay without it) nothing changes.
 int g_defect_vacated_click = 1;
+// mainLoop.panelTopRowsToWorld (P27A fix 4, the UI audit's class (c) item 3, log/roadmap/P27/P27A_notes.md section 10): the frame's
+// click dispatch hands a press at x >= 0xc8 to the open panel only below y 0x1e0 (ML+0xee99), but the panel art starts at y 0x1da and
+// the panels' hover tests (the same hit tests) light the buttons whose top reaches into rows 0x1da..0x1e0 (the golfer panel's and
+// the staff panel's Golfers button, the list's -2 / -3 buttons, the Build palette's improvement and close buttons): a press there
+// lights the button and acts on the course instead. Fixed (0): a press at y 0x1da..0x1e0, x >= 0xc8, that the open panel's own hit
+// test claims (commands.h panel_claims_press) goes to the panel handler as one below 0x1e0 does.
+int g_defect_panel_top_rows = 1;
+// mainLoop.messageDismissBand (P27A fix 6, class (c) item 7): a press dismisses the message window when y < g_value587ea0 + 8 and
+// |x - 0x190| < 0xc8 (ML+0xfd58..ML+0xfd80: x 0xc9..0x257), while tickMessage draws the window's frame at x 0xe8..0x287 (0x104..0x2a3
+// with a golfer or picture, which also moves it 0x2c down): a press on the frame's right part acts on the course and one left of
+// it, over the course, dismisses. Fixed (0): the press dismisses only on the drawn frame (fix 6's block in tick_frame.inc).
+int g_defect_msg_dismiss_band = 1;
 // mainLoop.cameraFollowOffGrid (P6A, 2026-11-03, Mariano's play-test): the camera tile pair gCameraTileX / gCameraTileY is
 // clamped to 0..0x31 only by the key and edge-pan cases of H1 (ML+0xe971..ML+0xea73, ML+0xec6b..ML+0xec89); the writers that
 // copy a golfer's, walker's, ball's or photo's world position >> 10 (P7 ML+0xbf38, H2 ML+0xf17c / ML+0xf994, updateGolfers'
@@ -2188,6 +2200,14 @@ const DefectDef kDefects[] = {
      "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "
      "world path",
      &g_defect_vacated_click},
+    {"mainLoop.panelTopRowsToWorld", "P27A",
+     "a press at x >= 0xc8 between y 0x1da (the panels' art top) and 0x1e0 takes the world path although the open panel's hit test "
+     "lights a button there (its top rows); fixed: such a press that the panel's own hit test claims goes to the panel handler",
+     &g_defect_panel_top_rows},
+    {"mainLoop.messageDismissBand", "P27A",
+     "a press dismisses the message window over the band x 0xc9..0x257 above its bottom while the window's frame is drawn at "
+     "x 0xe8..0x287 (0x104..0x2a3 and 0x2c lower with a golfer or picture); fixed: only a press on the drawn frame dismisses it",
+     &g_defect_msg_dismiss_band},
     {"mainLoop.cameraFollowOffGrid", "P6A",
      "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
      "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",

@@ -161,6 +161,10 @@ InputSource *input_source(Ctx &ctx);                 // or nullptr
 // (onKey / onChar)
 bool is_stop_handler(uint32_t handler);
 
+// P27A fix 4 (mainLoop.panelTopRowsToWorld): the open panel's own hit test (the one its click handler runs) answers a control at
+// (x, y); pure
+bool panel_claims_press(Ctx &ctx, int32_t x, int32_t y);
+
 // TEXT METRICS (U-0944). showPopup's option band and close button and textInputBox's width cut depend on Text_put widths:
 // Text_put runs drawMarkupRun over the draw context's style fonts, and the font measures with jgld's Font::textWidth,
 // which is GDI GetTextExtentPoint32A on a font made by CreateFontIndirectA from the game's own font file

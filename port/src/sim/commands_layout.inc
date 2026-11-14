@@ -28,8 +28,9 @@ int32_t amenity_row_hit(Ctx &, int32_t p1, int32_t p2, int32_t p3, int32_t p7, i
 
 // drawAmenitiesPanel (a, b): for the active amenity tool f_w_4c2848[3] in 1, 4 (with g_amenityUnlockMask set),
 // 0x13, 2, 0x10 (checked in that order; none of the steps changes the tool) the row under (a, b) becomes g_panelState[0]
-int32_t draw_amenities_panel(Ctx &ctx, int32_t a, int32_t b) {
-  GameState &gs = ctx.gs();
+// the row item under (a, b) for the active amenity tool (drawAmenitiesPanel's test, nothing written; P27A fix 7 shares it)
+int32_t amenity_row_at(Ctx &ctx, int32_t a, int32_t b) {
+  const GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_amenities_panel);
   const int32_t m = gs.f_w_4c2848[3];
   int32_t r = -1;
@@ -38,7 +39,11 @@ int32_t draw_amenities_panel(Ctx &ctx, int32_t a, int32_t b) {
   else if (m == 0x13) r = amenity_row_hit(ctx, -0x10, 0x226, 8, a, b, 0);
   else if (m == 2) r = amenity_row_hit(ctx, 0xd, 0x1a3, mode == 1 ? 6 : 5, a, b, 0);
   else if (m == 0x10) r = amenity_row_hit(ctx, 0x64, 0x12f, 7, a, b, 0);
-  if (r != -1) gs.g_panelState[0] = r;
+  return r;
+}
+int32_t draw_amenities_panel(Ctx &ctx, int32_t a, int32_t b) {
+  const int32_t r = amenity_row_at(ctx, a, b);
+  if (r != -1) ctx.gs().g_panelState[0] = r;
   return 0;
 }
 

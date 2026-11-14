@@ -26,6 +26,21 @@ namespace portsim {
 
 extern int g_defect_undo_button_help;  // tick.cpp mainLoop.undoButtonHelpOnly (P13A; commands_panels.inc undo_button)
 extern int g_defect_arrow_held_repeat;  // tick.cpp mainLoop.arrowKeyHeldRepeat (P19A item 1)
+extern int g_defect_shot_lie_mixed_tile;  // tick.cpp mainLoop.shotButtonsReadBallTile (P22B: the tile the shot buttons' grey reads)
+// hitGolferPanel.shotButtonsAsDrawn (P27A fix 5, the UI audit's class (c) item 6, log/roadmap/P27/P27A_notes.md section 10):
+// hitGolferPanel435f00 answers the five shot buttons (4..8) only in panel mode 3 (hitGolferPanel435f00+0x80 cmp [g_panelListMode], 3), while
+// drawGolferActionPanel draws them in modes 3 and 4 alike (its only g_panelListMode test, drawGolferActionPanel+0xe, hands the detail panel over)
+// whenever a player golfer is set and not in a match, and greys buttons 5..7 (Fade, Draw, High backspin) when the lie class of the
+// ball's tile is above 0 (P22B's tile): a greyed button still set its style on a press and lit on hover, and a live-looking button
+// in mode 4 took no press. Also clickGolferPanel hands every press to the staff detail panel while g_ui_561254 is set, though the
+// golfer panel is what mode 3 draws then. Fixed (0): the shot buttons answer where they are drawn live (modes 3 and 4 with a player
+// golfer out of a match, never a greyed button), and a mode-3 press answers the golfer panel drawn.
+int g_defect_shot_buttons_as_drawn = 1;
+// clickAmenityPanel.blankPressPicksHovered (P27A fix 7, class (c) item 9): drawAmenitiesPanel's hover pass stores the row item under
+// the cursor in g_panelState[0] each frame and never clears it, and clickAmenityPanel's press on no hotspot (pickAmenity434980 -1)
+// commits g_panelState[0] for the row tools (amenity_action's fall-through), so a press on blank palette space picks the item last
+// hovered. Fixed (0): such a press commits only when the row has an item under the press point; elsewhere nothing changes.
+int g_defect_blank_press_picks = 1;
 
 namespace {
 // Negative controls: mode 0 is the correct body.
@@ -773,6 +788,16 @@ const FuncDef kFuncs[] = {
 #undef XY
 
 const DefectDef kDefects[] = {
+    {"hitGolferPanel.shotButtonsAsDrawn", "P27A",
+     "the shot buttons answer only in panel mode 3 (hitGolferPanel435f00) though drawGolferActionPanel draws them in modes 3 and 4, "
+     "and a greyed Fade / Draw / High backspin (lie class above 0) still sets its style and lights; fixed: they answer where they "
+     "are drawn live (modes 3 and 4, a player golfer out of a match), a greyed one takes no press, and a mode-3 press answers the "
+     "golfer panel drawn although the staff detail flag (g_ui_561254) is set (clickGolferPanel handed it to handleEmployeeAction)",
+     &g_defect_shot_buttons_as_drawn},
+    {"clickAmenityPanel.blankPressPicksHovered", "P27A",
+     "a press on the amenities palette that hits no hotspot commits the row item last hovered (g_panelState[0], never cleared), "
+     "wherever the press is; fixed: it commits only an item under the press",
+     &g_defect_blank_press_picks},
     {"showFinancialReport.sumWriteBack", "model_defects#24",
      "the report writes each drawn year row's column sum back into the row's entry 8 (+0x10)", &g_defect_finance_sum_write_back},
     {"courseActionMenu.escIgnored", "P9A", "the world map ignores Esc; fixed: Esc acts as its Back button",
@@ -805,6 +830,23 @@ const DefectDef kDefects[] = {
      &g_defect_editor_cancel_stays},
 };
 }  // namespace
+
+// P27A fix 4 (tick.cpp mainLoop.panelTopRowsToWorld): the hit test the open panel's click handler would run for (x, y), as the
+// handlers forward (click_slot_panel, pick_building, click_employee_view, click_golfer_panel; the staff detail panel while
+// g_ui_561254 is set); true when it answers a control (anything but -1). Pure: no state is written.
+bool panel_claims_press(Ctx &ctx, int32_t x, int32_t y) {
+  const GameState &gs = ctx.gs();
+  int32_t r = -1;
+  switch (gs.g_panelListMode) {
+    case 0: r = gs.g_buildPanelSlot != 0 ? pick_amenity(ctx, x, y) : hit_test_slot(ctx, x, y); break;
+    case 1: r = gs.g_buildPanelPick != 0 ? hit_build_tool(ctx, x, y) : hit_building_tool(ctx, x, y); break;
+    case 2: r = gs.g_ui_561254 != 0 ? hit_employee(ctx, x, y) : hit_employee_slot(ctx, x, y); break;
+    case 3:
+    case 4: r = !golfer_panel_takes_press(gs) ? hit_employee(ctx, x, y) : hit_golfer_panel(ctx, x, y); break;
+    default: break;
+  }
+  return r != -1;
+}
 
 extern const ModuleDef kModule_commands = {"commands", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
                                            sizeof(kDefects) / sizeof(kDefects[0])};

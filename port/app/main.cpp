@@ -857,6 +857,10 @@ const ProfileMember kPlayProfile[] = {
     {"showRoutingMapScreen.modeTopStripLeaves", 0},  // P27B fix 1: a lit routing mode button takes the press over its whole box
     {"loadGameBrowser.rowPressPastText", 0},         // P27B fix 2: a load-list press counts over the drawn selection bar
     {"showHireEmployeeDialog.pressWithoutRowHires", 0},  // P27B fix 3: OK / a press off the rows hires nobody; OK lights over its image
+    {"mainLoop.panelTopRowsToWorld", 0},  // P27A fix 4: a press on a lit panel button's top rows (y 0x1da..0x1e0) goes to the panel
+    {"hitGolferPanel.shotButtonsAsDrawn", 0},  // P27A fix 5: the shot buttons answer where drawn live; a greyed one takes no press
+    {"mainLoop.messageDismissBand", 0},  // P27A fix 6: the message window dismisses on its drawn frame only
+    {"clickAmenityPanel.blankPressPicksHovered", 0},  // P27A fix 7: a press on blank palette space picks no row item
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

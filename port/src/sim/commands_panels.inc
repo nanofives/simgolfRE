@@ -12,11 +12,29 @@ int32_t hit_golfer_panel(Ctx &ctx, int32_t x, int32_t y) {
   if (near(0x139, 0x207, 15)) r = 1;
   if (near(0x139, 0x224, 15)) r = 2;
   if (near(0x139, 0x244, 15)) r = 3;
-  if (ctx.gs().g_panelListMode == 3) {
+  // P27A fix 5 (hitGolferPanel.shotButtonsAsDrawn = 0): the shot buttons answer where drawGolferActionPanel draws them live
+  bool shots = ctx.gs().g_panelListMode == 3, greyed = false;
+  if (!SG_DEFECT(g_defect_shot_buttons_as_drawn)) {
+    const GameState &gs = ctx.gs();
+    const int32_t p = gs.g_playerGolfer;
+    shots = false;
+    if ((gs.g_panelListMode == 3 || gs.g_panelListMode == 4) && p != -1) {
+      const uint32_t rec = state_va(ctx, &GameState::g_golfers) + (u32(p) << 8);
+      if (ctx.mem.load<int32_t>(rec + 0xcc) == -1) {  // not in a match (the scorecard is drawn there instead)
+        shots = true;
+        // the drawing's grey: the lie class (signed byte g_tileTypeAttrs + 0x22 + 0x30 t) above 0, t = typeAtPos of the ball's x and
+        // the tile y P22B's switch picks
+        const int32_t t = static_cast<int32_t>(cm::call_peer(ctx, "typeAtPos", {ctx.mem.load<uint32_t>(rec + 0xd4),
+                                                                                 ctx.mem.load<uint32_t>(rec + (SG_DEFECT(g_defect_shot_lie_mixed_tile) ? 4u : 0xd8u))}).eax);
+        greyed = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_tileTypeAttrs) + 0x22u + 0x30u * u32(t))) > 0;
+      }
+    }
+  }
+  if (shots) {
     if (near(0x19e, 0x1f9, 20)) r = 4;
-    if (near(0x1ed, 0x1f9, 20)) r = 5;
-    if (near(0x23c, 0x1f9, 20)) r = 6;
-    if (near(0x28b, 0x1f9, 20)) r = 7;
+    if (!greyed && near(0x1ed, 0x1f9, 20)) r = 5;
+    if (!greyed && near(0x23c, 0x1f9, 20)) r = 6;
+    if (!greyed && near(0x28b, 0x1f9, 20)) r = 7;
     if (near(0x2da, 0x1f9, 20)) r = 8;
   }
   if (near(0x11e, 0x1ea, 15)) r = 9;
@@ -483,8 +501,14 @@ int32_t click_employee_view(Ctx &ctx, int32_t x, int32_t y) {
   if (ctx.gs().g_ui_561254 != 0) return handle_employee_action(ctx, x, y);
   return employee_view_action(ctx, hit_employee_slot(ctx, x, y));
 }
+// P27A fix 5 (hitGolferPanel.shotButtonsAsDrawn = 0): clickGolferPanel hands every press to handleEmployeeAction while the staff
+// detail flag g_ui_561254 is set (clickGolferPanel+0x0..+0x21), but drawGolferActionPanel draws the golfer panel in mode 3 whatever
+// that flag (drawGolferActionPanel+0x0..+0x15); with the switch at 0 a mode-3 press answers the golfer panel it draws
+bool golfer_panel_takes_press(const GameState &gs) {
+  return gs.g_ui_561254 == 0 || (!SG_DEFECT(g_defect_shot_buttons_as_drawn) && gs.g_panelListMode == 3);
+}
 int32_t click_golfer_panel(Ctx &ctx, int32_t x, int32_t y) {
-  if (ctx.gs().g_ui_561254 != 0) return handle_employee_action(ctx, x, y);
+  if (!golfer_panel_takes_press(ctx.gs())) return handle_employee_action(ctx, x, y);
   return golfer_panel_action(ctx, hit_golfer_panel(ctx, x, y));
 }
 int32_t click_build_tool(Ctx &ctx, int32_t x, int32_t y) { return build_tool_action(ctx, hit_build_tool(ctx, x, y)); }
@@ -492,7 +516,14 @@ int32_t pick_building(Ctx &ctx, int32_t x, int32_t y) {
   if (ctx.gs().g_buildPanelPick != 0) return click_build_tool(ctx, x, y);
   return building_action(ctx, hit_building_tool(ctx, x, y));
 }
-int32_t click_amenity_panel(Ctx &ctx, int32_t x, int32_t y) { return amenity_action(ctx, pick_amenity(ctx, x, y)); }
+int32_t amenity_row_at(Ctx &ctx, int32_t a, int32_t b);  // commands_layout.inc
+int32_t click_amenity_panel(Ctx &ctx, int32_t x, int32_t y) {
+  const int32_t r = pick_amenity(ctx, x, y);
+  // P27A fix 7 (clickAmenityPanel.blankPressPicksHovered = 0): a press on no hotspot commits a row item only when one is under the
+  // press (amenity_action's fall-through takes g_panelState[0], the last item the hover pass found, whatever the press point)
+  if (!SG_DEFECT(g_defect_blank_press_picks) && r == -1 && amenity_row_at(ctx, x, y) == -1) return 0;
+  return amenity_action(ctx, r);
+}
 int32_t click_slot_panel(Ctx &ctx, int32_t x, int32_t y) {
   if (ctx.gs().g_buildPanelSlot != 0) return click_amenity_panel(ctx, x, y);
   return slot_action(ctx, hit_test_slot(ctx, x, y));
