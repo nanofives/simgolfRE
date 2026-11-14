@@ -2319,15 +2319,21 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   dwell(g, ctx, hover, "tooltip: drawEmployeeViewPanel's dwell tip (drawMapLine bar and centred text)", [&]() {
     gfxt::view_panel_tip(g, ctx, hover, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
   });
-  if (!beyond.empty() || !added.empty()) {  // P22D fix 1: the columns past the limit, outside every layer (the panel's layer is
-                                            // reopened, empty); fix 2: the added columns' layers
+  // P29A fix 1: while the page arrows are live (hitEmployeeSlot435570's own test: the band is not P26E's empty band) every one of the
+  // 4 + n columns is drawn, the empty ones with the panel's art alone (an empty slot's look), so the right end and its arrows sit
+  // 0x79 n right on every page, where hitEmployeeSlot435570 tests the -6 arrow. Before, only the columns holding a golfer were added
+  // (a last page of 13 golfers drew 4 columns and the arrow at the n = 0 place, which answered nothing)
+  const bool arrows_live = !list_scroll_hidden(ctx) || !view_list_fits(ctx);
+  const int32_t full = defer && ext > 0 && arrows_live ? ext : 0;
+  if (!beyond.empty() || !added.empty() || full > 0) {  // P22D fix 1: the columns past the limit, outside every layer (the panel's
+                                            // layer is reopened, empty); fix 2: the added columns' layers
     const size_t before = g.hud.layers.size();
     gfx_layer_end(ctx);
     for (const std::function<void()> &f : beyond) f();
     font(big);  // the selection the function leaves (set before the tip)
     g.hud.mark = g.root.px;  // their pixels are no layer's: the next boundary's gap does not see them
-    if (!added.empty() && g.hud.layers.size() == before + 1 && g.hud.layers.back().id == kGfxLayerPanel) {
-      int32_t used = 0;
+    if ((!added.empty() || full > 0) && g.hud.layers.size() == before + 1 && g.hud.layers.back().id == kGfxLayerPanel) {
+      int32_t used = full;  // P29A fix 1
       for (const Added &e : added) used = std::max(used, e.col - 3);
       std::vector<std::pair<std::function<void(int32_t)>, int32_t>> cols;
       for (Added &e : added) cols.emplace_back(std::move(e.draw), e.col);
