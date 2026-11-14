@@ -1337,3 +1337,236 @@ log/roadmap/P20/P20A_notes.md (resumed). His saves and recordings were copied fr
   fixed to slot first), fast_tree's commit-time stamps hiding changes from MSBuild, `/c/...` paths mangled inside test-slot strings,
   an --amend that folded a records commit into a fix (split back before any push), %TEMP% at 1.2 M entries (match_permute's perm_
   folders, fixed 13cb39b8; m36e_lib_ / m7_ / vc6_ leftovers deleted; Mashed's matcher still leaks m7_ folders).
+- After the round, Mariano's two answers (2026-11-10, published 342dd9e8). "Let groups play through while my golfer waits": P20A fix 2
+  (342dd9e8), play switch updateGolfers.playerWaitBlocksCourse (0 in play): the tee-queue count counted the player's golfer and
+  partner; at 0 the hole 3 tee has 4 / 4 / 5 / 4 waiting with 1-2 playing, at 1 4 / 6 / 8 / 9 with 0 playing; segments 205 / 205 = I25,
+  mood5 replay PASS 1488 at 0 and 1. "Keep the ball smooth and move the trail with it": P22C fix 3 (cfba5483), app option --trail-glide
+  (default on), with a whole-image upload fix in GpuCompositor::upload_world. Open: one paint stall P22C saw in a first-build run
+  (CPU path + checks), not reproduced in the final build.
+
+## P23: tenth play-test feedback and the wide audit (2026-11-10 .. 2026-11-11)
+Brief log/roadmap/P23/BRIEF.md (five items on 342dd9e8; base ce2ffadd), notes log/roadmap/P23/P23{A..F}_notes.md, the wide audit
+log/roadmap/P23/P23D_wide_audit.md (25 rows). His saves and recordings 20261110-095212-27588 / -095608-9680 were copied from MARIANO-PC
+by haiku children into log/roadmap/P23/mariano_pc/. App option off switch SG_APP_P23=off (port/test/conftest.py; it also turns
+--newest-saves off, so A/B arms use each option's own flag). Published cce0ac74, f4fdcfd3, a86a591e, ca8bb809, a4a85cce, a8343b84,
+043b5acc, 55f884b1 and 014232b7.
+- Item 3, "golfers stuck, camera moves slowly, players glide ... every later game too until a restart" (P23B fix 1, f4fdcfd3, class a):
+  the sim kept the original's 87 ms frame (10.8-11.5 frames/s) and the window stopped taking the pacer's ticks. run_live_window posts
+  kMsgCursorTick only while tick_pending is false, and only the GetMessageW loop cleared it; a tick dispatched from a modal loop
+  (maximize, title-bar drag / resize, system menu) went to DefWindowProcW and was dropped, so the latch held for the life of the
+  process: about 11 paints/s, no camera slide, no interpolation. Both his sessions resized at the start (1334 x 750 -> 2560 x 1351).
+  The window procedure now takes the tick (one on_tick shared with the loop) and the pacer posts a tick pending 250 ms again; p10e
+  pacer_posts / modal_ticks / tick_reposts. System-menu repro: 59.2 / 0 / 0 -> 60 / 60 / 60 ticks/s before / during / after. P22's
+  374-tick night session shows the same latch, so P22A fix 1's slow-vblank reading was a misread (P23B_notes.md section 2); its
+  fallback stays as a guard.
+- Item 3, the stuck tee queue (P23B fix 2, a86a591e, class c, Mariano: "Play past my pair"): play switch
+  updateGolfers.playerPairBlocksShots. On his While_Browsing save (Ocean's Edge 25 Jul 2004) original and port progress the same; only
+  the hole 2 tee queue (100-103, 114-117) never plays: his golfer 113's second shot is handed to him, partner 112 waits on the green,
+  and golfer 100 is held by the three look-ahead tests P20A fix 2 kept (112's ball / 112 within 0x25 of the target, 113 in the line
+  of fire). At 0 his golfer and his partner on his hole hold no one by those tests while his shot is handed over. Replay at 0:
+  100-103 reach hole 3; at 1 they never leave the tee (diverges at record 401).
+- Item 2, Continue Saved Game newest first (P23A fix 1, cce0ac74, class b, app option --newest-saves): AppFiles::list orders the saved
+  games by last-write time. A recording made with it did not replay (gate FAIL at record 0); P23A fix 3 (4229b333): portsim::SavesOrder
+  shared by app and sim lib, session.json saves_newest_first / saves_order, gate PASS 257 / 257 x64 + Win32, negative control FAILs
+  at 154. Recordings from cce0ac74 on need it to replay.
+- Item 1, the exe icon (P23A fix 2, 42b8eb3b; Mariano: "Game icon, LAN only"): the window loads the icon from the install's
+  golf_clean.exe at run time (ExtractIconExW); stage_lan_release.py stamps RT_GROUP_ICON / RT_ICON into a copy of the staged LAN exe;
+  github_release.py zips the plain build's exe and refuses one with an icon. Nothing derived from game art is in the repo.
+- Item 4, Sandbox Mode lit with the cursor away (P23C): fix 1 (df905267, class b, refines play switch mainLoop.titleHotspotRange):
+  P9A's rectangle for Sandbox is about 30 % transparent art, so it lit off the visible button; an item is now chosen only over the
+  opaque per-row hull of the highlighted buttons' picture, built at run time (gfxb::title_hover_rows) because the repo is public.
+  Fix 2 (6af8f45e, class a): the host's edge guard kept a title item lit with the cursor outside the window; title reads now go
+  unguarded (session.json title_unguarded_reads). The lit fill's offset inside its ring is the original's art: not changed.
+- Item 5, the terrain grid on the wide sides (P23D, class b, app option --wide-grid): fix 1 (035a438a) drew the grid on the world
+  layer and was reverted (bb70a886): at 4K the world job went 29.8 -> 85.0 ms mean, max 170 -> 4050 ms (back restore and a lazy GPU
+  raster read-back per job). Fix 1b (8ff28fb2): a frame-coherent skip keeps a frame's grid while back and lines are unchanged. Fix 2
+  (50e73ca5, class a, no switch): the world thread's overlay lines go to the GPU raster as one patch per job (GlRaster::apply_patch,
+  D3D CSPatch); PATCHCHECK 166 / 0 bad; read-backs while panning 97-142 -> 1; P13D's hole lines at 4K 243 -> 1 read-backs, world
+  job 38.3 -> 27.0 ms.
+- The wide audit: only lines_open overlay lines, cursor-pass records and queue sprites / labels reach the side columns; 25 rows, all
+  class (b), no class (a). Each fix is an app option, default on. P23E --line-tiles (fix 1 eea984bc, 1b 848c3f35: native lines'
+  CPU patches in 48 px pieces; the arc at 4K final_px 1305 M -> 475 M, world job 48.5 -> 40.5 ms) and --wide-lines (fix 2 47a69bb3
+  swing arc, row 3; fix 3 c5f214c7 landmark circle, row 2; fix 4 cc052626 + 4b 5465ded6 drag ruler and its yards label, row 4; fix 6
+  terrain marks, row 1; fix 5 Staff circle, row 17, with a class (a) layer fix: the circle moved about 120 px with the panel's anchor;
+  5 and 6 in a385eda9). P23F --edge-texts (fix 1 9dcb1598 rows 5, 6, 10, 11, 16, 24; fix 2 4ca8b7ee row 22, the course tip; fix 3
+  ca8bb809: stale edge runs lose their columns at publish via frame_gen and edge columns are clamped to the window during slides, which
+  removed the 4K smoke's doubled label, 4 bad / 1394 px). P23D --wide-bubbles (fix 3 1e383f53 walker bubbles, row 9; fix 4 a4a85cce
+  golfer panel bar, row 8, in the hr plane with drawAlpha's half op; fix 5 a8343b84 thought bubble; fix 7 4f76c4eb Gary's banner, row 7)
+  and --wide-ground (fix 6 043b5acc ground marks, rows 12-13; fix 8 55f884b1 marker sprite and mood image, rows 14-15). Left as the
+  original: rows 18, 19, 23, and 20 (narrateShot's fit test: widening it changes the GameState and needs a wide SimFoto). Row 21 is
+  not reachable in v1.03 (the 2x view's word is only ever cleared).
+- P23D fix 9 (014232b7, class a, no switch): a past-edge world text run lost its last / first columns on the GPU while the camera slid
+  (build_course_patches clamps a patch to the course picture at offset 0). The strips past the moved clamp are now dynamic final
+  patches with a per-rectangle read-back (fetch_part, 0.9-7.1 ms): left-tap walks 3 of 4 runs bad before, 0 in 12 after; right taps
+  0 in 15. P23E fix 7 (harness, 5465ded6): app_drive's unread stderr pipe could fill and block the app (a 60 s kill read as exit code
+  1); a _Drain thread now reads the app's pipes.
+- Checks: 8ff28fb2 was not publishable (4K smoke p14 177 / 4 bad, 1080 paint run 4 bad, edge 86 %) until P23F fix 3. The a86a591e
+  check's background handle hit its 1 h limit while the segments waited for the w8 lock, and the segments step died (rc=127); it was
+  rerun alone. Full check of 55f884b1: 1080 / 4K p14 824 / 202, 0 bad; paints at 120 Hz 90 / 96 / 94 %. Harness fixes committed as
+  604846b1; three 423 MB p3wav WAVs deleted from the repo root.
+- Open: row 20 (an option for Mariano); 1-3 px off by 1-3 next to the HUD emblem inside a moving label's course patch (owner open);
+  GPU still lines for the swing arc at 4K (about 24 ms of CPU patch per game frame); the lines' pixel walk on the GPU for moved frames
+  at 4K; a pre-queue frame text beside the frame is drawn over side-column sprites.
+
+## P24: eleventh play-test feedback, the game in Spanish (2026-11-11 .. 2026-11-12)
+Brief log/roadmap/P24/BRIEF.md (items 1-4 from release 014232b7, items 5-9 added the same evening on 3a3a4de0; base 5927a114),
+BRIEF_P24K.md, notes log/roadmap/P24/P24{A..K}_notes.md, handoff log/roadmap/P24/HANDOFF_P24J.md. His saves and recordings (newest
+20261111-115350-36904, client 1334 x 750 dpi 120, 165 Hz, RTX 5070 Ti) were copied from MARIANO-PC by haiku children into
+log/roadmap/P24/mariano_pc/ and mariano_pc2/. App option off switch SG_APP_P24=off. Published d1daeeab, dac9c19c, 3a3a4de0, ce669848,
+239562e1, 8ec76eec, 0f3b5e70, eaf4d822 and b3ee66b6.
+- Item 2, "i can't move hired people" (P24A fix 1, df4f6db1, class a): mainLoop's H2 press entry (tick_frame.inc a41e541) transcribed
+  the walker record index as 0x48 k instead of 0x4c k, so for every walker but record 0 (a type -6 record not in the Staff panel) the
+  new post went to the wrong bytes: no listed employee could be moved, by the Move button or by a click on him on the course. A Staff
+  list pick then a course click does not move him in the original either: left as the original (a switch only if Mariano asks).
+- Item 3, the year-end recap cut on the wide sides (P24B fix 1, d1daeeab, class a): P21C fix 1 (faf944e1) had been lost in the e6fa77c6
+  revert and never came back; re-landed unchanged, his recording's year end now dims both sides. Off with --hud-modal off.
+- Item 4, "major FPS drops on my latest savegame" (P24C, class a, a port cost, not a P23 regression): "Ocean's Edge 15 May 2005" (41
+  golfers, 101 text runs per present) at 2560 x 1351 ran game work 156-185 ms (5.8-6.5 frames/s). Fix 1 (dac9c19c): each text run
+  copied the whole surface three times and compared it once (text_run_begin, GdiTextMetrics::draw_glyphs), about 200 texts a frame;
+  now only the rows a string can touch (glyph_rows); TEXTCHECK 53,248 strings 0 differing; game work 160 -> 100 ms, 6.4 -> 9.9 frames/s.
+  Fix 2 (3a3a4de0, app option --course-tables): a first try that kept unchanged course patches kept only 10 % and was dropped; course
+  text runs are now drawn on the GPU from TextTables built once per game frame; paints/s 2560 x 1351 38.8 -> 90.6, 4K 12.9 -> 64.3.
+- Item 1, "i need the game in spanish" (P24D; Mariano: we translate, a dropdown in the main menu, the pack in the LAN build only).
+  Fix 1 (f694faf3, .gitignore fixed in fe731120): lang::redirect / lang::tr at the draw fetch, never where the sim reads a text; a pack
+  of english<TAB>spanish lines with printf patterns that must keep the same conversions (scripts/lang/check_pack.py); the title-menu
+  selector remembered in settings.ini; the pack in the gitignored lang/, copied by the stager into game\Lang\ only, never into a GitHub
+  zip. The game's TTFs carry the accented glyphs. Fix 2 (38e089e2): wrapped messages are looked up flattened and wrapped again with the
+  sim's rule (wrap_like_sim); the window height comes from the Spanish line count. Fix 3 (b88bec6e): the art with English words
+  (TROPHYparts, Top10_Trophies, Top10_Blank, tacs&tees) redrawn in the game's TTFs by scripts/lang/redraw_art.py into lang/es, served by
+  AppFiles::set_lang_overlay; one unexplained return to the title in an early run did not repeat in 15 / 15 loads. Fix 4 was pack only.
+  Fix 5 (dynamic boxes): 5a (ce669848) measures the translation before placing it, 5d lang_fit_font steps down the game's font sizes
+  when Spanish is wider than English + 10 %, 5b (5fcdddd7) grows the building panel tip, option 2 (7a4336b8) squeezes the world-map
+  plates.
+- P24J (0f3b5e70): a Fable review (claude3) of the pack gave 368 fixes (43 error / 278 minor / 47 style) and 7 art rows; the worker raised
+  lookup_core's capture depth from 2 to 3 (+121 pack rows). P24K (eaf4d822): every text the pack still missed, derived from the code;
+  popup option lines and %s parts with blanks around them now match; scripts/lang/check_coverage.py: uncovered 1,031 -> 0; pack 2,240
+  exact + 951 patterns. P24L (b3ee66b6): a pack %s part may be empty (the hole-opened notice had stayed English).
+- Item 5, the free practice green past the map edge (P24E fix 1, ad6bbf5c, class b): play switch
+  generateRandomCourse.startingFeatureOutside. The original does it too: the clubhouse window is fixed and the border sweep depends
+  on the acres, so at 50 acres a clubhouse column of 30 or 31 puts the green on cleared tiles (the original under Unicorn cuts 9 / 120
+  seeds; seed 10 gives his layout). At 0 the clubhouse takes the nearest spot that passes the original's own test and fits, with no
+  RNG draw added: location 9 / 50 acres, the 42 cut seeds inside, the 358 others byte-equal. Only newly generated courses change.
+- Item 6, the world map not widescreen and golfer texts over it (P24F): fix 1 (4ddc3f4d, class a): P23F's frame edge runs and P22E's
+  cursor edge runs were published until the next terrain picture, and the world map / course map draw none. Edge runs are now
+  published only while root_terrain, and gfxb::root_covered clears root_terrain for a root covered in pieces (the course map's
+  two-image backdrop). Fixes 2-3 (239562e1, class b, app option --screen-bands, Mariano picked option A): the world map, its
+  browsers, the course map and the bulletin board get the title menu's band fill. The 0.5 fps readout is a still modal screen's
+  count of changed paints, not a stall.
+- Item 7, a tournament start indicator (P24G fix 1, 8ec76eec, class b, app option --tourney-hold): during the start the three round
+  buttons get the game's grey covers and a short starting tip in the panel's empty shot row. Drawing only: double clicks were already
+  harmless (the sim's own gate). Its READY message was lost in an orchestrator restart and found by reading its session.
+- Item 9, the same ambient sound over and over (P24I fix 1, 9be174ea, class b, app option --sound-limit): the port runs the original's
+  triggers at or below its frame rate. The limiter in AudioOut drops a repeat of an animal / fly / ambience id within 8 s (balloon
+  10 s, sail boat 12 s) and rotates the six ambience variants; the seriema went from 1.08 to 0.28 starts per minute. The sim is untouched.
+- Process: update.bat from a PC on the modem's network (9aa36911): the updater tries the Deco's WAN address third and needs Mariano's
+  port forward of 8088 on the Deco. A ce669848 fast check read PAINT RATE LOW (edge 60 %) with 7 workers and 21 GB free commit; the
+  rerun read 91 %. The 0f3b5e70 fast check was killed while queued at a reboot warning (HANDOFF_P24J.md) and ran afterwards.
+- Open: item 8, "when i pause game the UI moves for a frame and comes back" (P24H): 32 bursts at three sizes, key and button, 165 Hz
+  pacing, showed no HUD layer move; the original shows none, and the popup double-draw darkening is the original's own; waiting for
+  his video. P24C: game work still about 95 ms against the 87 ms budget on LIVING-PC (resample on his PC). P24D: 5c popup / system
+  menus stay English-sized (their hit tests come from the box width); not reached in Spanish: the tournament box, save / skill
+  dialogs, championship results, the hire screen.
+
+## P25: twelfth play-test feedback (2026-11-12)
+Brief log/roadmap/P25/BRIEF.md (four items on b3ee66b6; base d823f4b3), notes log/roadmap/P25/P25{A,B,C}_notes.md, screenshots
+fb_*.png. His saves and recordings (Scorpion Cove 8 April 2013, a tournament running) were copied from MARIANO-PC by a haiku child into
+log/roadmap/P25/mariano_pc/. App option off switch SG_APP_P25=off. Published 6a5bc07f, 0e2043c3 and 71b8834a.
+- Item 1, "the UI moving happens when there's a tournament" (P24 item 8; P25A fix 1, 6a5bc07f, class a): at the pause and unpause
+  clicks one present carried a single HUD layer, the leader board, and showed the radial menu, palette and readouts in the centred 800
+  frame (240 px off their anchors at 1920 x 1080). The command tail draws showTournamentResults' title layer after the frame's
+  publish; gfx_layer_begin ended the armed carry and restarted the capture with the whole root as its base. A layer begun while the
+  carry is armed by a publish outside every scope now continues the carried capture. Single-layer presents 4 -> 0 in the A/B; what is
+  left is the leader board's fill blended twice on that refresh, the same with --hud-layers off. The original was not reached with a
+  tournament (it exits after loading his tournament saves).
+- Item 2, "there's no UI highlight when selecting monuments" (P25B, class c, then b): the port equals the original (the picked tile is
+  lit after the click, the hover cell k 0 shows no change, and opening Landmarks clears the pick). Mariano chose option 2, a lit
+  hover. Fix 1 (half-strength hover) was too faint to read. Fix 2 (71b8834a, app option --row-hover): the hovered tile takes the picked
+  cell at full strength, lightened toward white (bench rim at 1920 x 1080: (95, 98, 139) -> (190, 191, 209)).
+- Item 4, arcs on the SGA report's edge (P25C, 0e2043c3, class a): after the Information menu closed, 130 of its pixels that the report
+  rewrote with the same word stayed the popup's in the owner plane and were drawn at the opener's anchor offset, so the dimmed course
+  showed through. At the outermost popup's close the owned pixels are recorded and their write marks cleared.
+- Item 3, the menu moves under the report (P25C, the same patch, class c; Mariano chose option A; app option --closed-popups hide|keep,
+  default hide): the original keeps the dimmed menu at its 800-space place behind the report. With hide, a pixel a closed popup left
+  and nothing wrote since is left out of the frame's layer, its dim becomes the presenter's dim of the course, and its text runs hide.
+- Process: the first paint-rate run of 0e2043c3 read LOW (arrows 26 %, edge 46 %, free commit 7.8 GB under the Mashed run); the recheck
+  on the same tree read 96 / 94 %: load, not the fix.
+- Open: the original loads none of his port-written tournament saves (Scorpion Cove and Flamingo Shores exit or return to the title);
+  his recording 20261112-190311-30516 does not replay (sg_run_boot stops at record 2627 on cursor reads); a screen that returns to the
+  Information menu was not reached.
+
+## P26: thirteenth play-test feedback (2026-11-13)
+Brief log/roadmap/P26/BRIEF.md (11 items on 71b8834a; base 7f763b5f), notes log/roadmap/P26/P26{A..E}_notes.md, screenshots
+fb_img<N>.png. App option off switch SG_APP_P26=off. Published 483efa48 (items 1-10) and 2e7de03e (item 11).
+- Items 1 and 2, the arrow camera's start delay and uneven speed (P26A fix 1, 24f9c6dd, class b, app option --arrow-glide): the original
+  also steps once, waits Windows' 500 ms repeat delay, then steps once per frame; its frame-paced steady speed is 43.0 tiles/s. The
+  glide reads held state from WM_KEYDOWN / WM_KEYUP (repeats ignored) and runs at 70 % = 30.1 tiles/s per axis (half at zoom 8). It
+  draws a fractional camera at every present, never past the newest picture, and an arrow that starts a glide ends the sim's frame
+  wait. At 60 Hz every 100 ms window holds 29.8-30.3 units/s; key-down to stepping frame head 46.5 -> 7.3 ms at 60 Hz and 32.3 -> 16.3
+  ms at 165 Hz; a tap still moves 4 tiles; two arrows glide diagonally.
+- Item 3, palette names (P26B fix 3, 5f31c519, class b, app option --palette-names): one HUD font size for every name (P24D's
+  lang_fit_font had shrunk long Spanish names); a name wider than the 62 px tile pitch that holds a space wraps to two lines; the three
+  tree slots take their row's line (the original draws them at the tree art's top).
+- Item 7, the hover tip's background (P26B fix 7, c8587e22, class a): the tip bar darkened the root at its 800-space place, and the
+  anchored layer carried those course pixels as opaque words to the window's edge. The bar is now recorded as a kind-3 half-bright
+  blend of what shows beneath it.
+- Items 4 and 5, report screens (P26C, db0c4d5e). 4a (class a): the click remap kept the last in-game frame's layers on a flat frame
+  (the Information menu's popup piece, -240 px at 1920 x 1080), so the Routing Map's left buttons answered in the side band; fixed by
+  Presenter::flat_remap_clear. 4b (class b, play switch reportScreens.anyClickCloses): the original ends these screens at any click;
+  at 0 only the tick ends them, and Esc / Enter still do. 5 (class a): Histograph, Financial, Best Scores and Player Comments did not
+  light their OK tick because click_or_key_loop left out the original's cursor read; restoring it also brings the I25 ui_tour rows'
+  unread CURSOR records to 0. With anyClickCloses = 0 the Accomplishments board's tick now lights on hover (2e7de03e).
+- Item 6, the golfer roster's scroll band (P26E fix 1, 4f37e172, class b, play switch drawEmployeeViewPanel.scrollBarAlways): the
+  original always draws the band, a band click took row 3's golfer and an empty slot took golfer record 0. At 0 the band is empty
+  while the list fits, the band and empty slots select nothing, and the arrows answer only when there is a second page. Item 10
+  (P26E fix 2, 6633bd9c, class b, app option --card-width): the scorecard ends after the last hole with a par; the freed place is a
+  course click.
+- Item 8, the staff label font at zoom 8 (P26D fix 8, 5ccfd9ef, class b): drawWalkers' font choice was the fifth site of play switch
+  mainLoop.zoom8Font (zoom 8 exists only in the port). Item 9, the pin flag's shadow over a label (P26D fix 9, 483efa48, class b, app
+  option --staff-labels-top): drawWalkers' labels are drawn at the walk's end with P22C's golfer labels. A word guard changes the
+  glyph pixels that hold the pole's white, so the text capture keeps them.
+- Item 11, pixelated Accomplishments text (P26C fix 11, 2e7de03e, class b, app option --sharp-art): the Spanish plates are words in art
+  pixels. redraw_art.py --sharp writes a blank cell and a runs file per image, and the board draws those lines as text runs at the
+  window's resolution (English has no language art: unchanged).
+- Process: the db0c4d5e check failed the x64 build with 2 errors: a '}' was lost in the P26A / P26E hand merge of --card-width, and the
+  smoke had run a stale exe; fixed in 26496ee8.
+- Open: the sticky note's to-do lines stay English in Spanish (what supplies those strokes is not established); not covered by a run:
+  the staff detail panel's next arrow at 8 employees or fewer, a roster longer than a page; no window shot of golf_clean.exe with a
+  staff label crossed by a sprite.
+
+## P27: the whole-UI audit, every button answers where it is drawn (2026-11-13)
+Mariano: "quiero que hagas una investigacion profunda sobre toda la UI para corroborar que la ubicacion de los botones coincida con lo
+que se muestra". Brief log/roadmap/P27/BRIEF.md (base 247b5693), notes log/roadmap/P27/P27{A,B,C}_notes.md, audit tables
+P27A_audit_final.tsv, P27B_audit.tsv, P27C_audit.tsv, shots P27{A,B,C}_shots/. Three workers (opus high): P27A the tool and the in-game
+HUD, P27B full-screen reports and dialogs, P27C the front end and flat modal screens. Published da3eed87, bc297348, 728a5460, 79692228,
+c534758e, 98225b28, ef2396f5 and aa30da87.
+- The tool: log/roadmap/P27/tools/uiprobe.py with a development-only app hook (port/app/uiprobe.{h,cpp}, SG_P27_PROBE). Per probe it
+  takes the presenter's forward map, the click map, the CPU picture and the GPU paint; per element the drawn and hit rectangles,
+  dead / ghost / thru pixels, and live hover and click points 2 px inside and 3 px outside each edge.
+- P27C: fix 1 (da3eed87, class a): the hover preview lit buttons outside their hit circle on modal screens (world map Back, theme
+  Load, browser Cancel, pick-a-pro Load). Fix 2 (c428fd96, class a): no click or hover answer past the 800 x 600 content on flat
+  screens (the browser arrows' octagon reached x 803; side-band presses selected a browser row or left the theme screen; 6 dropped at
+  each size). Fix 3 (728a5460, class a): the world map's first present carried the previous screen's band fill (5,446 band pixels at
+  1920). Audit: 207 rows, 163 PASS, 32 FIXED, 12 NOT REACHED.
+- P27B: fixes 1-3 (class b, the original's own hit rules as play switches, listed to Mariano as vetoable): 12c076e3
+  showRoutingMapScreen.modeTopStripLeaves (mode buttons lit from y 0xfe act only below 0x118), bc297348 loadGameBrowser.rowPressPastText
+  (the bar starts at x 0x136, presses counted only past 0x140), c78fdaed showHireEmployeeDialog.pressWithoutRowHires (OK with no row
+  under the cursor hired a row-1 employee). Fix 4 (c534758e, class a, orchestrator option B): carried panel pixels that a modal screen
+  overdrew take no click (the roster's up arrow answered on the happiness meter, 1,386 px at 1920). Fix 5 (ef2396f5, class a): the same
+  rule on a modal screen's first, dimmed frame: 1,411 -> 0 px at 1920 x 1080, 2,223 -> 0 at 2560 x 1351, 704 -> 0 at 1334 x 750.
+  35 elements x 3 sizes, 5 fixed.
+- P27A: fixes 1-2 (79692228, class a): a cursor over the course at a moved panel's vacated place lit that panel's controls (the panels'
+  cursor read, kCursorSitePanels, now answers (-1, -1) there); the course beside a moved popup answered as the popup (96,487 ghost
+  pixels for the Information menu at 1920; PanelRemap::piece_vacated). Fix 3 (98225b28, class a): the port missed showInfoCursorPanel's
+  store of the course type's three tree points before its hit test, so Build palette slots 13-15 answered at course type 0's places
+  (up to 18 rows off). Fixes 4-7 (aa30da87, class b, play switches): mainLoop.panelTopRowsToWorld, hitGolferPanel.shotButtonsAsDrawn,
+  mainLoop.messageDismissBand, clickAmenityPanel.blankPressPicksHovered. Final audit, 101 elements per size: 101 / 100 / 101 PASS at
+  1920 x 1080 / 2560 x 1351 / 1334 x 750.
+- Process: the fast check of c534758e dispatched test_static to the notebook test hub, where it failed on junctions (vector_lib
+  missing); 6 passed locally, and fast_check.sh now runs test_static with PROYECTOS_TEST_HUB=off. Paint-rate runs read low under load
+  (72-91 % with low free memory, edge_z4 74 % with the CPU at 100 % and 2.8 GB free, aa30da87's first run idle 16 %, its recheck 91 /
+  99 / 94 %). App probes ran under test-slot alone when free commit was above 8 GB.
+- Open: class (c) rows kept as the original: the radial Build and People spots (5 logical rows / columns), the golfer strip's row
+  past the last face, and a 2-px ghost at the golfer list's Hire button at 2560 x 1351. A placement note: Preferences opened by keys
+  stays centred, opened by a click it follows the System menu. Not reached: the character intro's skill arrows (12 rows), tutorials,
+  a scrolled golfer / staff list, and from his save Hole Stats, End of Year, the character editor, tournament setup / results, buy
+  land, golfer pair select and the skill-point dialog.

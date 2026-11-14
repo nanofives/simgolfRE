@@ -307,8 +307,9 @@ used the wrong back end), the SP2 debug CRT in tools/vc6sp2 (jgld / Terrain link
 MSVC6-decomp (decompiled Microsoft compiler; nothing here uses it). Their claims are hypotheses: a source counts when our match.py
 gives 100% against our anchors (C4 match evidence), a name or field meaning when our disassembly supports it.
 ## Where things stand (2026-11-04)
-- RE ladder: no C2 row is open (end states `dead` / `trivial` / held). Counts: `py -3.12 scripts/re_classify.py status
-  --summary`. Upkeep: `re/roadmap/S11_c2_triage.tsv`.
+- RE ladder (2026-11-14): C4 2,930, C3 3 held, C1 11. Of 2,277 C2 rows, 616 have an end state (`dead` / `trivial` / held) and
+  1,661 are open, each triaged in `re/roadmap/S11_c2_triage.tsv` (reach, port module, match status; 584 hold a 100% match).
+  Counts: `py -3.12 scripts/re_classify.py status --summary`.
 - Port (`port/`, plan `re/PORT_PLAN.md`, conventions `port/CORE.md`, harness `port/test/README.md`): segments 205 / 205
   x64 + Win32, boot gate 67 PASS / 2 KNOWN / 2 NO_FRAMES (I25), census split 697 / 1. The app `simgolf_port.exe` defaults
   to profile `play`, `--wide`, layered HUD; tests run under `SG_APP_PROFILE=fixed` and the P5B / P6B / P8B / P9 `=off`

@@ -52,7 +52,7 @@ def main():
         assert r["id"] not in out, r["id"]
         out[r["id"]] = dict(r, verified="device-sink run (S7.12)")
     g15 = {r["id"] for r in g}
-    cols = list(h6) + ["verified", "decision", "profile_fixed"]
+    cols = list(h6) + ["verified", "decision", "profile_fixed", "profile_play"]
     rows = sorted(out.values(), key=lambda r: key(r["id"]))
     # G3 (Mariano, re/roadmap/DECISIONS_PENDING.md): the two hangs become fix, the other 24 ask rows stay keep.
     g3_fix = {"D42c": "loadGolfPro.negativeWindowBound", "D52b3": "generateRandomCourse.placementBound"}
@@ -69,6 +69,30 @@ def main():
         if r["recommendation"] == "fix":
             r["switch_state"] = "implemented"
         r["profile_fixed"] = "yes" if r["recommendation"] == "fix" else "no"
+    # G30 (Mariano, 2026-11-03): profile `play` = `fixed` + gameplay fixes. A defect row is in `play` when a member of
+    # re/port/play_profile.tsv names it in its decision_id cell (`G30,D<id>`); the member's name replaces the row's planned
+    # switch name. Rows of G30's first batch that have no member yet are listed with their state (log/roadmap/P4/MERGE.md).
+    play = {}
+    with open(ROOT / "re" / "port" / "play_profile.tsv", newline="", encoding="utf-8") as fh:
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if line.startswith("#") or len(cells) < 3 or cells[0] == "switch":
+                continue
+            for d in cells[2].split(","):
+                if re.match(r"D\d+", d.strip()):  # a defect row split over several per-function switches lists them all
+                    play[d.strip()] = (play[d.strip()] + " + " if d.strip() in play else "") + cells[0]
+    g30_open = {"D48b": ("switch only", "G30: switch exists, not in play (the intended clamp is not determined, P4/MERGE.md)"),
+                "D5": ("to-implement", "G30 fix pending (per-site pass, P4B_notes.md)"),
+                "D6": ("to-implement", "G30 fix pending (per-site pass, P4B_notes.md)")}
+    ids = {r["id"] for r in rows}
+    assert set(play) <= ids and set(g30_open) <= ids, sorted((set(play) | set(g30_open)) - ids)
+    for r in rows:
+        r["profile_play"] = "yes" if r["profile_fixed"] == "yes" or r["id"] in play else "no"
+        if r["id"] in play:
+            r.update(switch=play[r["id"]], switch_state="implemented", decision="G30 fix (profile play)")
+        elif r["id"] in g30_open:
+            assert r["id"] not in play, r["id"]
+            r.update(switch_state=g30_open[r["id"]][0], decision=g30_open[r["id"]][1])
     # --root <dir>: write <dir>/re/port/defect_decisions.tsv (an integrator's mirror; default the repo this script lives in)
     root = pathlib.Path(sys.argv[sys.argv.index("--root") + 1]) if "--root" in sys.argv else ROOT
     dest = root / "re" / "port" / "defect_decisions.tsv"
