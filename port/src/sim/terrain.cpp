@@ -79,6 +79,28 @@ int g_negctl_relax_tile = 0;
 int g_negctl_raise_from_nb = 0;
 int g_negctl_spread_shade = 0;
 
+// Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original byte for byte, 0 = the fix (P28A, decision
+// G30, log/roadmap/P28/P28A_notes.md has the instruction addresses and the evidence of every site).
+//   floodMark.outsideNeighbour   model_defects#6 (D6): the four even neighbours of a cell are read from tile_flags and
+//                                recursed into with no grid test, so an edge cell reads the word before / after the grid (or
+//                                the next / previous row) and the recursion ORs 0x40 into it. 0: a neighbour outside 0..49 in
+//                                x or y is skipped (no read, no recursion, no write): the cell does not exist.
+int g_defect_flood_outside = 1;
+//   canStep.readBeforeBound      model_defects#6 (D6): the neighbour's flags and type are read before tileBlocked bounds
+//                                it. 0: a neighbour outside the grid returns 0 before the reads (tileBlocked's own arm moved
+//                                first; every arm after those reads already returned 0 there).
+int g_defect_canstep_before_bound = 1;
+//   heightBlend.rowPastEnd       model_defects#6 (D6): the type test of the x + 1 cell reads one row past the grid at x = 49.
+//                                0: that cell's type is 0x14 when x + 1 is outside (tileBlocked / typeAtPos answer for a cell
+//                                outside the grid), so it is never the 0x11 that ends the blend early.
+int g_defect_hblend_row_past_end = 1;
+//   scanTileLine.edgeCellType    model_defects#5 (D5): the scored cell, its four neighbours and the second line's cell are read
+//                                from tile_type by index with no grid test. 0: a cell outside the grid has type 0x14, the type
+//                                tileBlocked (called on the same cell) and typeAtPos give it.
+int g_defect_scan_edge_type = 1;
+
+inline bool on_grid(int32_t x, int32_t y) { return x >= 0 && x < kGridW && y >= 0 && y < kGridW; }
+
 Grid<int8_t> types(Ctx &c) { return state_grid(c, &GameState::g_tileType, kGridW); }
 Grid<uint16_t> flags(Ctx &c) { return state_grid(c, &GameState::g_tileFlags, kGridW); }
 Grid<int8_t> levels(Ctx &c) { return state_grid(c, &GameState::g_tileLevel, kGridW); }
@@ -168,6 +190,7 @@ void flood_mark(Ctx &ctx, int32_t x, int32_t y) {
   const uint16_t mask = SG_NEGCTL(g_negctl_flood_mark) == 1 ? 0x20 : 0x420;
   for (int32_t k = 0; k < 8; k += 2) {
     const int32_t nx = add32(dir_dx(ctx, k), x), ny = add32(dir_dy(ctx, k), y);
+    if (!SG_DEFECT(g_defect_flood_outside) && !on_grid(nx, ny)) continue;  // P28A: the cell does not exist
     const uint16_t w2 = f(nx, ny);
     if ((w2 & mask) != 0 && (w2 & 0x40) == 0) flood_mark(ctx, nx, ny);
   }
@@ -201,6 +224,7 @@ int32_t can_step(Ctx &ctx, int32_t x, int32_t y, int32_t dir) {
   if (t == 0x16 || t == 0x15) return 0;
   const int32_t nx = add32(x, dir_dx(ctx, dir)), ny = add32(y, dir_dy(ctx, dir));
   const uint16_t mask = SG_NEGCTL(g_negctl_can_step) == 2 ? 0x100 : 0x120;
+  if (!SG_DEFECT(g_defect_canstep_before_bound) && !on_grid(nx, ny)) return 0;  // P28A: tileBlocked's arm before the reads
   if (flags(ctx)(nx, ny) & mask) return 0;
   if (walk_of(ctx, types(ctx)(nx, ny)) <= 0 && SG_NEGCTL(g_negctl_can_step) != 1) return 0;
   if (tile_blocked(ctx, nx, ny) != 0) return 0;
@@ -439,7 +463,8 @@ int32_t height_blend(Ctx &ctx, int32_t x, int32_t y) {
     return (state_arr(ctx, &GameState::g_cornerLevel) + (x * kCornerW + y)).get();
   }
   const int8_t t = types(ctx)(x, y);
-  if (t == 0x11 || types(ctx)(x + 1, y) == 0x11 || t == 0x12 || t == 0x13) return 3;
+  const bool next_off = !SG_DEFECT(g_defect_hblend_row_past_end) && !on_grid(x + 1, y);  // P28A: type 0x14 there
+  if (t == 0x11 || (next_off ? 0x14 : types(ctx)(x + 1, y)) == 0x11 || t == 0x12 || t == 0x13) return 3;
   const Ptr<CourseRecord> c = state_arr(ctx, &GameState::g_courseTable) + g.g_courseIndex;
   const int32_t sh = c.field(&CourseRecord::relief).get() == 2 ? 7 : 6;
   int32_t h = sample_height(ctx, shl32(x, sh), shl32(y, sh));
@@ -543,6 +568,11 @@ int32_t scan_tile_line(Ctx &ctx, int32_t x0, int32_t y0, int32_t tx, int32_t ty,
   }
   const int32_t half = steps / 2;
   const auto ttype = [&](int32_t cell) { return static_cast<int32_t>((state_arr(ctx, &GameState::g_tileType) + cell).get()); };
+  // P28A scanTileLine.edgeCellType: the cell (row rx, column ry) at index `cell`; outside the grid it has type 0x14 at 0
+  const bool edge_fix = !SG_DEFECT(g_defect_scan_edge_type);
+  const auto ctype = [&](int32_t rx, int32_t ry, int32_t cell) {
+    return edge_fix && !on_grid(rx, ry) ? 0x14 : ttype(cell);
+  };
   const auto byte2 = [&](int32_t t) { return static_cast<int32_t>(walk_of(ctx, t)); };
   const auto is13 = [&](int32_t t) { return static_cast<uint8_t>(collar_of(ctx, t)) == 0xD; };
   const auto sub_tile = [](int32_t v) { return sar32(v % 0x400, 4); };
@@ -567,21 +597,22 @@ int32_t scan_tile_line(Ctx &ctx, int32_t x0, int32_t y0, int32_t tx, int32_t ty,
     const int32_t fx = sub_tile(px), fy = sub_tile(py);
     const int32_t cell = add32(sar32(py, 10), mul32(sar32(px, 10), 50));
     const int32_t lead = steps <= 5 ? 1 : (steps >= 9 ? 3 : 2);
-    const int32_t t = ttype(cell);
+    const int32_t cx = sar32(px, 10), cy = sar32(py, 10);
+    const int32_t t = ctype(cx, cy, cell);
     if ((i >= steps - lead && strict == 0) || is13(t)) {
       const int32_t b2 = byte2(t);
       if (b2 > 0) score = add32(score, b2);
       if (is13(t)) score = add32(score, 0x20 / (i + 1));
       if (t == 0x11 || tile_blocked(ctx, sar32(px, 10), sar32(py, 10))) score = add32(score, 0x10);
       const int32_t ddx = dir_dx(ctx, dir), ddy = dir_dy(ctx, dir);
-      if (fx < 0xF && ddy) score = add32(score, byte2(ttype(cell - 50)) / 2);
-      if (fx > 0x30 && ddy) score = add32(score, byte2(ttype(cell + 50)) / 2);
-      if (fy < 0xF && ddx) score = add32(score, byte2(ttype(cell - 1)) / 2);
-      if (fy > 0x30 && ddx && mode != 1) score = add32(score, byte2(ttype(cell + 1)) / 2);
+      if (fx < 0xF && ddy) score = add32(score, byte2(ctype(cx - 1, cy, cell - 50)) / 2);
+      if (fx > 0x30 && ddy) score = add32(score, byte2(ctype(cx + 1, cy, cell + 50)) / 2);
+      if (fy < 0xF && ddx) score = add32(score, byte2(ctype(cx, cy - 1, cell - 1)) / 2);
+      if (fy > 0x30 && ddx && mode != 1) score = add32(score, byte2(ctype(cx, cy + 1, cell + 1)) / 2);
     }
     const int32_t qx = add32(x0, fold_range(ctx, angle, R));
     const int32_t qy = sub32(y0, abs_diff(ctx, angle, R));
-    if (is13(ttype(add32(sar32(qy, 10), mul32(sar32(qx, 10), 50))))) ++count13;
+    if (is13(ctype(sar32(qx, 10), sar32(qy, 10), add32(sar32(qy, 10), mul32(sar32(qx, 10), 50))))) ++count13;
     acc += acc_step;
     L = sub32(L, 0x400);
     R = add32(R, 0x400);
@@ -866,8 +897,24 @@ const FuncDef kFuncs[] = {
     {"rebuildHeightfield", "default", "void", 0, 0, a_rebuild_heightfield, &g_negctl_rebuild_heightfield},
     {"scanTileLine", "default", "int", 7, 0x027F, a_scan_tile_line, &g_negctl_scan_tile_line},
 };
+
+const DefectDef kDefects[] = {
+    {"floodMark.outsideNeighbour", "model_defects#6",
+     "the neighbour flag reads and the recursion that ORs 0x40 into them have no grid test (reads and writes outside tile_flags); "
+     "fixed: a neighbour outside the grid is skipped", &g_defect_flood_outside},
+    {"canStep.readBeforeBound", "model_defects#6",
+     "the neighbour's flags and type are read before tileBlocked bounds it; fixed: an outside neighbour returns 0 first",
+     &g_defect_canstep_before_bound},
+    {"heightBlend.rowPastEnd", "model_defects#6",
+     "the x + 1 cell's type test reads one row past the grid at x = 49; fixed: that cell has type 0x14 (not 0x11) outside",
+     &g_defect_hblend_row_past_end},
+    {"scanTileLine.edgeCellType", "model_defects#5",
+     "the scored cell, its four neighbours and the second line's cell are read with no grid test; fixed: a cell outside the "
+     "grid has type 0x14", &g_defect_scan_edge_type},
+};
 }  // namespace
 
-extern const ModuleDef kModule_terrain = {"terrain", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_terrain = {"terrain", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                          sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

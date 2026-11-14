@@ -71,6 +71,12 @@ int g_defect_shot_power_putt = 1;
 int g_defect_strict_sticky = 1;
 int g_defect_hazard_transposed = 1;
 int g_defect_mask_not_restored = 1;
+//   trialShot.edgeNeighbourType         model_defects#5 (D5, P28A, log/roadmap/P28/P28A_notes.md): the four neighbour type tests
+//                                       that set the edge flag (friction / bounce floor 2, the water stop) read tile_type by
+//                                       index with no grid test, so a ball on an edge tile compares against the course table,
+//                                       the habitat table or the next / previous row; fixed: a neighbour outside the grid has
+//                                       type 0x14, the type the same loop gives the ball's own tile through tileBlocked
+int g_defect_trial_edge_type = 1;
 
 // ------------------------------------------------------------------------------------------------ foreign callees
 class Foreign {
@@ -305,10 +311,15 @@ int32_t trial_shot(Ctx &ctx, int32_t g, int32_t x, int32_t y, int32_t aim) {
     if (pair != -1 && (steps & 7) == 0) f_appendTrack(ctx, {pair});
     const int32_t fx = sar32(r.i(kBallX), 6) & 15, fy = sar32(r.i(kBallY), 6) & 15;
     int32_t edge = 0;
-    if (fx <= 1 && w.tile(World::cell(sub32(tx, 1), ty)) != type) edge = 1;
-    if (fy <= 1 && w.tile(sub32(World::cell(tx, ty), 1)) != type) edge = 1;
-    if (fx >= 14 && w.tile(World::cell(add32(tx, 1), ty)) != type) edge = 1;
-    if (fy >= 14 && w.tile(add32(World::cell(tx, ty), 1)) != type) edge = 1;
+    // P28A trialShot.edgeNeighbourType: at 0 a neighbour (nx, ny) outside the grid has type 0x14
+    const bool edge_fix = !SG_DEFECT(g_defect_trial_edge_type);
+    const auto nb = [&](int32_t nx, int32_t ny, int32_t cell) -> int32_t {
+      return edge_fix && !(nx >= 0 && nx < 50 && ny >= 0 && ny < 50) ? 0x14 : w.tile(cell);
+    };
+    if (fx <= 1 && nb(sub32(tx, 1), ty, World::cell(sub32(tx, 1), ty)) != type) edge = 1;
+    if (fy <= 1 && nb(tx, sub32(ty, 1), sub32(World::cell(tx, ty), 1)) != type) edge = 1;
+    if (fx >= 14 && nb(add32(tx, 1), ty, World::cell(add32(tx, 1), ty)) != type) edge = 1;
+    if (fy >= 14 && nb(tx, add32(ty, 1), add32(World::cell(tx, ty), 1)) != type) edge = 1;
     const int32_t oct = octant(r.i(kDir));
     if (r.i(kBallZ) > 1) {  // in the air
       const int32_t h1 = f_heightAt(ctx, {r.i(kBallX), r.i(kBallY)});
@@ -1947,6 +1958,9 @@ const DefectDef kDefects[] = {
      &g_defect_hazard_transposed},
     {"narrateShot.maskNotRestored", "model_defects#39",
      "two missed-shot exits skip restoring the named golfer's skill mask", &g_defect_mask_not_restored},
+    {"trialShot.edgeNeighbourType", "model_defects#5",
+     "the four edge-flag neighbour type tests read tile_type with no grid test; fixed: a neighbour outside the grid has type 0x14",
+     &g_defect_trial_edge_type},
 };
 }  // namespace
 

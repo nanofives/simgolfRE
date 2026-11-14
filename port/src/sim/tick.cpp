@@ -121,6 +121,22 @@ int g_defect_camera_follow_offgrid = 1;
 // the reversal turn (updateGolfers+0x29cf..updateGolfers+0x29e6) and the step overshoot can take a golfer past the edge
 // (log/c3/c3fyl/audit123.md, U1). Fixed (0): the golfer's world position is clamped to 0..0xc7ff after the step.
 int g_defect_golfer_walk_offgrid = 1;
+// P28A (decision G30, model_defects#5 D5, log/roadmap/P28/P28A_notes.md: instruction addresses and evidence per site).
+// updateGolfers.edgeNeighbourType: the ball's four edge-bit neighbour type tests (updateGolfers+0x3daf..updateGolfers+0x3e59)
+// and the four green-neighbour tests (updateGolfers+0x41d9..updateGolfers+0x4246) read tile_type by index with no grid test.
+// Fixed (0): a neighbour outside the grid has type 0x14, the answer tileBlocked gives the ball's own tile at updateGolfers+0x4dd.
+int g_defect_golfer_edge_type = 1;
+// mainLoop.edgeNeighbourType: mainLoop's neighbour type tests against a tile class (the type-0x11 water decoration and side
+// sprites, the hole-point type-2 tests, the terrain edit's type 0x15 / 0x16 neighbour flag write) read tile_type (and
+// tile_variant / tile_flags behind them) by index with no grid test. Fixed (0): a neighbour outside the grid has type 0x14
+// (tileBlocked / typeAtPos, which mainLoop itself calls to skip outside neighbours elsewhere), so no class test passes there.
+int g_defect_ml_edge_type = 1;
+// mainLoop.edgeNeighbourNoFlags: the path-sprite neighbour mask and its (x - 1, y - 1) test (flag 1 << 12), the object kind 2
+// mask (flag 1 << 12) and the flag-0x20 neighbour masks read tile_flags by index with no grid test. Fixed (0): a cell outside the
+// grid has no flags (it does not exist), so a path ends at the map edge. Orchestrator's choice (class b), vetoable alone.
+int g_defect_ml_edge_no_flags = 1;
+// true when tile (x, y) is outside the 50 x 50 grid (the P28A switches above)
+inline bool p28_off(int x, int y) { return x < 0 || x >= 50 || y < 0 || y >= 50; }
 // updateGolfers.partnerWaitBlocksTee (P20A, Mariano's "the golfers are stuck", log/roadmap/P20/P20A_notes.md): a golfer at its ball
 // with swing counter 1 holds its shot while some golfer k of its hole (older or equal arrival order, not its partner, flag bit 10,
 // more strokes) stands within 0x64 of the hole's tee (updateGolfers+0x380a..updateGolfers+0x383e). A k that already played and
@@ -2215,6 +2231,15 @@ const DefectDef kDefects[] = {
     {"updateGolfers.walkOffGrid", "P6A",
      "a golfer's walking step has no grid test (reversal turn, step overshoot); fixed: the position is clamped to the grid after the step",
      &g_defect_golfer_walk_offgrid},
+    {"updateGolfers.edgeNeighbourType", "model_defects#5",
+     "the ball's edge-bit and green-neighbour type tests read tile_type with no grid test; fixed: a neighbour outside the grid "
+     "has type 0x14", &g_defect_golfer_edge_type},
+    {"mainLoop.edgeNeighbourType", "model_defects#5",
+     "mainLoop's neighbour type tests (water decoration and side sprites, hole points, the edit's neighbour flag write) read "
+     "tile_type with no grid test; fixed: a neighbour outside the grid has type 0x14", &g_defect_ml_edge_type},
+    {"mainLoop.edgeNeighbourNoFlags", "model_defects#5",
+     "the path, object kind 2 and flag-0x20 neighbour masks read tile_flags with no grid test; fixed: a cell outside the grid "
+     "has no flags (orchestrator's choice)", &g_defect_ml_edge_no_flags},
     {"updateGolfers.partnerWaitBlocksTee", "P20A",
      "a golfer holds its shot while a golfer of its hole with more strokes stands near the tee, also one that already played and "
      "only waits there for its partner, whose own shot is held by the group ahead: they wait for each other for good; fixed: a "

@@ -861,6 +861,16 @@ const ProfileMember kPlayProfile[] = {
     {"hitGolferPanel.shotButtonsAsDrawn", 0},  // P27A fix 5: the shot buttons answer where drawn live; a greyed one takes no press
     {"mainLoop.messageDismissBand", 0},  // P27A fix 6: the message window dismisses on its drawn frame only
     {"clickAmenityPanel.blankPressPicksHovered", 0},  // P27A fix 7: a press on blank palette space picks no row item
+    {"trialShot.edgeNeighbourType", 0},      // P28A (G30, D5): grid-edge neighbour type 0x14
+    {"updateGolfers.edgeNeighbourType", 0},  // P28A (G30, D5)
+    {"scanTileLine.edgeCellType", 0},        // P28A (G30, D5)
+    {"mainLoop.edgeNeighbourType", 0},       // P28A (G30, D5)
+    {"mainLoop.edgeNeighbourNoFlags", 0},    // P28A (G30, D5): orchestrator's choice, vetoable alone
+    {"floodMark.outsideNeighbour", 0},       // P28A (G30, D6)
+    {"canStep.readBeforeBound", 0},          // P28A (G30, D6)
+    {"heightBlend.rowPastEnd", 0},           // P28A (G30, D6)
+    {"generateRandomCourse.riverOutside", 0},      // P28A (G30, D6)
+    {"generateRandomCourse.smoothingOutside", 0},  // P28A (G30, D6)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1656,6 +1666,15 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     const int d = portsim::defect_find("mainLoop.arrowStepAfterDraw");
     // development (P21B's A / B): SG_P21_EARLY=0 puts the switch back to the original's 1 for this run
     if (d >= 0 && std::getenv("SG_P21_EARLY") && std::atoi(std::getenv("SG_P21_EARLY")) == 0) *portsim::defect_at(d, nullptr)->flag = 1;
+    // development (P28A's play check): SG_P28A_EDGE=0 puts the ten grid-edge switches back to the original's 1 for this run
+    if (std::getenv("SG_P28A_EDGE") && std::atoi(std::getenv("SG_P28A_EDGE")) == 0)
+      for (const char *sw : {"trialShot.edgeNeighbourType", "updateGolfers.edgeNeighbourType", "scanTileLine.edgeCellType",
+                             "mainLoop.edgeNeighbourType", "mainLoop.edgeNeighbourNoFlags", "floodMark.outsideNeighbour",
+                             "canStep.readBeforeBound", "heightBlend.rowPastEnd", "generateRandomCourse.riverOutside",
+                             "generateRandomCourse.smoothingOutside"}) {
+        const int k = portsim::defect_find(sw);
+        if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+      }
     ho.arrow_head = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
     const int h = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");  // P22A: the held arrow's delay needs the clock offset
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;

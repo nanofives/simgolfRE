@@ -44,6 +44,21 @@ int g_defect_placement_bound = 1;
 //                            tile the sweep will clear, the clubhouse takes the nearest spot of the same window that passes
 //                            the original's own test (base type, evalPlacementArea) and keeps both inside; no draw is added.
 int g_defect_feature_outside = 1;
+//   generateRandomCourse.riverOutside  model_defects#6 (D6, P28A, decision G30, log/roadmap/P28/P28A_notes.md): the river's shore
+//                            tile (nrow, column + 1) is read and, when heightBlend answers 3 there, written with no grid
+//                            test: on a step at column 49 the index column + 1 = 50 is tile (nrow + 1, 0) on the west edge
+//                            (heightBlend always answers 3 for column 50), and nrow = -1 / 50 reaches the course table / the
+//                            bytes after the grid; the loop's end test also reads (row, column) after a step that left the
+//                            grid. Fixed (0): a tile outside the grid is neither read nor written (it does not exist), and
+//                            the end test leaves the loop for an outside (row, column) without the read (the loop's own
+//                            bound row 0..0x31 / column >= 0 ends it there in both settings).
+int g_defect_river_outside = 1;
+//   generateRandomCourse.smoothingOutside  model_defects#6 (D6, P28A): the level smoothing next to water runs rows and columns
+//                            0..50, so the cells of row / column 50 read tile_type one past the grid (column 50 = the next
+//                            row's column 0), and a neighbour type test of an edge cell reads outside too. Fixed (0): a cell
+//                            outside the grid has type 0x14 (tileBlocked / typeAtPos), so a row / column 50 cell is not water
+//                            and smooths nothing, and an outside neighbour is not 0x11.
+int g_defect_smoothing_outside = 1;
 
 Ret call_peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   const int i = registry_find(name);
@@ -227,7 +242,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         int32_t best = 999, bestc = c1;
         int32_t nrow = add32(rnd(2) != 0 ? 1 : -1, row);
         const int32_t idx2 = cell(nrow, c1);
-        if (ty(idx2) != 0x11 && height_blend(ctx, nrow, c1) == 3) {
+        const bool idx2_off = !SG_DEFECT(g_defect_river_outside) && !(nrow >= 0 && nrow < 50 && c1 >= 0 && c1 < 50);  // P28A
+        if (!idx2_off && ty(idx2) != 0x11 && height_blend(ctx, nrow, c1) == 3) {
           set_type(idx2, p == 0 ? ((~shl32(add32(nrow, c1), 1) & 4) | 8) : 0xC);
           if (g.g_courseType == 1) set_type(idx2, 0xA);
         }
@@ -248,7 +264,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           row = nrow;
         }
         prevk = bestk;
-        if (ty(cell(row, col)) == 0x11) break;  // row may be -1 or 50 here: read outside the grid (model_defects#6)
+        // row may be -1 or 50 and col -1 here: read outside the grid (model_defects#6); P28A: at 0 leave without the read
+        if (!SG_DEFECT(g_defect_river_outside) && !(row >= 0 && row < 50 && col >= 0 && col < 50)) break;
+        if (ty(cell(row, col)) == 0x11) break;
         if (col < 0) break;
       }
     }
@@ -374,12 +392,15 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     static const int8_t kCol[5] = {-1, -1, 0, 0, -1};
     for (int32_t x = 0; x <= 50; ++x) {
       for (int32_t y = 0; y <= 0x32; ++y) {
-        const int8_t a0 = ty(cell(x, y));
+        const bool sm_fix = !SG_DEFECT(g_defect_smoothing_outside);  // P28A: type 0x14 outside the grid
+        const int8_t a0 = sm_fix && (x >= 50 || y >= 50) ? 0x14 : ty(cell(x, y));
         if (a0 != 0x11 && a0 != 0x12) continue;
         for (int32_t k = 0; k < 4; ++k) {
           const int32_t x1 = kRow[k] + x, y1 = kCol[k] + y;
           if (x1 < 0 || x1 >= 0x32 || y1 < 0 || y1 >= 0x32) continue;
-          if (ty(add32(add32(mul32(add32(dx(2 * k), x), 50), dy(2 * k)), y)) == 0x11) continue;
+          const int32_t nx = add32(dx(2 * k), x), ny = add32(dy(2 * k), y);
+          const bool n_off = sm_fix && !(nx >= 0 && nx < 50 && ny >= 0 && ny < 50);
+          if (!n_off && ty(add32(add32(mul32(add32(dx(2 * k), x), 50), dy(2 * k)), y)) == 0x11) continue;
           const Ptr<uint8_t> c = lv(corner(x1, y1));
           const uint8_t v = c.get();
           if (v <= 3) continue;
@@ -808,6 +829,12 @@ const DefectDef kDefects[] = {
      "the clubhouse spot and the free feature beside it (the practice green of location 9) are placed before the border sweep "
      "and never tested against it, so they can lie partly past the course edge",
      &g_defect_feature_outside},
+    {"generateRandomCourse.riverOutside", "model_defects#6",
+     "the river's shore tile at column + 1 (column 50 = the west edge of the next row; rows -1 / 50 = outside the grid) is read "
+     "and written with no grid test; fixed: a tile outside the grid is neither read nor written", &g_defect_river_outside},
+    {"generateRandomCourse.smoothingOutside", "model_defects#6",
+     "the water level smoothing runs rows and columns 0..50 and reads tile_type one past the grid; fixed: a cell outside the grid "
+     "has type 0x14 (not water)", &g_defect_smoothing_outside},
 };
 }  // namespace
 

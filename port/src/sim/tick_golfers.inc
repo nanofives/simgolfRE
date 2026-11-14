@@ -1340,10 +1340,12 @@ int updateGolfers() {
             const int fy = (by >> 6) & 0xf;                                             // updateGolfers+0x3da1..updateGolfers+0x3dac
             L1c = 0;                                                                    // updateGolfers+0x3db6
             const unsigned tb = static_cast<unsigned>(L20 + L18 * 50);                  // updateGolfers+0x3dc0..updateGolfers+0x3dc8
-            if (L3c <= 1 && G<signed char>((GS(g_courseTable) + 734) + tb) != L14) L1c = 8;            // updateGolfers+0x3daf..updateGolfers+0x3ddc
-            if (fy <= 1 && G<signed char>((GS(g_courseTable) + 783) + tb) != L14) L1c |= 1;            // updateGolfers+0x3de8..updateGolfers+0x3e09
-            if (L3c >= 0xe && G<signed char>((GS(g_tileType) + 50) + tb) != L14) L1c |= 2;         // updateGolfers+0x3e12..updateGolfers+0x3e33
-            if (fy >= 0xe && G<signed char>((GS(g_tileType) + 1) + tb) != L14) L1c |= 4;          // updateGolfers+0x3e38..updateGolfers+0x3e59
+            // P28A updateGolfers.edgeNeighbourType: at 0 a neighbour outside the grid has type 0x14 (L14's own tileBlocked answer)
+            const bool nfx = !SG_DEFECT(g_defect_golfer_edge_type);
+            if (L3c <= 1 && (nfx && p28_off(L18 - 1, L20) ? 0x14 : G<signed char>((GS(g_courseTable) + 734) + tb)) != L14) L1c = 8;            // updateGolfers+0x3daf..updateGolfers+0x3ddc
+            if (fy <= 1 && (nfx && p28_off(L18, L20 - 1) ? 0x14 : G<signed char>((GS(g_courseTable) + 783) + tb)) != L14) L1c |= 1;            // updateGolfers+0x3de8..updateGolfers+0x3e09
+            if (L3c >= 0xe && (nfx && p28_off(L18 + 1, L20) ? 0x14 : G<signed char>((GS(g_tileType) + 50) + tb)) != L14) L1c |= 2;         // updateGolfers+0x3e12..updateGolfers+0x3e33
+            if (fy >= 0xe && (nfx && p28_off(L18, L20 + 1) ? 0x14 : G<signed char>((GS(g_tileType) + 1) + tb)) != L14) L1c |= 4;          // updateGolfers+0x3e38..updateGolfers+0x3e59
             L38 = ((GD(i, (GS(g_golfers) + 224)) >> 28) + 1) >> 1 & 7;                               // updateGolfers+0x3e5e..updateGolfers+0x3e76
             if (GD(i, (GS(g_golfers) + 220)) > 1) {                                                  // updateGolfers+0x3e64 / updateGolfers+0x3e73..updateGolfers+0x3e7a
                 // in the air
@@ -1396,12 +1398,15 @@ int updateGolfers() {
                 } else if (L14 == 0xa) {                                                // updateGolfers+0x41a2..updateGolfers+0x41a5
                     if (8 - L3c <= 2 && L3c - 8 <= 2) {                                 // updateGolfers+0x41ab..updateGolfers+0x41be (|8 - fx| <= 2)
                         if (8 - fy <= 2 && fy - 8 <= 2) L28 = 1;                        // updateGolfers+0x41c0..updateGolfers+0x41d1
-                        if (fy < 8 && G<unsigned char>((GS(g_courseTable) + 783) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41d9..updateGolfers+0x41e8
-                        if (fy > 8 && G<unsigned char>((GS(g_tileType) + 1) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41f0..updateGolfers+0x41ff
+                        // P28A updateGolfers.edgeNeighbourType: at 0 a neighbour outside the grid has type 0x14, never the green 0xa
+                        const bool gfx = !SG_DEFECT(g_defect_golfer_edge_type);
+                        if (fy < 8 && !(gfx && p28_off(L18, L20 - 1)) && G<unsigned char>((GS(g_courseTable) + 783) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41d9..updateGolfers+0x41e8
+                        if (fy > 8 && !(gfx && p28_off(L18, L20 + 1)) && G<unsigned char>((GS(g_tileType) + 1) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41f0..updateGolfers+0x41ff
                     }
                     if (8 - fy <= 2 && fy - 8 <= 2) {                                   // updateGolfers+0x4207..updateGolfers+0x4216
-                        if (L3c < 8 && G<unsigned char>((GS(g_courseTable) + 734) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x4218..updateGolfers+0x4227
-                        if (L3c > 8 && G<unsigned char>((GS(g_tileType) + 50) + tb2 + L20) == 0xa) { L28 = 1; halve = true; }   // updateGolfers+0x422f..updateGolfers+0x4246
+                        const bool gfx = !SG_DEFECT(g_defect_golfer_edge_type);   // P28A, as above
+                        if (L3c < 8 && !(gfx && p28_off(L18 - 1, L20)) && G<unsigned char>((GS(g_courseTable) + 734) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x4218..updateGolfers+0x4227
+                        if (L3c > 8 && !(gfx && p28_off(L18 + 1, L20)) && G<unsigned char>((GS(g_tileType) + 50) + tb2 + L20) == 0xa) { L28 = 1; halve = true; }   // updateGolfers+0x422f..updateGolfers+0x4246
                     }
                     if (L28 != 0) halve = true;                                         // updateGolfers+0x4248..updateGolfers+0x424e
                 }

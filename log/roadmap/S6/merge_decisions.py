@@ -81,9 +81,8 @@ def main():
             for d in cells[2].split(","):
                 if re.match(r"D\d+", d.strip()):  # a defect row split over several per-function switches lists them all
                     play[d.strip()] = (play[d.strip()] + " + " if d.strip() in play else "") + cells[0]
-    g30_open = {"D48b": ("switch only", "G30: switch exists, not in play (the intended clamp is not determined, P4/MERGE.md)"),
-                "D5": ("to-implement", "G30 fix pending (per-site pass, P4B_notes.md)"),
-                "D6": ("to-implement", "G30 fix pending (per-site pass, P4B_notes.md)")}
+    # D5 / D6 got their per-site switches in P28A (2026-11-14, log/roadmap/P28/P28A_notes.md): they come from play_profile.tsv.
+    g30_open = {"D48b": ("switch only", "G30: switch exists, not in play (the intended clamp is not determined, P4/MERGE.md)")}
     ids = {r["id"] for r in rows}
     assert set(play) <= ids and set(g30_open) <= ids, sorted((set(play) | set(g30_open)) - ids)
     for r in rows:
