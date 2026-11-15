@@ -837,6 +837,7 @@ const ProfileMember kPlayProfile[] = {
     {"infoCursorTip.fixedBox", 0},                  // P11B fix 2 (the palette tool tip box fitted to its text, above the palette)
     {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)
     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
+    {"narrateShot.wideViewFit", 0},                 // P31D (G33 item 5: the shot narration and SimFoto over the wide view)
     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
     {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)

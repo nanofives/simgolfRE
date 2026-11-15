@@ -48,6 +48,8 @@ void scan_shot_area(Ctx &ctx, int32_t slot);
 // sentence in g_textBuffer, the skill the shot rewards or costs, the SimFoto bookkeeping (hole flags, golfer fields).
 // Drawing, sound and the modal pump are not part of the port (U-0883).
 int32_t narrate_shot(Ctx &ctx, int32_t slot, int32_t dist, int32_t yards, int32_t flag);
+// P31D (narrateShot.wideViewFit): the side margin E the box test adds on each side, (view width - 800) / 2; 0 with the switch at 1
+int32_t narrate_fit_margin(Ctx &ctx);
 
 }  // namespace portsim
 

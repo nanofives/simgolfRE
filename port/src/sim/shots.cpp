@@ -19,6 +19,7 @@
 #include "portsim/sim/shots.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <initializer_list>
 #include <vector>
@@ -77,6 +78,13 @@ int g_defect_mask_not_restored = 1;
 //                                       the habitat table or the next / previous row; fixed: a neighbour outside the grid has
 //                                       type 0x14, the type the same loop gives the ball's own tile through tileBlocked
 int g_defect_trial_edge_type = 1;
+//   narrateShot.wideViewFit             P31D (G33 item 5, log/roadmap/P31/P31D_notes.md): the box test is the original's
+//                                       800-screen test (a corner at x 0 or less is off screen, the box must lie in x 0x38 ..
+//                                       0x2f8), so a golfer standing in a side column of the host's wide view gets no narration
+//                                       and no SimFoto; fixed: the same test over the wide view's window, E = (W - 800) / 2 more
+//                                       on each side (W the view block's width), and a corner whose screen x is the hidden mark
+//                                       -1 is off screen as before
+int g_defect_narrate_wide_fit = 1;
 
 // ------------------------------------------------------------------------------------------------ foreign callees
 class Foreign {
@@ -1408,6 +1416,27 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
   return ret;
 }
 
+// P31D development switch for the pictures only (unset in every test and release run; log/roadmap/P31/P31D_notes.md): SG_P31D_STAGE
+// bit 0 narrates every scanned shot of a golfer whose screen x (+8) lies in a side column of the wide view (x < 0 but not the
+// hidden mark -1, or x >= 800), as g_forcedEventBits bit 0x10 does for the followed golfer; bit 1 makes narrateShot run the
+// original's 800 test whatever narrateShot.wideViewFit holds (the before picture); bit 6 gives such a golfer the SimFoto frame and
+// its modal wait as the followed golfer gets them. All change branch decisions only; nothing is written by the switch itself.
+static int p31d_stage_read() {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+  const char *e = std::getenv("SG_P31D_STAGE");
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+  return e ? std::atoi(e) : 0;
+}
+static int p31d_stage() {
+  static const int v = p31d_stage_read();
+  return v;
+}
+
 // ================================================================================================== scanShotArea
 void scan_shot_area(Ctx &ctx, int32_t slot) {
   const World w(ctx);
@@ -1466,7 +1495,8 @@ void scan_shot_area(Ctx &ctx, int32_t slot) {
     if (f_holeQuadrants(ctx, {r.i(kX), r.i(kY), 4}) != 0) v /= 2;
   }
   const int32_t lim = SG_NEGCTL(g_negctl_scan_shot_area) == 1 ? mul32(k, v) : mul32(add32(k, 1), v);
-  if (D > lim || ((s.g_forcedEventBits & 0x10u) && (z == s.g_playerGolfer || s.g_playerGolfer == -1))) {
+  const bool stage = (p31d_stage() & 1) != 0 && ((r.i(8) < 0 && r.i(8) != -1) || r.i(8) >= 800);   // P31D pictures only
+  if (D > lim || ((s.g_forcedEventBits & 0x10u) && (z == s.g_playerGolfer || s.g_playerGolfer == -1)) || stage) {
     narrate_shot(ctx, slot, R, D, 0);
     s.g_forcedEventBits &= 0xffffffefu;
   }
@@ -1480,6 +1510,11 @@ void scan_shot_area(Ctx &ctx, int32_t slot) {
 // lines (setLinePoint / lineTo), drawWindow, fillWindowRect, Widget_fillRect, drawCenteredText, drawTextSurface,
 // playSound, Window::refreshFull, the modal pumpAndRedraw(0) and saveBmp. The no-frame exit returns playSound's eax in
 // the original; the port returns 0 there (the only caller, scanShotArea, ignores the result).
+// P31D: the side margin narrateShot's box test adds on each side: 0 with narrateShot.wideViewFit at 1 (the original's 800 test)
+int32_t narrate_fit_margin(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_narrate_wide_fit) || (p31d_stage() & 2) != 0) return 0;
+  return (view_width(ctx) - 800) / 2;
+}
 int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_t flag) {
   const World w(ctx);
   GameState &s = ctx.gs();
@@ -1502,9 +1537,13 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
   int32_t who = g;
   const Rec R = w.rec(g);
   int32_t minX = R.i(8), maxX = minX, minY = R.i(0xc), maxY = minY;
+  // P31D (narrateShot.wideViewFit at 0): the x tests run over the wide view's window, E more on each side (0 at 1: the original)
+  const int32_t E = narrate_fit_margin(ctx);
+  bool hiddenMark = false;   // a corner at the hidden mark x -1 (what the frame's golfer pass writes for a golfer it does not see)
   {
     const Rec P = w.rec(R.sw(kPartner));
     const int32_t px = P.i(8), py = P.i(0xc);
+    hiddenMark = minX == -1 || px == -1;
     if (!(px >= minX)) minX = px;
     if (!(px <= maxX)) maxX = px;
     if (!(py >= minY)) minY = py;
@@ -1512,7 +1551,7 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
   }
   // (flag 0, not the followed golfer: two calls of emptyFunc_4a0890, a lone `ret`)
   int32_t ok = 1;
-  if (minX <= 0 || minY <= 0) {
+  if (minX <= neg32(E) || minY <= 0 || (E != 0 && hiddenMark)) {
     if (g != s.g_playerGolfer) {
       const uint32_t f = holeFlag(R);
       m.store<uint8_t>(f, static_cast<uint8_t>(m.load<uint8_t>(f) | (SG_NEGCTL(g_negctl_narrate_shot) == 2 ? 2u : 1u)));
@@ -1659,12 +1698,12 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
       }
     }
   }
-  // the box must fit the screen
-  if (!(minX >= 0x38)) {
-    if (!(minX >= 0))
+  // the box must fit the screen (P31D: the wide view's x window when E > 0)
+  if (!(minX >= sub32(0x38, E))) {
+    if (!(minX >= neg32(E)))
       ok = 0;
     else
-      minX = 0x38;
+      minX = sub32(0x38, E);
   }
   if (!(minY >= 0x38)) {
     if (!(minY >= 0))
@@ -1672,7 +1711,7 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     else
       minY = 0x38;
   }
-  if (!(maxX <= 0x2f8)) ok = 0;
+  if (!(maxX <= add32(0x2f8, E))) ok = 0;
   const int32_t followed = s.g_playerGolfer;
   if (!(maxY <= 0x230)) {
     ok = 0;
@@ -1850,6 +1889,9 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
   } else {
     frame = true;
   }
+  // P31D pictures only (SG_P31D_STAGE bit 6): the frame and the modal wait for a golfer whose corner stands in a side column
+  const bool p31d_frame = (p31d_stage() & 64) != 0 && ((R.i(8) < 0 && R.i(8) != -1) || R.i(8) >= 800);
+  if (p31d_frame) frame = true;
   // roadmap S2.11: with a graphics backend attached the frame and the ball are drawn (nothing else changes)
   const bool gfx_on = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
   if (frame) {
@@ -1895,7 +1937,7 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     const uint32_t f = holeFlag(R);
     m.store<uint8_t>(f, static_cast<uint8_t>(m.load<uint8_t>(f) | 1u));
   }
-  if ((any != 0 && s.g_playerGolfer == -1) || g == s.g_playerGolfer) {
+  if ((any != 0 && s.g_playerGolfer == -1) || g == s.g_playerGolfer || p31d_frame) {
     // pumpAndRedraw(0), the modal wait whose key decides the SimFoto save: with an InputSource attached (a run with
     // recorded or live input, portsim/sim/commands.h) the registered pump waits for the next command, as the original
     // does (phase 3.7a: the COMMAND segments' dispatches arrive here); with none (the vector harness, whose capture stood
@@ -1961,6 +2003,11 @@ const DefectDef kDefects[] = {
     {"trialShot.edgeNeighbourType", "model_defects#5",
      "the four edge-flag neighbour type tests read tile_type with no grid test; fixed: a neighbour outside the grid has type 0x14",
      &g_defect_trial_edge_type},
+    {"narrateShot.wideViewFit", "P31D,G33",
+     "the shot box must fit the original's 800-wide screen (a corner at x <= 0 is off screen, x 0x38 .. 0x2f8), so a golfer in a "
+     "side column of the wide view gets no narration and no SimFoto; fixed: the test runs over the wide view's window (view block "
+     "width W: (W - 800) / 2 more on each side), a corner at the hidden mark x -1 still off screen",
+     &g_defect_narrate_wide_fit},
 };
 }  // namespace
 

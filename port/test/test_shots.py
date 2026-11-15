@@ -218,6 +218,42 @@ def test_defect_narrate_mask_not_restored(portlib, on):
     assert mask == (0 if on else 0x1234)
 
 
+@pytest.mark.parametrize("case", ["left", "right", "hidden", "past"])
+@pytest.mark.parametrize("on", [1, 0])
+def test_narrate_wide_view_fit(portlib, case, on):
+    """narrateShot.wideViewFit (P31D, G33 item 5) on a constructed good shot of the followed golfer 5 (partner 6, no flight
+    points) with the view block's width 1066 (E = 133 more on each side). A box in a side column ('left' x -100 / -90, 'right'
+    x 850 / 860) fails the original's 800 test: the sentence goes to the ticker (startMessage: g_messageTimer set) and no
+    SimFoto (hole flag clear, flag 0x20000 clear). Fixed, it passes over the wide window: the SimFoto bookkeeping instead
+    (hole flag bit 0, flag 0x20000) and no ticker. 'hidden' (x -1, the frame's hidden mark) and 'past' (x 900 > 0x2f8 + 133)
+    fail at both settings."""
+    if any(f not in portlib.functions() for f in ("buildGolferName", "appendHoleName", "emitGolferThought")):
+        pytest.skip("narrateShot's callees are not registered yet")
+    xs = {"left": (-100, -90), "right": (850, 860), "hidden": (-1, 40), "past": (850, 900)}[case]
+    g, p = 5, 6
+    try:
+        with portlib.state() as st:
+            st.set_data_base(VL.DATA_VA)
+            assert st.call("bridge.viewWidth", [1066]).eax == 1066
+            st.write(_obj(portlib, "g_storyPairs")[0], struct.pack("<hh", g, 0))   # slot 0: golfer g, no flight points
+            st.write(_obj(portlib, "g_playerGolfer")[0], struct.pack("<i", g))
+            R, P = _golfer(portlib, g), _golfer(portlib, p)
+            st.write(R + 0x08, struct.pack("<ii", xs[0], 0x100))
+            st.write(P + 0x08, struct.pack("<ii", xs[1], 0x110))
+            st.write(R + 0xa2, struct.pack("<h", p))
+            ots, _ = _obj(portlib, "g_golferTypeState")
+            mt, _ = _obj(portlib, "g_messageTimer")
+            portlib.defect("narrateShot.wideViewFit", on)
+            st.call("narrateShot", [0, 3, 140, 0])
+            flag = st.read(ots + 3, 1)[0]                              # type 0, hole 0
+            flags = struct.unpack("<I", st.read(R + 0x10, 4))[0]
+            timer = struct.unpack("<i", st.read(mt, 4))[0]
+    finally:
+        portlib.defect("narrateShot.wideViewFit", 1)
+    photo = on == 0 and case in ("left", "right")
+    assert (flag & 1, bool(flags & 0x20000), timer >= 16) == ((1, True, False) if photo else (0, False, True))
+
+
 # ------------------------------------------------------------------------------------------- x87 (Win32 backend)
 @pytest.mark.x87
 @need_corpus

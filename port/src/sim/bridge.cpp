@@ -751,6 +751,13 @@ void a_play_sound_at_scripted(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(play_sound_at_with(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3), calls));
 }
 
+// Test-only (P31D): maps the view block when the context has none and stores its width word (arg 0), as a live host's frame-head
+// write does; returns view_width afterwards
+void a_view_width(Ctx &c, const uint32_t *a, Ret &r) {
+  if (view_map(c)) c.mem.store<int32_t>(kPortViewWidthVa, S(a, 0));
+  r.set_i32(view_width(c));
+}
+
 int g_negctl_none = 0;
 const FuncDef kFuncs[] = {
     {"worldToScreen", "default", "int", 5, 0, a_world_to_screen, &g_negctl_world_to_screen},
@@ -758,6 +765,7 @@ const FuncDef kFuncs[] = {
     {"queueMessage", "default", "void", 3, 0, a_queue_message, &g_negctl_queue_message},
     {"pointsPopup", "default", "void", 4, 0, a_points_popup, &g_negctl_points_popup},
     {"bridge.playSoundAtScripted", "default", "int", 5, 0x027F, a_play_sound_at_scripted, &g_negctl_none},
+    {"bridge.viewWidth", "default", "int", 1, 0, a_view_width, &g_negctl_none},
 };
 }  // namespace
 
