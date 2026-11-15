@@ -155,6 +155,36 @@ def test_add_golfer_pair_slots(portlib, mode):
     assert snap_p == b"\x5a" * 256 and snap_g[:4] == bytes(range(4))
 
 
+@pytest.mark.parametrize("holders", ["departed", "arriving", "live", "scratch"])
+@pytest.mark.parametrize("on", [1, 0])
+def test_departed_golfer_track(portlib, holders, on):
+    """addGolferPair.departedHoldsTrack (P31D fix 4): all 16 tracks held. 'departed' (golfers 20..35, hole byte 0) and 'arriving'
+    (hole byte 0xff): at 1 nothing is taken (the original), at 0 the first track goes to golfer 5. 'live' (golfers 20..35 on hole
+    3) and 'scratch' (the routing preview's word 0x98): unchanged at both settings."""
+    tr, gf = off(portlib, "g_storyPairs"), off(portlib, "g_golfers")
+    try:
+        with portlib.state() as st:
+            st.set_data_base(VL.DATA_VA)
+            for k in range(16):
+                h = 0x98 if holders == "scratch" else 20 + k
+                st.write(tr + k * TRACK, struct.pack("<h", h))
+                if h < 0x98:
+                    st.write(gf + h * GOLFER + 0x21, bytes([{"departed": 0, "arriving": 0xff, "live": 3}[holders]]))
+            st.write(gf + 5 * GOLFER + 0x21, b"\x02")
+            st.write(gf + 5 * GOLFER + 0xa2, struct.pack("<h", 6))
+            portlib.defect("addGolferPair.departedHoldsTrack", on)
+            before = st.image()
+            st.call("addGolferPair", [5])
+            words = [struct.unpack("<h", st.read(tr + k * TRACK, 2))[0] for k in range(16)]
+            changed = st.image() != before
+    finally:
+        portlib.defect("addGolferPair.departedHoldsTrack", 1)
+    taken = on == 0 and holders in ("departed", "arriving")
+    assert changed == taken
+    assert words[0] == (5 if taken else (0x98 if holders == "scratch" else 20))
+    assert words[1:] == [0x98 if holders == "scratch" else 20 + k for k in range(1, 16)]
+
+
 @pytest.mark.parametrize("mode", [0, 1])
 def test_reset_golfer_clears_hole(portlib, mode):
     gf = off(portlib, "g_golfers")

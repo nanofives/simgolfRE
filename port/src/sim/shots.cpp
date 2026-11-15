@@ -19,6 +19,7 @@
 #include "portsim/sim/shots.h"
 
 #include <cmath>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <initializer_list>
@@ -1420,7 +1421,8 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
 // bit 0 narrates every scanned shot of a golfer whose screen x (+8) lies in a side column of the wide view (x < 0 but not the
 // hidden mark -1, or x >= 800), as g_forcedEventBits bit 0x10 does for the followed golfer; bit 1 makes narrateShot run the
 // original's 800 test whatever narrateShot.wideViewFit holds (the before picture); bit 6 gives such a golfer the SimFoto frame and
-// its modal wait as the followed golfer gets them. All change branch decisions only; nothing is written by the switch itself.
+// its modal wait as the followed golfer gets them; bit 3 prints a line per narrateShot call. Bits 0, 1, 6 change branch decisions
+// only; nothing is written by the switch itself.
 static int p31d_stage_read() {
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -1549,6 +1551,8 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     if (!(py >= minY)) minY = py;
     if (!(py <= maxY)) maxY = py;
   }
+  // P31D pictures only: SG_P31D_STAGE bit 3 prints one stderr line per call (the fix 4 evidence counts narrations by it)
+  if (p31d_stage() & 8) std::fprintf(stderr, "[P31D] narrateShot golfer %d shot %d flag %d date %d\n", g, shot, flag, s.g_date);
   // (flag 0, not the followed golfer: two calls of emptyFunc_4a0890, a lone `ret`)
   int32_t ok = 1;
   if (minX <= neg32(E) || minY <= 0 || (E != 0 && hiddenMark)) {

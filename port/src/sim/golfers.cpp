@@ -3,6 +3,7 @@
 #include "portsim/sim/golfers.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <initializer_list>
 #include <utility>
 
@@ -74,6 +75,14 @@ int g_defect_walker_table_full = 1;   // spawnWalker.fullTable (D11)
 // is over the black void; pathStep then returns its unclamped direction (pathStep+0x2f, pathStep+0xdd..pathStep+0xf2) and he walks off
 // the land. 0 = the cursor tile is clamped to 0..0x31 for that target, and every walker's position stays inside the grid.
 int g_defect_walker_cursor_offgrid = 1;
+// addGolferPair.departedHoldsTrack (P31D fix 4, G30 class b, log/roadmap/P31/P31D_notes.md): addGolferPair takes the first of the 16
+// shot tracks whose golfer word is -1 and takes none when all 16 hold a golfer. updateGolfers frees a track only while it loops over
+// that track's golfer, and the loop skips a golfer whose hole byte is 0 (left the course) or 0xff (a record reused for a golfer
+// not yet arrived) before the free, so a golfer that leaves holding tracks keeps them for good (and a save carries them). Once all 16
+// are held that way no shot is scanned: no narration, no narrated skill reward, no SimFoto. 0 = when no track is free, the first one
+// held by a golfer record 0..0x97 whose hole byte is 0 or 0xff counts as free. With a free track, or every track's golfer on the
+// course, nothing changes; no RNG draw, no saved state added.
+int g_defect_departed_track = 1;
 
 Ptr<Golfer> golfer(Ctx &c, int32_t g) { return state_arr(c, &GameState::g_golfers) + g; }
 Ptr<ShotTrack> track(Ctx &c, int32_t p) { return state_arr(c, &GameState::g_storyPairs) + p; }
@@ -102,10 +111,35 @@ void append_pair_track_point(Ctx &ctx, int32_t p) {
   if (cnt < lim) t.field(&ShotTrack::point_count).set(static_cast<int16_t>(cnt + 1));
 }
 
+// P31D pictures only: SG_P31D_STAGE bit 11 runs the original track search whatever addGolferPair.departedHoldsTrack holds
+static bool p31d_stage_original_tracks() {
+  static const bool v = [] {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+    const char *e = std::getenv("SG_P31D_STAGE");
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+    return e != nullptr && (std::atoi(e) & 2048) != 0;
+  }();
+  return v;
+}
 void add_golfer_pair(Ctx &ctx, int32_t g) {
   int32_t slot = 0;
-  while (track(ctx, slot).field(&ShotTrack::golfer).get() != -1)
-    if (++slot >= kTracks) return;
+  while (slot < kTracks && track(ctx, slot).field(&ShotTrack::golfer).get() != -1) ++slot;
+  if (slot >= kTracks) {   // every track holds a golfer: the original takes none
+    if (SG_DEFECT(g_defect_departed_track) || p31d_stage_original_tracks()) return;
+    // P31D fix 4 (addGolferPair.departedHoldsTrack at 0): the first track whose golfer is no longer on the course
+    for (slot = 0; slot < kTracks; ++slot) {
+      const int32_t h = track(ctx, slot).field(&ShotTrack::golfer).get();
+      if (h < 0 || h >= 0x98) continue;
+      const uint8_t hole = static_cast<uint8_t>(golfer(ctx, h).field(&Golfer::hole).get());
+      if (hole == 0 || hole == 0xff) break;
+    }
+    if (slot >= kTracks) return;
+  }
   const Ptr<ShotTrack> t = track(ctx, slot);
   const Ptr<Golfer> gr = golfer(ctx, g);
   t.field(&ShotTrack::golfer).set(static_cast<int16_t>(g));
@@ -333,6 +367,11 @@ const DefectDef kDefects[] = {
     {"resetGolferState.singleHoleRecord", "model_defects#44",
      "the 18-iteration par loop re-derives the par of one hole record (g_holesPlusOne's) 18 times, thresholds applied twice",
      &g_defect_reset_single_hole},
+    {"addGolferPair.departedHoldsTrack", "P31D,G30",
+     "a shot track stays held by a golfer that left the course (updateGolfers frees a track only while looping over its golfer, "
+     "which it skips once its hole byte is 0 or 0xff), so a course can end with all 16 tracks held and no shot is ever scanned or "
+     "narrated; fixed: when no track is free, the first one held by a golfer record whose hole byte is 0 or 0xff is taken",
+     &g_defect_departed_track},
 };
 
 extern const ModuleDef kModule_golfers = {"golfers", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
