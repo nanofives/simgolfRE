@@ -196,6 +196,20 @@ int updateGolfers() {
                 (FLAGS(i) & 0x100000) == 0 && GW(i, (GS(g_golfers) + 178)) == 4)                    // updateGolfers+0x142..updateGolfers+0x170
                 G<int>((GS(f_w_4c2e00) + 12)) = i;                                                 // updateGolfers+0x172
         }
+        {   // P31D pictures only (SG_P31D_STAGE bit 7, unset in every test and release run): once per process, the first golfer
+            // standing in a side column of the wide view gets the SimFoto event word, the write the golfer panel's photo button makes
+            // (mainLoop ML+0xf164)
+            static const bool p31d_ev = std::getenv("SG_P31D_STAGE") && (std::atoi(std::getenv("SG_P31D_STAGE")) & 128);
+            static bool p31d_done = false;
+            static int p31d_from = -1;   // 0x40 dates after the first one seen here (past the load's welcome popup)
+            if (p31d_ev && p31d_from == -1) p31d_from = Date() + 0x40;
+            const int sx = GD(i, (GS(g_golfers) + 8));
+            if (p31d_ev && !p31d_done && Date() >= p31d_from && ((sx < 0 && sx != -1) || sx >= 800) &&
+                G<int>((GS(f_w_4c2e00) + 12)) == -1) {
+                G<int>((GS(f_w_4c2e00) + 12)) = i;
+                p31d_done = true;
+            }
+        }
         u = FLAGS(i);                                                                   // updateGolfers+0x178
         if (u & 0x100000) {                                                             // updateGolfers+0x17e
             p = GW(i, (GS(g_golfers) + 162));                                                        // updateGolfers+0x18a

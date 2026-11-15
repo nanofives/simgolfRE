@@ -1929,6 +1929,17 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     gx("Widget_fillRect", {surf, u32(left), u32(top), u32(left), u32(bottom), 0x80000000u});
     gx("Widget_fillRect", {surf, u32(left), u32(bottom), u32(right), u32(bottom), 0x80000000u});
     gx("Widget_fillRect", {surf, u32(right), u32(top), u32(right), u32(bottom), 0x80000000u});
+    if (E != 0) {   // P31D (narrateShot.wideViewFit at 0): the same border and frame lines in the wide scene (render only)
+      auto wide = [&](int32_t l, int32_t t, int32_t r, int32_t b, uint32_t col) { gx("simfoto.wide", {u32(l), u32(t), u32(r), u32(b), col}); };
+      wide(left - 0x10, top - 0x10, left - 0x10 + fw16, top, c);   // the four border bands (fillWindowRect's x, y, w, h)
+      wide(left - 0x10, top, left, bottom, c);
+      wide(right, top, right + 0x10, bottom, c);
+      wide(left - 0x10, bottom, left - 0x10 + fw16, bottom + 0x10, c);
+      wide(left, top, right + 1, top + 1, 0x80000000u);   // the four frame lines (Widget_fillRect's ends are inclusive)
+      wide(left, top, left + 1, bottom + 1, 0x80000000u);
+      wide(left, bottom, right + 1, bottom + 1, 0x80000000u);
+      wide(right, top, right + 1, bottom + 1, 0x80000000u);
+    }
     gx("drawCenteredText", {state_va(ctx, &GameState::f_strpool_4c4e58), u32((right + left) / 2), u32(bottom + 4), 0x80006318u});
     gx("drawTextSurface", {text, u32(right - 0x50), u32(bottom - 0x10), 0x80007ff0u});
     gx("Window::refreshFull", {win, 0});

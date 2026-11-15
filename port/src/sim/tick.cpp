@@ -297,6 +297,18 @@ int g_defect_foreign_green_auto = 1;
 // worldToScreen (ML+0x41c4) and tileToScreen (ML+0x41f1) find both its ends on screen. Fixed (0): a segment with an end off screen
 // is drawn too, clipped at the view's edge (tick_frame.inc P19B_HoleLineEnds).
 int g_defect_hole_line_ends_on_screen = 1;
+// mainLoop.simFotoWideFrame (P31D, G33 item 5 "Widen to the view", log/roadmap/P31/P31D_notes.md): the SimFoto event's box
+// (P5_simfoto, ML+0x8ffb..ML+0x9542) is clamped into the original's 800 screen (x0 0x10..0x2bc, x1 0x64..0x310, ML+0x90e6 /
+// ML+0x9107), so for a golfer in a side column of the wide view the frame lands on the 800 frame's edge, not around the golfer.
+// Fixed (0): the x clamps move out by E = (view width - 800) / 2 on each side and the frame's border, frame lines and caption are
+// also drawn into the wide scene (the render-only drop simfoto.wide). y unchanged. The box only feeds drawing and the dropped
+// saveCourseJpg: no GameState object depends on it.
+int g_defect_simfoto_wide_frame = 1;
+int32_t simfoto_wide_margin(Ctx &ctx) {
+  // P31D pictures only: SG_P31D_STAGE bit 8 runs the original's clamps whatever the switch holds (the before picture)
+  static const bool stage_orig = std::getenv("SG_P31D_STAGE") && (std::atoi(std::getenv("SG_P31D_STAGE")) & 256);
+  return SG_DEFECT(g_defect_simfoto_wide_frame) || stage_orig ? 0 : (view_width(ctx) - 800) / 2;
+}
 int32_t hover_tip_dwell();  // P6B hoverTip.tenFrameDwell (gfx_hud.cpp): the HUD panels' tip dwell, 10 frames in the original
 inline int16_t cash_word(int32_t v) {
   if (SG_DEFECT(g_defect_cash_low_word)) return static_cast<int16_t>(v);
@@ -2348,6 +2360,11 @@ const DefectDef kDefects[] = {
      "a hole's shot line is drawn segment by segment and a segment with an end off screen is left out, so on a hole partly in view "
      "the line stops short of the screen's edge; fixed: that segment is drawn too, cut at the edge of the view",
      &g_defect_hole_line_ends_on_screen},
+    {"mainLoop.simFotoWideFrame", "P31D,G33",
+     "the SimFoto event's frame is clamped into the original's 800 screen (x 0x10 .. 0x310), so a golfer in a side column of the "
+     "wide view gets a frame on the 800 frame's edge; fixed: the x clamps move out by (W - 800) / 2 on each side (W the view block's "
+     "width) and the frame is drawn into the wide scene too",
+     &g_defect_simfoto_wide_frame},
 };
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

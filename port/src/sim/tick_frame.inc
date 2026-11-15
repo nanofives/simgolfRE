@@ -5745,9 +5745,10 @@ void P5_simfoto(u32 F) {
         ebx -= d;                                          // ML+0x90e2
         edi += d;                                          // ML+0x90e4
     }
-    const int x0 = cc("clamp", FD(0xc) - 0x10, 0x10, 0x2bc);   // ML+0x90e6..ML+0x90f5 clamp -> ebp
+    const int E = simfoto_wide_margin(ctx);                // P31D mainLoop.simFotoWideFrame: the x clamps move out by E (0 at 1)
+    const int x0 = cc("clamp", FD(0xc) - 0x10, 0x10 - E, 0x2bc + E);   // ML+0x90e6..ML+0x90f5 clamp -> ebp
     esi += 0x10;                                           // ML+0x90ff
-    const int x1 = cc("clamp", esi, 0x64, 0x310);       // ML+0x9107 clamp -> esi
+    const int x1 = cc("clamp", esi, 0x64 - E, 0x310 + E);       // ML+0x9107 clamp -> esi
     FD(0xc) = x1;                                          // ML+0x9119
     const int y0 = cc("clamp", ebx - 0x10, 0x10, 0x1f4);   // ML+0x910c..ML+0x911d clamp -> ebx
     const int y1 = cc("clamp", edi + 0x10, 0x64, 0x248);   // ML+0x9122..ML+0x912f clamp -> edi
@@ -5772,6 +5773,20 @@ void P5_simfoto(u32 F) {
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), x0, y0, x0, y1, (int)0x80000000);   // ML+0x91e6 Widget_fillRect
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), x0, y1, x1, y1, (int)0x80000000);   // ML+0x91f9 Widget_fillRect
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), x1, y0, x1, y1, (int)0x80000000);   // ML+0x920c Widget_fillRect
+    if (E != 0 && g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // P31D: the same border and frame lines in the wide scene
+        auto wide = [&](int l, int t, int r, int b, uint32_t c) {
+            const uint32_t v[5] = {(u32)l, (u32)t, (u32)r, (u32)b, c};
+            gfx_drop(ctx, "simfoto.wide", v, 5);
+        };
+        wide(x0 - 0x10, y0 - 0x10, x0 - 0x10 + wb, y0, 0x80007fffu);   // the four border bands (fillWindowRect's x, y, w, h)
+        wide(x0 - 0x10, y0 - 0x10, x0, y0 - 0x10 + hb, 0x80007fffu);
+        wide(x0 - 0x10, y1, x0 - 0x10 + wb, y1 + 0x10, 0x80007fffu);
+        wide(x1, y0 - 0x10, x1 + 0x10, y0 - 0x10 + hb, 0x80007fffu);
+        wide(x0, y0, x1 + 1, y0 + 1, 0x80000000u);   // the four frame lines (Widget_fillRect's ends are inclusive)
+        wide(x0, y0, x0 + 1, y1 + 1, 0x80000000u);
+        wide(x0, y1, x1 + 1, y1 + 1, 0x80000000u);
+        wide(x1, y0, x1 + 1, y1 + 1, 0x80000000u);
+    }
     const int g2 = FD(0x2c);                               // ML+0x9211
     if (G16((GS(g_golfers) + 178) + g2) == 4 && GU8((GS(g_golfers) + 133) + g2) == 0x32) {   // ML+0x9215..ML+0x9228
         tc("setDrawTarget", Root(), GS(g_font519928), 0, 0, 0);       // ML+0x923b setDrawTarget

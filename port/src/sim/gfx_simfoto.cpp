@@ -29,6 +29,12 @@
 //   simfoto.begin(l, t, r, b)
 //       a marker tick's P5_simfoto puts before the SimFoto frame's first fill, with the frame's outer rectangle [l, r) x [t, b)
 //       (the 16-pixel border included); it draws nothing.
+//   simfoto.wide(l, t, r, b, colour)   (P31D; tick_frame.inc P5_simfoto and shots.cpp narrate_shot, only when the frame's box is in
+//       the wide view's coordinates: mainLoop.simFotoWideFrame / narrateShot.wideViewFit at 0 with a view wider than 800) one of
+//       the frame's border bands or frame lines, [l, r) x [t, b) in 800 space, after the same fill drawn on the root: drawn into the
+//       wide scene's hr plane at scene x = x + scene_e with the root pixels it covers marked (P23D fix 5's gfxs::bubble_fill, the
+//       thought box's path), so the part in a side column shows and the part inside the frame is the same picture at the window's
+//       resolution. Nothing without the world layer (bubble_fill's own tests: after the queue, hr valid).
 //
 // THE PROBE (negctl modes >= 0x10000 of this family: a measurement, not a control; port/test/test_gfx_dialogs2.py): at
 // simfoto.begin and at the start of drawWindow's golfer arm the rectangle the dialog covers is filled with the probe pattern (the
@@ -47,6 +53,7 @@
 #include "gfx_body.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/gfx_scene.h"   // P31D: gfxs::bubble_fill
 
 namespace portsim {
 
@@ -114,9 +121,24 @@ void b_simfoto_begin(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
                    static_cast<int32_t>(a[3]));
 }
 
+// P31D: a SimFoto border band or frame line also into the wide scene (render only; see simfoto.wide above)
+void b_simfoto_wide(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  const uint32_t c = a[4];
+  if (!(c & 0x80000000u)) {
+    g.unsup("simfoto.wide: a palette colour index");
+    return;
+  }
+  g.ensure_root(ctx);
+  ++g.hud.bubble_depth;   // bubble_fill draws only inside a bubble scope
+  gfxs::bubble_fill(g, ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]),
+                    static_cast<int32_t>(a[3]), static_cast<uint16_t>(c & 0xffff));
+  --g.hud.bubble_depth;
+}
+
 const GfxBodyDef kBodies[] = {
     {"loadInterfaceArt.ballArt", b_ball_art},
     {"simfoto.begin", b_simfoto_begin},
+    {"simfoto.wide", b_simfoto_wide},
 };
 
 }  // namespace
