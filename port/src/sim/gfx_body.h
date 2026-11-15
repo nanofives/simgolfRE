@@ -123,6 +123,7 @@ class Gfx {
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   bool sharp_art = false;  // P26C item 11 (gfx.h gfx_set_sharp_art): the bulletin board's art words as text runs
+  bool popup_fit = false;  // P30A item 2 (gfx.h gfx_set_popup_fit): showPopup drawn as wide as its translated lines
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
   bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   bool walker_labels_top = false;  // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' labels over the sprite walk

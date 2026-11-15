@@ -129,6 +129,10 @@ class Translator {
 
   // Client (host window) coordinates to the original's logical ones.
   Point to_logical(Point client) const;
+  // P30A item 2 (log/roadmap/P30/P30A_notes.md; app option --popup-fit): a map every logical point to_logical makes goes through
+  // (the app installs portsim::gfx_popup_warp: a widened popup's drawn box onto the box its hit tests use); null = none (tools)
+  using PointWarp = bool (*)(int32_t &x, int32_t &y);
+  static void set_point_warp(PointWarp w);
   // lParam of a mouse message: two signed 16-bit words, client coordinates (host window), to logical.
   Point lparam_point(uint32_t lp) const;
 

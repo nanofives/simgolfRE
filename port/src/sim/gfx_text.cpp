@@ -1809,4 +1809,24 @@ const GfxBodyDef kBodies[] = {
 
 extern const GfxFamily kGfxFamily_text = {"text", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
 
+// P30A item 2 (gfx.h gfx_popup_draw_width): showPopup's drawn width over its translated lines; reads only (the root's text object
+// is the one the caller's setDrawTarget set, gfxt::text_put leaves it as it was)
+int32_t gfx_popup_draw_width(Ctx &ctx, uint32_t text, int32_t x, int32_t box_w) {
+  Gfx *g = gfx(ctx);
+  if (!g || !g->popup_fit || lang::language() == lang::kEnglish || text == 0) return box_w;
+  g->ensure_root(ctx);
+  const std::string all = gfxb::vstring(ctx.mem, text);
+  int32_t widest = 0;
+  bool other = false;
+  for (size_t s = 0, e; (e = all.find('\n', s)) != std::string::npos; s = e + 1) {  // the lines draw_popup_pass draws
+    const std::string line = all.substr(s, e - s), t = lang::tr(line);
+    if (t != line) other = true;
+    widest = std::max(widest, gfxt::text_put(*g, ctx, t));
+  }
+  if (!other) return box_w;
+  const int32_t need = add32(sub32(widest, 1) | 0xf, 0x31);
+  const int32_t room = 2 * std::min(x, sub32(0x320, x));
+  return std::max(box_w, std::min(need, room));
+}
+
 }  // namespace portsim

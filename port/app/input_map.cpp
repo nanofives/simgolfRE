@@ -1,5 +1,7 @@
 #include "input_map.h"
 
+#include <atomic>  // P30A item 2: the point warp
+
 namespace portapp {
 
 namespace {
@@ -39,6 +41,11 @@ Step read_key(ReadApi api, uint32_t vk, uint32_t result) {
 
 }  // namespace
 
+namespace {
+std::atomic<Translator::PointWarp> g_point_warp{nullptr};  // P30A item 2
+}  // namespace
+void Translator::set_point_warp(PointWarp w) { g_point_warp.store(w); }
+
 Point Translator::to_logical(Point c) const {
   Point p;
   if (defect_ == Defect::NoViewport) return c;
@@ -48,6 +55,7 @@ Point Translator::to_logical(Point c) const {
   p.y = static_cast<int32_t>(floor_div(static_cast<int64_t>(c.y - vp_.origin_y) * kLogicalH, h));
   if (defect_ == Defect::YFlip) p.y = kLogicalH - 1 - p.y;
   if (defect_ == Defect::YFrameOffset) p.y += kCaptionHeight;
+  if (const PointWarp pw = g_point_warp.load()) pw(p.x, p.y);  // P30A item 2: a widened popup's drawn box
   return p;
 }
 

@@ -90,6 +90,29 @@ void gfx_set_row_hover(Ctx &ctx, bool on);
 // `<image>.blank.pcx` and `<image>.runs.tsv` (scripts/lang/redraw_art.py --sharp), draw their words as text runs at the window's
 // resolution over the blank plate; the root keeps the redrawn art's pixels (drawing only)
 void gfx_set_sharp_art(Ctx &ctx, bool on);
+// P30A item 2 (log/roadmap/P30/P30A_notes.md; app option --popup-fit, default on, SG_APP_P30=off: off). showPopup sizes its box
+// from the English lines (Text_put) and hit-tests that box; a translated line wider than it used to step the font down. With it on
+// and a language other than English, the popup is DRAWN at gfx_popup_draw_width (the same rule over the translated lines) and,
+// while it owns input, the app maps a point inside the drawn box back to the sim's box (gfx_popup_warp), so every row and the
+// check list's close square answer where they are drawn. The GameState and the hit tests never see the language. Off (the
+// default) or English: the drawn width is the sim's, no warp.
+void gfx_set_popup_fit(Ctx &ctx, bool on);
+// the width showPopup draws its box at: box_w, or (on, not English, a backend) ((widest translated line - 1) | 0xf) + 0x31 with the
+// backend's Text_put in the root's current fonts, at least box_w and at most 2 * min(x, 0x320 - x) (the box inside the 800-space
+// frame around its centre x). `text` = the popup's g_textBuffer (lines ended by 0x0a, the tail not drawn). Reads only.
+int32_t gfx_popup_draw_width(Ctx &ctx, uint32_t text, int32_t x, int32_t box_w);
+// The popup warp (process-wide: the sim thread pushes and pops, the app's input threads map). push: a popup drawn over 800-space
+// rows y0 <= y < y1 between drawn_left and drawn_right whose hit tests use sim_left / sim_right (x -+ box_w / 2); returns a token
+// for pop. Only the newest pushed warp maps (the popup that owns input). gfx_popup_warp maps a point inside that drawn box: the
+// bullets' 0x24 from the left edge and the right 0x30 (the row end and the close square) moved with their edge, the middle scaled,
+// both ends exact; returns true when it moved the point. Points outside the drawn box are left as they are.
+// first_y / rows: the first option row's y and the option count (logged only: SG_P30_LOG=1 prints each push and pop to stderr)
+int gfx_popup_warp_push(int32_t y0, int32_t y1, int32_t sim_left, int32_t sim_right, int32_t drawn_left, int32_t drawn_right,
+                        int32_t first_y, int32_t rows);
+void gfx_popup_warp_pop(int token);
+bool gfx_popup_warp(int32_t &x, int32_t &y);
+uint64_t gfx_popup_warp_mapped();  // points gfx_popup_warp moved (session.json p30a)
+uint64_t gfx_popup_warp_pushes();  // widened popups opened (session.json p30a)
 // P26E fix 2 (log/roadmap/P26/P26E_notes.md; app option --card-width, default on, SG_APP_P26=off: off). drawMatchScoreboard's grid
 // (the art cut g_sprites541a18 + 0x108) always has 18 hole columns and the total column; with it on and the HUD layer capture on,
 // a course of L < 18 holes gets a scorecard of L hole columns: the golfer panel's layer right of hole column L (the total column, the

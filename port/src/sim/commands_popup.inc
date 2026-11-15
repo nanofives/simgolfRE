@@ -45,6 +45,8 @@ struct DialogMark {
 // line ended by 0x0a: a caption centred with drawCenteredText2 (white, 0x80007ff0 + 0xf for flag4), an option with its
 // text at left + 0x24 (drawTextSurface one row up for the selection) and its bullet (check box for flag4 == 0), and the
 // refresh
+// P30A item 2: box_w here is the width the box is DRAWN at (show_popup's draw_w: its own box_w unless --popup-fit widened it for
+// the translated lines, gfx.h gfx_popup_draw_width), and inner its rounded text width (box_w - 0x31); drawing only
 void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_h, int32_t inner, int32_t flag4,
                      int32_t mask, int32_t disabled, int32_t sel) {
   if (!popup_gfx_on(ctx)) return;
@@ -137,6 +139,16 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
   const int32_t inner = sub32(widest, 1) | 0xf;
   const int32_t box_w = add32(inner, 0x31);
   const int32_t box_h = mul32(add32(mul32(lines, 3), 3), 8);
+  // P30A item 2 (drawing only): the width the box is drawn at, box_w unless --popup-fit widens it for the translated lines
+  // (gfx.h gfx_popup_draw_width; measures only). The hit tests below keep box_w; while this popup is open the app maps a point
+  // in the drawn box onto this box (gfx_popup_warp), and the warp goes when the popup returns (every return, an exception too).
+  const int32_t draw_w = popup_gfx_on(ctx) ? std::max(box_w, gfx_popup_draw_width(ctx, buf, x, box_w)) : box_w;
+  struct WarpScope {
+    int token = 0;
+    ~WarpScope() {
+      if (token) gfx_popup_warp_pop(token);
+    }
+  } warp_scope;
   int32_t sel = -1, result = 0, key_latch = 0, first_y = 0;
   if ((y & 1) != 0) popup_gx(ctx, "showPopup.readColour", {u32(x), u32(y)});
   for (;;) {
@@ -160,7 +172,11 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
       ++line_idx;
     }
     const int32_t count = sub32(line_idx, first);
-    draw_popup_pass(ctx, x, y, box_w, box_h, inner, flag4, mask, disabled, sel);
+    // P30A item 2: the warp of a widened popup, from its first pass on (before its first drawing and its first input read)
+    if (draw_w != box_w && warp_scope.token == 0)
+      warp_scope.token = gfx_popup_warp_push(y, add32(y, box_h), sub32(x, box_w / 2), add32(x, box_w / 2), sub32(x, draw_w / 2),
+                                             add32(x, draw_w / 2), first_y, count);
+    draw_popup_pass(ctx, x, y, draw_w, box_h, sub32(draw_w, 0x31), flag4, mask, disabled, sel);  // P30A: drawn at draw_w
     pump_messages(ctx, PumpKind::Blocking, "showPopup");
     if (flag4 == 0 && esc_pressed(ctx, g_defect_esc_popup_close)) return mask;  // P9A item 2: Esc = the close button
     if (flag4 != 0) {
@@ -186,7 +202,7 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
       mask = i32(1u << (u32(sel) & 31));
       if (gs.g_rootInput[kButton] != 0) {
         if ((u32(disabled) & u32(mask)) == 0) {
-          if ((y & 1) != 0) popup_gx(ctx, "showPopup.oddRepaint", {u32(sub32(x, box_w / 2)), u32(y), u32(box_w), u32(box_h)});
+          if ((y & 1) != 0) popup_gx(ctx, "showPopup.oddRepaint", {u32(sub32(x, draw_w / 2)), u32(y), u32(draw_w), u32(box_h)});
           return sel;
         }
         call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0});   // a disabled option: the refusal sound, a new pass

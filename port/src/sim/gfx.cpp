@@ -2336,6 +2336,81 @@ void gfx_set_row_hover(Ctx &ctx, bool on) {
 void gfx_set_sharp_art(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->sharp_art = on;
 }
+// P30A item 2 (gfx.h gfx_set_popup_fit)
+void gfx_set_popup_fit(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->popup_fit = on;
+}
+// P30A item 2 (gfx.h gfx_popup_warp_push / pop / warp): the warps of the widened popups open now, newest last
+namespace {
+struct PopupWarp {
+  int token = 0;
+  int32_t y0 = 0, y1 = 0, sl = 0, sr = 0, dl = 0, dr = 0;
+};
+std::mutex g_popup_warp_mu;
+std::vector<PopupWarp> g_popup_warps;
+int g_popup_warp_next = 0;
+uint64_t g_popup_warp_mapped = 0, g_popup_warp_pushes = 0;
+}  // namespace
+static bool popup_warp_log() {
+  static const bool on = [] {
+    const char *e = std::getenv("SG_P30_LOG");
+    return e && *e && std::strcmp(e, "0") != 0;
+  }();
+  return on;
+}
+int gfx_popup_warp_push(int32_t y0, int32_t y1, int32_t sim_left, int32_t sim_right, int32_t drawn_left, int32_t drawn_right,
+                        int32_t first_y, int32_t rows) {
+  std::lock_guard<std::mutex> lk(g_popup_warp_mu);
+  PopupWarp w;
+  w.token = ++g_popup_warp_next;
+  w.y0 = y0, w.y1 = y1, w.sl = sim_left, w.sr = sim_right, w.dl = drawn_left, w.dr = drawn_right;
+  g_popup_warps.push_back(w);
+  ++g_popup_warp_pushes;
+  if (popup_warp_log())
+    std::fprintf(stderr, "P30A warp push %d y %d %d sim %d %d drawn %d %d first_y %d rows %d\n", w.token, y0, y1, sim_left, sim_right,
+                 drawn_left, drawn_right, first_y, rows);
+  return w.token;
+}
+void gfx_popup_warp_pop(int token) {
+  std::lock_guard<std::mutex> lk(g_popup_warp_mu);
+  for (size_t i = g_popup_warps.size(); i > 0; --i)
+    if (g_popup_warps[i - 1].token == token) {
+      g_popup_warps.erase(g_popup_warps.begin() + static_cast<std::ptrdiff_t>(i - 1));
+      if (popup_warp_log()) std::fprintf(stderr, "P30A warp pop %d (%zu left)\n", token, g_popup_warps.size());
+      return;
+    }
+}
+bool gfx_popup_warp(int32_t &x, int32_t &y) {
+  std::lock_guard<std::mutex> lk(g_popup_warp_mu);
+  if (g_popup_warps.empty()) return false;
+  const PopupWarp &w = g_popup_warps.back();
+  if (y < w.y0 || y >= w.y1 || x < w.dl || x >= w.dr) return false;
+  // showPopup's tests (commands_popup.inc): a row is sl < x < sr - 0x30, the bullets at sl + 8 / + 0xc and the text at sl + 0x24;
+  // the close square |x - (sr - 0x14)| < 0x14. The left 0x24 keeps its offset from the left edge, the right 0x30 from the right
+  // edge, the middle [dl + 0x24, dr - 0x30) is scaled onto [sl + 0x24, sr - 0x30) (floor), so both of its ends land exactly.
+  const int32_t lm = 0x24, rm = 0x30;
+  int32_t nx = x;
+  if (x < w.dl + lm) {
+    nx = x - (w.dl - w.sl);
+  } else if (x >= w.dr - rm) {
+    nx = x - (w.dr - w.sr);
+  } else {
+    const int64_t dm = static_cast<int64_t>(w.dr - rm) - (w.dl + lm), sm = static_cast<int64_t>(w.sr - rm) - (w.sl + lm);
+    nx = dm > 0 ? static_cast<int32_t>(w.sl + lm + (static_cast<int64_t>(x) - (w.dl + lm)) * sm / dm) : x - (w.dl - w.sl);
+  }
+  if (nx == x) return false;
+  x = nx;
+  ++g_popup_warp_mapped;
+  return true;
+}
+uint64_t gfx_popup_warp_mapped() {
+  std::lock_guard<std::mutex> lk(g_popup_warp_mu);
+  return g_popup_warp_mapped;
+}
+uint64_t gfx_popup_warp_pushes() {
+  std::lock_guard<std::mutex> lk(g_popup_warp_mu);
+  return g_popup_warp_pushes;
+}
 // P26E fix 2 (gfx.h gfx_set_card_width)
 void gfx_set_card_width(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->card_width = on;
