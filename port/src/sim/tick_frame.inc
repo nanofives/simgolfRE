@@ -8554,6 +8554,15 @@ a41e070:
     if (edx >= 0x31F) { eax++; ecx++; }                // ML+0xebd9 cmp edx,0x31f; jl skip
     if (esi >= 0x257) { eax--; ecx++; }                // ML+0xebe3 cmp esi,0x257; jl skip
     edx = G32(GS(g_cameraRot));                             // ML+0xebed
+    // P31B (mainLoop.edgeScrollTileAtZoom8 = 0, the host's edge glide): at zoom 8 the move the rotation's case would add goes to
+    // the host (view block words +0x6c / +0x70), which glides the camera at half of it per frame; the clamp below runs as before
+    if (view_edge_glide(ctx) && G32(GS(g_zoomScale)) == 8) {
+        const int32_t r = (int32_t)edx;
+        const int32_t mx = r == 0 ? eax : r == 2 ? -ecx : r == 4 ? -eax : r == 6 ? ecx : 0;   // ML+0xebff / ML+0xec1b / ML+0xec33 / ML+0xec4f
+        const int32_t my = r == 0 ? ecx : r == 2 ? eax : r == 4 ? -ecx : r == 6 ? -eax : 0;
+        view_put_edge(ctx, mx, my);
+        goto a41e22b;
+    }
     if ((u32)edx > 6) goto a41e22b;                    // ML+0xebf3 cmp edx,6; ja
     switch (edx) {                                     // ML+0xebf8 jmp [edx*4+ML+0x124ac]
         case 0:  // ML+0xebff

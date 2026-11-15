@@ -185,6 +185,10 @@ struct HostOptions {
   ArrowGlide *glide = nullptr;
   double glide_speed = 0;   // tiles / s per camera axis with a 4-tile key-switch step (zoom 1 / 2 / 4, zoom 8 without P11F)
   bool glide_step2_z8 = false;  // P11F (mainLoop.cameraStepFixed4 = 0): the step is 2 tiles at zoom 8, the speed half
+  // P31B item 3 (--edge-glide on, needs the glide and mainLoop.edgeScrollTileAtZoom8 = 0): each frame head sets view block word
+  // +0x68 (bridge.h kPortViewEdgeGlideVa, a recorded write when it changes) and hands the last frame's zoom 8 edge move (words
+  // +0x6c / +0x70, written by the sim instead of adding it) to ArrowGlide::edge at half a tile per game frame per tile
+  bool edge_glide = false;
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -531,6 +535,8 @@ class LiveSession : public portsim::LiveHost {
   std::atomic<bool> glide_wake_{false};       // P26A: an arrow started a glide: the frame wait ends
   int64_t head_ns_ = 0;                       // P26A: the frame head's perf_now_ns (CameraSnap::head_ns)
   uint64_t glide_wakes_ = 0, glide_dropped_ = 0, glide_writes_ = 0;  // P26A (session.json glide)
+  int32_t edge_zoom_ = 0;                     // P31B: g_zoomScale at the last frame head (apply_glide)
+  uint64_t edge_frames_ = 0;                  // P31B: frame heads that took a zoom 8 edge move (session.json glide.edge_frames)
   bool arrow_clock_written_ = false;          // P22A
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers

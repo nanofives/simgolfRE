@@ -106,6 +106,12 @@
 //   zoom 8 under P11F) from the key-down and key-up, Windows' key repeat ignored; the window glides the course picture at that speed
 //   every present and the game steps whole tiles ahead of it at each frame head (present.h ArrowGlide, bridge.h kPortViewGlideXVa);
 //   an arrow that starts a glide ends the frame wait at once; a tap still moves one step (log/roadmap/P26/P26A_notes.md)
+//   P31B item 3: --edge-glide on|off (default on; SG_APP_P31=off: off; needs --arrow-glide and mainLoop.edgeScrollTileAtZoom8 = 0)
+//   at zoom 8 the edge scroll moves the camera through the arrow glide at half a tile per game frame per tile of the frame's own
+//   edge move (the screen speed of zoom 4); the frame keeps its edge tests (bridge.h kPortViewEdgeGlideVa)
+//   P31B item 4: --tap-slide on|off (default on; SG_APP_P31=off: off; needs --arrow-glide) a lone arrow tap (a key-up that leaves
+//   the axis short of its one-step minimum) covers the rest of its step in at most 60 ms (SG_P31_TAP_MS) instead of at the glide's
+//   speed (4 tiles at 30.1 tiles / s = 133 ms); held arrows keep the glide (present.h ArrowGlide::set_tap_s)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
@@ -564,6 +570,8 @@ struct Options {
   bool popup_fit = true;           // P30A item 2: --popup-fit on|off (SG_APP_P30=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
+  bool edge_glide = true;          // P31B item 3: --edge-glide on|off (SG_APP_P31=off: off)
+  bool tap_slide = true;           // P31B item 4: --tap-slide on|off (SG_APP_P31=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool staff_labels_top = true;    // P26D item 9: --staff-labels-top on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
@@ -882,6 +890,7 @@ const ProfileMember kPlayProfile[] = {
     {"heightBlend.rowPastEnd", 0},           // P28A (G30, D6)
     {"generateRandomCourse.riverOutside", 0},      // P28A (G30, D6)
     {"generateRandomCourse.smoothingOutside", 0},  // P28A (G30, D6)
+    {"mainLoop.edgeScrollTileAtZoom8", 0},  // P31B item 3 (G33): the zoom 8 edge scroll at zoom 4's screen speed (the edge glide)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1704,6 +1713,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     ho.glide_speed = 0.7 * 4.0 / 0.093;
     const int s4 = portsim::defect_find("mainLoop.cameraStepFixed4");  // P11F: 2 tiles at zoom 8
     ho.glide_step2_z8 = s4 >= 0 && *portsim::defect_at(s4, nullptr)->flag == 0;
+    const int e8 = portsim::defect_find("mainLoop.edgeScrollTileAtZoom8");  // P31B item 3: the zoom 8 edge scroll in the glide
+    ho.edge_glide = o.edge_glide && e8 >= 0 && *portsim::defect_at(e8, nullptr)->flag == 0;
+    if (o.tap_slide) {  // P31B item 4: a lone tap's slide (development: SG_P31_TAP_MS)
+      const char *tm = std::getenv("SG_P31_TAP_MS");
+      glide.set_tap_s((tm ? std::atof(tm) : 60.0) / 1000.0);
+    }
   }
   LiveSession session(ho, rec.string());
 
@@ -3666,6 +3681,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.sharp_art = v == "on";
       continue;
     }
+    if (a == "--edge-glide" || a == "--tap-slide") {  // P31B items 3 / 4 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      (a == "--edge-glide" ? o.edge_glide : o.tap_slide) = v == "on";
+      continue;
+    }
     if (a == "--popup-fit") {  // P30A item 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.popup_fit = v == "on";
@@ -4165,6 +4185,8 @@ int main(int argc, char **argv) {
       o.staff_labels_top = false;  // P26D item 9
       o.sharp_art = false;  // P26C item 11
     }
+  if (const char *ep = std::getenv("SG_APP_P31"))  // P31: G33's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = false;  // P31B items 3 / 4
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

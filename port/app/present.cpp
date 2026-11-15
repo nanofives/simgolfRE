@@ -212,6 +212,10 @@ namespace {
 constexpr double kGlideEps = 1e-6;
 constexpr double kGlideMax = 49.0;     // the key switch's clamp of each camera axis (0..0x31)
 constexpr double kGlideResync = 12.0;  // tiles: D this far from the picture's camera (a jump: a map click) restarts at it
+// P31B (class a): a frame head's request runs at most this far ahead of D. Under load the lead reached its 0.4 s clamp (late
+// pictures: 300 ms from the head), and 0.4 s x 30.1 tiles / s rounded up is 13 tiles, past kGlideResync: the window restarted D
+// at the far picture (a 13-tile jump) and the next head stepped back (P31B_notes.md). SG_P31_REQCAP=0: no cap (P26A as it was)
+constexpr double kGlideReqMax = 8.0;
 // the camera axes' move of one arrow at rotation rot (tick_frame.inc P21_ArrowStep: direction + rotation, & 7)
 void arrow_axes(uint32_t vk, int32_t rot, double &x, double &y) {
   const int base = vk == 0x26 ? 0 : vk == 0x27 ? 2 : vk == 0x28 ? 4 : 6;
@@ -238,22 +242,70 @@ void ArrowGlide::dir_locked() {
   bool any = false;
   for (int i = 0; i < 2; ++i) {
     Axis &a = ax_[i];
-    if (n[i] != 0) {
-      if (a.ud == 0 || (a.ud > 0) != (n[i] > 0)) a.st = a.d;  // a new direction on this axis: the tap minimum counts from here
+    const double e = edge_f_[i] / period_s_;  // P31B item 3: the edge scroll's move (tiles / s), 0 without --edge-glide
+    if (n[i] != 0 || e != 0) {
+      if (n[i] != 0 && (a.ud == 0 || (a.ud > 0) != (n[i] > 0))) a.st = a.d;  // a new direction: the tap minimum counts from here
       a.ud = n[i];
+      a.ue = e;
+      a.ur = 0;
       a.bounded = false;
       any = true;
-    } else if (a.ud != 0 && !a.bounded) {  // this axis's keys went up: on to the next whole tile, one step from st at least
-      a.s = a.ud > 0 ? std::max(std::ceil(a.d - kGlideEps), a.st + step_) : std::min(std::floor(a.d + kGlideEps), a.st - step_);
+    } else if ((a.ud != 0 || a.ue != 0) && !a.bounded) {
+      // this axis's keys went up (or the cursor left the edge): on to the next whole tile, and after arrows one key-switch step
+      // from st at least (the tap minimum)
+      const double r = rate(a);
+      const bool pos = r > 0 || (r == 0 && a.ud > 0);
+      a.s = pos ? std::ceil(a.d - kGlideEps) : std::floor(a.d + kGlideEps);  // the edge alone: no tap minimum
+      if (a.ud != 0) a.s = pos ? std::max(a.s, a.st + step_) : std::min(a.s, a.st - step_);
       a.s = std::clamp(a.s, 0.0, kGlideMax);
       a.bounded = true;
+      // P31B item 4: a tap (the key-up leaves the axis short of its tap minimum) covers the rest in at most tap_s_, so a lone tap
+      // slides for tap_s_ instead of step / v; a longer hold leaves less than v * tap_s_ and keeps the glide's speed
+      a.ur = 0;
+      if (a.ud != 0 && tap_s_ > 0) {
+        const double fast = std::fabs(a.s - a.d) / tap_s_;
+        if (fast > std::fabs(r)) {
+          a.ur = fast;
+          ++st_.taps_fast;
+        }
+      }
       any = true;
-    } else if (a.ud != 0) {
+    } else if (a.ud != 0 || a.ue != 0) {
       any = true;
     }
   }
   moving_ = any;
   if (any) settled_ = false;
+}
+double ArrowGlide::rate(const Axis &a) const {  // P31B: the arrows' v * ud plus the edge's ue; a tap's own speed once bounded
+  const double r = v_ * a.ud + a.ue;
+  if (a.bounded && a.ur > 0 && a.ur > std::fabs(r)) return (r > 0 || (r == 0 && a.ud > 0)) ? a.ur : -a.ur;
+  return r;
+}
+void ArrowGlide::edge(double fx, double fy, int64_t t_ns) {
+  std::lock_guard<std::mutex> lk(mu_);
+  if (fx == edge_f_[0] && fy == edge_f_[1]) return;
+  edge_f_[0] = fx;
+  edge_f_[1] = fy;
+  ++st_.edge_changes;
+  if (!engaged_) return;
+  const bool rest = !moving_;
+  dir_locked();
+  if (rest && moving_) last_ns_ = t_ns;
+}
+bool ArrowGlide::edge_on() const {
+  std::lock_guard<std::mutex> lk(mu_);
+  return edge_f_[0] != 0 || edge_f_[1] != 0;
+}
+void ArrowGlide::set_period_s(double s) {
+  std::lock_guard<std::mutex> lk(mu_);
+  period_s_ = std::clamp(s, 0.04, 0.2);
+  for (int i = 0; i < 2; ++i)
+    if (!ax_[i].bounded && ax_[i].ue != 0) ax_[i].ue = edge_f_[i] / period_s_;
+}
+void ArrowGlide::set_tap_s(double s) {
+  std::lock_guard<std::mutex> lk(mu_);
+  tap_s_ = std::max(0.0, s);
 }
 bool ArrowGlide::key(uint32_t vk, bool down, int64_t t_ns) {
   if (vk < 0x25 || vk > 0x28) return false;
@@ -282,16 +334,17 @@ bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, doubl
   last_ns_ = now_ns;
   const double c[2] = {static_cast<double>(cx), static_cast<double>(cy)};
   if (!engaged_) return false;
+  const bool edge_held = edge_f_[0] != 0 || edge_f_[1] != 0;  // P31B
   if (rot != rot_) {
     rot_ = rot;
-    if (held_) dir_locked();
+    if (held_ || edge_held) dir_locked();
   }
   if (std::fabs(ax_[0].d - c[0]) > kGlideResync || std::fabs(ax_[1].d - c[1]) > kGlideResync) {
     ++st_.resyncs;
     settled_ = true;
-    for (Axis &a : ax_) a.ud = 0, a.bounded = false;
+    for (Axis &a : ax_) a.ud = a.ue = a.ur = 0, a.bounded = false;
     moving_ = false;
-    if (held_) dir_locked();
+    if (held_ || edge_held) dir_locked();
     ax_[0].d = c[0];
     ax_[1].d = c[1];
     for (Axis &a : ax_) a.st = a.d;
@@ -303,29 +356,32 @@ bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, doubl
   }
   if (moving_) {
     ++st_.ticks_moving;
+    if (edge_held) ++st_.edge_ticks;
     bool any = false;
     for (int i = 0; i < 2; ++i) {
       Axis &a = ax_[i];
-      if (a.ud == 0) continue;
-      double nd = a.d + v_ * a.ud * dt;
-      if (a.bounded) nd = a.ud > 0 ? std::min(nd, a.s) : std::max(nd, a.s);
+      if (a.ud == 0 && a.ue == 0) continue;
+      const double r = rate(a);  // P31B: v * ud (P26A) plus the edge's move; a tap's speed after its key-up
+      const bool pos = r > 0 || (r == 0 && a.ud > 0);
+      double nd = a.d + r * dt;
+      if (a.bounded) nd = pos ? std::min(nd, a.s) : std::max(nd, a.s);
       nd = std::clamp(nd, 0.0, kGlideMax);
       // never past the newest picture's camera: what lies beyond it is not drawn yet
-      if (a.ud > 0 && nd > c[i]) {
+      if (pos && nd > c[i]) {
         nd = std::max(a.d, c[i]);
         ++st_.caps;
-      } else if (a.ud < 0 && nd < c[i]) {
+      } else if (!pos && nd < c[i]) {
         nd = std::min(a.d, c[i]);
         ++st_.caps;
       }
       a.d = nd;
-      const bool edge = (a.ud > 0 && a.d >= kGlideMax - kGlideEps) || (a.ud < 0 && a.d <= kGlideEps);
+      const bool edge = (pos && a.d >= kGlideMax - kGlideEps) || (!pos && a.d <= kGlideEps);
       if ((a.bounded && std::fabs(a.d - a.s) < kGlideEps) || edge) {  // this axis stopped, or met the game's clamp
         if (a.bounded && !edge) a.d = a.s;
-        a.ud = 0;
+        a.ud = a.ue = a.ur = 0;
         a.bounded = false;
       }
-      any = any || a.ud != 0;
+      any = any || a.ud != 0 || a.ue != 0;
     }
     moving_ = any;
   }
@@ -342,18 +398,22 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
   if (!engaged_ || settled_) return false;
   if (rot != rot_) {
     rot_ = rot;
-    if (held_) dir_locked();
+    if (held_ || edge_f_[0] != 0 || edge_f_[1] != 0) dir_locked();
   }
   const int32_t c[2] = {cx, cy};
   int32_t r[2] = {0, 0};
   for (int i = 0; i < 2; ++i) {
     const Axis &a = ax_[i];
     double t = 0;
-    if (a.ud == 0) t = std::round(a.d);
+    if (a.ud == 0 && a.ue == 0) t = std::round(a.d);
     else if (a.bounded) t = a.s;
     else {
-      const double x = a.d + v_ * a.ud * lead_s_;
-      t = a.ud > 0 ? std::ceil(x - kGlideEps) : std::floor(x + kGlideEps);
+      const double ra = rate(a);
+      static const bool cap = !(std::getenv("SG_P31_REQCAP") && std::atoi(std::getenv("SG_P31_REQCAP")) == 0);
+      double ahead = ra * lead_s_;
+      if (cap) ahead = std::clamp(ahead, -kGlideReqMax, kGlideReqMax);  // P31B: never past kGlideResync
+      const double x = a.d + ahead;
+      t = (ra > 0 || (ra == 0 && a.ud > 0)) ? std::ceil(x - kGlideEps) : std::floor(x + kGlideEps);
     }
     t = std::clamp(t, 0.0, kGlideMax);
     r[i] = static_cast<int32_t>(t) - c[i];
@@ -369,10 +429,10 @@ void ArrowGlide::set_engaged(bool on) {
   std::lock_guard<std::mutex> lk(mu_);
   if (on == engaged_) return;
   engaged_ = on;
-  for (Axis &a : ax_) a.ud = 0, a.bounded = false;
+  for (Axis &a : ax_) a.ud = a.ue = a.ur = 0, a.bounded = false;
   moving_ = false;
   settled_ = true;  // (re)starts at rest on the next picture's camera
-  if (on && held_) dir_locked();
+  if (on && (held_ || edge_f_[0] != 0 || edge_f_[1] != 0)) dir_locked();
 }
 bool ArrowGlide::engaged() const {
   std::lock_guard<std::mutex> lk(mu_);
@@ -407,6 +467,7 @@ void Presenter::slide_start(const WorldImage &w) {
     double m = 0;
     for (double x : glide_arr_) m = std::max(m, x);
     glide_->set_lead_s((period_ns_ + m) / 1e9 + 0.02);
+    glide_->set_period_s(period_ns_ / 1e9);  // P31B: the edge glide moves per game frame
   }
   slide_stats_.period_ms = st.period_ms;
   const int64_t now = portsim::perf_now_ns();

@@ -106,6 +106,15 @@ bool view_take_glide(Ctx &ctx, int32_t &dx, int32_t &dy) {  // P26A
   ctx.mem.store<int32_t>(kPortViewGlideYVa, 0);
   return true;
 }
+int g_defect_edge_tile_z8 = 1;  // P31B item 3: mainLoop.edgeScrollTileAtZoom8
+bool view_edge_glide(Ctx &ctx) {
+  return !SG_DEFECT(g_defect_edge_tile_z8) && ctx.view && ctx.mem.load<int32_t>(kPortViewEdgeGlideVa) != 0;
+}
+void view_put_edge(Ctx &ctx, int32_t mx, int32_t my) {
+  if (!ctx.view) return;
+  ctx.mem.store<int32_t>(kPortViewEdgeMoveXVa, mx);
+  ctx.mem.store<int32_t>(kPortViewEdgeMoveYVa, my);
+}
 bool view_arrow_held_due(Ctx &ctx, uint32_t head) {  // P22A
   if (!ctx.view) return true;
   const uint32_t down = ctx.mem.load<uint32_t>(kPortViewArrowHeldTVa) + ctx.mem.load<uint32_t>(kPortViewClockOffVa);
@@ -702,6 +711,12 @@ const DefectDef kDefects[] = {
      "every listed golfer is on the first page the arrows do nothing and the band is drawn empty (no track, bar or arrows); the "
      "detail panel's next arrow works only while it is drawn (more than 8 employees)",
      &g_defect_list_scroll_always},
+    {"mainLoop.edgeScrollTileAtZoom8", "P31B",
+     "the edge scroll (mainLoop ML+0xebb4..ML+0xec89) moves the camera 1 tile per frame on each axis at every zoom, so at zoom 8 "
+     "it covers twice the screen distance of zoom 4; fixed: at zoom 8 with the host's view block word +0x68 set (the app's edge "
+     "glide) the frame makes the same tests but writes its move into words +0x6c / +0x70 instead of adding it, and the host's "
+     "glide moves the camera half a tile per game frame per tile of that move (the screen speed of zoom 4)",
+     &g_defect_edge_tile_z8},
 };
 extern const ModuleDef kModule_bridge = {"bridge", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
                                          sizeof(kDefects) / sizeof(kDefects[0])};

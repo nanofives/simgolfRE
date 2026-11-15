@@ -441,6 +441,26 @@ void LiveSession::apply_glide(portsim::Ctx &ctx) {
   const bool z8 = opt_.glide_step2_z8 && ctx.gs().g_zoomScale == 8;
   const double step = z8 ? 2.0 : 4.0;
   const portsim::GameState &g = ctx.gs();
+  if (opt_.edge_glide) {  // P31B item 3: the zoom 8 edge scroll through the glide (bridge.h kPortViewEdgeGlideVa)
+    if (ctx.mem.load<int32_t>(portsim::kPortViewEdgeGlideVa) != 1) {
+      ctx.mem.store<int32_t>(portsim::kPortViewEdgeGlideVa, 1);
+      if (writes) writes->wrote(portsim::kPortViewEdgeGlideVa, 1u);
+    }
+    // the last frame's edge move at zoom 8 (the sim wrote it in place of adding it; nothing in the sim reads these words)
+    const int32_t mx = ctx.mem.load<int32_t>(portsim::kPortViewEdgeMoveXVa), my = ctx.mem.load<int32_t>(portsim::kPortViewEdgeMoveYVa);
+    ctx.mem.store<int32_t>(portsim::kPortViewEdgeMoveXVa, 0);
+    ctx.mem.store<int32_t>(portsim::kPortViewEdgeMoveYVa, 0);
+    const int64_t now = portsim::perf_now_ns();
+    if (g.g_zoomScale != edge_zoom_ && opt_.glide->edge_on()) {  // a zoom change while the edge glides: start again at rest
+      opt_.glide->edge(0, 0, now);
+      opt_.glide->set_engaged(false);
+      opt_.glide->set_engaged(true);
+    }
+    edge_zoom_ = g.g_zoomScale;
+    // half a tile per game frame per tile of the frame's move: zoom 4's screen speed (ArrowGlide::edge, per frame period)
+    opt_.glide->edge(0.5 * mx, 0.5 * my, now);
+    if (mx != 0 || my != 0) ++edge_frames_;
+  }
   int32_t dx = 0, dy = 0;
   if (!opt_.glide->head(opt_.glide_speed * step / 4.0, step, g.gCameraTileX, g.gCameraTileY, g.g_cameraRot, dx, dy)) return;
   ctx.mem.store<int32_t>(portsim::kPortViewGlideXVa, dx);
@@ -2595,7 +2615,10 @@ std::string LiveSession::summary_json(const Result &r) const {
     s += ",\"glide\":{\"keys\":" + std::to_string(g.keys) + ",\"starts\":" + std::to_string(g.starts) + ",\"wakes\":" +
          std::to_string(glide_wakes_) + ",\"dropped\":" + std::to_string(glide_dropped_) + ",\"writes\":" +
          std::to_string(glide_writes_) + ",\"tiles\":" + std::to_string(g.tiles_req) + ",\"caps\":" + std::to_string(g.caps) +
-         ",\"ticks_moving\":" + std::to_string(g.ticks_moving) + ",\"resyncs\":" + std::to_string(g.resyncs) + "}";
+         ",\"ticks_moving\":" + std::to_string(g.ticks_moving) + ",\"resyncs\":" + std::to_string(g.resyncs) +
+         ",\"edge_glide\":" + std::to_string(opt_.edge_glide ? 1 : 0) + ",\"edge_frames\":" + std::to_string(edge_frames_) +
+         ",\"edge_changes\":" + std::to_string(g.edge_changes) + ",\"edge_ticks\":" + std::to_string(g.edge_ticks) +
+         ",\"taps_fast\":" + std::to_string(g.taps_fast) + "}";  // P31B
   }
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";

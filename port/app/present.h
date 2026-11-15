@@ -234,8 +234,17 @@ class ArrowGlide {
   void set_engaged(bool on);  // the host: the frame loop runs and the view block is mapped (false: D at rest)
   bool engaged() const;
   void set_lead_s(double s);  // the presenter: the time from a frame head to its picture's arrival plus one period
+  void set_period_s(double s);  // P31B: the presenter's game frame period (the edge glide's speed is per game frame)
+  // P31B item 3 (--edge-glide): the edge scroll's camera move per game frame on each axis (tiles; the sim's own move at zoom 8
+  // published by the frame, halved by the host), 0 / 0 = the cursor left the edge (each axis runs on to its next whole tile)
+  void edge(double fx, double fy, int64_t t_ns);
+  bool edge_on() const;
+  // P31B item 4 (--tap-slide): a key-up that leaves an axis short of its tap minimum covers the rest in at most tap_s (0 = at the
+  // glide's speed, P26A)
+  void set_tap_s(double s);
   struct Stats {
     uint64_t keys = 0, starts = 0, heads_req = 0, tiles_req = 0, caps = 0, ticks_moving = 0, resyncs = 0;
+    uint64_t edge_changes = 0, edge_ticks = 0, taps_fast = 0;  // P31B
   };
   Stats stats() const;
 
@@ -243,17 +252,22 @@ class ArrowGlide {
   struct Axis {
     double d = 0;                  // D on this axis (tiles)
     double ud = 0;                 // the move per unit of speed (+-1, +-2 or +-sqrt 2 with two arrows; 0 = still)
+    double ue = 0;                 // P31B: the edge scroll's move (tiles / s), added to v * ud
+    double ur = 0;                 // P31B: a tap's speed after its key-up (tiles / s; 0 = none), bounded only
     double s = 0;                  // the stop tile after the key-up (bounded = true)
     double st = 0;                 // D at the last direction change (the tap minimum counts from here)
     bool bounded = false;
   };
   void dir_locked();
+  double rate(const Axis &a) const;  // P31B: tiles / s on the axis (signed)
   mutable std::mutex mu_;
   uint32_t held_ = 0;  // bit 0 Left, 1 Up, 2 Right, 3 Down
   Axis ax_[2];
   bool moving_ = false, settled_ = true;  // settled: at rest on the picture's camera (D follows it)
   int32_t rot_ = 0;
   double v_ = 0, step_ = 4, lead_s_ = 0.15;
+  double period_s_ = 0.093, tap_s_ = 0;  // P31B
+  double edge_f_[2] = {0, 0};           // P31B: the edge move per game frame (tiles), per axis
   int64_t last_ns_ = 0;
   bool engaged_ = false;
   Stats st_;

@@ -76,6 +76,7 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P25", "off")  # P25C fix 2 --closed-popups keep, P25B --row-hover
     os.environ.setdefault("SG_APP_P26", "off")  # P26E fix 2 --card-width, P26A --arrow-glide, P26B item 3 --palette-names, P26D item 9 --staff-labels-top, P26C item 11 --sharp-art
     os.environ.setdefault("SG_APP_P30", "off")  # P30A item 2 --popup-fit
+    os.environ.setdefault("SG_APP_P31", "off")  # P31B item 3 --edge-glide, item 4 --tap-slide
     os.environ.setdefault("SG_APP_P22", "off")  # P22E item 7 --edge-previews, P22D --golfer-list / --meter-tips, P22C --trail-glide
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

@@ -112,6 +112,19 @@ constexpr uint32_t kPortViewGlideXVa = kPortViewVa + 0x60u;
 constexpr uint32_t kPortViewGlideYVa = kPortViewVa + 0x64u;
 // the pending step (false: none, or no view block); clears words +0x60 / +0x64
 bool view_take_glide(Ctx &ctx, int32_t &dx, int32_t &dy);
+// P31B item 3 (Mariano G33 "halve at zoom 8": the edge scroll moves 1 tile per frame at every zoom, so at zoom 8 twice the screen
+// distance; log/roadmap/P31/P31B_notes.md). Word +0x68 (host, a recorded harness write like +12): 1 = the live host's arrow glide
+// moves the camera for the edge scroll at zoom 8 (app option --edge-glide). With the `play` switch mainLoop.edgeScrollTileAtZoom8
+// at 0, word +0x68 set and g_zoomScale 8, mainLoop's edge scroll (ML+0xebb4..ML+0xec65) does its own tests unchanged but writes the
+// move it would add to gCameraTileX / gCameraTileY into words +0x6c / +0x70 (the sim writes them, nothing in the sim reads them)
+// instead of adding it; the host's glide then moves the camera half a tile per game frame per tile of that move.
+constexpr uint32_t kPortViewEdgeGlideVa = kPortViewVa + 0x68u;
+constexpr uint32_t kPortViewEdgeMoveXVa = kPortViewVa + 0x6cu;
+constexpr uint32_t kPortViewEdgeMoveYVa = kPortViewVa + 0x70u;
+extern int g_defect_edge_tile_z8;  // mainLoop.edgeScrollTileAtZoom8: 1 = the original (1 tile per frame at every zoom)
+// true when this frame's edge move at zoom 8 goes to the host (switch at 0, word +0x68 set, a view block)
+bool view_edge_glide(Ctx &ctx);
+void view_put_edge(Ctx &ctx, int32_t mx, int32_t my);  // words +0x6c / +0x70
 // what the host took at the frame head: the arrow key-down (code 0 = none) and its time, the key-up bits of word +24 (false: none
 // of them, or no view block); clears words +12 / +16 / +24
 bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups);
