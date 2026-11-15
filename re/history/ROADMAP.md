@@ -1570,3 +1570,107 @@ c534758e, 98225b28, ef2396f5 and aa30da87.
   stays centred, opened by a click it follows the System menu. Not reached: the character intro's skill arrows (12 rows), tutorials,
   a scrolled golfer / staff list, and from his save Hole Stats, End of Year, the character editor, tournament setup / results, buy
   land, golfer pair select and the skill-point dialog.
+
+## P28: the D5 / D6 per-site pass (2026-11-14)
+Mariano's order of 2026-11-14: the RE bookkeeping (ff879a46: S3 and S11 closed, defect_decisions.tsv with a profile_play column, this
+file's P23-P27, the S11.5 test committed), this pass, the screens P27 did not reach (P29), the leftovers that needed no answer (P30),
+then his keep-or-change answers. Brief log/roadmap/P28/BRIEF.md (base f5e56983), notes log/roadmap/P28/P28A_notes.md, merge note
+P28A_model_defects.md, tests port/test/test_defects_p28.py. One worker (opus high). Published 31a5a04d.
+- The rule for each site (P4B had stopped at these two rows because each site needs its own meaning for a cell outside the 50 x 50
+  grid): (a) the same function already bounds that neighbour elsewhere: the missing side takes the same arm; (b) a helper already
+  answers for coordinates outside the grid: tileBlocked / typeAtPos give type 0x14 there; (c) a write outside a table: the cell does
+  not exist, so the write and the read that guards it are skipped. A site with no such evidence keeps the original's read and is
+  listed for a decision.
+- Fix 1 (153e0d20): ten play switches, default 1 = the original, 0 in profile play; 60 accesses, 55 fixed. D5:
+  trialShot.edgeNeighbourType, updateGolfers.edgeNeighbourType, scanTileLine.edgeCellType (its scored cell and second line were not
+  in the row), mainLoop.edgeNeighbourType, and mainLoop.edgeNeighbourNoFlags (an outside cell has no flags, so a path ends at the map
+  edge: no helper answers flags there, so this is the orchestrator's choice, class b, vetoable alone). D6: floodMark.outsideNeighbour,
+  canStep.readBeforeBound, heightBlend.rowPastEnd, generateRandomCourse.riverOutside, generateRandomCourse.smoothingOutside.
+- Found on the way: a river step at column 49 reads and writes its shore tile at column 50, which is the next row's west edge tile;
+  when that land is bought the stray shore tile comes back.
+- U-1553 resolved: the outside reads change course bytes. Over 320 generated courses (40 seeds x settings 0 / 1 x course types 0..4)
+  the river fix changes 160, only in g_tileTypeSaved (west-edge column 0), and the smoothing fix 26, only in g_cornerLevel;
+  g_tileType never differs.
+- Fix 2 (ee5e60f9): mainLoop's five wall-mask reads of a neighbour outside the grid join mainLoop.edgeNeighbourNoFlags (a mask of 0:
+  the table holds the masks calcTileWallMask wrote for inside cells; the same choice, draw only). re/analysis/data/model_defects.md
+  section 1 rows 5 and 6 list the sites the rows did not name; re/port/defect_decisions.tsv shows D5 / D6 implemented and in play.
+- Evidence: x64 0 errors / 0 warnings, test_static 6, test_profiles 21, test_defects_p28 10 (per switch: with two fillers in the
+  outside bytes the result follows the filler at 1 and not at 0; canStep returns 0 at both settings, so its test shows the read is
+  skipped; mainLoop's switches only draw and have no unit test), segments x64 205 / 205 equal to I25 under the default switches. Play
+  check on his Ocean's Edge 15 May 2005 save with the ten at 0 and at 1 (SG_P28A_EDGE=0, development): no fault; nothing on screen is
+  attributable, because every grid-edge tile of his 28 saves is unbought land.
+- Not changed, listed: mainLoop's P1_scan neighbour reads (both results are overwritten before use), the smoothing loop's corner
+  reads at column -1 (the corner array's U-0209 alias), the river's height samples (no tile table).
+
+## P29: the screens the P27 UI audit did not reach (2026-11-14 .. 2026-11-15)
+Brief log/roadmap/P29/BRIEF.md (base f5e56983), notes log/roadmap/P29/P29A_notes.md, tables P29A_audit.tsv / P29A_summary.tsv, shots
+P29A_shots/. One worker (opus high) with P27's uiprobe.py and its development-only app hook, plus a read / write hook at the frame
+head for the states. Sizes 1920 x 1080, 2560 x 1351 dpi 120, 1334 x 750 dpi 120, Spanish. Published 31a5a04d (fix 1), bdfa15de
+(fix 2) and 0c175e1e (fix 3).
+- How the states were reached: organic for most rows (Hole Stats by a click on a hole marker tile, the character editor from the pro
+  panel's portrait, the staff panel paged by hiring to 9 employees, the bulletin award's skill dialog after the first tournament's
+  board); prepared saves with every changed byte recorded (the date moved close to the year end for End of Year, the date set for
+  the SGA tournament offer, the skills zeroed for the character intro's arrows); one injected state, the land offer's event flag
+  (the offer is a random patron event that no save holds), marked in the table.
+- Fix 1 (31a5a04d, class a): on a later page of the wide golfer list (P22D fix 2) only the columns holding a golfer were added, so a
+  last page of 13 golfers drew 4 columns and the next arrow at the n = 0 place while hitEmployeeSlot435570 tests it 0x79 n further
+  right: the drawn arrow answered nothing and the click map reached empty pixels (1,680 / 2,552 / 784 px at the three sizes).
+  draw_employee_view_panel's layered branch now draws all 4 + n columns while the arrows are live.
+- Fix 2 (51281a69, class a): a course pixel right of the wide list's drawn end has no layer, and the Translator gave it the wide
+  world's x, inside the added columns' own 800-space places: a press selected the last column's golfer and moved the camera.
+  PanelRemap::map_impl makes such a point a vacated place, so the press takes the world path (mainLoop.vacatedPanelClick) and the
+  hover read answers no control; ghost 6,795 / 40,635 / 3,360 px -> 0.
+- Fix 3 (0c175e1e, class b, play switch drawGolferInfoPanel.tabsBelowFrame): the golfer info panel picks its tab from one cursor read
+  within 0x19 of each button's centre, about 16 rows below the panel art's bottom edge, so a press on the course there acted on a
+  button (the close tick included), as in the original. At 0 a button answers only above the art's bottom edge.
+- PASS at the three sizes: Hole Stats close, End of Year close, the tournament purse popup and the preparation popup, buy land (9
+  lots and Done; the offer popup), the character intro's skill arrows (rows 0..9, plus / minus, OK) and the points-left popup, the
+  staff panel paged to 9 employees, the golfer list's pages after fixes 1-2, the tournament results close (reached by playing his
+  Scorpion Cove tournament for 31 minutes to the pro's last hole, the game's own autosave there, then the last hole per size). The
+  bulletin award's skill dialog PASS at 1920. The character editor: 16-17 of 21 controls PASS per size, the others fail only the
+  probe's forward-map pixel heuristic with drawn = hit within 1 px.
+- "Tournament setup" has no screen of its own: showCourseReport's mode 2 returns before its report loop in the port and in the
+  original, so the row is the purse popup and the preparation popup.
+- Closed: tutorial pages are not reachable in v1.03 (nothing moves g_tutorialPage off 0 and no instruction sets the tutorial flag).
+  Not reached: golfer pair select (the golfers waiting at the first tee have no screen point; clicks on 8 tee tiles opened nothing;
+  an injected screen point is rewritten by the next frame).
+- Also measured: there is no faster game speed (the word that skips the frame wait is only read in golf_clean.exe, and the app has
+  no speed option). The posted S key does not save in the probe (the key switch tests the character and the posted key arrives in
+  the other case).
+- Spanish: the hire dialog, End of Year, the popups and the results screen fit. One skill name of the skill-point dialog ran 49 px
+  under the portrait (163 px drawn, 109 px free): shortened in the LAN-only pack (97 px, rows 0..9 PASS again).
+- Process: the w8 lock was the bottleneck while four workers ran (release checks of 2 h 04 and 4 h 08 with 0.6-4 GB of free commit;
+  probe batches held the lock 40 minutes): holds were cut to about 10 minutes and the segments step given --priority, and the checks
+  after that took 42-43 minutes. The hourly stale-watcher purge killed an idle grep pipe and a queued batch with it (batches now log
+  without a grep). The claude2 children were moved to another account about 23:40 and their background runs orphaned.
+
+## P30: play-test leftovers that needed no answer (2026-11-14 .. 2026-11-15)
+Brief log/roadmap/P30/BRIEF.md (base f5e56983), notes log/roadmap/P30/P30A_notes.md and P30B_notes.md. Two workers (opus high).
+Published e2604858, bdfa15de and 390d2756.
+- The sticky note's to-do lines in Spanish (P26 item 11; P30A fix 1, e2604858): the visible strokes come from the note's alpha mask
+  image, not its colour image (the board's blit writes d * k / 256 + s), and the Spanish redraw had replaced only the colour image,
+  so the install's English stroke shapes showed over the redraw's black. scripts/lang/redraw_art.py `alpha=<mask image>` writes the
+  mask from the new letters' coverage; `opaque=<mask image>` keeps the install's pixel where the mask is partly transparent, which
+  removes the blue dashed rim of the redrawn heading (493 rim pixels overflowed a 5-bit channel). LAN art only; no port code.
+- Popups fit their Spanish text (P24D 5c; P30A fix 2, 653ef8ae, app option --popup-fit, SG_APP_P30=off): show_popup draws the box at
+  the width showPopup's own rule gives over the translated lines, and while such a popup is open Translator::to_logical maps a point
+  of the drawn box onto the sim's box (left 0x24 and right 0x30 shifted, the middle scaled); the GameState never sees the language.
+  System menu 336 -> 368, Preferences 368 -> 416, quit confirmation 320 -> 368; every row and the close square answer within 1
+  window px of their drawn place at the three sizes; English pixel-identical on vs off; negative control --negctl p30a-no-warp RED;
+  a Spanish recording that uses the widened parts replays 159 / 159. Rejected: the sim measuring the translation (a recording would
+  depend on the pack) and stretching the popup's layer (the text would be stretched).
+- The original closing on two of his saves (P25B side finding; P30B, no fix): both are tropical courses. loadWorldAssets asks
+  loadFlic for the tropical tree flics under folder names with a space, the portable install holds them with an underscore (U-1330 /
+  U-1331), the image loader returns 0 and Image_draw reads through it: an access violation 1-3.5 s after Load. With copies of the
+  folders under the exe's names both saves load and play in the original (instances/p30b_alias, never original\), so the port writes
+  nothing the original cannot load; the tournament was a coincidence.
+- The recording that stopped replaying (P25A side finding; P30B fix 2, 390d2756, class a): his session loaded the quit save before
+  its first frame head and overwrote it (and top10.sve) at its quit, and session.json never carried the data directory's files, so
+  the replay began from another game (81 of 203 objects differ at record 0; the stop at record 2627 is the consequence). A live
+  session now copies <data>/files and deleted.lst into <rec>/start_files and lists them in session.json; sg_files_remove (an
+  in-memory hide, refused on a write-through root) and live.apply_start_files put them over the install at replay; app_replay.gate_one
+  uses them. About 5.9 MB per session on his folder. His recording cannot reach equal hashes (its start files are overwritten in
+  every copy); with the nearest surviving save standing in it replays 48,050 / 48,050 records equal on 202 of 203 objects.
+- Checks of the round: per fix the fast check (x64, test_static, segments when sim code changed, a 1080 smoke); one full check on
+  8a990393 (clean tree, x64 + Win32 0 errors / 0 warnings, 1080 and 4K smoke 0 bad).
+- Open: recordings do not carry files given with --put, an empty directory of the data folder, or the build that made them.
