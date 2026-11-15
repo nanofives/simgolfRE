@@ -5,7 +5,17 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Open
 
-(none)
+- **G34, tuning of round P31's built choices (asked 2026-11-15 14:45, re-sent 20:2x; everything is published with the first option).**
+  (1) Camera bound, bottom margin: above the bottom HUD panels (built, 142 units) / the same as the other sides. (2) Camera bound at
+  zoom 1, where the land is smaller than the view: pinned to the land's centre (built) / free. (3) Camera bound, margin of black
+  beyond the land: 16 units (built) / 8 / 32. (4) The slide after a lone arrow tap: about 25 ms (built) / almost a jump / about
+  70 ms. (5) The SimFoto photo in the wide view: the original's size anywhere in the view (built, framing A) / widened to the
+  view's aspect (B). (6) The narration's and the SimFoto event's saved photo files, dropped today: a BMP plus a small JPEG encoder /
+  a BMP only / leave them dropped (P31D fix 3b; resume child cmwhxga130cfhp015tpmscap6). Items 1-4 are one constant each
+  (camera_range.h, the tap slide's length in the app). Vetoable choices of the round, each a play switch or app option: paths and
+  wall pieces end at the map edge (mainLoop.edgeNeighbourNoFlags), the golfer info panel's buttons answer only on the panel
+  (drawGolferInfoPanel.tabsBelowFrame), the staff click-to-move exclusions (mainLoop.staffListCourseClickIgnored), shot tracks of
+  departed golfers taken again (addGolferPair.departedHoldsTrack), the early first picture of an arrow move (--early-world).
 
 ## Answered
 
