@@ -5,6 +5,7 @@
 // they call read and extend the same buffer.
 #include "portsim/sim/dialogs.h"
 
+#include <algorithm>
 #include <cstring>
 #include <map>
 #include <memory>
@@ -51,6 +52,13 @@ int g_negctl_none = 0;
 // polaroid before them). 0 = the capture also saves the same picture for every other record of the same date whose photo file is
 // missing.
 int g_defect_bulletin_photo_last = 1;
+// P29A fix 3 (the UI audit of the screens P27 did not reach, log/roadmap/P29/P29A_notes.md, class b): drawGolferInfoPanel.tabsBelowFrame.
+// 1 = the original: the golfer info panel's buttons answer by one cursor read each pass within 0x19 of their centres (main page y
+// 0x106, story page y 0x11f), and mainLoop's press handler acts on the button that read chose, so the octagons reach about 16 rows
+// below the panel art's bottom edge onto the course: a cursor there lights a button and a press there acts on it (the close tick
+// among them). 0 = a button answers only above the panel art's bottom edge (0x1a + the frame / background image's height; the story
+// page's band at 0xa5 included).
+int g_defect_info_tabs_below_frame = 1;
 
 using cm::call_peer;
 using cm::cat;
@@ -558,7 +566,21 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
   const int32_t prev = gs.g_infoPanelTab;
   gs.g_infoPanelTab = -1;
   int32_t cx = 0, cy = 0;
-  auto near = [&](int32_t x, int32_t y, int32_t radius) { return approx_distance(sub32(x, cx), sub32(y, cy)) < radius; };
+  // P29A fix 3 (drawGolferInfoPanel.tabsBelowFrame = 0): the panel art's bottom edge bounds the buttons' octagons
+  int32_t frame_bottom = 0x7fffffff;
+  if (!SG_DEFECT(g_defect_info_tabs_below_frame)) {
+    auto art_h = [&](uint32_t s) {
+      int32_t w = 0, h = 0;
+      if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx_sprite_cut(ctx, s, w, h)) return h;
+      return m.load<int32_t>(s + 28);
+    };
+    const uint32_t sp = GS(g_sprites541a18);
+    frame_bottom = story ? std::max(0x1a + art_h(sp + 0x18c), 0xa5 + art_h(sp + 0x1b8))
+                         : 0x1a + std::max(art_h(sp + 0x1e4), art_h(sp + 0x18c));
+  }
+  auto near = [&](int32_t x, int32_t y, int32_t radius) {
+    return cy < frame_bottom && approx_distance(sub32(x, cx), sub32(y, cy)) < radius;
+  };
 
   if (story) {
     const int32_t partner = g ^ 1;
@@ -1465,6 +1487,10 @@ const DefectDef kDefects[] = {
      "one pending photo slot that every postEvent overwrites: of the records posted before the next board call (openHole's first dogleg right / "
      "dogleg left / par 5 hole) only the last gets its photo file",
      &g_defect_bulletin_photo_last},
+    {"drawGolferInfoPanel.tabsBelowFrame", "P29A",
+     "the golfer info panel's buttons answer within 0x19 of their centres, about 16 rows below the panel art's bottom edge (over the "
+     "course): a cursor there lights a button and a press there acts on it",
+     &g_defect_info_tabs_below_frame},
 };
 }  // namespace
 

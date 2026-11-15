@@ -858,6 +858,7 @@ const ProfileMember kPlayProfile[] = {
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
+    {"drawGolferInfoPanel.tabsBelowFrame", 0},     // P29A fix 3: the info panel's buttons answer only above its art's bottom edge
     {"drawEmployeeViewPanel.fourColumns", 0},      // P22D fix 2: the golfer list's added columns (the host's view block word +0x40)
     {"generateRandomCourse.startingFeatureOutside", 0},  // P24E (play-test 11 item 5: the free practice green inside the course edge)
     {"drawEmployeeViewPanel.scrollBarAlways", 0},  // P26E fix 1 (play-test 13 item 6: no scroll band when the golfer list fits)
