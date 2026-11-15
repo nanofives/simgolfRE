@@ -232,6 +232,8 @@ class ArrowGlide {
   // for the zoom, the game's camera (gCameraTileX / Y) and rotation now; the step (dx, dy) to ask for (false: none)
   bool head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t &dx, int32_t &dy);
   void set_engaged(bool on);  // the host: the frame loop runs and the view block is mapped (false: D at rest)
+  // P31A: the host, at a frame head: the camera's legal range per axis (bridge.h camera_range; 0..0x31 at the switch's 1)
+  void set_range(const double lo[2], const double hi[2]);
   bool engaged() const;
   void set_lead_s(double s);  // the presenter: the time from a frame head to its picture's arrival plus one period
   void set_period_s(double s);  // P31B: the presenter's game frame period (the edge glide's speed is per game frame)
@@ -266,6 +268,7 @@ class ArrowGlide {
   bool moving_ = false, settled_ = true;  // settled: at rest on the picture's camera (D follows it)
   int32_t rot_ = 0;
   double v_ = 0, step_ = 4, lead_s_ = 0.15;
+  double lo_[2] = {0, 0}, hi_[2] = {49, 49};  // P31A: the clamp of each axis (the key switch's 0..0x31 until the host sets it)
   double period_s_ = 0.093, tap_s_ = 0;  // P31B
   double edge_f_[2] = {0, 0};           // P31B: the edge move per game frame (tiles), per axis
   int64_t last_ns_ = 0;

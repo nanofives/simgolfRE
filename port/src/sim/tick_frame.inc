@@ -220,8 +220,8 @@ void P21_ArrowStep(int code) {
     const int dx = dir == 0 || dir == 2 ? camStep : dir == 4 || dir == 6 ? -camStep : 0;
     const int dy = dir == 2 || dir == 4 ? camStep : dir == 0 || dir == 6 ? -camStep : 0;
     if (dx == 0) return;                                                     // rotations 1 / 3 / 5: no case (ML+0xe96a)
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, 0, 0x31);
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, 0, 0x31);
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, CamLo(0, 0), CamHi(0));  // P31A: the range
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, CamLo(1, 0), CamHi(1));
 }
 // P21B: before the frame's picture, what the host took at the frame head runs as the frame's P6 pump would have run it, in queue
 // order: a key-up (rootWin_onChar0), the arrow key-down (rootWin_onKey(0, code), then taken as H1 takes it: setDirtyFlagA), a
@@ -230,9 +230,13 @@ void P21_ArrowStep(int code) {
 // but is left for this frame's H1 to take, and no held step is taken (one step per picture, as in the original).
 // P26A: the arrow glide's camera step (view_take_glide, tiles), each axis clamped 0..0x31 as the key switch's cases clamp it
 // (ML+0xe971..ML+0xea73)
+// P31A: the bounds a camera clamp passes: as the original passes them (lo `orig`, hi 0x31) at mainLoop.cameraBoundByZoom = 1,
+// the camera's legal range (bridge.h camera_range: the land, the zoom, the rotation and the view width) at 0
+int32_t CamLo(int axis, int32_t orig) { return SG_DEFECT(g_defect_camera_bound_zoom) ? orig : camera_range(ctx).lo[axis]; }
+int32_t CamHi(int axis) { return SG_DEFECT(g_defect_camera_bound_zoom) ? 0x31 : camera_range(ctx).hi[axis]; }
 void P26_GlideStep(int32_t dx, int32_t dy) {
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, 0, 0x31);
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, 0, 0x31);
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, CamLo(0, 0), CamHi(0));  // P31A: the range
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, CamLo(1, 0), CamHi(1));
 }
 void P21_ArrowEarly(uint32_t head) {
     if (!ctx.view) return;
@@ -347,7 +351,10 @@ void FramePreamble(u32 F, int retile) {
 
     // ML+0xef8..ML+0xf8b : refresh the terrain render; when the date is set and [g_ui_542df8] != 0 also re-apply the
     // course type, refresh again and play the <text> sound
-    cc("updateTerrainRender", G32(GS(gCameraTileX)), G32(GS(gCameraTileY)), G32(GS(g_zoomScale)), G32(GS(g_cameraRot)));   // ML+0xf13 updateTerrainRender
+    // P31A (mainLoop.cameraBoundByZoom = 0): the frame's picture never shows a camera outside its range (a load or a writer after
+    // the last frame's H1 clamp; the range also follows a new view width); at 1 nothing runs here
+    if (!SG_DEFECT(g_defect_camera_bound_zoom)) camera_on_map(ctx);
+    cc("updateTerrainRender", G32(GS(gCameraTileX)),G32(GS(gCameraTileY)), G32(GS(g_zoomScale)), G32(GS(g_cameraRot)));   // ML+0xf13 updateTerrainRender
     G32((GS(f_w_4c2e00) + 4)) = -1;                           // ML+0xf22
     bool doCourse = true;                           // ML+0xf20/ML+0xf2c/ML+0xf35
     if (G32(GS(g_date)) != 0 && G32(GS(g_ui_542df8)) == 0)   // ML+0xf18 test; ML+0xf2e test; ML+0xf35 je ML+0xf8e
@@ -8492,20 +8499,20 @@ a41df16:
         default: goto a41e070;                         // cases 1,3,5
     }
 a41df31:  // rotate to dir 0 -> step camera +x, -y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, ebp, 0x31);  // ML+0xe971..ML+0xe991
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, ebp, 0x31);  // ML+0xe996..ML+0xe9a5
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, CamLo(0, ebp), CamHi(0));  // ML+0xe971..ML+0xe991
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, CamLo(1, ebp), CamHi(1));  // ML+0xe996..ML+0xe9a5
     goto a41e070;                                      // ML+0xe9b2
 a41df77:  // dir 2 -> +x, +y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, ebp, 0x31);  // ML+0xe9b7..ML+0xe9d7
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, ebp, 0x31);  // ML+0xe9dc..ML+0xe9ea
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + camStep, CamLo(0, ebp), CamHi(0));  // ML+0xe9b7..ML+0xe9d7
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, CamLo(1, ebp), CamHi(1));  // ML+0xe9dc..ML+0xe9ea
     goto a41e070;                                      // ML+0xe9f7
 a41dfbc:  // dir 4 -> -x, +y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, ebp, 0x31);  // ML+0xe9fc..ML+0xea1c
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, ebp, 0x31);  // ML+0xea21..ML+0xea2f
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, CamLo(0, ebp), CamHi(0));  // ML+0xe9fc..ML+0xea1c
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + camStep, CamLo(1, ebp), CamHi(1));  // ML+0xea21..ML+0xea2f
     goto a41e070;                                      // ML+0xea3d
 a41dfff:  // dir 6 -> -x, -y
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, ebp, 0x31);  // ML+0xea3f..ML+0xea5f
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, ebp, 0x31);  // ML+0xea64..ML+0xea73
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) - camStep, CamLo(0, ebp), CamHi(0));  // ML+0xea3f..ML+0xea5f
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) - camStep, CamLo(1, ebp), CamHi(1));  // ML+0xea64..ML+0xea73
     goto a41e070;                                      // ML+0xea80
 a41e042:  // key 0x21: rotate +2
     G32(GS(g_cameraRot)) = (G32(GS(g_cameraRot)) + 2) & 7;       // ML+0xea82..ML+0xea8d
@@ -8586,8 +8593,8 @@ a41e070:
 a41e225:
     G32(GS(gCameraTileY)) = ecx;                             // ML+0xec65
 a41e22b:
-    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)), ebp, 0x31);  // ML+0xec6b..ML+0xec75 clamp
-    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)), ebp, 0x31);  // ML+0xec7a..ML+0xec89 clamp
+    G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)), CamLo(0, ebp), CamHi(0));  // ML+0xec6b..ML+0xec75 clamp
+    G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)), CamLo(1, ebp), CamHi(1));  // ML+0xec7a..ML+0xec89 clamp
     eax = G32((GS(f_w_4c2e00) + 12));                             // ML+0xec93
     if (eax == edi) goto a41e290;                      // ML+0xec9b cmp eax,edi; je
     cc("playSound", 0x95, 0x64, ebp, ebp, ebp);         // ML+0xeca9 playSound

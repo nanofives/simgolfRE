@@ -210,7 +210,6 @@ bool camera_shift_f(int32_t zoom, int32_t rot, double X, double Y, double &sx, d
 }
 namespace {
 constexpr double kGlideEps = 1e-6;
-constexpr double kGlideMax = 49.0;     // the key switch's clamp of each camera axis (0..0x31)
 constexpr double kGlideResync = 12.0;  // tiles: D this far from the picture's camera (a jump: a map click) restarts at it
 // P31B (class a): a frame head's request runs at most this far ahead of D. Under load the lead reached its 0.4 s clamp (late
 // pictures: 300 ms from the head), and 0.4 s x 30.1 tiles / s rounded up is 13 tiles, past kGlideResync: the window restarted D
@@ -257,7 +256,7 @@ void ArrowGlide::dir_locked() {
       const bool pos = r > 0 || (r == 0 && a.ud > 0);
       a.s = pos ? std::ceil(a.d - kGlideEps) : std::floor(a.d + kGlideEps);  // the edge alone: no tap minimum
       if (a.ud != 0) a.s = pos ? std::max(a.s, a.st + step_) : std::min(a.s, a.st - step_);
-      a.s = std::clamp(a.s, 0.0, kGlideMax);
+      a.s = std::clamp(a.s, lo_[i], hi_[i]);  // P31A: the camera's range
       a.bounded = true;
       // P31B item 4: a tap (the key-up leaves the axis short of its tap minimum) covers the rest in at most tap_s_, so a lone tap
       // slides for tap_s_ instead of step / v; a longer hold leaves less than v * tap_s_ and keeps the glide's speed
@@ -365,7 +364,7 @@ bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, doubl
       const bool pos = r > 0 || (r == 0 && a.ud > 0);
       double nd = a.d + r * dt;
       if (a.bounded) nd = pos ? std::min(nd, a.s) : std::max(nd, a.s);
-      nd = std::clamp(nd, 0.0, kGlideMax);
+      nd = std::clamp(nd, lo_[i], hi_[i]);  // P31A: the camera's range
       // never past the newest picture's camera: what lies beyond it is not drawn yet
       if (pos && nd > c[i]) {
         nd = std::max(a.d, c[i]);
@@ -375,7 +374,7 @@ bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, doubl
         ++st_.caps;
       }
       a.d = nd;
-      const bool edge = (pos && a.d >= kGlideMax - kGlideEps) || (!pos && a.d <= kGlideEps);
+      const bool edge = (pos && a.d >= hi_[i] - kGlideEps) || (!pos && a.d <= lo_[i] + kGlideEps);
       if ((a.bounded && std::fabs(a.d - a.s) < kGlideEps) || edge) {  // this axis stopped, or met the game's clamp
         if (a.bounded && !edge) a.d = a.s;
         a.ud = a.ue = a.ur = 0;
@@ -415,7 +414,7 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
       const double x = a.d + ahead;
       t = (ra > 0 || (ra == 0 && a.ud > 0)) ? std::ceil(x - kGlideEps) : std::floor(x + kGlideEps);
     }
-    t = std::clamp(t, 0.0, kGlideMax);
+    t = std::clamp(t, lo_[i], hi_[i]);  // P31A: the camera's range
     r[i] = static_cast<int32_t>(t) - c[i];
   }
   dx = r[0];
@@ -424,6 +423,14 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
   ++st_.heads_req;
   st_.tiles_req += static_cast<uint64_t>(std::abs(dx) + std::abs(dy));
   return true;
+}
+// P31A: the camera's legal range per axis (bridge.h camera_range), set by the host at each frame head
+void ArrowGlide::set_range(const double lo[2], const double hi[2]) {
+  std::lock_guard<std::mutex> lk(mu_);
+  for (int i = 0; i < 2; ++i) {
+    lo_[i] = lo[i];
+    hi_[i] = hi[i] < lo[i] ? lo[i] : hi[i];
+  }
 }
 void ArrowGlide::set_engaged(bool on) {
   std::lock_guard<std::mutex> lk(mu_);

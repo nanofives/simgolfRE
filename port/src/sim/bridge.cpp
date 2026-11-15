@@ -5,6 +5,7 @@
 #include <memory>
 #include <cmath>    // P19A: fabs (world_to_screen_exact)
 #include <cstring>
+#include <utility>  // P31A: std::swap
 
 #include <initializer_list>
 
@@ -398,6 +399,86 @@ void course_redo_end(Ctx &ctx) {
 }
 
 int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
+
+// ------------------------------------------------------------------------------------------------ the camera's range (P31A)
+int g_defect_camera_bound_zoom = 1;  // mainLoop.cameraBoundByZoom
+int32_t g_camera_bound_margins[4] = {kCameraBoundMargin, kCameraBoundMargin, kCameraBoundMargin, kCameraBoundBottom};
+namespace {
+// twice the 800-space offset from the view's centre of the world point (u, v) (whole tiles: a land corner) seen from camera tile
+// (cx, cy), flat ground: worldToScreen's per-rotation formulas with (world - (camera << 10) - 0x200) * zoom / 128 = 8 zoom per
+// tile on x, 5 zoom on y (x 20 / 32), including its half-tile terms (+ 8 zoom on x at rotation 0, - 8 zoom at 4; - 5 zoom on y at
+// 2, + 5 zoom at 6)
+void corner_offset2(int32_t rot, int32_t Z, int32_t u, int32_t v, int32_t cx, int32_t cy, int32_t &X2, int32_t &Y2) {
+  const int32_t a2 = 2 * (u - cx) - 1, b2 = 2 * (v - cy) - 1;  // twice (world - camera centre) in tiles
+  switch (rot) {
+    case 0: X2 = 8 * Z * (a2 + b2) + 16 * Z; Y2 = 5 * Z * (b2 - a2); break;
+    case 2: X2 = 8 * Z * (b2 - a2); Y2 = -5 * Z * (a2 + b2) - 10 * Z; break;
+    case 4: X2 = -8 * Z * (a2 + b2) - 16 * Z; Y2 = 5 * Z * (a2 - b2); break;
+    default: X2 = 8 * Z * (a2 - b2); Y2 = 5 * Z * (a2 + b2) + 10 * Z; break;
+  }
+}
+}  // namespace
+CameraRange camera_range(Ctx &ctx) {
+  CameraRange r;
+  if (SG_DEFECT(g_defect_camera_bound_zoom)) return r;
+  const GameState &g = ctx.gs();
+  const int32_t Z = g.g_zoomScale, rot = g.g_cameraRot;
+  // the projection this rule follows is the 800 x 600 one (worldToScreen rescales 1024 and 1280 wide screens); odd rotations
+  // have no case in worldToScreen
+  if (Z <= 0 || Z > 8 || (rot != 0 && rot != 2 && rot != 4 && rot != 6) || g.g_screenWidth != 800 || g.g_screenHeight != 600)
+    return r;
+  int32_t x0 = 50, x1 = -1, y0 = 50, y1 = -1;  // the land: the tiles whose type is not 0x14
+  const Ptr<int8_t> type = state_arr(ctx, &GameState::g_tileType);
+  for (int32_t x = 0; x < 50; ++x)
+    for (int32_t y = 0; y < 50; ++y)
+      if ((type + (x * 50 + y)).get() != 0x14) {
+        x0 = x < x0 ? x : x0;
+        x1 = x > x1 ? x : x1;
+        y0 = y < y0 ? y : y0;
+        y1 = y > y1 ? y : y1;
+      }
+  if (x1 < 0) return r;
+  const int32_t Vw = view_width(ctx);
+  const int32_t *M = g_camera_bound_margins;
+  int32_t m[4] = {0, 0, 0, 0};  // margins in tiles: x low, x high, y low, y high
+  auto fits = [&](const int32_t *t) {
+    const int32_t lx = x0 + t[0], hx = x1 - t[1], ly = y0 + t[2], hy = y1 - t[3];
+    if (lx > hx || ly > hy) return false;
+    // each land corner seen from the box corner nearest to it
+    const int32_t c[4][4] = {{x0, y0, lx, ly}, {x1 + 1, y0, hx, ly}, {x1 + 1, y1 + 1, hx, hy}, {x0, y1 + 1, lx, hy}};
+    for (const auto &k : c) {
+      int32_t X2 = 0, Y2 = 0;
+      corner_offset2(rot, Z, k[0], k[1], k[2], k[3], X2, Y2);
+      if (X2 < -(Vw - 2 * M[0]) || X2 > Vw - 2 * M[2] || Y2 < -(600 - 2 * M[1]) || Y2 > 600 - 2 * M[3]) return false;
+    }
+    return true;
+  };
+  bool small[2] = {false, false};  // the land is smaller than the view on this axis
+  bool grew = true;
+  while (grew) {
+    grew = false;
+    int order[4] = {0, 1, 2, 3};  // the smallest margin first (ties: x low, x high, y low, y high)
+    for (int i = 1; i < 4; ++i)
+      for (int j = i; j > 0 && m[order[j]] < m[order[j - 1]]; --j) std::swap(order[j], order[j - 1]);
+    for (int i : order) {
+      int32_t t[4] = {m[0], m[1], m[2], m[3]};
+      ++t[i];
+      if (fits(t)) {
+        m[i] = t[i];
+        grew = true;
+        break;
+      }
+      if (i < 2 ? x0 + t[0] > x1 - t[1] : y0 + t[2] > y1 - t[3]) small[i / 2] = true;
+    }
+  }
+  r.lo[0] = x0 + m[0];
+  r.hi[0] = x1 - m[1];
+  r.lo[1] = y0 + m[2];
+  r.hi[1] = y1 - m[3];
+  if (small[0]) r.lo[0] = r.hi[0] = (x0 + x1 + 1) / 2;
+  if (small[1]) r.lo[1] = r.hi[1] = (y0 + y1 + 1) / 2;
+  return r;
+}
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 
 // ------------------------------------------------------------------------------------------------ worldToScreen
@@ -689,6 +770,12 @@ const DefectDef kDefects[] = {
      "tileToScreen caches and returns a tile's screen point only inside x -0x40 .. 800 + 0x40 (the scenery buildSceneSprites queues); "
      "fixed: that x window is the wide view's (view block width W: (W - 800) / 2 more on each side)",
      &g_defect_t2s_wide},
+    {"mainLoop.cameraBoundByZoom", "P31A,G33",
+     "the camera tile pair is clamped to 0..0x31 on both axes (the view's centre on the grid), so at the map's edge up to half "
+     "the view is black; fixed: each axis is clamped to the range that keeps every land corner (the tiles whose type is not 0x14) "
+     "reachable with a small black margin beyond it for the zoom, rotation and view width (camera_range), centred where the land "
+     "is smaller than the view",
+     &g_defect_camera_bound_zoom},
     {"mainLoop.courseUndo", "P11D",
      "the only undo is the original's one level per tile (right click twice: demolishObject restores the tile's previous content "
      "and refunds its price); fixed: every setGrids edit is journalled with what it overwrote, the edits of one left press form a "

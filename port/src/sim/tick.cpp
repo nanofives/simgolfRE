@@ -303,11 +303,13 @@ inline int16_t cash_word(int32_t v) {
   return static_cast<int16_t>(v > 0x7fff ? 0x7fff : v < -0x8000 ? -0x8000 : v);
 }
 // P6A: keep the camera tile pair on the 50 x 50 grid (mainLoop.cameraFollowOffGrid = 0); no change at 1
+// P31A (mainLoop.cameraBoundByZoom = 0): the range is camera_range's (bridge.h), whatever cameraFollowOffGrid says
 void camera_on_map(Ctx &ctx) {
-  if (SG_DEFECT(g_defect_camera_follow_offgrid)) return;
+  if (SG_DEFECT(g_defect_camera_follow_offgrid) && SG_DEFECT(g_defect_camera_bound_zoom)) return;
   GameState &g = ctx.gs();
-  g.gCameraTileX = g.gCameraTileX < 0 ? 0 : g.gCameraTileX > 0x31 ? 0x31 : g.gCameraTileX;
-  g.gCameraTileY = g.gCameraTileY < 0 ? 0 : g.gCameraTileY > 0x31 ? 0x31 : g.gCameraTileY;
+  const CameraRange r = camera_range(ctx);
+  g.gCameraTileX = g.gCameraTileX < r.lo[0] ? r.lo[0] : g.gCameraTileX > r.hi[0] ? r.hi[0] : g.gCameraTileX;
+  g.gCameraTileY = g.gCameraTileY < r.lo[1] ? r.lo[1] : g.gCameraTileY > r.hi[1] ? r.hi[1] : g.gCameraTileY;
 }
 namespace tk {
 

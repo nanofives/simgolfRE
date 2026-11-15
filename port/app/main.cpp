@@ -832,6 +832,7 @@ const ProfileMember kPlayProfile[] = {
     {"updateGolfers.playerWaitBlocksCourse", 0},    // P20A fix 2 (groups play through while the player's golfer waits for his shot)
     {"updateGolfers.playerPairBlocksShots", 0},     // P23B fix 2 (his waiting pair ahead on the hole holds no group's shot)
     {"mainLoop.cameraFollowOffGrid", 0},            // P6A
+    {"mainLoop.cameraBoundByZoom", 0},              // P31A (G33 item 1: the camera limited by zoom at the map edge)
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)
     {"infoCursorTip.fixedBox", 0},                  // P11B fix 2 (the palette tool tip box fitted to its text, above the palette)
     {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)

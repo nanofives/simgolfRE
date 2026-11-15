@@ -6,6 +6,7 @@
 // of golfers_glue.inc).
 #include <initializer_list>
 
+#include "portsim/sim/camera_range.h"  // P31A: camera_range
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/terrain.h"
@@ -195,15 +196,23 @@ uint32_t clear_object_footprint(Ctx &ctx, int32_t index) {
 int32_t step_course_edit_queue(Ctx &ctx) {
   GameState &g = ctx.gs();
   const int mode_neg = SG_NEGCTL(g_negctl_edit_queue);
-  const int32_t target = g.g_cameraGoalX;
+  int32_t target = g.g_cameraGoalX;
+  int32_t target_y = g.g_cameraTargetY;
+  // P31A (mainLoop.cameraBoundByZoom = 0): the goal (a hole's midpoint) is taken inside the camera's range, so the camera, which every
+  // frame's clamp keeps in that range, can reach it and the queue goes on
+  if (target != -1 && !SG_DEFECT(g_defect_camera_bound_zoom)) {
+    const CameraRange r = camera_range(ctx);
+    target = target < r.lo[0] ? r.lo[0] : target > r.hi[0] ? r.hi[0] : target;
+    target_y = target_y < r.lo[1] ? r.lo[1] : target_y > r.hi[1] ? r.hi[1] : target_y;
+  }
   if (target != -1) {
     const int32_t cam0 = g.gCameraTileX;
     bool moving = cam0 != target;
-    if (!moving) moving = g.gCameraTileY != g.g_cameraTargetY;
+    if (!moving) moving = g.gCameraTileY != target_y;
     if (moving) {
       const int32_t s0 = sign(sub32(target, cam0));
       const int32_t nx = add32(g.gCameraTileX, mode_neg == 1 ? 2 * s0 : s0);
-      const int32_t dy = sub32(g.g_cameraTargetY, g.gCameraTileY);
+      const int32_t dy = sub32(target_y, g.gCameraTileY);
       g.gCameraTileX = nx;
       const int32_t s1 = sign(dy);
       g.gCameraTileY = add32(g.gCameraTileY, s1);

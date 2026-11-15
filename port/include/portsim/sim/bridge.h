@@ -11,6 +11,7 @@
 #ifndef PORTSIM_SIM_BRIDGE_H
 #define PORTSIM_SIM_BRIDGE_H
 
+#include "portsim/sim/camera_range.h"  // P31A
 #include <cstdint>
 #include <functional>
 
@@ -188,6 +189,8 @@ int32_t view_width(Ctx &ctx);
 // the side margin E = (view width - 800) / 2 the wide visibility switches add on each side; 0 with the switch at 1 (the original)
 int32_t wide_view_margin_w2s(Ctx &ctx);
 int32_t wide_view_margin_t2s(Ctx &ctx);
+
+// P31A: the camera's legal range (mainLoop.cameraBoundByZoom) is declared in portsim/sim/camera_range.h
 
 }  // namespace portsim
 

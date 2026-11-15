@@ -438,6 +438,12 @@ void LiveSession::apply_glide(portsim::Ctx &ctx) {
     drop_glide_arrows();
   }
   opt_.glide->set_engaged(true);
+  {  // P31A: the camera's legal range (mainLoop.cameraBoundByZoom; 0..0x31 at 1) for the glide's clamps
+    const portsim::CameraRange r = portsim::camera_range(ctx);
+    const double lo[2] = {static_cast<double>(r.lo[0]), static_cast<double>(r.lo[1])};
+    const double hi[2] = {static_cast<double>(r.hi[0]), static_cast<double>(r.hi[1])};
+    opt_.glide->set_range(lo, hi);
+  }
   const bool z8 = opt_.glide_step2_z8 && ctx.gs().g_zoomScale == 8;
   const double step = z8 ? 2.0 : 4.0;
   const portsim::GameState &g = ctx.gs();
