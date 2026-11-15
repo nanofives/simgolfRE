@@ -1241,6 +1241,18 @@ void PanelRemap::map_impl(int32_t &x, int32_t &y, bool &vacated, bool count, int
           break;
         }
       }
+    } else if (x >= vp_.origin_x + vp_.client_w) {
+      // P29A fix 2 (class a): right of the 800-space frame, a point with no layer pixel in the rows of the golfer list's added
+      // columns (the layers with vx, P22D fix 2) shows the course beside the wide panel's drawn end; the Translator gives it the
+      // wide world's x, which lies inside those columns' own 800-space places, so the panel's tests answered there (a press
+      // selected the last column's golfer). A vacated place: a press takes the world path (P9E fix 3, mainLoop.vacatedPanelClick)
+      // and the panels' hover read answers no control (P27A fix 1), as at a moved panel's old place
+      for (const RemapLayer &l : layers_) {
+        if (l.vx != 0 && ly >= l.y0 && ly < l.y1) {
+          vacated = true;
+          break;
+        }
+      }
     }
     return;
   }
