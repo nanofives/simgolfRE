@@ -220,6 +220,10 @@ SG_API int sg_files_root(sg_ctx *ctx, const char *dir);     /* read <dir>/<name>
    sg_files_root; `names` = the logical names ranked at the session start, newest first, newline-separated ("" = none).
    Call after the fixture files were put. SG_E_ARG without a root directory. */
 SG_API int sg_files_saves_order(sg_ctx *ctx, const char *names);
+/* P30B fix 2: remove `name` from the context's files (with a root directory: hidden in memory, the disk is never touched),
+   so a replay sees the files an app session began with (session.json start_files: the install's saved games it lacked, the
+   data directory's deletes). 1 = it existed, 0 = it did not, SG_E_ARG on a bad argument or a write-through root. */
+SG_API int sg_files_remove(sg_ctx *ctx, const char *name);
 SG_API int64_t sg_files_size(sg_ctx *ctx, const char *name); /* -1 when absent */
 /* up to cap bytes of `name` from `offset` as the port sees it (overlay writes included); bytes read, -1 when absent */
 SG_API int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap);

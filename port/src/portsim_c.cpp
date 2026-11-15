@@ -637,6 +637,15 @@ int sg_files_saves_order(sg_ctx *ctx, const char *names) {
   return SG_OK;
 }
 
+int sg_files_remove(sg_ctx *ctx, const char *name) {
+  if (!ctx || !name) return SG_E_ARG;
+  if (ctx->dir_files) {
+    if (ctx->dir_files->write_through()) return SG_E_ARG;  // would delete the file on disk (SG_FILES_WRITE_THROUGH=1): refused
+    return ctx->dir_files->remove(name) ? 1 : 0;           // an in-memory tombstone
+  }
+  return ctx->mem_files.remove(name) ? 1 : 0;
+}
+
 int64_t sg_files_size(sg_ctx *ctx, const char *name) {
   if (!ctx || !name || !ctx->ctx.files_ptr) return -1;
   return ctx->ctx.files_ptr->size(name);

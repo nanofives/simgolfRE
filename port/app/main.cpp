@@ -287,6 +287,8 @@
 //                   body_calls.tsv: body pump calls per live frame
 //   --clock-origin <v> (S7.4) the clock answers v + ms since the first answer; --keys message: GetKeyState /
 //                   GetAsyncKeyState from the key messages received (a driver that posts messages), log/roadmap/S7/4_notes.md
+//   start_files/    (P30B fix 2, live sessions) files/<logical name> = every file of <data>/files and deleted.lst as the session
+//                   began; session.json start_files lists them with the install's own saved games (port/test/live.py replays it)
 // The saves overlay lives beside it: <data>/files/<logical name> and <data>/deleted.lst (saves.h).
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -385,7 +387,7 @@ std::string saves_json(const AppFiles &files) {
     first = false;
     s += "\"" + jesc(n) + "\"";
   }
-  return s + "]";
+  return s + "]" + files.start_json();  // P30B fix 2: start_files (empty unless snapshot_start ran)
 }
 
 // The address of the exe's .data section (ImageBase + VirtualAddress) from the file's PE header: the GameState's base, so
@@ -2500,6 +2502,23 @@ void selftest_saves(Tests &t, SavesDefect defect) {
       }
       f.set_newest_first(false);
     }
+    {  // P30B fix 2: the session's start files: a copy of the data directory's files, the install's saves listed
+      const fs::path snap = base / "rec" / "start_files";
+      const bool snap_ok = f.snapshot_start(snap.string());
+      const std::string j = f.start_json();
+      std::vector<uint8_t> sc;
+      t.add("saves.start_snapshot_copies", snap_ok && read_file((snap / "files" / "Saved Games" / "c.sve").string(), sc) &&
+                                               sc == w && fs::exists(snap / "files" / "top10.sve") &&
+                                               fs::exists(snap / "files" / "Themes" / "Default.pro"));
+      t.add("saves.start_snapshot_json", j.find("\"ok\":true") != std::string::npos &&
+                                             j.find("[\"Saved Games/c.sve\",3]") != std::string::npos &&
+                                             j.find("\"install_saves\":[[\"Saved Games/a.sve\",13],[\"Saved Games/b.sve\",2]]") !=
+                                                 std::string::npos &&
+                                             j.find("\"count\":3") != std::string::npos);
+      f.write("Saved Games/c.sve", {'z', 'z'});  // a write after the start leaves the snapshot as it was
+      std::vector<uint8_t> sc2;
+      t.add("saves.start_snapshot_frozen", read_file((snap / "files" / "Saved Games" / "c.sve").string(), sc2) && sc2 == w);
+    }
     t.add("saves.remove_install_file_tombstone", f.remove("Saved Games/b.sve") && f.size("Saved Games/b.sve") == -1 &&
                                                      fs::exists(inst / "Saved Games" / "b.sve"));
     t.add("saves.remove_data_file", f.remove("Saved Games/c.sve") && !fs::exists(data / "files" / "Saved Games" / "c.sve"));
@@ -4224,7 +4243,13 @@ int main(int argc, char **argv) {
   // hold a `snapshots` directory, as the original's saveBmp fopen fails without one; the installer's directory table lists it, the
   // extracted install has none, so the board's photos stayed empty. The live game makes it in the data directory's files
   if (o.trace.empty() && o.window && o.photo_dir) fs::create_directories(fs::path(files.data_root()) / "files" / "snapshots", ec);
-  if (o.trace.empty() && o.window) return run_live_window(o, files, rec);  // S7.6: the game
+  if (o.trace.empty() && o.window) {
+    // P30B fix 2: the data directory's files as the session begins (after the snapshots directory above), so the recording
+    // replays to its own hashes whatever the directory holds later (saves.h snapshot_start, session.json start_files)
+    if (!files.snapshot_start((rec / "start_files").string()))
+      std::fprintf(stderr, "start files: a copy into %s failed (start_files.ok = false)\n", (rec / "start_files").string().c_str());
+    return run_live_window(o, files, rec);  // S7.6: the game
+  }
 
   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
                      : o.negctl == "present-swap" ? PresentDefect::ByteSwap

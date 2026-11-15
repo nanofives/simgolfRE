@@ -72,6 +72,16 @@ class AppFiles : public portsim::GameFiles {
   // writes refused so far (unsafe names, or no data directory)
   uint32_t refused() const { return refused_; }
 
+  // P30B fix 2: what a live session begins with, for its replay. The sim reads the data directory's files from the first frame
+  // (Themes\Default.pro and top10.sve at boot, the saved games, the championship courses, the board's photos), and the player
+  // keeps changing them after the session (a later save, an autosave, a new pro), so a recording that names only the listing
+  // order (saves_order) replays against whatever the directory holds when it is replayed. snapshot_start copies every file of
+  // <data>/files and deleted.lst into `dst` (dst/files/<logical name>, dst/deleted.lst) and keeps the install's saved-games
+  // names; start_json() is session.json's `start_files` member (empty before a snapshot). Returns false when a copy failed
+  // (start_files.ok = false then, and the replay refuses it).
+  bool snapshot_start(const std::string &dst);
+  const std::string &start_json() const { return start_json_; }
+
  private:
   bool tombstoned(const std::string &name) const;
   void save_tombstones() const;
@@ -88,6 +98,7 @@ class AppFiles : public portsim::GameFiles {
   std::set<std::string> deleted_;                         // normalised names hidden from the install
   uint32_t refused_ = 0;
   portsim::SavesOrder saves_;
+  std::string start_json_;  // P30B fix 2
 };
 
 }  // namespace portapp

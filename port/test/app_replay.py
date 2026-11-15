@@ -69,10 +69,11 @@ def read_framehash(raw: bytes, nsim: int) -> list[tuple[int, list[int]]]:
     return out
 
 
-def replay(lib, trace: bytes, max_records: int, saves_order: list[str] | None = None) -> dict:
-    """sg_run_boot over a recording, as port/test/test_app_live.py's replay does (the install as game files, GDI text)"""
+def replay(lib, trace: bytes, max_records: int, saves_order: list[str] | None = None, start: dict | None = None) -> dict:
+    """sg_run_boot over a recording, as port/test/test_app_live.py's replay does (the install as game files, GDI text);
+    `start` = live.start_files_of(session, recording dir): the files the session began with (P30B fix 2)"""
     from port.test import live as LV
-    st, done = LV.boot_state(lib, None, saves_order)
+    st, done = LV.boot_state(lib, None, saves_order, start)
     try:
         code, n, ts, hs = st.run_boot(trace, max_records)
     finally:
@@ -132,7 +133,7 @@ def gate_one(lib, name: str, trace: bytes | None = None, framehash: bytes | None
     apply_switches(lib, sw)
     try:
         from port.test import live as LV
-        got = replay(lib, trace, len(exp) + 1, LV.saves_order_of(session))
+        got = replay(lib, trace, len(exp) + 1, LV.saves_order_of(session), LV.start_files_of(session, d))
     finally:
         lib.defect_reset()
     r = compare(exp, got, names)

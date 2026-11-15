@@ -69,6 +69,7 @@ struct Api {
   F(void, sg_files_clear, (sg_ctx *))
   F(int, sg_files_root, (sg_ctx *, const char *))
   F(int, sg_files_saves_order, (sg_ctx *, const char *))
+  F(int, sg_files_remove, (sg_ctx *, const char *))
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
   F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
@@ -126,6 +127,7 @@ bool load_api(const char *path) {
   F(void, sg_files_clear, (sg_ctx *))
   F(int, sg_files_root, (sg_ctx *, const char *))
   F(int, sg_files_saves_order, (sg_ctx *, const char *))
+  F(int, sg_files_remove, (sg_ctx *, const char *))
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
   F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
@@ -542,6 +544,8 @@ int main(int argc, char **argv) {
           status = A.sg_files_root(s.ctx, has ? d.c_str() : nullptr);
         } else if (op == 33) {  // P23B fix 3: Saved Games newest first by event order
           status = A.sg_files_saves_order(s.ctx, r.str().c_str());
+        } else if (op == 34) {  // P30B fix 2: hide a file from the context's files (a replay's session start)
+          status = A.sg_files_remove(s.ctx, r.str().c_str());
         } else if (op == 24) {
           int64_t n = A.sg_files_size(s.ctx, r.str().c_str());
           w.put<int64_t>(n);

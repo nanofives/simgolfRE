@@ -244,4 +244,80 @@ bool AppFiles::remove(const std::string &name) {
   return existed;
 }
 
+namespace {
+std::string json_str(const std::string &s) {
+  std::string o = "\"";
+  for (char c : s) {
+    if (c == '"' || c == '\\') o += '\\', o += c;
+    else if (static_cast<unsigned char>(c) < 0x20) o += ' ';
+    else o += c;
+  }
+  return o + "\"";
+}
+}  // namespace
+
+bool AppFiles::snapshot_start(const std::string &dst) {
+  start_json_.clear();
+  if (!ok()) return false;
+  std::error_code ec;
+  const fs::path src = fs::path(data_) / "files", out = fs::path(dst);
+  bool good = true;
+  uint64_t nfiles = 0, nbytes = 0;
+  std::string files_j, dirs_j;
+  fs::create_directories(out / "files", ec);
+  if (ec) good = false;
+  if (fs::is_directory(src, ec)) try {
+    for (fs::recursive_directory_iterator it(src, ec), end; !ec && it != end; it.increment(ec)) {
+      const fs::path rel = fs::relative(it->path(), src, ec);
+      if (ec) {
+        good = false;
+        break;
+      }
+      const std::string logical = rel.generic_string();
+      std::error_code e2;
+      if (it->is_directory(e2)) {  // listed too: an empty directory (snapshots, P10C fix 3) changes what the game's writes do
+        fs::create_directories(out / "files" / rel, e2);
+        if (e2) good = false;
+        dirs_j += (dirs_j.empty() ? "" : ",") + json_str(logical);
+        continue;
+      }
+      if (!it->is_regular_file(e2)) continue;
+      fs::create_directories((out / "files" / rel).parent_path(), e2);
+      fs::copy_file(it->path(), out / "files" / rel, fs::copy_options::overwrite_existing, e2);
+      if (e2) {
+        good = false;
+        continue;
+      }
+      const uint64_t sz = static_cast<uint64_t>(fs::file_size(it->path(), e2));
+      ++nfiles;
+      nbytes += sz;
+      files_j += (files_j.empty() ? "" : ",") + std::string("[") + json_str(logical) + "," + std::to_string(sz) + "]";
+    }
+    if (ec) good = false;
+  } catch (const std::exception &) {  // a name the narrow code page cannot hold
+    good = false;
+  }
+  const fs::path del = fs::path(data_) / "deleted.lst";
+  std::string deleted_j;
+  for (const std::string &d : deleted_) deleted_j += (deleted_j.empty() ? "" : ",") + json_str(d);
+  if (fs::exists(del, ec)) {
+    fs::copy_file(del, out / "deleted.lst", fs::copy_options::overwrite_existing, ec);
+    if (ec) good = false;
+  }
+  // the install's own saved games (a LAN player's install has none; original\ holds the test saves): a replay on another
+  // install hides the ones this list lacks
+  std::string inst_j;
+  for (const portsim::DirEntry &e : install_files_->list("Saved Games/*")) {
+    if (e.is_dir || e.name == "." || e.name == "..") continue;
+    const std::string logical = "Saved Games/" + e.name;
+    if (tombstoned(logical)) continue;
+    inst_j += (inst_j.empty() ? "" : ",") + std::string("[") + json_str(logical) + "," +
+              std::to_string(install_files_->size(logical)) + "]";
+  }
+  start_json_ = ",\"start_files\":{\"dir\":\"" + out.filename().generic_string() + "\",\"ok\":" + (good ? "true" : "false") +
+                ",\"files\":[" + files_j + "],\"dirs\":[" + dirs_j + "],\"deleted\":[" + deleted_j + "],\"install_saves\":[" +
+                inst_j + "],\"count\":" + std::to_string(nfiles) + ",\"bytes\":" + std::to_string(nbytes) + "}";
+  return good;
+}
+
 }  // namespace portapp

@@ -124,9 +124,46 @@ def saves_order_of(session: dict | None) -> list[str] | None:
     return [str(n) for n in session.get("saves_order") or []]
 
 
-def boot_state(lib, scenario: str | None, saves_order: list[str] | None = None):
+def start_files_of(session: dict | None, rec_dir) -> dict | None:
+    """P30B fix 2: the files an app session began with (session.json `start_files`, written by the app since P30B; the copies
+    are in <rec_dir>/start_files/files/<logical name>), None for a recording made before (it carries only saves_order, so it
+    replays against whatever data directory the replay is given)"""
+    sf = (session or {}).get("start_files")
+    if not sf:
+        return None
+    return {**sf, "root": pathlib.Path(rec_dir) / str(sf.get("dir") or "start_files") / "files"}
+
+
+def apply_start_files(st, start: dict) -> None:
+    """P30B fix 2: put the session's start files over the replay's install and hide what that session's files did not hold:
+    the install's saved games the session's install lacked (a LAN player's install has none, original\\ holds the test saves)
+    and the names the data directory's deleted.lst hid. A start file set the app could not copy whole, or a saved game both
+    installs hold with another size, is refused (the replay would not be the session's)."""
+    if not start.get("ok", False):
+        raise RuntimeError("session.json start_files.ok is false: the app could not copy the start files")
+    for name, _size in start.get("files") or []:
+        st.files_put(str(name), (start["root"] / str(name)).read_bytes())
+    put = {str(n).replace("\\", "/").lower() for n, _ in start.get("files") or []}
+    rec_inst = {str(n).replace("\\", "/").lower(): int(sz) for n, sz in start.get("install_saves") or []}
+    here = SG.INSTALL / "Saved Games"
+    for p in sorted(here.iterdir()) if here.is_dir() else []:
+        if not p.is_file():
+            continue
+        key = ("Saved Games/" + p.name).lower()
+        if key in rec_inst:
+            if rec_inst[key] != p.stat().st_size and key not in put:
+                raise RuntimeError(f"{p.name}: the session's install held {rec_inst[key]} bytes, this install {p.stat().st_size}")
+        elif key not in put:
+            st.files_remove("Saved Games/" + p.name)
+    for name in start.get("deleted") or []:
+        if str(name).lower() not in put:
+            st.files_remove(str(name))
+
+
+def boot_state(lib, scenario: str | None, saves_order: list[str] | None = None, start: dict | None = None):
     """A fresh state set up as port/test/boot.py sets one up: the exe's initialised data at the original data base, the
-    install (and the scenario's own files) as game files, the GDI text provider. Returns (state, cleanup)."""
+    install (and the scenario's own files) as game files, the GDI text provider. Returns (state, cleanup).
+    `start` (start_files_of): an app session's start files, put before the saves order is set (P30B fix 2)."""
     why = lib.exe_load()
     if why:
         raise RuntimeError(f"exe: {why}")
@@ -139,6 +176,12 @@ def boot_state(lib, scenario: str | None, saves_order: list[str] | None = None):
     if scenario:
         for fname, data in segment_files.files_for(scenario).items():
             st.files_put(fname, data)
+    if start is not None:         # P30B fix 2: before the order, as the app's files held them when it ranked them
+        try:
+            apply_start_files(st, start)
+        except Exception:
+            st.__exit__(None, None, None)
+            raise
     if saves_order is not None:   # after the fixture files: they stay unranked, as in the app
         st.files_saves_order(saves_order)
     gdi = lib.has("gditext.attach") and os.environ.get("SG_TEXT_METRICS", "gdi") == "gdi"
