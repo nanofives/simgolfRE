@@ -18,7 +18,7 @@
 //       original (here a backend-local key) and Surface_fillRegion(board, root, 0, 0, 0x320, 0x258).
 //   showBulletinBoard.event(x, y)
 //       one listed event's frame, before its text line: cell 33 at (x - 7, y - 0xad).
-//   showBulletinBoard.capture(sx, sy, digits)
+//   showBulletinBoard.capture(sx, sy, digits[, E])   (E: P31D showBulletinBoard.widePhoto at 0, see b_capture)
 //       (roadmap S3.18) the photo the board's first call with a pending photo position takes: saveBmp(root, name, rect) with
 //       name = f_strpool_4e3e7c's `snapshots\accomp` + the photo index's __itoa digits (the caller's buffer) + the `.bmp` at
 //       f_strpool_4c4970 + 0x4d0, rect = {bx, by, bx + 0xc8, by + 0xa0}, bx = clamp(sx - 0x64, 0, 0x258), by = clamp(sy -
@@ -77,6 +77,7 @@
 #include "portsim/arith.h"
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/gfx_scene.h"  // P31D: gfxs::wide_scene
 #include "portsim/sim/util.h"
 
 namespace portsim {
@@ -429,13 +430,18 @@ bool dir_exists(Ctx &ctx, const std::string &name) {
   return !ctx.files().list(n.substr(0, slash) + "/*").empty();
 }
 
-void b_capture(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+void b_capture(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
   g.ensure_root(ctx);
   const Memory &m = ctx.mem;
   const std::string name = gfxb::vstring(m, state_va(ctx, &GameState::f_strpool_4e3e7c)) + gfxb::vstring(m, a[2]) +
                            gfxb::vstring(m, state_va(ctx, &GameState::f_strpool_4c4970) + 0x4d0);
   if (!control(7) && !dir_exists(ctx, name)) return;   // saveBmp's fopen fails: nothing written
-  const int32_t bx = clamp(sub32(static_cast<int32_t>(a[0]), 0x64), 0, 0x258);
+  // P31D (showBulletinBoard.widePhoto at 0): a fourth argument E widens the clamp to the wide view, and the columns outside the 800
+  // root are read from the wide scene the last sprite queue left (gfxs::wide_scene; black where there is none)
+  const int32_t E = n >= 4 ? static_cast<int32_t>(a[3]) : 0;
+  int32_t sw = 0, se = 0;
+  const std::vector<uint16_t> *scene = E > 0 ? gfxs::wide_scene(ctx, sw, se) : nullptr;
+  const int32_t bx = clamp(sub32(static_cast<int32_t>(a[0]), 0x64), -E, add32(0x258, E));
   const int32_t by = clamp(sub32(static_cast<int32_t>(a[1]), 0x64), 0, 0x1b8);
   const int32_t w = 0xc8, h = 0xa0;
   const size_t row = static_cast<size_t>(w) * 3, size = row * static_cast<size_t>(h);
@@ -444,7 +450,9 @@ void b_capture(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   for (int32_t y = by; y < by + h; ++y)
     for (int32_t x = bx; x < bx + w; ++x) {
       const bool in = x >= 0 && y >= 0 && x < g.root.w && y < g.root.h;
-      const uint32_t px = in ? g.root.px[static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x)] : 0;
+      uint32_t px = in ? g.root.px[static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x)] : 0;
+      if (!in && scene && y >= 0 && y < 600 && x + se >= 0 && x + se < sw)
+        px = (*scene)[static_cast<size_t>(y) * static_cast<size_t>(sw) + static_cast<size_t>(x + se)];
       bits[k++] = static_cast<uint8_t>(px << 3);
       bits[k++] = static_cast<uint8_t>(control(5) ? (px >> 3) & 0xfc : (px >> 2) & 0xf8);
       bits[k++] = static_cast<uint8_t>((px >> 7) & 0xf8);

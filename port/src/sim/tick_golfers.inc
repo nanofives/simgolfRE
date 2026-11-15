@@ -196,18 +196,31 @@ int updateGolfers() {
                 (FLAGS(i) & 0x100000) == 0 && GW(i, (GS(g_golfers) + 178)) == 4)                    // updateGolfers+0x142..updateGolfers+0x170
                 G<int>((GS(f_w_4c2e00) + 12)) = i;                                                 // updateGolfers+0x172
         }
-        {   // P31D pictures only (SG_P31D_STAGE bit 7, unset in every test and release run): once per process, the first golfer
-            // standing in a side column of the wide view gets the SimFoto event word, the write the golfer panel's photo button makes
-            // (mainLoop ML+0xf164)
-            static const bool p31d_ev = std::getenv("SG_P31D_STAGE") && (std::atoi(std::getenv("SG_P31D_STAGE")) & 128);
-            static bool p31d_done = false;
-            static int p31d_from = -1;   // 0x40 dates after the first one seen here (past the load's welcome popup)
-            if (p31d_ev && p31d_from == -1) p31d_from = Date() + 0x40;
-            const int sx = GD(i, (GS(g_golfers) + 8));
-            if (p31d_ev && !p31d_done && Date() >= p31d_from && ((sx < 0 && sx != -1) || sx >= 800) &&
-                G<int>((GS(f_w_4c2e00) + 12)) == -1) {
-                G<int>((GS(f_w_4c2e00) + 12)) = i;
-                p31d_done = true;
+        {   // P31D pictures only (SG_P31D_STAGE, unset in every test and release run; log/roadmap/P31/P31D_notes.md). Once per process,
+            // 0x40 dates after the first date seen here (past the load's welcome popup), the first golfer standing in a side column of
+            // the wide view gets: bit 7, the SimFoto event word (the write the golfer panel's photo button makes, mainLoop ML+0xf164);
+            // bit 9, the bulletin board's pending photo of the first dated record at its place (the words postEvent writes for an accomplishment:
+            // f_w_4e3db8 +0 the record, +4 the x; the y at g_scrollTextWin + 0x54)
+            static const int p31d = std::getenv("SG_P31D_STAGE") ? std::atoi(std::getenv("SG_P31D_STAGE")) & (128 | 512) : 0;
+            static int p31d_done = 0, p31d_from = -1;
+            if (p31d != 0) {
+                if (p31d_from == -1) p31d_from = Date() + 0x40;
+                const int sx = GD(i, (GS(g_golfers) + 8));
+                if (Date() >= p31d_from && ((sx < 0 && sx != -1) || sx >= 800)) {
+                    if ((p31d & 128) && !(p31d_done & 128) && G<int>((GS(f_w_4c2e00) + 12)) == -1) {
+                        G<int>((GS(f_w_4c2e00) + 12)) = i;
+                        p31d_done |= 128;
+                    }
+                    int rec = -1;   // the first dated board record (records of 0x30 at g_bulletinEvents + 0x28, the date at +0)
+                    for (int k = 0; k < 22 && rec < 0; k++)
+                        if (G<int>(GS(g_bulletinEvents) + 0x28 + 0x30 * k) != 0) rec = k;
+                    if ((p31d & 512) && !(p31d_done & 512) && rec >= 0 && G<int>(GS(f_w_4e3db8)) == -1) {
+                        G<int>(GS(f_w_4e3db8)) = rec;
+                        G<int>(GS(f_w_4e3db8) + 4) = GD(i, GS(g_golfers));
+                        G<int>(GS(g_scrollTextWin) + 0x54) = GD(i, (GS(g_golfers) + 4));
+                        p31d_done |= 512;
+                    }
+                }
             }
         }
         u = FLAGS(i);                                                                   // updateGolfers+0x178

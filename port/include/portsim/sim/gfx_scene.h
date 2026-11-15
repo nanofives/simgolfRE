@@ -59,6 +59,9 @@ void bubble_shade(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, cons
 // mirrored body), and its fillWindowRect box [x0, x1) x [y0, y1) of colour word: also into the hr plane after the queue, marked
 void bubble_scaled(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y, int32_t nx, int32_t ny, int32_t den);
 void bubble_fill(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_t word);
+// P31D (showBulletinBoard.widePhoto, gfx_bulletin.cpp): the wide scene the last sprite queue left (sw x 600 logical pixels, the
+// frame's 800 columns at se), null when there is none (no world layer, or no queue since it was made)
+const std::vector<uint16_t> *wide_scene(Ctx &ctx, int32_t &sw, int32_t &se);
 void bubble_bar(Gfx &g, Ctx &ctx, int32_t x0, int32_t y0, int32_t xe, int32_t ye, const uint16_t *before, int32_t lx0, int32_t lx1,
                 int32_t yc);
 // P23D fix 8 (gfx.h GfxGroundScope): a sprite or image the frame code draws on the root before the queue (P4_selectedSprite's

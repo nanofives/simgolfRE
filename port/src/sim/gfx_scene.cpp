@@ -2620,6 +2620,18 @@ void on_wide(Gfx &g, LiveTerrainWorld &w, F f) {
   std::swap(g.root, wide);
   wide.px.swap(w.scene);
 }
+}  // namespace
+namespace gfxs {
+// P31D (gfx_scene.h): the wide scene for showBulletinBoard's capture
+const std::vector<uint16_t> *wide_scene(Ctx &ctx, int32_t &sw, int32_t &se) {
+  LiveTerrainWorld *w = wide_world(ctx);
+  if (!w || !w->scene_valid || w->scene.size() != static_cast<size_t>(w->scene_w) * 600) return nullptr;
+  sw = w->scene_w;
+  se = w->scene_e;
+  return &w->scene;
+}
+}  // namespace gfxs
+namespace {
 // P23D fix 6 (gfx.h gfx_set_wide_ground): the frame's ground marks kept since the last queue, queued into hr before any queue entry
 // (DrawBOp over a one-colour art of each rectangle at scale 1, no mover source), the root pixels still holding their word marked
 std::atomic<uint64_t> g_ground_queued{0}, g_ground_past{0};   // P23D fix 6: rectangles queued into hr, of them past the root's edge

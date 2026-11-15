@@ -6,6 +6,7 @@
 #include "portsim/sim/dialogs.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <cstring>
 #include <map>
 #include <memory>
@@ -16,6 +17,7 @@
 #include "portsim/arith.h"
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/bridge.h"  // P31D: view_width (showBulletinBoard.widePhoto)
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/tick.h"
@@ -52,6 +54,12 @@ int g_negctl_none = 0;
 // polaroid before them). 0 = the capture also saves the same picture for every other record of the same date whose photo file is
 // missing.
 int g_defect_bulletin_photo_last = 1;
+// P31D (G33 item 5 "Widen to the view", log/roadmap/P31/P31D_notes.md): showBulletinBoard.widePhoto. 1 = the original: the board's
+// photo is a 0xc8 x 0xa0 crop of the 800 root at clamp(sx - 0x64, 0, 0x258); in the wide view (worldToScreen.wideViewVisibility at
+// 0) a position in a side column passes the on-screen test, so the crop lands on the 800 frame's edge, not on the position. 0 = the
+// crop is clamped to the wide view (x from -E to 0x258 + E) and its pixels outside the 800 columns come from the wide scene. The
+// capture writes a file only: no GameState object depends on the switch.
+int g_defect_bulletin_wide_photo = 1;
 // P29A fix 3 (the UI audit of the screens P27 did not reach, log/roadmap/P29/P29A_notes.md, class b): drawGolferInfoPanel.tabsBelowFrame.
 // 1 = the original: the golfer info panel's buttons answer by one cursor read each pass within 0x19 of their centres (main page y
 // 0x106, story page y 0x11f), and mainLoop's press handler acts on the button that read chose, so the octagons reach about 16 rows
@@ -1047,6 +1055,28 @@ std::string mem_string(const Memory &m, uint32_t va) {
   }
   return s;
 }
+// roadmap S3.18: saveBmp's capture of the root for an attached graphics backend (gfx_bulletin.cpp; nothing without one). P31D
+// (showBulletinBoard.widePhoto at 0): a fourth argument E = (view width - 800) / 2 when it is not 0, so the backend cuts the photo
+// from the wide scene (clamped to the wide view, not to the 800 root); at 1 the call is the original's three arguments
+bool p31d_stage_orig_photo() {   // P31D pictures only: SG_P31D_STAGE bit 10 = the original's clamp whatever the switch holds
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+  const char *e = std::getenv("SG_P31D_STAGE");
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+  return e && (std::atoi(e) & 1024) != 0;
+}
+void bulletin_capture(Ctx &ctx, uint32_t sx, uint32_t sy, uint32_t digits) {
+  static const bool orig = p31d_stage_orig_photo();
+  const int32_t E = SG_DEFECT(g_defect_bulletin_wide_photo) || orig ? 0 : (view_width(ctx) - 800) / 2;
+  if (E != 0)
+    gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {sx, sy, digits, u32(E)});
+  else
+    gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {sx, sy, digits});
+}
 // P19D (showBulletinBoard.photoLastPostOnly = 0): the capture at (sx, sy) also saved for every other record dated as record `id`
 // whose photo (`snapshots\accomp` + __itoa(record) + `.bmp`, the board's name) is not in the files yet
 void capture_same_day(Ctx &ctx, int32_t id, uint32_t sx, uint32_t sy) {
@@ -1061,7 +1091,7 @@ void capture_same_day(Ctx &ctx, int32_t id, uint32_t sx, uint32_t sy) {
     Scratch digits(ctx, 16);
     itoa10(ctx, k, digits.va);
     if (ctx.files().exists(head + mem_string(m, digits.va) + tail)) continue;
-    gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {sx, sy, digits.va});
+    bulletin_capture(ctx, sx, sy, digits.va);
   }
 }
 }  // namespace
@@ -1096,7 +1126,7 @@ void show_bulletin_board(Ctx &ctx) {
     } else {
       itoa10(ctx, m.load<int32_t>(photo), numbuf);   // the file name; clamp and the rectangle only feed saveBmp
       // roadmap S3.18: saveBmp's capture of the root for an attached graphics backend (gfx_bulletin.cpp; nothing without one)
-      gfxr::ScreenDraw(ctx).gx("showBulletinBoard.capture", {m.load<uint32_t>(out.va), m.load<uint32_t>(out.va + 4), numbuf});
+      bulletin_capture(ctx, m.load<uint32_t>(out.va), m.load<uint32_t>(out.va + 4), numbuf);
       if (!SG_DEFECT(g_defect_bulletin_photo_last))   // P19D: the records posted with it (openHole's siblings) get the picture too
         capture_same_day(ctx, m.load<int32_t>(photo), m.load<uint32_t>(out.va), m.load<uint32_t>(out.va + 4));
       m.store<int32_t>(photo + 4, -1);
@@ -1487,6 +1517,11 @@ const DefectDef kDefects[] = {
      "one pending photo slot that every postEvent overwrites: of the records posted before the next board call (openHole's first dogleg right / "
      "dogleg left / par 5 hole) only the last gets its photo file",
      &g_defect_bulletin_photo_last},
+    {"showBulletinBoard.widePhoto", "P31D,G33",
+     "the board's photo is a 0xc8 x 0xa0 crop of the 800 root clamped into the 800 screen, so a position in a side column of the wide "
+     "view (which the wide on-screen test accepts) gets a picture of the frame's edge; fixed: the crop is clamped to the wide view and "
+     "cut from the wide scene",
+     &g_defect_bulletin_wide_photo},
     {"drawGolferInfoPanel.tabsBelowFrame", "P29A",
      "the golfer info panel's buttons answer within 0x19 of their centres, about 16 rows below the panel art's bottom edge (over the "
      "course): a cursor there lights a button and a press there acts on it",

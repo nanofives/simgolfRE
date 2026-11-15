@@ -229,6 +229,36 @@ def test_capture_equals_the_save_bmp_model(glib, sx, sy, index):
     assert f == _save_bmp_model(root, sx, sy)
 
 
+def _wide_bmp_model(root, sx, sy, e):
+    """P31D (showBulletinBoard.widePhoto at 0): the crop clamped to the wide view (x -E .. 0x258 + E); with no wide scene (no world
+    layer here) the columns outside the 800 root are black"""
+    bx, by = _clamp(sx - 0x64, -e, 0x258 + e), _clamp(sy - 0x64, 0, 0x1B8)
+    rows = []
+    for y in range(by, by + 0xA0):
+        row = bytearray()
+        for x in range(bx, bx + 0xC8):
+            p = int(root[y, x]) if 0 <= x < 800 else 0
+            row += bytes(((p << 3) & 0xFF, (p >> 2) & 0xF8, (p >> 7) & 0xF8))
+        rows.append(bytes(row))
+    bits = b"".join(reversed(rows))
+    info = struct.pack("<IiiHHIIiiII", 0x28, 0xC8, 0xA0, 1, 0x18, 0, 0, 0, 0, 0, 0)
+    return b"BM" + struct.pack("<IHHI", len(bits) + 0x36, 0, 0, 0x36) + info + bits
+
+
+@pytest.mark.parametrize("sx", [-50, 40, 850, 400])
+def test_capture_wide_view(glib, sx):
+    """P31D: the capture's fourth argument E (showBulletinBoard.widePhoto at 0, E = 133 for a 1066-wide view) clamps the crop to
+    the wide view; a position in a side column (-50, 850) or near the frame's edge (40) gets a different file than the 800 clamp
+    (the original's three arguments, the same root), the frame's middle (400) the same one"""
+    with _state(glib) as st:
+        st.files_put("snapshots/readme.txt", b"x")
+        root = _pattern_root(st, 5)
+        _g(st, "showBulletinBoard.capture", [sx & 0xFFFFFFFF, 300, _put_str(st, 0x200, "8"), 133])
+        wide = st.files_read(f"{SNAP}8.bmp")
+    assert wide == _wide_bmp_model(root, sx, 300, 133)
+    assert (wide == _save_bmp_model(root, sx, 300)) == (sx == 400)
+
+
 def test_no_snapshots_directory_writes_nothing(glib):
     _root, f = _captured(glib, 400, 300, 4, with_dir=False)
     assert f is None
