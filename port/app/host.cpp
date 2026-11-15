@@ -1255,6 +1255,8 @@ struct JobLog {
   }
 };
 JobLog g_joblog;
+// P31B fix 3: the world thread's priority (world_loop)
+constexpr int kWorldThreadPriority = THREAD_PRIORITY_ABOVE_NORMAL;  // the sim thread's level (U-1655)
 }  // namespace
 
 // ---- P15A: the world thread
@@ -1276,8 +1278,15 @@ void LiveSession::world_stop() {
 }
 
 void LiveSession::world_loop() {
-  // the world thread yields to the sim thread and the window (the game's rate first; a late world image is a skipped picture)
-  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+  // P31B fix 3 (log/roadmap/P31/P31B_notes.md, "paint stall"): every picture the window shows passes through this thread, so on a
+  // loaded PC it must not wait behind other programs' work. At BELOW_NORMAL (P15A) it got no CPU for 5-30 s at a time when the
+  // cores were busy (its jobs: 0-78 ms of thread CPU in 5-30 s of wall time) while the sim (ABOVE_NORMAL, U-1655) went on: the window
+  // showed no new picture until an input. SG_P31_WORLD_PRIO=<-2..2> (development): another level (-1 = the old BELOW_NORMAL)
+  {
+    const char *wp = std::getenv("SG_P31_WORLD_PRIO");
+    const int lv = wp ? std::max(-2, std::min(2, std::atoi(wp))) : kWorldThreadPriority;
+    SetThreadPriority(GetCurrentThread(), lv);
+  }
   for (;;) {
     std::shared_ptr<WorldJob> j;
     {
