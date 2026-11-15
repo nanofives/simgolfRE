@@ -52,8 +52,10 @@ int Menu(u32 F) {
     // each entry to the menu after its background load; empty = the picture could not be read (then the whole cut rectangle)
     std::vector<int16_t> hoverRows;
     int32_t hoverAt[5] = {0, 0, 0, 0, 0};
-    // P31C (mainLoop.titleEscIgnored = 0): an Esc counts only once the held-key word g_char83821c (onChar's key-down, onChar0's
-    // key-up) has been seen without Esc in it before a pass's pump: an Esc held (or repeating) from the screen before never quits
+    // P31C (mainLoop.titleEscIgnored = 0): an Esc counts only once the Esc key itself has been seen up since the menu's entry
+    // (GetAsyncKeyState(VK_ESCAPE), the recorded async read key_async, high bit clear before a pass's pump; P31C fix 3: the
+    // held-key word g_char83821c was cleared by any key's key-up, so another key's tap armed it under a held Esc). An Esc held
+    // (or repeating) from the screen before never quits; read only until armed, so an idle menu adds one read per entry
     bool escArmed = false;
 
 menu_top:  // ML+0x11875
@@ -111,7 +113,7 @@ menu_top:  // ML+0x11875
 hover_loop:  // ML+0x11a65
     cc("waitTicks", 1, 0);              // waitTicks(1, 0)                ML+0x11a69
     cc("doAllTasks");                    // doAllTasks()              ML+0x11a71 (no pushed args)
-    if (!SG_DEFECT(g_defect_title_esc) && G32(GS(g_char83821c)) != 0x1B) escArmed = true;  // P31C: Esc not held before this pump
+    if (!SG_DEFECT(g_defect_title_esc) && !escArmed && (key_async(0x1B) & 0x8000) == 0) escArmed = true;  // P31C: Esc up before this pump
     cc("pumpMessages");                    // pumpMessages()                 ML+0x11a76 (no pushed args)
     // View_toLocal(g_rootWindow, &F[0x1e4], &F[0x1d8])                   ML+0x11a90
     tc("View_toLocal", GS(g_rootWindow), FA(0x1E4), FA(0x1D8));

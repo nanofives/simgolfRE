@@ -9145,6 +9145,33 @@ int H2_Rebuild(u32 F) {
 // golfer strip moves the camera to that golfer. Otherwise the nearest golfer / walker within 40 px is selected
 // (Ctrl skips the golfer scan), and a click on an object tile with no object record opens the pair select (mode 1)
 // or the rename-course box (mode 2).
+// P31C (mainLoop.staffListCourseClickIgnored = 0): H2_Select's two "nothing here" ends (a tile without the object bit 0x400, or
+// an object other than objectAt's 0) for a left press: with the Staff list's detail panel open in panel mode 2 (g_ui_561254,
+// g_panelListMode 2) and an employee picked there (g_employeePanelMode != -1 and g_ui_59ca54 set: handleEmployeeAction's own
+// guards for its Move button, control 4), the picked walker g_employeeDetailList[g_employeePanelMode] gets the landing of the
+// Move button's armed press (mainLoop's H2 press entry from ML+0xef4c): tileBlocked at the cursor tile plays the refusal sound
+// 0x18 and moves nobody; else the cursor tile goes into the walker record's post bytes +0x10 / +0x11 and word +0x1a is
+// cleared. The pending word f_w_4c2e00 + 0x10 is not touched (it is -1 here: an armed press never reaches H2_Select). At 1, or
+// without a pick, the frame ends as the original's (kFrame).
+int P31C_StaffMove() {
+    if (SG_DEFECT(g_defect_staff_list_click)) return kFrame;
+    if (G32((GS(g_rootInput) + 16)) != 1) return kFrame;
+    if (G32(GS(g_panelListMode)) != 2 || G32(GS(g_ui_561254)) == 0 || G32(GS(g_ui_59ca54)) == 0) return kFrame;
+    const int sel = G32(GS(g_employeePanelMode));
+    if (sel == -1) return kFrame;
+    const int g = G32(GS(g_employeeDetailList) + 4u * (u32)sel);
+    if (g < 0 || g >= 0x80) return kFrame;  // the landing's walker test (ML+0xef86: an index >= 0x80 is a golfer)
+    if (cc("tileBlocked", G32(GS(g_cursorTileX)), G32(GS(g_cursorTileY))) != 0) {
+        cc("playSound", 0x18, 0x64, 0, 0, 0);
+        return kFrame;
+    }
+    const u32 rec = GS(g_walkers) + 0x4Cu * (u32)g;
+    G8(rec + 16) = (s8)G8(GS(g_cursorTileX));
+    G8(rec + 17) = (s8)G8(GS(g_cursorTileY));
+    G16(rec + 26) = 0;
+    return kFrame;
+}
+
 int H2_Select(u32 F, int ebp) {
     u32 key = 0;                       // ML+0xf764 esi = GetAsyncKeyState slot
     G8(GS(g_ui_569498)) = 0;                               // ML+0xf76c
@@ -9251,8 +9278,8 @@ int H2_Select(u32 F, int ebp) {
     }
     // ML+0xfad3
     int x = FD(0x1c), y = FD(0x24);
-    if ((H2_TW(H2_cell(x, y)) & 0x400) == 0) return kFrame;   // ML+0xfae4..ML+0xfaf5
-    if (cc("objectAt", x, y) != 0) return kFrame;     // ML+0xfafd objectAt / ML+0xfb07
+    if ((H2_TW(H2_cell(x, y)) & 0x400) == 0) return P31C_StaffMove();   // ML+0xfae4..ML+0xfaf5
+    if (cc("objectAt", x, y) != 0) return P31C_StaffMove();     // ML+0xfafd objectAt / ML+0xfb07
     if (G32((GS(g_rootInput) + 16)) == 1) {                       // ML+0xfb0d
         if (G32(GS(g_flags)) & 0x200000) return kFrame;   // ML+0xfb16 / ML+0xfb20
         if (G32(GS(g_holesPlusOne)) <= 1) return kFrame;      // ML+0xfb26 / ML+0xfb2d
