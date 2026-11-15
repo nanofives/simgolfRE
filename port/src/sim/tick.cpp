@@ -90,6 +90,12 @@ int g_defect_title_default_item = 1;
 // the hull of the opaque pixels of the picture the highlighted buttons are cut from, read at the menu's entry, not the whole
 // rectangle); among items holding the cursor the original's distance decides. The exit icon (hotspot 5) is mainLoop.titleExitHotspotWide's.
 int g_defect_title_hotspot_range = 1;
+// mainLoop.titleEscIgnored (P31C, G33 item 2a, 2026-11-15, Mariano: "Both changes"): the title menu's hover loop reads only the
+// cursor and the button word (ML+0x11a65..ML+0x11cba), so an Esc does nothing there; its only way out of the game is the exit
+// icon (hotspot 5 -> selection -2, Session's QUIT path: top10.sve, Default.pro, the closing movie, the credits). Fixed (0): a
+// fresh Esc (the char word 0x1b after a pass's pump, with the held-key word g_char83821c seen without Esc before that pump since
+// the menu's entry) acts as a click on the exit icon; an Esc held or left from the screen before is dropped.
+int g_defect_title_esc = 1;
 // mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
 // that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
 // nearestMenuSpot) or, below y 0x1e0, to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5); every other press takes
@@ -2213,6 +2219,10 @@ const DefectDef kDefects[] = {
      "a labelled title-menu item is chosen within distance 0xa0 of its text centre (about 0x140 px wide, mostly outside its art); "
      "fixed: only over the item's lit button art (per row the hull of its opaque pixels; P23C, was its art box)",
      &g_defect_title_hotspot_range},
+    {"mainLoop.titleEscIgnored", "P31C",
+     "the title menu ignores Esc (its only exit is the exit icon); fixed: a fresh Esc pressed while the menu is shown acts as a "
+     "click on the exit icon (quit: top10.sve, Default.pro, the closing movie, the credits)",
+     &g_defect_title_esc},
     {"mainLoop.vacatedPanelClick", "P9E",
      "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
      "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "

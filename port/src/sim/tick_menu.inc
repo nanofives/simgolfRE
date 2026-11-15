@@ -52,6 +52,9 @@ int Menu(u32 F) {
     // each entry to the menu after its background load; empty = the picture could not be read (then the whole cut rectangle)
     std::vector<int16_t> hoverRows;
     int32_t hoverAt[5] = {0, 0, 0, 0, 0};
+    // P31C (mainLoop.titleEscIgnored = 0): an Esc counts only once the held-key word g_char83821c (onChar's key-down, onChar0's
+    // key-up) has been seen without Esc in it before a pass's pump: an Esc held (or repeating) from the screen before never quits
+    bool escArmed = false;
 
 menu_top:  // ML+0x11875
     // --- reset state + draw the title background (ML+0x11875..ML+0x11913) ---
@@ -96,11 +99,19 @@ menu_top:  // ML+0x11875
     cc("pumpLight");                    // pumpLight()                    ML+0x11a37 (no pushed args)
     FD(0x2C) = 0;                    //                               ML+0x11a46
     StrCpy(kBuf, (GS(f_strpool_4c581c) + 424));          //                               ML+0x11a63
+    if (!SG_DEFECT(g_defect_title_esc)) {  // P31C: an Esc left in the char word from before the menu is dropped
+        escArmed = false;
+        if (G32(GS(gDirtyFlagB)) == 0x1B) {
+            G32(GS(gDirtyFlagB)) = 0;
+            G32(GS(gDirtyFlagA)) = 0;
+        }
+    }
 
     // --- hover / click loop (ML+0x11a65..ML+0x11cba) ---
 hover_loop:  // ML+0x11a65
     cc("waitTicks", 1, 0);              // waitTicks(1, 0)                ML+0x11a69
     cc("doAllTasks");                    // doAllTasks()              ML+0x11a71 (no pushed args)
+    if (!SG_DEFECT(g_defect_title_esc) && G32(GS(g_char83821c)) != 0x1B) escArmed = true;  // P31C: Esc not held before this pump
     cc("pumpMessages");                    // pumpMessages()                 ML+0x11a76 (no pushed args)
     // View_toLocal(g_rootWindow, &F[0x1e4], &F[0x1d8])                   ML+0x11a90
     tc("View_toLocal", GS(g_rootWindow), FA(0x1E4), FA(0x1D8));
@@ -186,8 +197,22 @@ hover_loop:  // ML+0x11a65
     // Window::refreshFull(g_rootWindow, 0)                             ML+0x11ca5
     tc("Window::refreshFull", GS(g_rootWindow), 0);
     if (io.live) io.live->title_menu_pass();  // P6B: a notification for a live host (tick_hook.h); nothing changes here
+    // P31C (mainLoop.titleEscIgnored = 0): an Esc in the char word (rootWin_onKey's WM_CHAR 0x1b) after this pass's pump, pressed
+    // while the menu was shown (escArmed), is taken (both key words cleared) and acts as a click on the exit icon (hotspot 5,
+    // selection -2 after the remap: Session's QUIT path); a click on an item in the same pass wins. An Esc that is not fresh is
+    // taken and ignored, so it cannot stay in the word for a later pass.
+    if (!SG_DEFECT(g_defect_title_esc) && G32(GS(gDirtyFlagB)) == 0x1B &&
+        (G32((GS(g_rootInput) + 16)) == 0 || ebx == -1)) {
+        G32(GS(gDirtyFlagB)) = 0;
+        G32(GS(gDirtyFlagA)) = 0;
+        if (escArmed) {
+            ebx = 5;
+            goto menu_click;
+        }
+    }
     if (G32((GS(g_rootInput) + 16)) == 0) goto hover_loop;   // no mouse click     ML+0x11cb1
     if (ebx == -1) goto hover_loop;            // no item under cursor ML+0x11cba
+menu_click:
 
     // --- a click landed on item ebx: redraw items 0..4 un-highlit (ML+0x11cc0..ML+0x11d4e) ---
     MV_blitFull(GS(g_image568d10));                                         // ML+0x11ceb

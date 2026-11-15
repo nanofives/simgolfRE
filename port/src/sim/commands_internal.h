@@ -96,6 +96,7 @@ extern int g_defect_report_any_click;  // P26C item 4b (commands.cpp reportScree
 extern int g_defect_browser_row_press;  // P27B fix 2 (commands.cpp loadGameBrowser.rowPressPastText)
 extern int g_defect_hire_no_row;        // P27B fix 3 (commands.cpp showHireEmployeeDialog.pressWithoutRowHires)
 extern int g_defect_editor_cancel_stays;  // P13B item 14: showCharacterEditor.cancelStaysOpen (commands.cpp)
+extern int g_defect_editor_esc_keeps;     // P31C: showCharacterEditor.escKeepsEdits (commands.cpp)
 }  // namespace portsim
 
 #define GS(sym) portsim::state_va(ctx, &portsim::GameState::sym)

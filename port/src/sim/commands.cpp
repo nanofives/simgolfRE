@@ -118,6 +118,13 @@ int g_defect_esc_course_action = 1, g_defect_esc_buy_land = 1, g_defect_esc_char
 //                  record, its phrase lines, the golfer's skill bytes, the player's skills and the portrait slot counters a loaded
 //                  character file wrote) and leaves the editor without Exit's preference writes, then the exit path as Exit's
 int g_defect_editor_cancel_stays = 1;
+// P31C (G33 item 2b, 2026-11-15, Mariano: "Both changes"): with showCharacterEditor.escIgnored = 0 an Esc in the character
+// editor is a press on Exit (case 19), which keeps every edit and writes the preview preferences.
+//   showCharacterEditor.escKeepsEdits  fixed (0, with escIgnored at 0): an Esc discards the edits and leaves: Cancel's full
+//                  restore (the type record, its phrase lines, the golfer's skill bytes, the player's skills, the portrait slot
+//                  counters: cancelStaysOpen = 0's set, whatever that switch is), then the exit path without Exit's writes.
+//                  At 1, or with escIgnored at 1 (the original: Esc does nothing), nothing changes.
+int g_defect_editor_esc_keeps = 1;
 // P26C item 4b (Mariano's play-test 13: "for this and every menu i want to dismiss it ONLY with the tick button, not clicking
 // anywhere on the screen"): the full-screen screens with a tick (close) button end at the first click anywhere (the report
 // loops' button word test, the routing map's click below the map, the roster's right click, the bulletin board's click).
@@ -828,6 +835,10 @@ const DefectDef kDefects[] = {
     {"showCharacterEditor.cancelStaysOpen", "P13B",
      "the character editor's Cancel restores the type record and stays open; fixed: Cancel restores every edit and closes the editor",
      &g_defect_editor_cancel_stays},
+    {"showCharacterEditor.escKeepsEdits", "P31C",
+     "with showCharacterEditor.escIgnored at 0 an Esc in the character editor acts as Exit and keeps the edits; fixed: an Esc "
+     "puts back every edit (Cancel's full restore) and leaves the editor",
+     &g_defect_editor_esc_keeps},
 };
 }  // namespace
 

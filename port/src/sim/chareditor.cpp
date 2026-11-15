@@ -687,11 +687,13 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
   // for Cancel: the type's phrase lines (comment lines, loadThemeFile), the golfer's skill bytes (skill bars; loadThemeFile's
   // 16-byte record), the player's skills and the portrait slot counters (loadThemeFile)
   const bool cancel_closes = g_defect_editor_cancel_stays == 0;
+  // P31C (showCharacterEditor.escKeepsEdits = 0, with escIgnored at 0): an Esc runs the closing Cancel below, so the same copies
+  const bool esc_discards = g_defect_esc_char_editor == 0 && g_defect_editor_esc_keeps == 0;
   const uint32_t phrases = GS(g_golferPhrases) + u32(mul32(character, 0x4e2));
   std::vector<uint8_t> keep_phrases, keep_skills;
   int32_t keep_slots[2] = {};
   int8_t keep_player[16] = {};
-  if (cancel_closes) {
+  if (cancel_closes || esc_discards) {
     for (uint32_t i = 0; i < 0x4e2; ++i) keep_phrases.push_back(B(phrases + i));
     for (uint32_t i = 0; i < 16; ++i) keep_skills.push_back(B(Gr + 0xf0 + i));
     std::memcpy(keep_slots, gs.g_loopCounter59b76c, sizeof keep_slots);
@@ -937,9 +939,14 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
     if (InputSource *s = input_source(ctx)) s->timed_pass(100);
     pump_pass(ctx, "showCharacterEditor");
     int32_t btn = gs.g_rootInput[kButton];
+    bool esc_cancel = false;
     if (cm::esc_pressed(ctx, g_defect_esc_char_editor)) {  // P9A item 2: Esc = a press on Exit (case 19)
       ctl = 19;
       btn = 1;
+      if (esc_discards) {  // P31C: Esc = Cancel's full restore, then the exit path without Exit's preference writes
+        ctl = 18;
+        esc_cancel = true;
+      }
     }
     if (btn == 0) continue;
 
@@ -1039,7 +1046,7 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
           break;
         case 18:  // Cancel: the entry copy back, the editor stays open
           if (neg != 3) copy(R1, backup, 0x230);
-          if (cancel_closes) {  // P13B item 14: every edit put back, then the exit path without Exit's preference writes
+          if (cancel_closes || esc_cancel) {  // P13B item 14: every edit put back, then the exit path without Exit's preference writes
             for (uint32_t i = 0; i < 0x4e2; ++i) SB(phrases + i, keep_phrases[i]);
             for (uint32_t i = 0; i < 16; ++i) SB(Gr + 0xf0 + i, keep_skills[i]);
             std::memcpy(gs.g_loopCounter59b76c, keep_slots, sizeof keep_slots);

@@ -857,6 +857,8 @@ const ProfileMember kPlayProfile[] = {
     {"pickCharEditor.escIgnored", 0},               // P9A item 2: Esc = the look picker's cancel
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
+    {"mainLoop.titleEscIgnored", 0},                // P31C (G33 item 2a): a fresh Esc on the title menu = the exit icon (quit)
+    {"showCharacterEditor.escKeepsEdits", 0},       // P31C (G33 item 2b): Esc in the character editor discards the edits and exits
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
     {"drawGolferInfoPanel.tabsBelowFrame", 0},     // P29A fix 3: the info panel's buttons answer only above its art's bottom edge
     {"drawEmployeeViewPanel.fourColumns", 0},      // P22D fix 2: the golfer list's added columns (the host's view block word +0x40)
