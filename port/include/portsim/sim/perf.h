@@ -18,6 +18,7 @@ namespace portsim {
 enum PerfCounter : int { kPerfGfx = 0, kPerfTerrain800 = 1, kPerfTerrainWorld = 2, kPerfNested = 3, kPerfCount = 4 };
 
 inline std::atomic<bool> g_perf_on{false};
+inline std::atomic<int64_t> g_p31_world_ns{0};  // P31B DEV: perf_now_ns at the last renderSpriteQueue end (item 7 measurement)
 inline std::atomic<int64_t> g_perf_ns[kPerfCount] = {};
 inline thread_local int g_perf_gfx_depth = 0;  // gfx_drop calls open on this thread
 

@@ -314,6 +314,7 @@ struct WorldImage {
   int32_t cur_box[4] = {0, 0, 0, 0};
   CursorProj proj;  // P10E
   CameraSnap cam;   // P12A fix 1
+  bool early = false;  // P31B item 7: an early world picture (host.cpp LiveSession::early_world), the frame's present follows
   // P12A fix 2: the frame's window-resolution sprite queue (gfx.h GfxHrScene: its base and every draw with its source), for the
   // moving objects drawn between two game frames (null: none, or --smooth-objects off)
   std::shared_ptr<const portsim::GfxHrScene> hr_scene;

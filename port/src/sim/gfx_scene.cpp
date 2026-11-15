@@ -678,6 +678,8 @@ namespace {
 std::atomic<bool> g_hr_scene_on{false};  // P12A fix 2 (gfx_set_hr_scene): the app wants the published scenes
 thread_local bool t_hr_selftest = false;  // P17B: this thread runs gfx_hr_gpu_selftest (no publication; the process-wide switch untouched)
 std::atomic<int64_t> g_hr_pub_ns{0};      // P12A fix 3: the publications' time and count (gfx_hr_scene_cost)
+std::atomic<GfxQueueEndHook> g_queue_end_fn{nullptr};  // P31B item 7 (gfx_set_queue_end_hook)
+void *g_queue_end_user = nullptr;
 std::atomic<int64_t> g_hr_pub_n{0};
 thread_local GfxMoverSrc g_draw_src;      // P12A fix 2: the source of the queue entry b_queue_draw is drawing (hr_blit copies it)
 thread_local GfxMoverSrc g_label_src;     // P12A fix 2: the source of the queue entry b_queue_label is drawing the label of
@@ -3277,6 +3279,7 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   }
   if (LiveTerrainWorld *w = wide_world(ctx)) {   // G32: the frame at the queue's end
     g.ensure_root(ctx);
+    g_p31_world_ns.store(perf_now_ns(), std::memory_order_relaxed);  // P31B DEV (item 7 measurement): the world queue's end
     PerfDetailScope pd(kPdQueueEnd);  // P15A
     w->s1 = g.root.px;
     w->scene_valid = true;
@@ -3323,6 +3326,7 @@ void b_queue_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
       put(".base", w->scene_base);
       put(".s1", w->s1);
     }
+    if (GfxQueueEndHook fn = g_queue_end_fn.load(std::memory_order_acquire)) fn(g_queue_end_user, ctx, *w);  // P31B item 7
   }
   SceneState &ss = st(g);
   ss.queue_calls += 1;
@@ -4377,6 +4381,11 @@ void gfx_cursor_sprites_end(Ctx &ctx) {
   LiveTerrainWorld *w = wide_world(ctx);
   if (!w || !w->scene_valid || w->scene_pre.size() != w->scene.size()) return;
   w->scene_cur = w->scene;
+}
+
+void gfx_set_queue_end_hook(GfxQueueEndHook fn, void *user) {  // P31B item 7
+  g_queue_end_user = user;
+  g_queue_end_fn.store(fn, std::memory_order_release);
 }
 
 extern const GfxFamily kGfxFamily_scene = {"scene", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};

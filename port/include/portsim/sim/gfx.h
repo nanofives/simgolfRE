@@ -720,6 +720,12 @@ void gfx_set_hr_defer_check(bool on);
 bool gfx_hr_check_on();
 bool gfx_hr_defer();
 std::shared_ptr<GfxHrJob> gfx_hr_take_job();  // never null
+// P31B item 7 (app option --early-world, log/roadmap/P31/P31B_notes.md): RENDER-ONLY. A hook the backend calls on the frame thread
+// at renderSpriteQueue's end on the wide world (after the queue's flush was recorded and the scene kept), where the frame's world
+// part is drawn and its HUD not yet: the live host may hand that world over early. Null (the default) = none; nothing the backend
+// or the GameState holds changes either way.
+using GfxQueueEndHook = void (*)(void *user, Ctx &ctx, const LiveTerrainWorld &w);
+void gfx_set_queue_end_hook(GfxQueueEndHook fn, void *user);
 void gfx_hr_job_merge(std::shared_ptr<GfxHrJob> &into, const std::shared_ptr<GfxHrJob> &next);
 void gfx_hr_job_run(GfxHrJob &j, LiveTerrainWorld &w);
 size_t gfx_hr_job_ops(const GfxHrJob &j);

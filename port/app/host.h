@@ -189,6 +189,11 @@ struct HostOptions {
   // +0x68 (bridge.h kPortViewEdgeGlideVa, a recorded write when it changes) and hands the last frame's zoom 8 edge move (words
   // +0x6c / +0x70, written by the sim instead of adding it) to ArrowGlide::edge at half a tile per game frame per tile
   bool edge_glide = false;
+  // P31B item 7 (--early-world on, needs the glide and the world thread): a frame head whose glide request answers an arrow that
+  // started a glide hands that frame's world over at renderSpriteQueue's end (portsim gfx_set_queue_end_hook), before its HUD is
+  // drawn: a picture of this frame's base and world with the last present's HUD layers and HUD text runs over it; the frame's own
+  // present follows as before
+  bool early_world = false;
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -261,6 +266,7 @@ struct WorldJob {
   int32_t outcome = 0;
   bool overwrote = false;
   int64_t ops_ns = 0, image_ns = 0;  // P18B (SG_P17_JOBLOG): run_world_job's hr ops (gfx_hr_job_run) and image part
+  bool early = false;  // P31B item 7 (LiveSession::early_world)
 };
 
 class LiveSession : public portsim::LiveHost {
@@ -516,6 +522,20 @@ class LiveSession : public portsim::LiveHost {
     portsim::GfxWorldRun run;
   } wts_;  // jobs .. job_max_ns: world thread; merged, root_*, submit_ns: sim thread (read after the thread stopped)
   void world_start();
+  // P31B item 7 (HostOptions::early_world): the queue-end hook (sim thread) and the early job it submits
+  static void queue_end_hook(void *user, portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w);
+  void early_world(portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w);
+  bool early_due_ = false;          // this frame's head answered a glide start with a step (sim thread)
+  bool early_ok_ = false;           // early_f_ holds the last present's HUD layers
+  portsim::GfxHudFrame early_f_;    // the last present's HUD frame without its base / back
+  portsim::GfxTextFrame early_tf_;  // the last present's text runs in HUD layers (layer >= 0)
+  bool early_text_ = false;
+  Point early_fc_{-1, -1};
+  CameraSnap early_cam_;            // the last present's camera (the world runs' shift)
+  std::vector<std::pair<uint32_t, uint16_t>> early_bub_;  // fix 2b: the last present's bub800 pixels (index, word)
+  uint64_t early_bub_px_ = 0;
+  uint64_t early_jobs_ = 0, early_skipped_ = 0;
+  bool glide_wrote_ = false;        // apply_glide wrote a step at this head
   void world_stop();
   void world_loop();
   void run_world_job(WorldJob &j);

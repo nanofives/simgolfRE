@@ -723,7 +723,10 @@ void Presenter::objects_start(const WorldImage &prev, const std::map<size_t, std
     if (s.kind == portsim::kGfxMoverNone) continue;
     const int32_t o = cnt[{s.kind, s.index}]++;
     const auto it = pm.find({s.kind, s.index, o});
-    std::FILE *bl = (s.kind == portsim::kGfxMoverBall || s.kind == portsim::kGfxMoverShadow) ? ball_log() : nullptr;
+    static const bool p31_golf = std::getenv("SG_P31_GOLF") && std::atoi(std::getenv("SG_P31_GOLF")) == 1;  // P31B (development)
+    std::FILE *bl = (s.kind == portsim::kGfxMoverBall || s.kind == portsim::kGfxMoverShadow || (p31_golf && s.kind == portsim::kGfxMoverGolfer))
+                        ? ball_log()
+                        : nullptr;
     auto blog = [&](int how, double ddx, double ddy) {
       if (bl)
         std::fprintf(bl, "F\t%lld\t%u\t%d\t%d\t%d\t%d\t%d\t%.3f\t%.3f\t%d\t%.3f\t%.3f\t%.2f\t%.4f\t%.4f\n",

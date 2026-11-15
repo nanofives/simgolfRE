@@ -112,6 +112,9 @@
 //   P31B item 4: --tap-slide on|off (default on; SG_APP_P31=off: off; needs --arrow-glide) a lone arrow tap (a key-up that leaves
 //   the axis short of its one-step minimum) covers the rest of its step in at most 60 ms (SG_P31_TAP_MS) instead of at the glide's
 //   speed (4 tiles at 30.1 tiles / s = 133 ms); held arrows keep the glide (present.h ArrowGlide::set_tap_s)
+//   P31B item 7: --early-world on|off (default on; SG_APP_P31=off: off; needs --arrow-glide and the world thread) the frame an
+//   arrow's glide start woke hands its world to the window at renderSpriteQueue's end, before its HUD is drawn (the last
+//   present's HUD layers over it), so the first move starts that much sooner (host.h HostOptions::early_world)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
@@ -572,6 +575,7 @@ struct Options {
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool edge_glide = true;          // P31B item 3: --edge-glide on|off (SG_APP_P31=off: off)
   bool tap_slide = true;           // P31B item 4: --tap-slide on|off (SG_APP_P31=off: off)
+  bool early_world = true;         // P31B item 7: --early-world on|off (SG_APP_P31=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool staff_labels_top = true;    // P26D item 9: --staff-labels-top on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
@@ -1720,6 +1724,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     ho.glide_step2_z8 = s4 >= 0 && *portsim::defect_at(s4, nullptr)->flag == 0;
     const int e8 = portsim::defect_find("mainLoop.edgeScrollTileAtZoom8");  // P31B item 3: the zoom 8 edge scroll in the glide
     ho.edge_glide = o.edge_glide && e8 >= 0 && *portsim::defect_at(e8, nullptr)->flag == 0;
+    ho.early_world = o.early_world && ho.world_thread;  // P31B item 7
     if (o.tap_slide) {  // P31B item 4: a lone tap's slide (development: SG_P31_TAP_MS)
       const char *tm = std::getenv("SG_P31_TAP_MS");
       glide.set_tap_s((tm ? std::atof(tm) : 60.0) / 1000.0);
@@ -2140,6 +2145,17 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         if (wl_scope.on) winlog_event('K', wl_k0, wl_kc);
         hover_index = index;  // P27C fix 1
         portsim::GfxTextFrame tf = std::move(wi.text);  // P9C: the frame's text runs (empty without --text-res native)
+        {  // P31B item 7 (development): SG_P31_EARLY_SHOT=<dir> writes each early world picture and the picture after it
+          static const char *esd = std::getenv("SG_P31_EARLY_SHOT");
+          static int en = 0, ewant = 0;
+          if (esd && ho.world && wi.early && en < 12) {
+            presenter.gpu_shot(std::string(esd) + "/early_" + std::to_string(en) + "_a.bmp");
+            ewant = 1;
+          } else if (esd && ho.world && ewant) {
+            presenter.gpu_shot(std::string(esd) + "/early_" + std::to_string(en++) + "_b.bmp");
+            ewant = 0;
+          }
+        }
         if (ho.world) {
           int64_t wl_s0 = wl_scope.on ? portsim::perf_now_ns() : 0;
           wl_kc = wl_scope.on ? winlog_cycles() : 0;
@@ -3686,9 +3702,9 @@ bool parse(int argc, char **argv, Options &o) {
       o.sharp_art = v == "on";
       continue;
     }
-    if (a == "--edge-glide" || a == "--tap-slide") {  // P31B items 3 / 4 (before the chain too)
+    if (a == "--edge-glide" || a == "--tap-slide" || a == "--early-world") {  // P31B items 3 / 4 / 7 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
-      (a == "--edge-glide" ? o.edge_glide : o.tap_slide) = v == "on";
+      (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
       continue;
     }
     if (a == "--popup-fit") {  // P30A item 2 (before the chain too)
@@ -4191,7 +4207,7 @@ int main(int argc, char **argv) {
       o.sharp_art = false;  // P26C item 11
     }
   if (const char *ep = std::getenv("SG_APP_P31"))  // P31: G33's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = false;  // P31B items 3 / 4
+    if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = o.early_world = false;  // P31B items 3 / 4 / 7
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

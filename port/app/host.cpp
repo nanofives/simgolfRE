@@ -428,6 +428,7 @@ size_t LiveSession::drop_glide_arrows() {
 // P26A: at a frame head of the frame loop, the glide's camera step for this frame (view block words +0x60 / +0x64, tiles, recorded
 // writes); the speed and the tap step follow the zoom the key switch would step with (P21_ArrowStep: 2 tiles at zoom 8 under P11F)
 void LiveSession::apply_glide(portsim::Ctx &ctx) {
+  glide_wrote_ = false;  // P31B item 7
   if (!opt_.glide) return;
   if (!portsim::view_map(ctx)) {
     opt_.glide->set_engaged(false);
@@ -476,6 +477,7 @@ void LiveSession::apply_glide(portsim::Ctx &ctx) {
     writes->wrote(portsim::kPortViewGlideYVa, static_cast<uint32_t>(dy));
   }
   ++glide_writes_;
+  glide_wrote_ = true;  // P31B item 7
   latlog('V', portsim::perf_now_ns(), frame_, dx, dy, g.gCameraTileX, g.gCameraTileY);  // P26A (SG_P21_LATLOG)
 }
 
@@ -1264,10 +1266,12 @@ void LiveSession::world_start() {
   if (world_thr_.joinable()) return;
   wq_stop_ = false;
   world_thr_ = std::thread([this] { world_loop(); });
+  if (opt_.early_world) portsim::gfx_set_queue_end_hook(&LiveSession::queue_end_hook, this);  // P31B item 7
 }
 
 void LiveSession::world_stop() {
   if (!world_thr_.joinable()) return;
+  if (opt_.early_world) portsim::gfx_set_queue_end_hook(nullptr, nullptr);  // P31B item 7
   {
     std::lock_guard<std::mutex> lk(wq_mu_);
     wq_stop_ = true;
@@ -1374,6 +1378,106 @@ void LiveSession::submit_world(std::shared_ptr<WorldJob> j) {
   wq_cv_.notify_all();
 }
 
+// P31B item 7 (HostOptions::early_world; log/roadmap/P31/P31B_notes.md): renderSpriteQueue's end on the frame thread. A frame whose
+// head answered a glide start with a step (early_due_) has drawn its world here (the terrain at the new camera and the queue's
+// sprites) and not yet its HUD (the panels, the labels pass, input, the rest of mainLoop: 42 % of the frame's work, measured). The
+// world goes to the world thread now as its own picture: this frame's root so far is the base (so the world mask is taken over the
+// terrain and sprites it holds), the last present's HUD layers and their text runs are drawn over it, the camera is this frame's.
+// The frame's own present follows as before (a job that has not started by then is merged into it: its picture only).
+void LiveSession::queue_end_hook(void *user, portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w) {
+  static_cast<LiveSession *>(user)->early_world(ctx, w);
+}
+void LiveSession::early_world(portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w) {
+  if (!early_due_) return;
+  early_due_ = false;
+  if (!early_ok_ || !world_thr_.joinable() || !w.valid || w.s1.size() != static_cast<size_t>(kLogicalW) * kLogicalH ||
+      !portsim::gfx_back_terrain(ctx)) {
+    ++early_skipped_;
+    return;
+  }
+  const int64_t s0 = portsim::perf_now_ns();
+  auto j = std::make_shared<WorldJob>();
+  j->hr = portsim::gfx_hr_take_job();
+  j->capture = true;
+  j->terrain = true;
+  j->layered = true;
+  j->use = true;
+  j->cam = take_cam(ctx, true);
+  j->cam.head_ns = head_ns_;
+  // P31B fix 2b: what the last present drew into the world after its queue is one frame old here, like its HUD, and anchored to the
+  // world: moved by the camera's step since that present (camera_shift, 800-space). Its bubbles (the golfers' comment bars and
+  // thought bubbles, the walkers' speech bubbles, the --wide-ground marks: the root pixels P23D marked in bub800 with their words)
+  // go into this picture's base at the moved place, where the world mask leaves the base showing (800 resolution, inside the frame)
+  int32_t sx = 0, sy = 0;
+  const bool shift = camera_shift(early_cam_, j->cam, sx, sy);
+  std::vector<uint16_t> base = w.s1;
+  if (shift)
+    for (const std::pair<uint32_t, uint16_t> &b : early_bub_) {
+      const int32_t x = static_cast<int32_t>(b.first % kLogicalW) + sx, y = static_cast<int32_t>(b.first / kLogicalW) + sy;
+      if (x < 0 || x >= kLogicalW || y < 0 || y >= kLogicalH) continue;
+      base[static_cast<size_t>(y) * kLogicalW + static_cast<size_t>(x)] = b.second;
+      ++early_bub_px_;
+    }
+  j->f = early_f_;
+  j->f.base = base;
+  j->f.back = base;
+  j->cursor = false;
+  j->smooth_objects = opt_.smooth_objects;
+  j->early = true;
+  uint64_t gen = 0;
+  std::shared_ptr<const std::vector<uint16_t>> r = portsim::gfx_hr_job_root(*j->hr, gen);
+  if (w.rec) {
+    j->world_raster = true;
+  } else if (r && gen == w.gen) {
+    j->root = std::move(r);
+  } else if (last_root_ && last_root_gen_ == w.gen) {
+    j->root = last_root_;
+  } else {
+    j->root = std::make_shared<const std::vector<uint16_t>>(w.raster->pixels());
+  }
+  copy_world_planes(w, j->planes);
+  j->px = base;
+  if (opt_.smooth_objects && !w.names_differ && w.terrain800.size() == w.s1.size()) {
+    j->scene_slot = std::make_shared<std::shared_ptr<const portsim::GfxHrScene>>();
+    portsim::gfx_hr_job_add_take(*j->hr, j->scene_slot);
+  }
+  if (early_text_) {
+    j->text = true;
+    j->tf = early_tf_;
+    // the course's runs kept (present: the base's, layer -1, and the world's beside the frame, layer -3, with no queue source: the
+    // golfers' comment lines, the labels pass) are the last present's, anchored to the world: moved by the camera's step as the
+    // bubbles. The names the queue drew (queue source) are this frame's own, in its world picture: run_world_job makes the early
+    // picture without the text-free variant (WorldImage::px_text), so they show there at the world's resolution
+    std::vector<portsim::GfxTextRun> kept;
+    for (portsim::GfxTextRun &run : j->tf.runs) {
+      if (run.layer == -3 || run.layer == -1) {
+        if (!shift) continue;
+        run.x += sx, run.x0 += sx, run.x1 += sx, run.y += sy, run.y0 += sy, run.y1 += sy;
+        if (run.ex1 > run.ex0) run.ex0 += sx, run.ex1 += sx;
+      }
+      kept.push_back(std::move(run));
+    }
+    j->tf.runs = std::move(kept);
+    j->tf.base_clean = base;  // no glyph of a kept run is in the base (HUD runs: the layers; course runs: not drawn yet)
+    j->tf.back = base;        // Presenter::set_text takes a frame's runs only with its back buffer and clean copy (frame-sized)
+    j->tf.clean = base;
+  }
+  j->t_ns = portsim::perf_now_ns();
+  j->show = base;
+  j->fc_x = early_fc_.x;
+  j->fc_y = early_fc_.y;
+  {
+    std::lock_guard<std::mutex> lk(frame_mu_);
+    j->seq = ++present_seq_;
+    j->index = last_index_;
+    j->band = last_band_;
+  }
+  latlog('Y', j->t_ns, frame_, j->cam.cam_x, j->cam.cam_y);  // P31B (SG_P21_LATLOG): the early world job
+  submit_world(std::move(j));
+  ++early_jobs_;
+  wts_.submit_ns += portsim::perf_now_ns() - s0;
+}
+
 void LiveSession::run_world_job(WorldJob &j) {
   if (!w2_) w2_ = std::make_unique<portsim::LiveTerrainWorld>();
   // P17B: the GPU backend for the hr planes (made, after its self-test, once the world is larger than the auto limit or with --gpu-world on)
@@ -1449,7 +1553,7 @@ void LiveSession::run_world_job(WorldJob &j) {
   if (w2_->hr_gpu) {
     static const int check = std::getenv("SG_P17_WORLDCHECK") ? std::max(0, std::atoi(std::getenv("SG_P17_WORLDCHECK"))) : 0;
     bool failed = false;
-    made = world_image_part_gpu(*w2_, root_raster ? nullptr : &root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart,
+    made = world_image_part_gpu(*w2_, root_raster ? nullptr : &root_cpu(), j.px, j.terrain, j.use, j.f, j.text && !j.early ? &j.tf : nullptr, j.cursor, wi, apart,
                                 failed, check > 0);
     if (failed) {  // the backend is off for the session; the planes hold nothing on the CPU: no picture until the next queue start
       w2_->hr_valid = w2_->hrc_valid = w2_->hrb_valid = false;
@@ -1462,7 +1566,7 @@ void LiveSession::run_world_job(WorldJob &j) {
     if (check > 0 && (serial++ % check) == 0) {
       WorldImage cw;
       bool ca = false;
-      const bool cm = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, cw, ca);
+      const bool cm = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text && !j.early ? &j.tf : nullptr, j.cursor, cw, ca);
       int64_t bad = 0;
       auto cmp = [&bad](const auto &a, const auto &b) {
         if (a.size() != b.size()) {
@@ -1484,7 +1588,7 @@ void LiveSession::run_world_job(WorldJob &j) {
       portapp::gpu_world_image_check(bad);
     }
   } else {
-    made = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text ? &j.tf : nullptr, j.cursor, wi, apart);
+    made = world_image_part(*w2_, root_cpu(), j.px, j.terrain, j.use, j.f, j.text && !j.early ? &j.tf : nullptr, j.cursor, wi, apart);
   }
   if (made) {
     ++presents_world_;
@@ -1498,6 +1602,7 @@ void LiveSession::run_world_job(WorldJob &j) {
     if (!wi.hud.empty()) ++presents_layered_;  // P9B
   }
   wi.cam.t_ns = j.t_ns;  // P12A fix 1: the present's time
+  wi.early = j.early;    // P31B item 7
   if (j.smooth_objects && !wi.empty() && j.scene_slot) wi.hr_scene = *j.scene_slot;  // P12A fix 2: the queue's draws (taken by its op)
   if (j.smooth_objects && !wi.empty()) wi.trails = j.trails;  // P22C fix 3
   if (j.check) {  // SG_P15_CHECK: the same present's image made at the present as without the world thread
@@ -1577,6 +1682,7 @@ static void world_reset(WorldImage &w) {
   for (int32_t &b : w.cur_box) b = 0;
   w.proj.ok = false;  // P10E (its tables keep their capacity)
   w.cam = CameraSnap{};  // P12A fix 1
+  w.early = false;       // P31B item 7
   w.hr_scene.reset();    // P12A fix 2
   w.trails.clear();      // P22C fix 3
   w.gpu.reset();         // P17B fix 2: the shared picture back to the world thread's pool
@@ -1726,6 +1832,37 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       j->cam = take_cam(ctx, j->use);
       j->cam.head_ns = head_ns_;  // P26A
       if (j->use) layer_log(j->f);
+      if (opt_.early_world) {  // P31B item 7: the HUD an early world picture of the next woken frame shows (no base / back)
+        early_ok_ = j->use;
+        if (j->use) {
+          early_f_.layers = j->f.layers;
+          early_f_.serial = j->f.serial;
+          early_f_.none = j->f.none;
+          early_f_.carried = j->f.carried;
+          early_f_.pieces = j->f.pieces;
+          early_f_.owner = j->f.owner;
+          early_f_.cursor2d.clear();  // the last frame's tool previews are not drawn over the next frame's world
+          early_f_.lines.clear();
+          early_f_.line800.clear();
+          early_f_.line_word.clear();
+        }
+        early_text_ = text && j->use;
+        if (early_text_) {  // the runs in HUD layers only: the course's runs (base -1, world -3) are this frame's, drawn in its base
+          early_tf_.serial = tf.serial;
+          early_tf_.hud_serial = tf.hud_serial;
+          early_tf_.patches = tf.patches;
+          early_tf_.runs.clear();
+          for (const portsim::GfxTextRun &r : tf.runs)
+            if (r.layer >= 0 || ((r.layer == -1 || r.layer == -3) && r.mover.kind == portsim::kGfxMoverNone))
+              early_tf_.runs.push_back(r);  // fix 2b: the HUD's runs and the course runs with no queue source
+        }
+        early_fc_ = fc;
+        early_cam_ = j->cam;
+        early_bub_.clear();  // fix 2b: the root pixels this frame's post-queue bubbles and ground marks wrote, with their words
+        if (w->bub800.size() == static_cast<size_t>(kLogicalW) * kLogicalH && w->bub_word.size() == w->bub800.size())
+          for (size_t i = 0; i < w->bub800.size(); ++i)
+            if (w->bub800[i]) early_bub_.emplace_back(static_cast<uint32_t>(i), w->bub_word[i]);
+      }
       j->hud_none = opt_.hud_layers && !j->use && portsim::gfx_hud_modal(ctx);  // P9D
       j->smooth_objects = opt_.smooth_objects;
       uint64_t gen = 0;
@@ -1761,6 +1898,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
       }
     }
     j->t_ns = portsim::perf_now_ns();
+    latlog('W', j->t_ns, frame_, portsim::g_p31_world_ns.load());  // P31B DEV: the world queue's end in this frame
     j->trails = portsim::gfx_trail_take();  // P22C fix 3: the frame's trail segments (taken at every present)
     if (opt_.text_banner) {  // P10B fix 1: kept for a loading banner over this frame
       if (text) last_text_ = tf;
@@ -1834,6 +1972,7 @@ void LiveSession::present(portsim::Ctx &ctx, char kind) {
     }
   wi.cam.t_ns = portsim::perf_now_ns();  // P12A fix 1: the present's time (the presenter's game frame period)
   wi.cam.head_ns = head_ns_;  // P26A: its frame head's time (ArrowGlide's lead)
+  latlog('W', portsim::perf_now_ns(), frame_, portsim::g_p31_world_ns.load());  // P31B DEV: the world queue's end in this frame
   if (opt_.smooth_objects && !wi.empty()) {
     const portsim::PerfDetailScope pd(portsim::kPdCapHrScene);  // P15A
     wi.hr_scene = portsim::gfx_hr_scene(ctx);  // P12A fix 2: the queue's draws
@@ -1942,8 +2081,9 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   apply_view(ctx);                // G32: the window's view width and world size (recorded write, before the frame body)
   apply_undo(ctx);                // P11D: Ctrl+Z / Ctrl+Y (recorded write, before the frame body)
   head_ns_ = portsim::perf_now_ns();  // P26A
-  glide_wake_.store(false);           // P26A: this head takes what woke the wait
+  const bool woke = glide_wake_.exchange(false);  // P26A: this head takes what woke the wait
   apply_glide(ctx);               // P26A: the arrow glide's request (recorded writes, before the frame body)
+  early_due_ = opt_.early_world && woke && glide_wrote_;  // P31B item 7: this frame's world goes over at its queue end
   apply_arrow(ctx);               // P21B: an arrow key-down (recorded writes, before the frame body)
   apply_arrow_clock(ctx);         // P22A: the clock offset for the held arrow's delay (recorded write, once)
   track_screen(ctx, true);        // P7: a frame head is the frame loop
@@ -2633,7 +2773,9 @@ std::string LiveSession::summary_json(const Result &r) const {
          ",\"ticks_moving\":" + std::to_string(g.ticks_moving) + ",\"resyncs\":" + std::to_string(g.resyncs) +
          ",\"edge_glide\":" + std::to_string(opt_.edge_glide ? 1 : 0) + ",\"edge_frames\":" + std::to_string(edge_frames_) +
          ",\"edge_changes\":" + std::to_string(g.edge_changes) + ",\"edge_ticks\":" + std::to_string(g.edge_ticks) +
-         ",\"taps_fast\":" + std::to_string(g.taps_fast) + "}";  // P31B
+         ",\"taps_fast\":" + std::to_string(g.taps_fast) + ",\"early_world\":" + std::to_string(opt_.early_world ? 1 : 0) +
+         ",\"early_jobs\":" + std::to_string(early_jobs_) + ",\"early_skipped\":" + std::to_string(early_skipped_) +
+         ",\"early_bub_px\":" + std::to_string(early_bub_px_) + "}";  // P31B
   }
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
