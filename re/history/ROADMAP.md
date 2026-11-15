@@ -1674,3 +1674,75 @@ Published e2604858, bdfa15de and 390d2756.
 - Checks of the round: per fix the fast check (x64, test_static, segments when sim code changed, a 1080 smoke); one full check on
   8a990393 (clean tree, x64 + Win32 0 errors / 0 warnings, 1080 and 4K smoke 0 bad).
 - Open: recordings do not carry files given with --put, an empty directory of the data folder, or the build that made them.
+
+## P31: Mariano's eight keep-or-change answers, G33 (2026-11-15)
+Brief log/roadmap/P31/BRIEF.md (base 0107e361), decision G33 (re/roadmap/DECISIONS_PENDING.md), notes log/roadmap/P31/P31A_notes.md
+.. P31D_notes.md, orchestrator state log/roadmap/P31/ORCH_HANDOFF.md. Four workers on claude2 (opus; P31C medium, the others high).
+Published 15471fbd, db30d75c, 2f050933, 47c50b9f, 49b34756 and 07f3cbc6.
+- Item 1, the map edge ("Limit by zoom"; P31A fix 1, 2f050933): play switch mainLoop.cameraBoundByZoom. At 0 every camera writer
+  (the arrow step, P26A's glide through ArrowGlide::set_range, the mouse edge pan, the followers and offsets, the course-edit
+  replay's goal, the first picture after a load, a zoom or rotation change) takes its range from camera_range
+  (port/include/portsim/sim/camera_range.h): per axis a range from the zoom, the rotation, the view width and the bounding box of the
+  land, so each of the land's four corners stays reachable with a margin of black beyond it (16 units left, top and right, 142 at
+  the bottom, which keeps the land's bottom corner above the bottom HUD panels); where the land is smaller than the view (zoom 1)
+  the camera is pinned to the land's centre. Black in the window on Scorpion Cove at 1920x1080, corners / edge midpoints: zoom 8
+  84% / 75% -> 30% / 16%, zoom 4 79% / 61% -> 30% / 16%, zoom 2 73% / 54% -> 31% / 25%. Known limit: the range is a box per axis, so
+  on wide windows the left and right corners keep more black.
+- Item 2, Esc ("Both changes"; P31C fixes 1 and 3, 15471fbd and 84b6ed7d): play switches mainLoop.titleEscIgnored (at 0 a fresh Esc
+  on the title menu is a click on the exit icon, the game's own quit path) and showCharacterEditor.escKeepsEdits (at 0 Esc in the
+  character editor is Cancel's full restore and leaves without Exit's writes). The title arms its quit only once the frame's recorded
+  async key read shows Esc up: the first guard watched a word that any key's key-up clears, so Esc held with another key tapped let
+  a later Esc repeat quit.
+- Items 3 and 4, camera motion (P31B fix 1, db30d75c). "Halve at zoom 8": play switch mainLoop.edgeScrollTileAtZoom8 with app option
+  --edge-glide: at zoom 8 the sim publishes its edge move in view words instead of adding it and P26A's glide moves the camera
+  half a tile per game frame per tile of that move (screen distance per game frame at 1920x1080: 126-135 px -> 64-77 px, zoom 4's
+  62-80 px). "Shorter on a tap": app option --tap-slide: a key-up that leaves the axis short of its one-step minimum covers the rest
+  in at most 60 ms (first moved paint -> settled 104 / 111 ms -> 25 / 25 ms at 165 Hz); a tap still moves exactly one step. Found on
+  the way (class a, SG_P31_REQCAP=0 restores): under load P26A's frame-head request reached 13 tiles, past the glide's 12-tile
+  resync, so a tap showed a 13-tile jump and stepped back 9 (5 of 12 taps per run); the request is capped at 8 tiles ahead (0 of 36).
+- Item 5, narration and SimFoto ("Widen to the view"; P31D fixes 1, 2 and 3a: 3b2330aa, 7c648925, 72c1b694). With E = (view width -
+  800) / 2: narrateShot.wideViewFit moves the fit test's x bounds out by E, so a golfer in a side column is narrated like one inside
+  the 800 window (this changes the GameState on purpose at 0: the narration body, the skill reward with its RNG draws, the SimFoto's
+  modal wait); mainLoop.simFotoWideFrame moves the SimFoto event's two x clamps out by E and draws the border bands and frame lines
+  through a new drop simfoto.wide on the wide plane (framing A: the original photo size anywhere in the view; no GameState object
+  differs); showBulletinBoard.widePhoto cuts the bulletin board's photo from the last queue's wide scene (gfxs::wide_scene) instead
+  of the 800 root clamped at its edge. The narration's and the event's saved photo files stay dropped (fix 3b waits for an answer).
+- Item 6, staff move ("Add it"; P31C fix 2, 84b6ed7d): play switch mainLoop.staffListCourseClickIgnored: with an employee picked in
+  the Staff list, a left press on an empty spot of the course lands his move at the cursor tile as the Move button's armed click
+  does. Kept as the original: a right click, a press while a move is armed, panel and System-menu presses, active tools and
+  everything H2_Select answers first (hole markers, a golfer or employee nearby, the pair prompt, the clubhouse).
+- Item 7, the first arrow move ("Make it earlier"; P31B fixes 2 + 2b, 4e6544c3): app option --early-world. The frame an arrow woke
+  hands its world over at renderSpriteQueue's end (gfx_set_queue_end_hook) as an early world job under the last present's HUD
+  layers; the frame's own present follows unchanged. Head -> first moved paint on a loaded PC: 207.9 -> 170.4 ms at 1920x1080,
+  329.5 -> 258.1 ms at 3840x2108; no cost on the other frames. The first build's early picture lacked what the frame draws into the
+  world after the queue (comment bars and lines, thought and speech bubbles, ground marks, labels, tool previews), which blinked for
+  one picture at each camera start; fix 2b carries them from the last present moved by the camera step. Left: a bubble bar in the
+  wide side columns still blinks (its text does not); a carried comment stands where its golfer was one game frame earlier (p90 5
+  client pixels at 1080 for 25-60 ms). Not built: a margin of world beyond the window (1.9x the world's pixels on every picture,
+  +89 ms per hand-over at 4K).
+- Item 8, the Deco port forward: Mariano sets it up himself.
+- The picture stall (P31B fix 3, 49b34756; old code, not this round's). The release check of 7c648925 read the idle phase at 0.2
+  paints/s with the game at 10.5 frames/s. Cause: the world thread (P15A, LiveSession::world_loop), which builds every picture the
+  window shows, ran at THREAD_PRIORITY_BELOW_NORMAL against the sim thread's ABOVE_NORMAL and the window's HIGHEST; with the cores
+  busy the game ran on and no world job finished (jobs of up to 25.5 s wall that used 0-78 ms of CPU) until an input boosted the
+  thread. Every release since P15A carried it. Repro: the app pinned to two cores, 30 s idle: BELOW_NORMAL 4 stalls in 13 runs,
+  NORMAL 0 in 10, ABOVE_NORMAL 0 in 10. Fix: the world thread at the sim thread's level (SG_P31_WORLD_PRIO sets another for
+  tests). The check of 49b34756 then read the edge-scroll phase at 38% of the refresh with the PC at about 90% CPU; the worker's 12
+  rate runs across four priority levels read 108-110 paints/s at every level, so that reading was the machine's load.
+- Shot tracks held by departed golfers (found by P31D on his Ocean's Edge save; P31D fix 4, 07f3cbc6, class b): play switch
+  addGolferPair.departedHoldsTrack. addGolferPair takes the first of the 16 shot tracks whose word is -1 and nothing when none is;
+  updateGolfers frees a golfer's track only inside its loop over golfers on the course, after the hole-byte tests, so a golfer who
+  leaves with tracks still named keeps them until its record is reused, and the save writes them. With 16 held no swing gets a
+  track and narrateShot never runs (his save: all 16 held by three golfers with hole byte 0). At 0, when no track is free, the
+  first track naming a golfer record with hole byte 0 or 0xff is taken; a track named by a golfer on the course or by the routing
+  preview's and narrateShot's scratch records never is. On that save: the first narrated shot about 70 s after the load at 0, no
+  narrateShot call in 1,790 frames at 1.
+- Checks of the round: per fix the fast check (x64, test_static, segments 205 / 205 equal to I25 when sim code changed, a 1080
+  smoke with the paint-rate run). One full check on 07f3cbc6 (clean tree, x64 + Win32 0 errors / 0 warnings, test_static 6, the
+  all-checks smoke at 1080 and 4K 0 bad).
+- Open: Mariano's answers on the camera bound's bottom margin, zoom 1 rule and margin size, the tap slide's length, the photo's
+  shape (A built / B wider) and the saved photo files (P31D fix 3b). Seen and left as is: a golfer comment crossing the SimFoto
+  border shows above the top band's edge row; the HUD's bottom-left panel covers part of an event frame low in the left column (the
+  original draws its HUD after the event too); the HUD panels are off screen during the narration's key wait, which is the
+  original's order (updateTerrainRender overwrites the whole root at the frame's start, narrateShot waits inside updateGolfers, and
+  mainLoop draws the HUD after it; the SimFoto event's wait comes after the HUD and shows it).
