@@ -1746,3 +1746,49 @@ Published 15471fbd, db30d75c, 2f050933, 47c50b9f, 49b34756 and 07f3cbc6.
   original draws its HUD after the event too); the HUD panels are off screen during the narration's key wait, which is the
   original's order (updateTerrainRender overwrites the whole root at the frame's start, narrateShot waits inside updateGolfers, and
   mainLoop draws the HUD after it; the SimFoto event's wait comes after the HUD and shows it).
+
+## P32: Mariano's fourteenth play-test feedback, 13 items (2026-11-15 .. 2026-11-16)
+Brief log/roadmap/P32/BRIEF.md (base 63bb2619), notes log/roadmap/P32/P32A_notes.md .. P32F_notes.md, orchestrator state
+log/roadmap/P32/ORCH_HANDOFF.md. Six workers on claude2 (opus; P32C medium, the others high). LIVING-PC rebooted at 21:51 (Token
+leak); the workers resumed from their notes. Published 3c9cb346, 7051f1a1, 21cb4d1c, 6ce79fa2, 375653e3, f8f38006, f13683c1 and
+c7bfbd2f, each with its GitHub release.
+- Item 1, the camera glitches at the edges (P32A fix 1, 7051f1a1, class a): P26A's arrow glide asked for an 8-tile request at the
+  glide's start, past Presenter::slide_start's far test, so the picture was not slid: taps and holds jumped 8 tiles and stepped
+  back, with streaks where elements vanished and came back. The request is capped. No single P31 option caused it.
+- Item 2, the match panel ("Panel del partido"). Names (P32B fix 3, f8f38006): app option --plate-clip, a name wider than its
+  plate keeps the letters that fit whole (the original moves a wide name to the smaller font and still runs past the plate; every
+  pro of the Scorpion Cove field and a 15-letter name fit, 15 W's did not). The bottom (P32B fix 4, c2c3d596, class a): at a scale
+  that is not a whole number the window's last row maps below frame row 599, and the smooth composite (present.cpp compose_layers
+  and the GPU tap) mixed in row 600, which holds no layer pixel, so a one-row strip of course scrolled along the card's bottom
+  edge while the camera moved; app option --edge-rows clamps tap rows to 0..599. Not confirmed against his picture (none came).
+- Item 3, 5, 8 hover texts and item 6 the wheel (P32C fixes 1-3: 3c9cb346, 7051f1a1, 375653e3). The money's asterisk is the cash
+  cheat's bit; a + pressed while a modal screen was open reached the cheat key (play switch mainLoop.hiddenCheatKeys, class a).
+  App option --explain-tips: the asterisk, the grey golfer names (Tired / Thirsty / Hungry / Leaving, from the colour rule's
+  meters), the customize button, the list arrows and the screens' close buttons. App option --list-wheel: the Membership Roster,
+  the golfer list (a page), the staff list (2 rows), the routing map's walkers, the saved-game browser and the editor's presets.
+- Item 4 (P32B fix 1, 21cb4d1c): play switch clickGolferPanel.namePlateCentresCamera, a press on a match scorecard's name plate
+  centres the camera on that golfer as the golfer list's grid slot does (the original's plates act only outside a match).
+- Item 7, the shot's margin of error (P32D fix 7, c7bfbd2f). A first build drew 48 sampled outcomes (rings / crosses, four
+  styles); Mariano asked why crosses lay far from the aim line: 30 real shots from the same state spread the same way (tree hits
+  37% real / 29% preview, every far outcome a tree hit), so the preview was right, but he wanted an estimate from the code at the
+  aim point instead. Built: app option --shot-spread, prepareShot set up once per combination of its random draws at their
+  extremes (192 set-ups on a scratch state) and flown in the air only to the first landing; one outline at the aim line's end
+  (sideways x short / long bounds), no trees, bounces or roll; a red cross where the no-random flight passes a tile the tree test
+  can catch; nothing on putts from the green. Skills that change it: Accurate Irons / Driver, Draw / Fade, High Backspin (a 5 Iron
+  on the fairway: Accurate Irons 0 / 3 / 10 = 7.4 / 3.5 / 1.7 degrees each side).
+- Item 9, the photo camera (P32A fix 9, 1f602b24): app option --photo-banner, the game's tip box "Taking a photo for the bulletin
+  board" at the top centre while the photo is pending, until the board opens; the camera still jumps (Mariano: banner C, jump).
+- Item 10, carts in tournaments (P32D fix 10, 6ce79fa2): play switch loadGolfPro.fieldWalksOnly; with a connected Cart Garage the
+  field and the player's golfer get the members' may-ride flag and use the game's own cart rules and speed ("Si hay garaje").
+- Item 11, the golfer pair select (P32E fixes 1-4, 7051f1a1): the right cards were dead because the port never held the card art
+  width; the stray-click close (play switch, original behaviour) and the missing button hover fixed; app option --pair-cover lays
+  the screen out as Mariano's layout A (the 800 panel centred, sides covered), the book lit on hover with a tip.
+- Item 12, the dead Next Chapter (P32F fix 1, 6ce79fa2): the golfers seeded after a tournament (initGolferState) and a new hole's
+  pair got story 0 without the owner flag, so the original's button did nothing (seen in an own instance of the original). Play
+  switch initGolferState.phantomStory: they get no story ("Que no muestren nada").
+- Item 13, the trophy (P32B fix 2, 6ce79fa2): the LAN pack's redrawn TROPHYparts art kept English letter edges; redraw_art.py
+  fill=stack rebuilds the plate from the 25 plates that share it (the pack stays local).
+Release checks read PAINT RATE LOW four times with other runs on the PC (a SimCity game, the workers); interleaved A/B runs of the
+new options (log/roadmap/P32/rate_ab, rate_ab_d7) read 96-111 paints/s in both arms, so those were load. Full check of the round on
+c7bfbd2f: clean P19Z mirror; builds x64 + Win32 0 errors / 0 warnings; static 6;
+  all-checks smoke 1080 p14 564 / 0 bad and 4K p14 127 / 0 bad, p15 / p16b / p17b 0 differing.
