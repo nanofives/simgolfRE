@@ -4269,7 +4269,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P31"))  // P31: G33's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = o.early_world = false;  // P31B items 3 / 4 / 7
   if (const char *ep = std::getenv("SG_APP_P32"))  // P32: the fourteenth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.edge_rows = false;  // P32C, P32E fix 4, P32B item 2
+    if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
