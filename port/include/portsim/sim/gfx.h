@@ -140,6 +140,11 @@ uint64_t gfx_popup_warp_pushes();  // widened popups opened (session.json p30a)
 // grid's and the panel's right border) moves 0x12 (18 - L) columns left and the columns it leaves show the course. Drawing only
 // (the layer's pixels; the root and the GameState are never written). Off (the default): the original's drawing.
 void gfx_set_card_width(Ctx &ctx, bool on);
+// P32B item 2 (log/roadmap/P32/P32B_notes.md; app option --plate-clip, default on, SG_APP_P32=off: off). drawMatchScoreboard writes
+// each name at x 0x140 on its plate with no clip (a name whose width in g_font51b360 is above 0x73 is drawn in g_fontRef_519fd8,
+// still unclipped), so a long name runs past the plate's right end onto the hole grid. On: the name keeps only the letters whose
+// width in the font it is drawn in fits inside the plate (up to x 0x1aa), nothing after them. Drawing only.
+void gfx_set_plate_clip(Ctx &ctx, bool on);
 // P26B item 3 (log/roadmap/P26/P26B_notes.md; app option --palette-names, default on, SG_APP_P26=off: off). The Build Course
 // palette's tool names over the tiles (showInfoCursorPanel's label loop): every name in the HUD font itself (no smaller font of
 // the language fit), a name wider than the tile pitch broken at a space onto two lines, and the trees' names at their row's

@@ -135,6 +135,7 @@ class Gfx {
   bool pair_cover = false;  // P32E fix 4 (gfx.h gfx_set_pair_cover): the golfer pair select's frame holds no terrain picture
   int pair_frame = 0, back_pair = 0;  // P32E fix 4: the root / the back buffer holds the pair select (set by its cover drop)
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
+  bool plate_clip = false;  // P32B item 2 (gfx.h gfx_set_plate_clip): the match scorecard's names end inside their plates
   bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   bool walker_labels_top = false;  // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' labels over the sprite walk
   int32_t meter_prev = -1, meter_count = 0;  // P22D fix 3: the box under the cursor at the last status bar, and for how many

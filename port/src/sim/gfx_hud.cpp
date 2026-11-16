@@ -30,6 +30,7 @@
 //   16 (P22D fix 1) the golfer list's columns past its limit drawn inside the panel's layer again (the badges cut at its right border)
 //   21 (P26E fix 1) the golfer list's scroll band drawn as the original's (track, bar, arrows) with the switch scrollBarAlways at 0
 //   22 (P26E fix 2) the match scorecard keeps its 18 hole columns with --card-width on
+//   23 (P32B item 2) the match scorecard's names are not clipped to their plates with --plate-clip on
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -1741,6 +1742,20 @@ void match_scoreboard(Gfx &g, Ctx &ctx, int32_t who) {
     if (!measured) {
       g.unsup("drawMatchScoreboard: the provider cannot measure a name");
       return;
+    }
+    // P32B item 2 (gfx.h gfx_set_plate_clip): only the letters that fit whole inside the plate (x 0x140 .. kPlateTextEnd, measured
+    // in the font the name is drawn in), nothing after them
+    if (g.plate_clip && mode() != 23) {
+      constexpr int32_t kPlateTextEnd = 0x1aa;  // the plate's inner right edge (its art ends at x 0x1b0, the grid border at 0x1b4)
+      const uint32_t f = w > 0x73 ? big : small;
+      auto width = [&](const std::string &s, int32_t &out) {
+        bool ok = false;
+        if (TextMetrics *tm = text_metrics(ctx))
+          with_scratch_buffer(ctx, s, [&](uint32_t buf) { ok = tm->glyph_width(ctx, f, buf, static_cast<int32_t>(s.size()), out); });
+        return ok;
+      };
+      int32_t cw = 0;
+      while (name.size() > 1 && width(name, cw) && cw > kPlateTextEnd - 0x140) name.pop_back();
     }
     font(w > 0x73 ? big : small);
     text(name, 0x140, y, 0x80000000u, false);

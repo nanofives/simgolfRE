@@ -2434,6 +2434,10 @@ uint64_t gfx_popup_warp_pushes() {
   std::lock_guard<std::mutex> lk(g_popup_warp_mu);
   return g_popup_warp_pushes;
 }
+// P32B item 2 (gfx.h gfx_set_plate_clip)
+void gfx_set_plate_clip(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->plate_clip = on;
+}
 // P26E fix 2 (gfx.h gfx_set_card_width)
 void gfx_set_card_width(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->card_width = on;
