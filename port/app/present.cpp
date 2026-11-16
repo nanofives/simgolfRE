@@ -2319,6 +2319,9 @@ void Presenter::compose_layers(std::vector<uint32_t> &out, int32_t cw, int32_t c
     const int32_t dx = pass == cpass ? cdx + shx + slx : pass >= 0 ? piece_dx_[static_cast<size_t>(pass)] : dx0;  // P12A: slx
     const int32_t dyp = pass == cpass ? shy + sly : 0;  // P10E: the live move's rows; P12A: the slide's
     auto tap = [&](int32_t x, int32_t y) -> const portsim::GfxLayerPx * {
+      // P32B item 2 (--edge-rows): the frame has no row above 0 or below 599; a smooth tap there (the window's first / last client
+      // rows sample between row 599 and 600) took no layer pixel, so the course under the HUD showed through the panel's bottom row
+      if (edge_rows_) y = std::clamp(y, 0, kLogicalH - 1);
       const portsim::GfxLayerPx *p = l.at(x, y);
       if (p && split && moved_piece(l, x, y) != (pass == cpass ? -1 : pass)) return nullptr;
       if (p && l.id == portsim::kGfxLayerCentred && cur_at(x, y)) return nullptr;  // P9E fix 4: drawn as the cursor's previews

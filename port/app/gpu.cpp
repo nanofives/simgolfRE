@@ -57,7 +57,7 @@ cbuffer CB : register(b0) {
   int gin_x0, gin_x1, gin_y0, gin_y1;
   int nlayers, cur_layer, cur_on, box_on;
   int cdx, shx, shy, c2move;
-  int lines_on, pieces_on, npieces, cpad0;
+  int lines_on, pieces_on, npieces, edge_rows;  // edge_rows: P32B item 2 (Presenter::set_edge_rows)
   int cb0, cb1, cb2, cb3;
   int shade_n0, shade_n1, toff_x, toff_y;
   int tn_x, tn_y, cpad1, cpad2;
@@ -219,6 +219,7 @@ int moved_piece(uint t) {  // the moved piece of a pixel of a split layer, -1 no
 }
 bool tapl(Layer L, int x, int y, int pi, int cpass, bool split, bool cmove, bool wdim, out uint2 v) {
   v = uint2(0, 0);
+  if (edge_rows != 0) y = clamp(y, 0, 599);  // P32B item 2: a tap above / below the 800-space frame reads its edge row
   if (x < L.x0 || x >= L.x1 || y < L.y0 || y >= L.y1) return false;
   v = lpx[L.base + (y - L.y0) * (L.x1 - L.x0) + (x - L.x0)];
   uint kind = v.y & 255u;
@@ -642,7 +643,7 @@ struct GpuCB {
   int32_t gin_x0, gin_x1, gin_y0, gin_y1;
   int32_t nlayers, cur_layer, cur_on, box_on;
   int32_t cdx, shx, shy, c2move;
-  int32_t lines_on, pieces_on, npieces, cpad0;
+  int32_t lines_on, pieces_on, npieces, edge_rows;  // edge_rows: P32B item 2 (Presenter::set_edge_rows)
   int32_t cb0, cb1, cb2, cb3;
   int32_t shade_n0, shade_n1, toff_x, toff_y;
   int32_t tn_x, tn_y, cpad1, cpad2;
@@ -3072,6 +3073,7 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   c.lines_on = lines ? 1 : 0;
   c.pieces_on = P.pieces_on(f, vp) ? 1 : 0;
   c.npieces = static_cast<int32_t>(f.pieces.size());
+  c.edge_rows = P.edge_rows() ? 1 : 0;  // P32B item 2
   c.cb0 = W.cur_box[0];
   c.cb1 = W.cur_box[1];
   c.cb2 = W.cur_box[2];

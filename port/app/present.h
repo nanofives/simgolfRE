@@ -513,6 +513,9 @@ class Presenter {
   // previews' place in the draw order, the second end moved with them by P10E's live shift; their 800-space pixels are left out of
   // the centred layers (--line-res native; off = the frame's line pixels scaled with the layer)
   void set_line_native(bool on) { line_native_ = on; }
+  // P32B item 2 (--edge-rows): the layers' smooth taps above row 0 / below row 599 of the 800-space frame read that edge row
+  void set_edge_rows(bool on) { edge_rows_ = on; }
+  bool edge_rows() const { return edge_rows_; }
   // P23E fix 1: the GPU presenter renders a native line's CPU patch as pieces along the line, not its whole box (--line-tiles)
   void set_line_tiles(bool on) { line_tiles_ = on; }
   // P24C fix 2b: the GPU presenter draws the course runs from tables over its course picture, not as CPU course patches (--course-tables)
@@ -598,6 +601,7 @@ class Presenter {
   mutable uint32_t painted_set_ = 0;                       // P10A: frames_set_ at the last paint
   CursorLive live_;                                        // P10E
   bool line_native_ = false;                               // P10I fix 1
+  bool edge_rows_ = false;                                 // P32B item 2 (set_edge_rows)
   bool line_tiles_ = false;                                // P23E fix 1
   bool course_tables_ = false;                             // P24C fix 2b
   bool hover_on_ = false;                                  // P10I fix 2
