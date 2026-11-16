@@ -6390,6 +6390,7 @@ int Ph_00418bc7(u32 F) {
     P6_StatusBar(F);    // ML+0x9ef5..ML+0xa1ba
     P6_Panels(F);       // ML+0xa1ba..ML+0xa37e
     P6_PauseLabel(F);   // ML+0xa37e..ML+0xa3f4
+    if (gfx_photo_banner(ctx)) gfx_drop(ctx, "photo.banner", nullptr, 0);  // P32A item 9 (gfx.h gfx_set_photo_banner): drawing only, outside the panels' layers (centred)
     int eax = P6_Cursor(F);         // ML+0xa3f4..ML+0xa657
     if (gfx_hover_help(ctx)) {      // P11C (gfx.h gfx_set_hover_help): the app's hover help, drawing only; inert without it
         const uint32_t hp[2] = {static_cast<uint32_t>(FD(0x68)), static_cast<uint32_t>(FD(0x58))};

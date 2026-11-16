@@ -120,6 +120,8 @@ class Gfx {
   bool hover_help = false;  // P11C (gfx.h gfx_set_hover_help): the hover help lines are drawn
   bool hover_help_course = true;  // P13A (gfx.h gfx_set_hover_help_course): and the course line with no tool among them
   bool meter_tips = false;  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips are drawn
+  bool photo_banner = false;  // P32A item 9 (gfx.h gfx_set_photo_banner): the pending photo's banner is drawn
+  int32_t photo_record = -1;  // P32A item 9: the record whose photo place the banner saw (-1: none; drawing state only)
   bool explain_tips = false;  // P32C (gfx.h gfx_set_explain_tips): the cash asterisk, grey names and customize button explained
   // P32C FIX 3 (gfx_text.h modal_tip): the tip a modal screen shows over the root, with the root's words under its box before and
   // after it was drawn (modal_untip puts back each word still showing the tip)

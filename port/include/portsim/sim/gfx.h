@@ -83,6 +83,16 @@ void gfx_set_meter_tips(Ctx &ctx, bool on);
 // Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_explain_tips(Ctx &ctx, bool on);
 bool gfx_explain_tips(Ctx &ctx);
+// P32A item 9 (Mariano's play-test 14: "when the camera gets moved when it's about to take a picture there should be a visual
+// indicator", his answer: the banner, the camera still jumps; log/roadmap/P32/P32A_notes.md), set by the app's host (--photo-banner on,
+// the default; SG_APP_P32=off: off). post_event names a bulletin board record in f_w_4e3db8 word 0 with its photo place in word 1;
+// showBulletinBoard, once per unpaused frame, jumps the camera to an off-screen place, takes the photo on the next call (word 1 = -1)
+// and opens the board when g_bulletinAnimTick reaches 0x14. From the frame word 1 names a place (or the photo is taken: the
+// showBulletinBoard.capture drop, for a place already on screen) until the board opens, the game's
+// one-line tip (drawPanelBackdrop) "Taking a photo for the bulletin board" (lang::tr) sits at the top of the 800 frame, drawn by
+// the drop photo.banner, issued by mainLoop's HUD pass after P6_PauseLabel (centred). Drawing only: the GameState is never written. Off (the default): nothing.
+void gfx_set_photo_banner(Ctx &ctx, bool on);
+bool gfx_photo_banner(Ctx &ctx);
 // P24G (Mariano's play-test 11 item 7: "an intermediate UI / indicator when tournament is starting, otherwise I can keep clicking on
 // tournament button or practice"; log/roadmap/P24/P24G_notes.md), set by the app's host (--tourney-hold on, the default;
 // SG_APP_P24=off: off). clickGolferPanel ignores Practice Round, Play <pro> and Begin Tournament while g_flags bit 21 (a tournament

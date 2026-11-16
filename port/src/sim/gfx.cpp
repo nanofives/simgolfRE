@@ -2450,6 +2450,15 @@ void gfx_set_palette_names(Ctx &ctx, bool on) {
 void gfx_set_walker_labels_top(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->walker_labels_top = on;
 }
+// P32A item 9 (gfx.h gfx_set_photo_banner)
+void gfx_set_photo_banner(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->photo_banner = on;
+}
+bool gfx_photo_banner(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->photo_banner;
+}
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->tourney_hold = on;

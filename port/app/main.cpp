@@ -122,6 +122,10 @@
 //   explain the cash box's asterisk (the cash cheat key '+' was used), a golfer list name drawn in a colour (Tired / Thirsty /
 //   Hungry / Leaving the course, from the colour rule's meters) and Gary Golf's customize button (gfx.h gfx_set_explain_tips;
 //   drawing only; log/roadmap/P32/P32C_notes.md)
+//   P32A item 9: --photo-banner on|off (default on; SG_APP_P32=off: off) while the bulletin board's accomplishment photo is pending
+//   (post_event set it; the camera jumps to an off-screen place, the photo is taken, the board opens about 20 frames later) the
+//   game's one-line tip "Taking a photo for the bulletin board" sits at the top of the frame (gfx.h gfx_set_photo_banner; drawing
+//   only; log/roadmap/P32/P32A_notes.md)
 //   P32C item 6: --list-wheel on|off (default on; SG_APP_P32=off: off) the mouse wheel scrolls the Membership Roster, one notch = one
 //   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa); FIX 3: also the routing map's walker
 //   list, the saved-game browser, the character editor's preset picker (modal pumps) and the golfer / staff lists (frame heads)
@@ -592,6 +596,7 @@ struct Options {
   bool tap_slide = true;           // P31B item 4: --tap-slide on|off (SG_APP_P31=off: off)
   bool early_world = true;         // P31B item 7: --early-world on|off (SG_APP_P31=off: off)
   bool explain_tips = true;        // P32C items 3 / 5 / 8: --explain-tips on|off (SG_APP_P32=off: off)
+  bool photo_banner = true;        // P32A item 9: --photo-banner on|off (SG_APP_P32=off: off)
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool staff_labels_top = true;    // P26D item 9: --staff-labels-top on|off (SG_APP_P26=off: off)
@@ -1328,6 +1333,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
       if (ok && o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C
+      if (ok && o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
       if (ok && o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11
@@ -1619,6 +1625,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
   if (o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C: the unexplained marks' tips (gfx.h; drawing only)
+  if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
   if (o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11: the bulletin board's art words as runs (gfx.h; drawing only)
@@ -2338,7 +2345,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
   s += ",\"p32c_app\":{\"explain_tips\":" + std::to_string(o.explain_tips ? 1 : 0) + ",\"list_wheel\":" +
-       std::to_string(o.list_wheel ? 1 : 0) + "}";  // P32C
+       std::to_string(o.list_wheel ? 1 : 0) + ",\"photo_banner\":" + std::to_string(o.photo_banner ? 1 : 0) + "}";  // P32C, P32A item 9
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
     // whose lines turned out to differ)
@@ -3740,9 +3747,9 @@ bool parse(int argc, char **argv, Options &o) {
       (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
       continue;
     }
-    if (a == "--explain-tips" || a == "--list-wheel") {  // P32C items 3 / 5 / 8 and 6 (before the chain too)
+    if (a == "--explain-tips" || a == "--list-wheel" || a == "--photo-banner") {  // P32C items 3 / 5 / 8 and 6, P32A item 9 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
-      (a == "--explain-tips" ? o.explain_tips : o.list_wheel) = v == "on";
+      (a == "--explain-tips" ? o.explain_tips : a == "--list-wheel" ? o.list_wheel : o.photo_banner) = v == "on";
       continue;
     }
     if (a == "--pair-cover") {  // P32E fix 4 (before the chain too)

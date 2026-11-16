@@ -433,6 +433,9 @@ bool dir_exists(Ctx &ctx, const std::string &name) {
 void b_capture(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
   g.ensure_root(ctx);
   const Memory &m = ctx.mem;
+  // P32A item 9 (gfx.h gfx_set_photo_banner): the board's photo is taken now; the banner stays until the board opens (a place on
+  // screen is taken in the frame its record was posted, so word 1 is -1 before the banner's drop reads it)
+  if (g.photo_banner) g.photo_record = m.load<int32_t>(state_va(ctx, &GameState::f_w_4e3db8));
   const std::string name = gfxb::vstring(m, state_va(ctx, &GameState::f_strpool_4e3e7c)) + gfxb::vstring(m, a[2]) +
                            gfxb::vstring(m, state_va(ctx, &GameState::f_strpool_4c4970) + 0x4d0);
   if (!control(7) && !dir_exists(ctx, name)) return;   // saveBmp's fopen fails: nothing written

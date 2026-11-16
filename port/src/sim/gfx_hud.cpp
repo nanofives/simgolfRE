@@ -1820,6 +1820,7 @@ bool tourney_started(Ctx &ctx) {
   return false;
 }
 constexpr int32_t kTourneyTipY = 0x1fe;  // P24G: the shot buttons' row (y 0x1f9), empty while no player golfer is out
+constexpr int32_t kPhotoBannerY = 0x20;  // P32A item 9: the photo banner's text row y - 5, the top of the 800 frame between the boards
 // P26E fix 2 (gfx.h gfx_set_card_width): the scorecard as wide as the course. drawMatchScoreboard draws a column only for a hole
 // record with a non-zero par byte (g_holes + 0x208 col), over the grid image g_sprites541a18 + 0x108 (JoeCoolPanel, drawn at
 // (0x129, 0x1ed) with the art's own x): hole column col's box lies between the grid lines x 0x1b3 + 0x12 (col - 1) and 0x1b3 + 0x12
@@ -2187,6 +2188,23 @@ void b_modal_tip(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   gfxt::modal_tip(g, ctx, lang::tr(kText[a[0]]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]));
 }
 void b_modal_untip(Gfx &g, Ctx &, const uint32_t *, int) { gfxt::modal_untip(g); }
+
+// P32A item 9 (gfx.h gfx_set_photo_banner): from mainLoop's HUD pass after P6_PauseLabel (no panel layer: centred), after showBulletinBoard (P5) ran this frame. f_w_4e3db8 word 0 is the
+// pending record (-1 none, 0x63 the board opened from the menu, run_bulletin_board_with_sound), word 1 its photo place until the
+// photo is taken (-1 after). The banner latches the record when word 1 names a place, or when the photo is taken (b_capture, for a
+// place on screen: taken in the frame its record was posted), and stays until the board opens
+// (g_bulletinAnimTick >= 0x14: the board's own wait) or word 0 changes. Centred at the 800 frame's top, below the leader board's
+// title row (drawPanelBackdrop's text row at y - 5).
+void b_photo_banner(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  if (!g.photo_banner) return;
+  const uint32_t w = state_va(ctx, &GameState::f_w_4e3db8);
+  const int32_t rec = ctx.mem.load<int32_t>(w), place = ctx.mem.load<int32_t>(w + 4);
+  if (rec == -1 || rec == 0x63) g.photo_record = -1;
+  else if (place != -1) g.photo_record = rec;
+  else if (rec != g.photo_record) g.photo_record = -1;
+  if (g.photo_record == -1 || ctx.gs().g_bulletinAnimTick >= 0x14) return;
+  gfxt::photo_banner_tip(g, ctx, 400, kPhotoBannerY);
+}
 
 // P26E fix 1 (play switch drawEmployeeViewPanel.scrollBarAlways = 0, bridge.h view_list_fits): the golfer list's scroll band drawn
 // empty while every listed golfer is on the first page. MemberPanel (the art cut g_sprites541a18 + 0xb0 at (0xd7, 0x1da), the art's
@@ -2678,6 +2696,7 @@ const GfxBodyDef kBodies[] = {
     {"drawGolferActionPanel.draw", b_action_panel},
     {"drawEmployeeViewPanel.draw", b_view_panel},
     {"statusBar.tips", b_meter_tips},  // P22D fix 3
+    {"photo.banner", b_photo_banner},  // P32A item 9
     {"p32c.tip", b_modal_tip},         // P32C FIX 3
     {"p32c.untip", b_modal_untip},     // P32C FIX 3
     {"drawEmployeeDetailPanel.draw", b_detail_panel},
