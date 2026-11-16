@@ -52,6 +52,52 @@ def plates(im: Image.Image, min_w: int = 60, min_h: int = 8, max_h: int = 24):
     return found
 
 
+def stack_plate(im: Image.Image, rects, agree: int = 8) -> Image.Image:
+    """P32B item 13: the plate under the words of `rects` (all of one size, the same art under different words). Per pixel the
+    value most plates share (letters differ from plate to plate, the plate is the same byte for byte); where fewer than `agree`
+    plates share it (the middle, where most words run), the pixel is modelled from the plate's lighting: a bevel v(y) per channel
+    from the two end columns (normalised by their brightest value) times each column's scale, the median of pixel / v(y) over the
+    column's trusted rows (columns with none take the scale interpolated from their neighbours)."""
+    from collections import Counter
+    rgb = im.convert("RGB")
+    px = rgb.load()
+    w, h = rects[0][2], rects[0][3]
+    mode = [[None] * w for _ in range(h)]
+    known = [[False] * w for _ in range(h)]
+    for yy in range(h):
+        for xx in range(w):
+            v, n = Counter(px[x + xx, y + yy] for x, y, _, _ in rects).most_common(1)[0]
+            mode[yy][xx], known[yy][xx] = v, n >= agree
+    prof = [[0.0, 0.0, 0.0] for _ in range(h)]
+    ends = [0, 1, w - 2, w - 1]
+    for xx in ends:
+        top = [max(mode[yy][xx][c] for yy in range(h)) or 1 for c in range(3)]
+        for yy in range(h):
+            for c in range(3):
+                prof[yy][c] += mode[yy][xx][c] / top[c] / len(ends)
+    scale = [None] * w
+    for xx in range(w):
+        rows = [yy for yy in range(h) if known[yy][xx] and min(prof[yy]) > 0.05]
+        if rows:
+            scale[xx] = [sorted(mode[yy][xx][c] / prof[yy][c] for yy in rows)[len(rows) // 2] for c in range(3)]
+    have = [xx for xx in range(w) if scale[xx] is not None]
+    for xx in range(w):
+        if scale[xx] is None:
+            lo = max([q for q in have if q < xx], default=None)
+            hi = min([q for q in have if q > xx], default=None)
+            if lo is None or hi is None:
+                scale[xx] = scale[hi if lo is None else lo]
+            else:
+                t = (xx - lo) / (hi - lo)
+                scale[xx] = [scale[lo][c] * (1 - t) + scale[hi][c] * t for c in range(3)]
+    out = Image.new("RGB", (w, h))
+    op = out.load()
+    for yy in range(h):
+        for xx in range(w):
+            op[xx, yy] = mode[yy][xx] if known[yy][xx] else tuple(max(0, min(255, round(scale[xx][c] * prof[yy][c]))) for c in range(3))
+    return out
+
+
 def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path, info: list | None = None,
            cover: Image.Image | None = None) -> Image.Image:
     """`cover` (an "L" image of im's size, P30A): the drawn letters' coverage (0..255) is written into it, inside the rectangle."""
@@ -106,6 +152,13 @@ def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path,
             if len(nxt) == len(todo):
                 break
             todo = nxt
+    elif opts.get("fill", "column") == "stack":
+        # P32B item 13 (log/roadmap/P32/P32B_notes.md): every plate of the image with fill=stack is the same plate art under
+        # different words, so the rectangle takes the clean plate stack_plate() built from all of them (no trace of the English)
+        clean = opts["_clean"].load()
+        for yy in range(opts["_clean"].size[1]):  # `below=N`: N rows under the rectangle too (the English letters reach them)
+            for xx in range(w):
+                px[x + xx, y + yy] = clean[xx, yy]
     elif opts.get("fill", "column") == "row":
         # a plate shaded down y (a bevelled box): every row inside takes its end columns' mean
         for yy in range(y + rpad, y + h - rpad):
@@ -240,6 +293,13 @@ def main() -> int:
             sys.exit(f"{a.spec} line {n}: image<TAB>x,y,w,h<TAB>text")
         opts = dict(o.split("=", 1) for o in p[3:] if "=" in o)
         rows.setdefault(p[0], []).append((tuple(int(v) for v in p[1].split(",")), p[2], opts))
+    for img, items in rows.items():  # P32B item 13: one clean plate per image for its fill=stack rows
+        st = [it for it in items if it[2].get("fill") == "stack"]
+        if st:
+            below = int(st[0][2].get("below", 0))
+            clean = stack_plate(Image.open(inst / img), [(x, y, w, h + below) for (x, y, w, h), _, _ in st], int(st[0][2].get("agree", 8)))
+            for _, _, o in st:
+                o["_clean"] = clean
     if a.sharp:
         for img, items in rows.items():
             im, blank, runs = Image.open(inst / img), Image.open(inst / img), []

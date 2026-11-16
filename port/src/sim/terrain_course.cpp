@@ -18,6 +18,7 @@ namespace portsim {
 // P4 (G30) defect switches shared with tick.cpp (mainLoop's sites). 1 = the original, 0 = the fix.
 int g_defect_corner_level_clamp = 1;  // cornerLevel.unclampedAndShared (D21): no wrap on inc / dec, the reset writes all 51 bytes
 int g_defect_ball_list_bound = 1;     // ballScreenList.overflow (D12): at most 32 entries are appended
+extern int g_defect_phantom_story;     // golfers.cpp initGolferState.phantomStory (P32F): the seeded pair gets story id -1
 
 namespace {
 // Negative controls: mode 0 is the correct body.
@@ -278,6 +279,7 @@ int32_t step_course_edit_queue(Ctx &ctx) {
         a.field(&Golfer::strokes).set(1);
         a.field(&Golfer::wait).set(2);
         a.field(&Golfer::partner).set(static_cast<int16_t>(g1 ^ 1));
+        if (!SG_DEFECT(g_defect_phantom_story) && g1 >= 0) a.field(&Golfer::story_id).set(-1);  // P32F
         const int32_t g2 = i32(call_peer(ctx, "updateMembership", {0}).eax);
         const Ptr<Golfer> b = golfers + g2;
         b.field(&Golfer::hole).set(static_cast<int8_t>(hole_no));
@@ -290,6 +292,7 @@ int32_t step_course_edit_queue(Ctx &ctx) {
         b.field(&Golfer::strokes).set(1);
         b.field(&Golfer::wait).set(8);
         b.field(&Golfer::partner).set(static_cast<int16_t>(g2 ^ 1));
+        if (!SG_DEFECT(g_defect_phantom_story) && g2 >= 0) b.field(&Golfer::story_id).set(-1);  // P32F
         H = g.g_holesPlusOne;
       }
       (state_arr(ctx, &GameState::g_tileType) + idx).set(static_cast<int8_t>(qmode.get()));

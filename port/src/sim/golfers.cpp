@@ -17,6 +17,13 @@
 
 namespace portsim {
 
+// initGolferState.phantomStory (P32F, play-test 14 item 12): the golfers initGolferState seeds on every hole (after each tournament,
+// through resetGolferState) and the two stepCourseEditQueue places on a new hole come from updateMembership, which zeroes the whole
+// record, and never pass through pairGolfersWithStory: their story id is 0 (a real story) with no story-owner flag, so the info panel
+// offers that story and a Next Chapter button that mainLoop never acts on. Fixed (0): those golfers get story id -1, as
+// pairGolfersWithStory's first writes give every pair. Outside the unnamed namespace: terrain_course.cpp reads it too.
+int g_defect_phantom_story = 1;
+
 namespace {
 // Negative controls: mode 0 is the correct body.
 //   appendPairTrackPoint 1 = point 0 also takes the ball position, 2 = count stops at 32
@@ -83,6 +90,13 @@ int g_defect_walker_cursor_offgrid = 1;
 // held by a golfer record 0..0x97 whose hole byte is 0 or 0xff counts as free. With a free track, or every track's golfer on the
 // course, nothing changes; no RNG draw, no saved state added.
 int g_defect_departed_track = 1;
+// loadGolfPro.fieldWalksOnly (P32D fix 10, play-test 14 item 10, class b, log/roadmap/P32/P32D_notes.md): a member who arrives
+// while a Cart Garage is connected (g_activeObjectLevel[11] != 0) gets golfer flag bit 16 "may ride" (updateMembership), and so do
+// both golfers of a story pair (pairGolfersWithStory); updateGolfers then puts a golfer with that bit in a cart (flag bit 15) on
+// paths and for the way to the tee, at speed 4 * level + 8. loadGolfPro zeroes every record of the tournament field and both setters
+// are skipped while a tournament runs, so the pros and the player's golfer always walk. 0 = loadGolfPro gives the field (pros and
+// the player's golfer) bit 16 when a Cart Garage is connected, as members get it. No RNG draw, no saved state added.
+int g_defect_field_walks = 1;
 
 Ptr<Golfer> golfer(Ctx &c, int32_t g) { return state_arr(c, &GameState::g_golfers) + g; }
 Ptr<ShotTrack> track(Ctx &c, int32_t p) { return state_arr(c, &GameState::g_storyPairs) + p; }
@@ -367,11 +381,21 @@ const DefectDef kDefects[] = {
     {"resetGolferState.singleHoleRecord", "model_defects#44",
      "the 18-iteration par loop re-derives the par of one hole record (g_holesPlusOne's) 18 times, thresholds applied twice",
      &g_defect_reset_single_hole},
+    {"initGolferState.phantomStory", "P32F",
+     "the golfers initGolferState seeds on every hole (resetGolferState, after each tournament) and the pair stepCourseEditQueue places "
+     "on a new hole are updateMembership records zeroed whole and never paired by pairGolfersWithStory: story id 0 with no story-owner "
+     "flag, so the info panel shows story 0 and a Next Chapter button that mainLoop ignores (it needs the owner flag on the golfer or "
+     "its partner) and no chapter ever advances; fixed: those golfers get story id -1",
+     &g_defect_phantom_story},
     {"addGolferPair.departedHoldsTrack", "P31D,G30",
      "a shot track stays held by a golfer that left the course (updateGolfers frees a track only while looping over its golfer, "
      "which it skips once its hole byte is 0 or 0xff), so a course can end with all 16 tracks held and no shot is ever scanned or "
      "narrated; fixed: when no track is free, the first one held by a golfer record whose hole byte is 0 or 0xff is taken",
      &g_defect_departed_track},
+    {"loadGolfPro.fieldWalksOnly", "P32D,play-test 14",
+     "the tournament field never gets the may-ride flag, so pros walk while members ride with a Cart Garage; fixed: the field gets "
+     "it when a Cart Garage is connected",
+     &g_defect_field_walks},
 };
 
 extern const ModuleDef kModule_golfers = {"golfers", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

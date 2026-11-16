@@ -462,6 +462,9 @@ void init_golfer_state(Ctx &ctx) {
       g.field(&Golfer::order).set(static_cast<int16_t>(n));
       gs.g_nextArrivalOrder = add32(n, 1);
       g.field(&Golfer::partner).set(static_cast<int16_t>(r ^ 1));
+      // P32F (initGolferState.phantomStory = 0): no story for a seeded golfer (updateMembership left story id 0, no owner flag);
+      // a refused draw (r = -1) is left as the original leaves it
+      if (!SG_DEFECT(g_defect_phantom_story) && r >= 0) g.field(&Golfer::story_id).set(-1);
     }
   }
 }

@@ -857,6 +857,8 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.simFotoWideFrame", 0},               // P31D (G33 item 5: the SimFoto event framed in the wide view)
     {"showBulletinBoard.widePhoto", 0},             // P31D (G33 item 5: the board's photo cut from the wide scene)
     {"addGolferPair.departedHoldsTrack", 0},        // P31D fix 4 (G30: shot tracks held by departed golfers are taken)
+    {"initGolferState.phantomStory", 0},            // P32F (play-test 14 item 12: golfers seeded after a tournament have no story)
+    {"loadGolfPro.fieldWalksOnly", 0},              // P32D fix 10 (play-test 14 item 10: the tournament field rides with a Cart Garage)
     {"mainLoop.titleDefaultItem1", 0},              // P9A (Mariano's play-test 3: no title item lit before the cursor nears one)
     {"mainLoop.titleHotspotRange", 0},              // P9A (a title item is chosen only over its button art)
     {"mainLoop.vacatedPanelClick", 0},              // P9E fix 3 (a press where a moved panel used to be acts on the course)

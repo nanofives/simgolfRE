@@ -130,6 +130,9 @@ int32_t load_golf_pro(Ctx &ctx) {
       r.field(&Golfer::kind).set(static_cast<uint8_t>(g != 1 ? 0x20 : 0x24));
       if (g != 1) r.field(&Golfer::name_rec).set(static_cast<uint8_t>(pick));
       r.field(&Golfer::flags).set(r.field(&Golfer::flags).get() & 0xffffffe3u);
+      // P32D fix 10 (loadGolfPro.fieldWalksOnly = 0): the field may ride when a Cart Garage is connected, as members do
+      if (!SG_DEFECT(g_defect_field_walks) && (state_arr(ctx, &GameState::g_activeObjectLevel) + 11).get() != 0)
+        r.field(&Golfer::flags).set(r.field(&Golfer::flags).get() | (1u << 16));
       r.field(&Golfer::cls).set(static_cast<int8_t>(g != 1 ? clamp(gs.g_difficulty, 0, 2) : 2));
       if (g == 1) {  // the player
         uint16_t mask = 0;
