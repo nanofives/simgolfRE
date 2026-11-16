@@ -1501,6 +1501,69 @@ void tourney_starting_tip(Gfx &g, Ctx &ctx, int32_t x, int32_t y) { backdrop(g, 
 // y - 5) and drawCenteredText(text, x, y - 10, 0x80007fff)
 void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y) { backdrop(g, ctx, text, x, y); }  // P22D fix 3
 
+// P32C FIX 3 (gfx_text.h)
+void modal_untip(Gfx &g) {
+  Gfx::ModalTip &t = g.modal_tip;
+  if (!t.on) return;
+  t.on = false;
+  Surface16 &r = g.root;
+  if (r.w < t.x1 || r.h < t.y1) return;
+  const int32_t bw = t.x1 - t.x0;
+  for (int32_t y = t.y0; y < t.y1; ++y)
+    for (int32_t x = t.x0; x < t.x1; ++x) {
+      const size_t k = static_cast<size_t>(y - t.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - t.x0);
+      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      if (o == t.after[k] && o != t.before[k]) {
+        o = t.before[k];
+        hud_mark(&o);
+      }
+    }
+}
+void modal_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t cx, int32_t y_bottom) {
+  modal_untip(g);
+  if (text.empty()) return;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  if (r.w < 800 || r.h < 600) return;
+  int32_t asc = 10, tw = 6 * static_cast<int32_t>(text.size());
+  if (TextMetrics *tm = text_metrics(ctx)) {
+    const uint32_t f = g.fonts[0];
+    with_saved_state(ctx, [&]() {
+      const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+      put_str(ctx, buf, text);
+      int32_t a = 0, w = 0;
+      if (f && tm->glyph_ascent(ctx, f, a)) asc = a;
+      if (f && tm->glyph_width(ctx, f, buf, static_cast<int32_t>(text.size()), w)) tw = w;
+    });
+  }
+  // P13B's box: the text 4 pixels inside each side, from 2 rows above its top to 2 under its descenders (a third of the ascent)
+  const int32_t hw = tw / 2 + 4, h = 2 + asc + asc / 3 + 2;
+  cx = std::max(hw + 1, std::min(cx, 799 - hw));
+  Gfx::ModalTip &t = g.modal_tip;
+  t.x0 = std::max(0, cx - hw);
+  t.x1 = std::min(800, cx + hw);
+  t.y1 = std::max(h, std::min(600, y_bottom));
+  t.y0 = t.y1 - h;
+  const int32_t bw = t.x1 - t.x0, bh = t.y1 - t.y0;
+  auto grab = [&](std::vector<uint16_t> &v) {
+    v.resize(static_cast<size_t>(bw) * static_cast<size_t>(bh));
+    for (int32_t y = 0; y < bh; ++y)
+      std::memcpy(&v[static_cast<size_t>(y) * static_cast<size_t>(bw)],
+                  &r.px[static_cast<size_t>(t.y0 + y) * static_cast<size_t>(r.w) + static_cast<size_t>(t.x0)],
+                  static_cast<size_t>(bw) * sizeof(uint16_t));
+  };
+  grab(t.before);
+  for (int32_t y = t.y0; y < t.y1; ++y)
+    for (int32_t x = t.x0; x < t.x1; ++x) {
+      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      o = 0;
+      hud_mark(&o);
+    }
+  centred(g, ctx, text, cx, t.y0 + 2);
+  grab(t.after);
+  t.on = true;
+}
+
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why) {
   std::string text;
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));
@@ -1508,6 +1571,8 @@ void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const
   else if (hover == -2) text = pool(ctx, GSO(f_strpool_4c5d20, 0xa8));
   text = lang::tr(text);  // P24D fix 5
   if (text.empty() && !why.empty()) text = why;  // P32C item 5: a coloured name's reasons (already in the current language)
+  // P32C FIX 3 (gfx.h gfx_set_explain_tips): the page arrows, which the original's tip leaves empty
+  if (text.empty() && g.explain_tips && (hover == -5 || hover == -6)) text = lang::tr(hover == -5 ? "Previous page" : "Next page");
   const int32_t n3 = mul32(static_cast<int32_t>(text.size()), 3);
   map_bar(g, ctx, sub32(x, n3), add32(x, n3), sub32(y, 5));
   centred(g, ctx, text, x, sub32(y, 10));
@@ -1526,7 +1591,10 @@ void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y) {
     case 7: text = pool(ctx, GSO(f_strpool_4c80d0, 0x2ec)); break;
     case 8: text = pool(ctx, GSO(f_strpool_4c80d0, 0x2c0)); break;
     case 9: text = pool(ctx, GSO(f_strpool_4c80d0, 0x2d4)); break;
-    default: break;
+    default:
+      // P32C FIX 3 (gfx.h gfx_set_explain_tips): the list's arrows (hits 2 / 3), which the original's table leaves empty
+      if (g.explain_tips && (hit == 2 || hit == 3)) text = lang::tr(hit == 2 ? "Scroll up" : "Scroll down");
+      break;
   }
   backdrop(g, ctx, text, x, sub32(y, mode() == 10 ? 4 : 5));
 }

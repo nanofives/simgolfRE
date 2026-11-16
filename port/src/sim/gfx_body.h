@@ -121,6 +121,13 @@ class Gfx {
   bool hover_help_course = true;  // P13A (gfx.h gfx_set_hover_help_course): and the course line with no tool among them
   bool meter_tips = false;  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips are drawn
   bool explain_tips = false;  // P32C (gfx.h gfx_set_explain_tips): the cash asterisk, grey names and customize button explained
+  // P32C FIX 3 (gfx_text.h modal_tip): the tip a modal screen shows over the root, with the root's words under its box before and
+  // after it was drawn (modal_untip puts back each word still showing the tip)
+  struct ModalTip {
+    bool on = false;
+    int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+    std::vector<uint16_t> before, after;
+  } modal_tip;
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   bool sharp_art = false;  // P26C item 11 (gfx.h gfx_set_sharp_art): the bulletin board's art words as text runs

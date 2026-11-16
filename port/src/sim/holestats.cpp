@@ -120,7 +120,9 @@ struct HoleStats {
       const bool in = x >= 0x23e && x < 0x26a && cy >= button_y && cy < add32(button_y, 0x2c);
       if (in != (hover != 0)) {
         hover = in ? 1 : 0;
+        if (gfx_explain_tips(ctx)) d.gx("p32c.untip", {});   // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only)
         d.gx("Image_draw", {GS(g_spriteRef_820f40) + (in ? 0x2cu : 0u), root, 0x23e, u32(button_y), 0});
+        if (gfx_explain_tips(ctx) && in) d.gx("p32c.tip", {0, 0x23e + 0x16, u32(sub32(button_y, 2))});
         d.gx("Window::refreshFull", {d.window(), 0});
       }
     }
@@ -335,6 +337,10 @@ struct HoleStats {
     d.gx("Surface_stretchBlit", {art + 0xb0, art + 0xdc, root, 0, u32(y), 0});
     button_y = add32(y, 8);
     d.gx("Image_draw", {GS(g_spriteRef_820f40) + (hover != 0 ? 0x2cu : 0u), root, 0x23e, u32(button_y), 0});
+    if (gfx_explain_tips(ctx)) {  // P32C FIX 3: the page drawn again: the tip again over the hovered close button
+      d.gx("p32c.untip", {});
+      if (hover != 0) d.gx("p32c.tip", {0, 0x23e + 0x16, u32(sub32(button_y, 2))});
+    }
     d.gx("Window::refreshFull", {d.window(), 0});
     return rounds;
   }

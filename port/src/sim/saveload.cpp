@@ -699,11 +699,20 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
 
     // ---- the input loop
     int32_t hot = -1, dwell = 0, action = 0;
+    bool wheeled = false;   // P32C FIX 3
     for (;;) {
       cm::pump_messages(ctx, PumpKind::Blocking, "loadGameBrowserScreen");
       InputSource *src = input_source(ctx);
       int32_t x = 0, y = 0;
       if (!src || !src->cursor(x, y)) throw NeedInput{{"loadGameBrowserScreen"}};
+      // P32C FIX 3 (bridge.h kPortViewWheelVa, written only under --list-wheel): each notch is one press of the list's up (2) /
+      // down (3) button, their own steps (4 back, 4 or 5 on), then the list is drawn again
+      if (const int32_t notches = view_take_wheel(ctx)) {
+        for (int32_t k = 0; k < (notches < 0 ? -notches : notches); ++k)
+          scroll = notches > 0 ? clamp(sub32(scroll, 4), 0, max_scroll) : clamp(add32(scroll, mode == 1 ? 5 : 4), 0, max_scroll);
+        wheeled = true;
+        break;
+      }
       const int32_t prev = hot;
       hot = -1;   // (the original waits waitTicks(2, 0) before the pump; the port's pump model has no wait)
       if (approx_distance(sub32(x, 0x279), sub32(y, 0x22B)) < (mode == 8 ? 0x19 : 0x1A)) hot = 0;
@@ -750,6 +759,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       break;
     }
 
+    if (wheeled) continue;   // P32C FIX 3: the list again at the new offset
     if (action != -2) {
       gs.g_rootInput[kRootButton] = 0;
       if (static_cast<uint32_t>(action) > 4) continue;

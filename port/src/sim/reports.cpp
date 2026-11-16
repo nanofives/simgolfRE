@@ -84,7 +84,9 @@ void hover(Ctx &ctx, Hover *h, int32_t px, int32_t py) {
   h->lit = in;
   const uint32_t win = state_va(ctx, &GameState::g_rootWindow);
   // the plain image g_spriteRef_820f40[0], the lit one [1] (+0x2c)
+  if (gfx_explain_tips(ctx)) gx2(ctx, "p32c.untip", {});   // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only, nothing without --explain-tips)
   gx2(ctx, "Image_draw", {state_va(ctx, &GameState::g_spriteRef_820f40) + (in ? 0x2cu : 0u), win + 0x274, u32(h->x), u32(h->y), 0});
+  if (gfx_explain_tips(ctx) && (in)) gx2(ctx, "p32c.tip", {0, u32(add32(h->x, 0x16)), u32(sub32(h->y, 2))});
   gx2(ctx, "Window::refreshFull", {win, 0});
 }
 void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr) {

@@ -47,6 +47,13 @@ void tourney_starting_tip(Gfx &g, Ctx &ctx, int32_t x, int32_t y);
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why = std::string());
 // P22D fix 3 (gfx.h gfx_set_meter_tips): `text` as the game's one-line tip, drawPanelBackdrop(x, y) (centre x, text row y - 5)
 void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y);
+// P32C FIX 3 (gfx.h gfx_set_explain_tips): a tip on a modal screen, which repaints nothing between its own hover changes: the
+// in-game tip's look (the black bar the HUD tips get from drawMapLine, here filled into the root as drawPanelBackdrop does over the
+// character editor, P13B; the text white, drawCenteredText in the screen's current font), centred on cx with its bar's bottom row
+// at y_bottom - 1 and kept inside the 800-wide root; the root's words under it are kept, and modal_untip puts back every word that
+// still shows the tip (a word the screen redrew since is left: a full redraw has replaced the tip already)
+void modal_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t cx, int32_t y_bottom);
+void modal_untip(Gfx &g);
 void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // drawAmenitiesPanel's dwell tip of item L and its mode-4 hovered building row r, at the cursor (a, b)
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);

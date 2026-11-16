@@ -351,6 +351,12 @@ struct MapDraw {
       image(0x1b8, 0x264, 0x139);
     }
     image(0x688, 0x47, 0x215);
+    if (gfx_explain_tips(ctx)) {  // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only): the quit button's and the arrows' tips
+      gx("p32c.untip", {});
+      if (state == -2) gx("p32c.tip", {0, 0x296 + 0x28, 0x214 - 2});
+      if (mode == 0 && state == 9) gx("p32c.tip", {1, 0x307 + 9, 0x40 - 2});
+      if (mode == 0 && state == 10) gx("p32c.tip", {2, 0x307 + 9, 0xcd - 2});
+    }
     gx("Window::refreshFull", {win, 0});
   }
 };
@@ -541,6 +547,7 @@ int32_t show_routing_map_screen(Ctx &ctx) {
     if (s.m.load<uint8_t>(w + 0x13) != 0xfa && s.m.load<uint8_t>(w + 0x12) != 0 && s.m.load<int8_t>(w + 0x13) < 0) ++count;
   }
   bool more = false;
+  (void)view_take_wheel(ctx);   // P32C FIX 3: notches turned before the map opened are not its own
   for (;;) {
     if (!s.redraw(scroll, count, more, state, selected)) break;
     bool redraw = false, quit = false;
@@ -550,6 +557,14 @@ int32_t show_routing_map_screen(Ctx &ctx) {
       const int32_t prev = state;
       state = route_hit(s.mode(), px, py, count);
       if (prev != state) {   // the hovered button changed: redraw first
+        redraw = true;
+        break;
+      }
+      // P32C FIX 3 (bridge.h kPortViewWheelVa, written only under --list-wheel): one notch per pass is one press of the walker
+      // list's up (9) / down (10) arrow, which move it one walker; the rest wait for the next pass (the end is known after the redraw)
+      if (const int32_t w = view_take_wheel_one(ctx)) {
+        if (w > 0 && scroll > 0) --scroll;
+        if (w < 0 && more) ++scroll;
         redraw = true;
         break;
       }
@@ -903,6 +918,7 @@ struct RosterDraw {
   // the hover images of a zone change that does not end the pass (hover <= 0 before it; c3eo.cpp's input loop)
   void hover_to(int32_t from, int32_t to) const {
     if (!d.on) return;
+    if (gfx_explain_tips(ctx)) d.gx("p32c.untip", {});   // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only, nothing without --explain-tips)
     const uint32_t ok = state_va(ctx, &GameState::g_spriteRef_820f40);
     if (to == 0) {
       image(ok + 0x2c, 0x2dc, 0x224);
@@ -911,6 +927,10 @@ struct RosterDraw {
       if (to == 1) image(art + 0x268, 0x2ff, 0x50);
       if (to == 2) image(art + 0x294, 0x2ff, 0x1ea);
     }
+    // P32C FIX 3: the hovered zone's tip above it (the close button 0x2c wide, the arrows 0x12 wide)
+    if (gfx_explain_tips(ctx) && (to == 0)) d.gx("p32c.tip", {0, 0x2dc + 0x16, 0x224 - 2});
+    if (gfx_explain_tips(ctx) && (to == 1)) d.gx("p32c.tip", {1, 0x2ff + 9, 0x50 - 2});
+    if (gfx_explain_tips(ctx) && (to == 2)) d.gx("p32c.tip", {2, 0x2ff + 9, 0x1ea - 2});
     d.gx("Window::refreshFull", {d.window(), 0});
   }
   std::string gfxb_vstring(uint32_t va) const {

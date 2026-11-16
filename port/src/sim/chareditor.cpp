@@ -12,6 +12,7 @@
 #include "commands_internal.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/bridge.h"  // P32C FIX 3: view_take_wheel
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
@@ -277,9 +278,24 @@ int32_t pick_char_editor(Ctx &ctx, int32_t row) {
   const int neg = SG_NEGCTL(g_negctl_pick);
   Scratch xy(ctx, 8);
   m.store<int32_t>(xy.va + 4, row);
+  (void)view_take_wheel(ctx);   // P32C FIX 3: notches turned before the picker opened are not its own
   for (;;) {
     view_to_local(ctx, xy.va, xy.va + 4, "pickCharEditor");
     const int32_t x = m.load<int32_t>(xy.va), y = m.load<int32_t>(xy.va + 4);
+    // P32C FIX 3 (bridge.h kPortViewWheelVa, written only under --list-wheel): each notch is one press of the presets' arrows
+    // (zone 0xb takes 10 off a non-zero offset, zone 10 adds 10 below 0x46), clamped as after an arrow press; then a new pass
+    if (const int32_t notches = view_take_wheel(ctx)) {
+      int32_t sc = gs.g_ui_5aa55c;
+      for (int32_t k = 0; k < (notches < 0 ? -notches : notches); ++k) {
+        if (notches > 0 && sc != 0) sc = sub32(sc, 10);
+        if (notches < 0 && sc < 0x46) sc = add32(sc, 10);
+      }
+      const int32_t limit = sub32(m.load<int32_t>(GS(g_loopCounter59b76c) + 4 * u32(row)), 10);
+      if (sc > limit) sc = limit;
+      if (sc < 0) sc = 0;
+      gs.g_ui_5aa55c = sc;
+      continue;
+    }
     const int32_t zone = char_editor_zone(ctx, x, y);
     pump_pass(ctx, "pickCharEditor");
     if (cm::esc_pressed(ctx, g_defect_esc_char_picker)) return -1;  // P9A item 2: Esc = the picker's cancel

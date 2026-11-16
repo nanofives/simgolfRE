@@ -2107,6 +2107,7 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   head_ns_ = portsim::perf_now_ns();  // P26A
   const bool woke = glide_wake_.exchange(false);  // P26A: this head takes what woke the wait
   apply_glide(ctx);               // P26A: the arrow glide's request (recorded writes, before the frame body)
+  apply_wheel(ctx);               // P32C FIX 3: the wheel's notches for the in-frame lists (a recorded head write)
   early_due_ = opt_.early_world && woke && glide_wrote_;  // P31B item 7: this frame's world goes over at its queue end
   apply_arrow(ctx);               // P21B: an arrow key-down (recorded writes, before the frame body)
   apply_arrow_clock(ctx);         // P22A: the clock offset for the held arrow's delay (recorded write, once)

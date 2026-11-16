@@ -76,7 +76,10 @@ void gfx_set_meter_tips(Ctx &ctx, bool on);
 // game's own tip boxes say what the original leaves unexplained: the cash box's asterisk (mainLoop ML+0x9f9b appends it while
 // g_flags bit 29 is set, which only the cash key '+' sets, ML+0xda7b), a golfer list name drawn in a colour
 // (drawEmployeeViewPanel's colour rule: Energy, Thirst, Hunger, leaving), and Gary Golf's customize button (hitGolferPanel435f00
-// hotspot 0, whose tip the original's table leaves empty). English in port code, other languages through the pack (lang::tr).
+// hotspot 0, whose tip the original's table leaves empty). FIX 3: the golfer list's page arrows, the staff list's arrows, and on
+// the modal screens (gfx_text.h modal_tip) the Membership Roster's arrows and close button, the report screens' close / OK buttons
+// (commands_screens.inc ok_hover, reports.cpp hover, the hole statistics), the routing map's quit button and walker arrows.
+// English in port code, other languages through the pack (lang::tr).
 // Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_explain_tips(Ctx &ctx, bool on);
 bool gfx_explain_tips(Ctx &ctx);

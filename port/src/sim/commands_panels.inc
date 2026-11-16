@@ -497,6 +497,25 @@ int32_t slot_action(Ctx &ctx, int32_t r) {
 
 // ---- the click handlers: the forwarding test, the hit test, the action (the semantic Command kinds run the action) ----
 int32_t handle_employee_action(Ctx &ctx, int32_t x, int32_t y) { return employee_action(ctx, hit_employee(ctx, x, y)); }
+}  // namespace (commands.cpp includes this file inside one; bridge.h declares the next function in portsim)
+// P32C FIX 3 (bridge.h view_panel_wheel): a notch > 0 is the up / previous arrow, < 0 the down / next one
+void view_panel_wheel(Ctx &ctx) {
+  const int32_t n = view_take_wheel(ctx);
+  GameState &gs = ctx.gs();
+  if (n == 0 || gs.g_panelListMode != 2) return;
+  for (int32_t k = 0; k < (n < 0 ? -n : n); ++k) {
+    if (gs.g_ui_561254 != 0) {  // the staff list (drawEmployeeDetailPanel): up while scrolled, down while its arrow is drawn (> 8)
+      if (n > 0 && gs.g_ui_5aa558 != 0) employee_action(ctx, 2);
+      if (n < 0 && gs.g_ui_5aa6b8[2] > 8) employee_action(ctx, 3);
+    } else {  // the golfer list: a page back while past the first, a page on while golfers lie past this page
+      const int32_t page = 4 * (4 + view_list_columns(ctx));
+      if (n > 0 && gs.g_ui_5aa6b8[4] > 0) employee_view_action(ctx, -5);
+      if (n < 0 && add32(gs.g_ui_5aa6b8[4], page) < view_list_count(ctx)) employee_view_action(ctx, -6);
+    }
+  }
+}
+namespace {
+using namespace cm;
 int32_t click_employee_view(Ctx &ctx, int32_t x, int32_t y) {
   if (ctx.gs().g_ui_561254 != 0) return handle_employee_action(ctx, x, y);
   return employee_view_action(ctx, hit_employee_slot(ctx, x, y));

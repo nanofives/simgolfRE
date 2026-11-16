@@ -2163,6 +2163,16 @@ void b_meter_tips(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   gfxt::meter_tip(g, ctx, s, b.x - half - 6, b.y + b.h / 2 + 5);
 }
 
+// P32C FIX 3 (gfx_text.h modal_tip, gfx.h gfx_set_explain_tips): a modal screen's hovered control explained. "p32c.tip" (id, cx,
+// y_bottom): id 0 the close / OK button, 1 an up arrow, 2 a down arrow; "p32c.untip": the tip taken away. Drawing only.
+void b_modal_tip(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (!g.explain_tips) return;
+  static const char *const kText[3] = {"Close", "Scroll up", "Scroll down"};
+  if (a[0] > 2) return;
+  gfxt::modal_tip(g, ctx, lang::tr(kText[a[0]]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]));
+}
+void b_modal_untip(Gfx &g, Ctx &, const uint32_t *, int) { gfxt::modal_untip(g); }
+
 // P26E fix 1 (play switch drawEmployeeViewPanel.scrollBarAlways = 0, bridge.h view_list_fits): the golfer list's scroll band drawn
 // empty while every listed golfer is on the first page. MemberPanel (the art cut g_sprites541a18 + 0xb0 at (0xd7, 0x1da), the art's
 // own coordinates): rows 0x24b..0x24c are the list's lower edge, with the track's top over x 0x160..0x2ed; rows 0x24d..0x256 are the
@@ -2653,6 +2663,8 @@ const GfxBodyDef kBodies[] = {
     {"drawGolferActionPanel.draw", b_action_panel},
     {"drawEmployeeViewPanel.draw", b_view_panel},
     {"statusBar.tips", b_meter_tips},  // P22D fix 3
+    {"p32c.tip", b_modal_tip},         // P32C FIX 3
+    {"p32c.untip", b_modal_untip},     // P32C FIX 3
     {"drawEmployeeDetailPanel.draw", b_detail_panel},
     {"gfx_hud.recordPanels", b_record_panels},
 };

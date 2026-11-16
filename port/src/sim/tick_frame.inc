@@ -7358,6 +7358,7 @@ int Ph_0041c0c5(u32 F, int* h2in) {
         G32(GS(g_char83821c)) <= 0x28 && view_arrow_held_due(ctx, FU(0x1EC)))  // P22A: after the hold delay only
         eax = G32(GS(g_char83821c));
     FD(0x28) = eax;                           // ML+0xcb24 (second key/flags)
+    view_panel_wheel(ctx);  // P32C FIX 3 (bridge.h): the wheel word, written only by a live host under --list-wheel (0 otherwise)
     if (esi == edi) goto a41c150;             // ML+0xcb28 cmp esi,edi; je
     if (!(G32(GS(g_flags)) & 0x8000)) goto a41c150;  // ML+0xcb2a test ah,0x80; je
     if (esi != 0x1b) goto a41c147;            // ML+0xcb34 cmp esi,0x1b; jne

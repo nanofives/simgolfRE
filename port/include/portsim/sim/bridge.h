@@ -190,6 +190,14 @@ void course_redo_end(Ctx &ctx);
 // 1 .. 3 rows, per notch). No host writes it otherwise, and nothing else reads it.
 constexpr uint32_t kPortViewWheelVa = kPortViewVa + 0x90u;
 int32_t view_take_wheel(Ctx &ctx);  // the pending notches (0: none, or no view block); clears the word
+// P32C FIX 3: one notch (+1 / -1, 0 none) of the pending ones; the rest stay in the word for the loop's next pass (a list whose
+// end is known only after its next redraw: showRoutingMapScreen's walker list)
+int32_t view_take_wheel_one(Ctx &ctx);
+// P32C FIX 3: the frame body's share of the word (written by a live host at a frame head, a recorded head write): H1 takes it every
+// frame after its key fetch; with the golfer panels in list mode (g_panelListMode 2) each notch is one press of the shown list's own
+// arrows (the golfer list's page arrows clickEmployeeView -5 / -6, the staff list's arrows handleEmployeeAction 2 / 3, each only
+// where that arrow is drawn and would move the list); otherwise the notches are dropped
+void view_panel_wheel(Ctx &ctx);
 
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);

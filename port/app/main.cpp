@@ -120,7 +120,8 @@
 //   Hungry / Leaving the course, from the colour rule's meters) and Gary Golf's customize button (gfx.h gfx_set_explain_tips;
 //   drawing only; log/roadmap/P32/P32C_notes.md)
 //   P32C item 6: --list-wheel on|off (default on; SG_APP_P32=off: off) the mouse wheel scrolls the Membership Roster, one notch = one
-//   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa)
+//   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa); FIX 3: also the routing map's walker
+//   list, the saved-game browser, the character editor's preset picker (modal pumps) and the golfer / staff lists (frame heads)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)

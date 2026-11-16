@@ -28,7 +28,9 @@ void ok_hover(Ctx &ctx, OkHover *h) {
   const bool in = px >= h->x && px < add32(h->x, 0x2c) && py >= h->y && py < add32(h->y, 0x2c);
   if (in == h->lit) return;
   h->lit = in;
+  if (gfx_explain_tips(ctx)) d.gx("p32c.untip", {});   // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only, nothing without --explain-tips)
   d.gx("Image_draw", {h->plain + (in ? 0x2cu : 0u), d.root(), u32(h->x), u32(h->y), 0});
+  if (gfx_explain_tips(ctx) && (in)) d.gx("p32c.tip", {0, u32(add32(h->x, 0x16)), u32(sub32(h->y, 2))});
   d.gx("Window::refreshFull", {d.window(), 0});
 }
 void click_or_key_loop(Ctx &ctx, bool button_first, const char *where, OkHover *h = nullptr) {
