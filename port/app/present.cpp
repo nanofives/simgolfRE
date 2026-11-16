@@ -215,6 +215,10 @@ constexpr double kGlideResync = 12.0;  // tiles: D this far from the picture's c
 // pictures: 300 ms from the head), and 0.4 s x 30.1 tiles / s rounded up is 13 tiles, past kGlideResync: the window restarted D
 // at the far picture (a 13-tile jump) and the next head stepped back (P31B_notes.md). SG_P31_REQCAP=0: no cap (P26A as it was)
 constexpr double kGlideReqMax = 8.0;
+// P32A: the screen shift (800-space, camera_shift's formula) a request may ask for from D: 0.9 of the slide's far test
+// (Presenter::kSlideMaxX / kSlideMaxY), so a picture of the glide is always slid; zoom 4 at rotation 0: 5 tiles diagonally (64
+// units a tile), 6 along a screen-vertical arrow (40 units a tile); zoom 8 half of those
+constexpr double kGlideScreenX = 0.9 * Presenter::kSlideMaxX, kGlideScreenY = 0.9 * Presenter::kSlideMaxY;
 // the camera axes' move of one arrow at rotation rot (tick_frame.inc P21_ArrowStep: direction + rotation, & 7)
 void arrow_axes(uint32_t vk, int32_t rot, double &x, double &y) {
   const int base = vk == 0x26 ? 0 : vk == 0x27 ? 2 : vk == 0x28 ? 4 : 6;
@@ -389,7 +393,7 @@ bool ArrowGlide::tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, doubl
   if (!moving_ && std::fabs(ox) < kGlideEps && std::fabs(oy) < kGlideEps) settled_ = true;
   return !settled_;
 }
-bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t &dx, int32_t &dy) {
+bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t zoom, int32_t &dx, int32_t &dy) {
   std::lock_guard<std::mutex> lk(mu_);
   dx = dy = 0;
   v_ = v;
@@ -401,6 +405,7 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
   }
   const int32_t c[2] = {cx, cy};
   int32_t r[2] = {0, 0};
+  double tt[2] = {0, 0};
   for (int i = 0; i < 2; ++i) {
     const Axis &a = ax_[i];
     double t = 0;
@@ -415,8 +420,30 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
       t = (ra > 0 || (ra == 0 && a.ud > 0)) ? std::ceil(x - kGlideEps) : std::floor(x + kGlideEps);
     }
     t = std::clamp(t, lo_[i], hi_[i]);  // P31A: the camera's range
-    r[i] = static_cast<int32_t>(t) - c[i];
+    tt[i] = t;
   }
+  // P32A item 1 (class a; SG_P32_GLIDECAP=0: as before): the picture a request asks for must stay within the slide's far test
+  // (Presenter::slide_start: a camera shift past kSlideMaxX / kSlideMaxY from the painted picture is a jump). A request past it
+  // made slide_start drop the underlay (prev_ok_), and paint_gpu then drew that picture at offset 0: the view jumped the whole
+  // request ahead (8 tiles, 1153 client px at 2560 x 1351 on a tap) and stepped back to the glide's place with the uncovered edge
+  // filled by stretched pixels. The shift is measured from D (the picture shown is never ahead of the newest one, so the painted
+  // picture's camera lies between D and the request); the axis farther from D steps back a tile at a time until it fits.
+  {
+    static const bool cap = !(std::getenv("SG_P32_GLIDECAP") && std::atoi(std::getenv("SG_P32_GLIDECAP")) == 0);
+    bool capped = false;
+    for (int guard = 0; cap && zoom > 0 && guard < 64; ++guard) {
+      double sx = 0, sy = 0;
+      if (!camera_shift_f(zoom, rot_, tt[0] - ax_[0].d, tt[1] - ax_[1].d, sx, sy)) break;
+      if (std::fabs(sx) <= kGlideScreenX && std::fabs(sy) <= kGlideScreenY) break;
+      const int i = std::fabs(tt[0] - ax_[0].d) >= std::fabs(tt[1] - ax_[1].d) ? 0 : 1;
+      const double gap = tt[i] - ax_[i].d;
+      if (std::fabs(gap) < 1.0) break;  // within a tile of D on both axes: nothing to take back
+      tt[i] -= gap > 0 ? 1.0 : -1.0;
+      capped = true;
+    }
+    if (capped) ++st_.screen_caps;
+  }
+  for (int i = 0; i < 2; ++i) r[i] = static_cast<int32_t>(tt[i]) - c[i];
   dx = r[0];
   dy = r[1];
   if (dx == 0 && dy == 0) return false;

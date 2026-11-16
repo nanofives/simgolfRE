@@ -43,7 +43,8 @@ void terrain_toolbar_tip(Gfx &g, Ctx &ctx, int32_t sel, int32_t a, int32_t b);
 void action_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // P24G (gfx.h gfx_set_tourney_hold): the "Starting tournament..." line (lang::tr) as the game's one-line tip at (x, y)
 void tourney_starting_tip(Gfx &g, Ctx &ctx, int32_t x, int32_t y);
-void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y);
+// `why` (P32C item 5): the text for a hovered list slot, which the original's tip leaves empty ("" = the original)
+void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why = std::string());
 // P22D fix 3 (gfx.h gfx_set_meter_tips): `text` as the game's one-line tip, drawPanelBackdrop(x, y) (centre x, text row y - 5)
 void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y);
 void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);

@@ -1885,6 +1885,8 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   text_publish(g, g.hud.on ? &g.hud.published : nullptr);  // P9C: the frame's text runs (inert with capture off)
   gfxh::after_present(g, ctx);
   g.back_terrain = g.root_terrain;
+  g.back_pair = g.pair_frame;  // P32E fix 4 (only the pair select's cover drop sets it, with --pair-cover)
+  g.pair_frame = 0;
   std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};
   {
     std::lock_guard<std::mutex> l(mu());
@@ -2328,6 +2330,15 @@ void gfx_set_hover_help_course(Ctx &ctx, bool on) {
 void gfx_set_meter_tips(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->meter_tips = on;
 }
+// P32C (gfx.h gfx_set_explain_tips)
+void gfx_set_explain_tips(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->explain_tips = on;
+}
+bool gfx_explain_tips(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->explain_tips;
+}
 // P25B (gfx.h gfx_set_row_hover)
 void gfx_set_row_hover(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->row_hover = on;
@@ -2339,6 +2350,18 @@ void gfx_set_sharp_art(Ctx &ctx, bool on) {
 // P30A item 2 (gfx.h gfx_set_popup_fit)
 void gfx_set_popup_fit(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->popup_fit = on;
+}
+// P32E fix 4 (gfx.h gfx_set_pair_cover)
+void gfx_set_pair_cover(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->pair_cover = on;
+}
+bool gfx_pair_cover(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->pair_cover;
+}
+bool gfx_back_pair(Ctx &ctx) {
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->back_pair != 0;
 }
 // P30A item 2 (gfx.h gfx_popup_warp_push / pop / warp): the warps of the widened popups open now, newest last
 namespace {

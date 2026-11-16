@@ -469,7 +469,9 @@ void LiveSession::apply_glide(portsim::Ctx &ctx) {
     if (mx != 0 || my != 0) ++edge_frames_;
   }
   int32_t dx = 0, dy = 0;
-  if (!opt_.glide->head(opt_.glide_speed * step / 4.0, step, g.gCameraTileX, g.gCameraTileY, g.g_cameraRot, dx, dy)) return;
+  if (!opt_.glide->head(opt_.glide_speed * step / 4.0, step, g.gCameraTileX, g.gCameraTileY, g.g_cameraRot,
+                          g.g_zoomScale, dx, dy))
+    return;
   ctx.mem.store<int32_t>(portsim::kPortViewGlideXVa, dx);
   ctx.mem.store<int32_t>(portsim::kPortViewGlideYVa, dy);
   if (writes) {
@@ -498,6 +500,15 @@ void LiveSession::on_input(const InputEvent &e) {
       queue_seq_.push_back(e.seq);
     }
     if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
+    if (opt_.list_wheel && e.msg == 0x20a) {  // P32C item 6: WM_MOUSEWHEEL, the delta in the high word (WHEEL_DELTA 120 a notch)
+      wheel_acc_ += static_cast<int16_t>(e.wp >> 16);
+      const int32_t n = wheel_acc_ / 120;
+      wheel_acc_ -= n * 120;
+      if (n != 0) {
+        wheel_pending_.fetch_add(n);
+        wheel_notches_ += static_cast<uint64_t>(n < 0 ? -n : n);
+      }
+    }
     event_rows_.push_back({e.seq, e.msg, e.wp, e.lp, frame_now_.load(), static_cast<uint32_t>(e.commands.size()), -1});
     if (e.msg >= kWmMouseMove && e.msg <= 0x20e) {
       msg_cursor_ = Translator(e.vp).lparam_point(e.lp);
@@ -509,6 +520,18 @@ void LiveSession::on_input(const InputEvent &e) {
     ++events_;
   }
   cv_.notify_all();
+}
+
+// P32C item 6 (host.h HostOptions::list_wheel): the notches the window took since the last write are added to view block word +0x90
+// (bridge.h kPortViewWheelVa) as one recorded write; a replay applies it before the modal loop's next cursor read
+void LiveSession::apply_wheel(portsim::Ctx &ctx) {
+  if (!opt_.list_wheel) return;
+  const int32_t n = wheel_pending_.exchange(0);
+  if (n == 0 || !portsim::view_map(ctx)) return;
+  const int32_t v = ctx.mem.load<int32_t>(portsim::kPortViewWheelVa) + n;
+  ctx.mem.store<int32_t>(portsim::kPortViewWheelVa, v);
+  if (writes) writes->wrote(portsim::kPortViewWheelVa, static_cast<uint32_t>(v));
+  ++wheel_writes_;
 }
 
 void LiveSession::request_stop() {
@@ -2054,6 +2077,7 @@ BandFill LiveSession::band_hint(portsim::Ctx &ctx) {
     band = BandFill::ExtendClamp;
     ++presents_map_;
   }
+  if (screen && portsim::gfx_back_pair(ctx)) band = BandFill::ExtendClamp;  // P32E fix 4: the pair select's frame purple at the sides
   if (screen) ++presents_screen_;
   ++(band == BandFill::Black ? presents_black_ : presents_extend_);
   return band;
@@ -2558,6 +2582,7 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   bool waited = false;
   for (;;) {
     if (stopping()) return portsim::LiveReply::Stop;
+    if (!p.body) apply_wheel(ctx);  // P32C item 6
     const uint32_t now = timeGetTime();
     if (!queue_.empty()) {
       if (p.may_deliver || p.must_deliver) {  // must_deliver without may_deliver: applied, counted by the core
@@ -2773,7 +2798,7 @@ std::string LiveSession::summary_json(const Result &r) const {
          ",\"ticks_moving\":" + std::to_string(g.ticks_moving) + ",\"resyncs\":" + std::to_string(g.resyncs) +
          ",\"edge_glide\":" + std::to_string(opt_.edge_glide ? 1 : 0) + ",\"edge_frames\":" + std::to_string(edge_frames_) +
          ",\"edge_changes\":" + std::to_string(g.edge_changes) + ",\"edge_ticks\":" + std::to_string(g.edge_ticks) +
-         ",\"taps_fast\":" + std::to_string(g.taps_fast) + ",\"early_world\":" + std::to_string(opt_.early_world ? 1 : 0) +
+         ",\"taps_fast\":" + std::to_string(g.taps_fast) + ",\"screen_caps\":" + std::to_string(g.screen_caps) + ",\"early_world\":" + std::to_string(opt_.early_world ? 1 : 0) +
          ",\"early_jobs\":" + std::to_string(early_jobs_) + ",\"early_skipped\":" + std::to_string(early_skipped_) +
          ",\"early_bub_px\":" + std::to_string(early_bub_px_) + "}";  // P31B
   }
@@ -2806,6 +2831,8 @@ std::string LiveSession::summary_json(const Result &r) const {
        std::to_string(presents_text_) + ",\"runs\":" + std::to_string(text_runs_) + "}";  // P9C
   s += ",\"p9e\":{\"vacated_clicks\":" + std::to_string(opt_.vacated_clicks ? 1 : 0) + ",\"vacated_writes\":" +
        std::to_string(vacated_writes_) + "}";  // P9E fix 3
+  s += ",\"p32c\":{\"list_wheel\":" + std::to_string(opt_.list_wheel ? 1 : 0) + ",\"wheel_notches\":" +
+       std::to_string(wheel_notches_) + ",\"wheel_writes\":" + std::to_string(wheel_writes_) + "}";  // P32C item 6
   s += ",\"p10c\":{\"title_bands\":" + std::to_string(opt_.title_bands ? 1 : 0) + ",\"title_reposts\":" +
        std::to_string(title_reposts_) + "}";  // P10C fix 1
   s += ",\"memory\":" + memory.json();

@@ -25,6 +25,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
+#include "portsim/sim/bridge.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
@@ -46,7 +47,7 @@ int g_negctl_routing_map = 0;
 int g_negctl_shortcuts = 0;
 // showMembershipRoster: 1 the exclusion bit of the type records is left alone, 2 the close button's box is 0x10 columns narrower,
 // 3 a right click on an arrow redraws instead of leaving, 4 a left press on an arrow ends the screen, 5 the exit
-// leaves the message-box mode byte at 1
+// leaves the message-box mode byte at 1, 6 (P32C item 6) a wheel notch scrolls the other way
 int g_negctl_roster = 0;
 
 // model_defects: the exit remap indexes a 20-entry table with each golfer's hole byte, and a byte of 20 or more reads the
@@ -938,6 +939,7 @@ int32_t show_membership_roster(Ctx &ctx) {
   for (uint32_t k = 0; k < 76; ++k) excluded[k] = (m.load<uint8_t>(types + 0x2c * k + 2) & 0x80) != 0;
   const RosterDraw rd(ctx);
   int32_t offset = 0;   // the scroll offset (drawing only)
+  (void)view_take_wheel(ctx);   // P32C item 6: notches turned before the roster opened are not its own
   if (rd.d.on) {
     rd.d.gx("reports.begin", {});
     if (gs.g_graphicsDevice != 0) rd.d.gx("Display::setScale", {1, 1, 1});
@@ -954,9 +956,21 @@ int32_t show_membership_roster(Ctx &ctx) {
     rd.finish();
     hover = -1;
     bool left = false;
+    bool wheeled = false;   // P32C item 6
     for (;;) {
       int32_t x = 0, y = 0;
       if (!src || !src->cursor(x, y)) throw NeedInput{{"showMembershipRoster"}};
+      // P32C item 6 (bridge.h kPortViewWheelVa; the host writes it only under --list-wheel): each notch is one press of the up
+      // (> 0) or down arrow, the arrows' own step below; then the page is drawn again as after an arrow press
+      if (const int32_t notches = view_take_wheel(ctx)) {
+        const int32_t n = mutant == 6 ? -notches : notches;   // control: the notches scroll the other way
+        for (int32_t k = 0; k < (n < 0 ? -n : n); ++k) {
+          if (n > 0 && offset > 0) offset = sub32(offset, clamp(offset, 1, 3));
+          if (n < 0 && sub32(rd.count, 0x16) > offset) offset = add32(offset, clamp(sub32(sub32(rd.count, offset), 0x16), 1, 3));
+        }
+        wheeled = true;
+        break;
+      }
       const int32_t x1 = mutant == 2 ? 0x2f8 : 0x308;
       int32_t zone = -1;
       if (x >= 0x2dc && x < x1 && y >= 0x224 && y < 0x250) zone = 0;
@@ -977,6 +991,7 @@ int32_t show_membership_roster(Ctx &ctx) {
       if (gs.g_rootInput[kButton] != 0) break;
       if (cm::flush_redraw(ctx) != 0) break;
     }
+    if (wheeled) continue;   // P32C item 6: the page again at the new offset
     const int32_t b = gs.g_rootInput[kButton];
     if (b == 1) {
       if (hover == 0 || (mutant == 4 && hover > 0)) break;

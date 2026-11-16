@@ -71,6 +71,15 @@ void gfx_set_hover_help_course(Ctx &ctx, bool on);
 // box for the HUD tips' dwell, the game's own name for it as the game's one-line tip (drawPanelBackdrop) left of the box. Drawing
 // only: the GameState is never written. Off (the default): nothing.
 void gfx_set_meter_tips(Ctx &ctx, bool on);
+// P32C (Mariano's play-test 14 items 3, 5 and 8; log/roadmap/P32/P32C_notes.md), set by the app's host (--explain-tips on, the
+// default; SG_APP_P32=off: off). After the game's own tip dwell (hover_tip_dwell) with the cursor still over the control, the
+// game's own tip boxes say what the original leaves unexplained: the cash box's asterisk (mainLoop ML+0x9f9b appends it while
+// g_flags bit 29 is set, which only the cash key '+' sets, ML+0xda7b), a golfer list name drawn in a colour
+// (drawEmployeeViewPanel's colour rule: Energy, Thirst, Hunger, leaving), and Gary Golf's customize button (hitGolferPanel435f00
+// hotspot 0, whose tip the original's table leaves empty). English in port code, other languages through the pack (lang::tr).
+// Drawing only: the GameState is never written. Off (the default): nothing.
+void gfx_set_explain_tips(Ctx &ctx, bool on);
+bool gfx_explain_tips(Ctx &ctx);
 // P24G (Mariano's play-test 11 item 7: "an intermediate UI / indicator when tournament is starting, otherwise I can keep clicking on
 // tournament button or practice"; log/roadmap/P24/P24G_notes.md), set by the app's host (--tourney-hold on, the default;
 // SG_APP_P24=off: off). clickGolferPanel ignores Practice Round, Play <pro> and Begin Tournament while g_flags bit 21 (a tournament
@@ -97,6 +106,15 @@ void gfx_set_sharp_art(Ctx &ctx, bool on);
 // check list's close square answer where they are drawn. The GameState and the hit tests never see the language. Off (the
 // default) or English: the drawn width is the sim's, no warp.
 void gfx_set_popup_fit(Ctx &ctx, bool on);
+// P32E fix 4 (Mariano's play-test 14 item 11, option A): on, the golfer pair select screen (showGolferPairSelect) counts as a screen
+// drawn over the whole root: its backdrop covers the 800 frame but is drawn over the course's quarter dim, which gfxb::root_covered
+// never calls covered, so the wide window showed the course and the HUD layers beside it. Its frames now hold no terrain picture, and
+// the host gives them the screens' side bands (HostOptions::screen_bands). Drawing only; off by default.
+void gfx_set_pair_cover(Ctx &ctx, bool on);
+bool gfx_pair_cover(Ctx &ctx);
+// the back buffer (the last Window::refreshFull) shows the pair select with the option on: the host fills the sides by repeating
+// the screen's edge columns (its frame purple; BandFill::ExtendClamp), not by the --wide-fill mirror of its cream page
+bool gfx_back_pair(Ctx &ctx);
 // the width showPopup draws its box at: box_w, or (on, not English, a backend) ((widest translated line - 1) | 0xf) + 0x31 with the
 // backend's Text_put in the root's current fonts, at least box_w and at most 2 * min(x, 0x320 - x) (the box inside the 800-space
 // frame around its centre x). `text` = the popup's g_textBuffer (lines ended by 0x0a, the tail not drawn). Reads only.

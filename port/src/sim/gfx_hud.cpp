@@ -2124,8 +2124,16 @@ void view_panel_wide(Gfx &g, Ctx &ctx, size_t pi, int32_t used, std::vector<std:
 // (hover_tip_dwell: hoverTip.tenFrameDwell) gets the game's own name for it: "Cash" (f_strpool_4c8808 + 0xe0) and "Fun Rating"
 // (+ 0xd4), the save browser's column titles (loadGameBrowserScreen), and "Skill Rating" (f_strpool_4c615c + 0x60 without its
 // ": ", the label mainLoop copies and erases before it draws the skill value), as drawPanelBackdrop centred left of the box.
+// P32C item 3 (gfx.h gfx_set_explain_tips): the cash box while P6_StatusBar draws the asterisk after the amount (g_flags bit 29 set,
+// bit 24 clear: ML+0x9f94 / ML+0x9f9b) also says why: bit 29 is set only by the cash key '+' (H1's key switch, ML+0xda7b: 10,000
+// more cash and the bit), it is saved with g_flags and only a new game clears it (ML+0x11890 sets g_flags to 1 << 30).
+// Without --meter-tips the asterisk's tip is the only one drawn.
+bool cash_asterisk(Ctx &ctx) {
+  const uint32_t f = ctx.gs().g_flags;
+  return (f & (1u << 29)) != 0 && (f & (1u << 24)) == 0;
+}
 void b_meter_tips(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
-  if (!g.meter_tips) return;
+  if (!g.meter_tips && !g.explain_tips) return;
   struct Box {
     int32_t x, y, w, h;
     uint32_t text;
@@ -2144,9 +2152,13 @@ void b_meter_tips(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   ++g.meter_count;
   if (hit < 0 || g.meter_count <= hover_tip_dwell()) return;
+  const bool why = g.explain_tips && hit == 0 && cash_asterisk(ctx);  // P32C item 3
+  if (!g.meter_tips && !why) return;
   const Box &b = boxes[hit];
   std::string s = gfxb::vstring(ctx.mem, va(ctx, b.text));
   while (!s.empty() && (s.back() == ' ' || s.back() == ':')) s.pop_back();
+  if (why) s = g.meter_tips ? s + lang::tr(" (*: the cash cheat key + was used in this game)")
+                            : lang::tr("*: the cash cheat key + was used in this game");
   const int32_t half = 3 * static_cast<int32_t>(s.size());  // drawPanelBackdrop's half width (3 per character)
   gfxt::meter_tip(g, ctx, s, b.x - half - 6, b.y + b.h / 2 + 5);
 }
@@ -2245,6 +2257,9 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   };
   std::vector<Added> added;
   const int32_t limit = compact ? 0x2f3 : 0x2b7 + 0x79 * ext;
+  // P32C item 5: the golfer whose name each hitEmployeeSlot435570 slot (row + 4 column, wide layout only) shows, -1 none
+  int32_t named[4 * (4 + kViewListColsMax)];
+  for (int32_t &v : named) v = -1;
   for (int32_t i = 0; i < 0x98; ++i) {
     const int32_t gi = mod32(add32(sub32(gs.g_lastAllocatedGolfer, i), 0x98), 0x98);
     const bool active = sbyte(gi, 0x21) > 0;
@@ -2293,6 +2308,10 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       }
     };
     const int32_t col = compact ? 0 : (x1 - 0x136) / 0x79;
+    if (!compact && active) {  // P32C item 5
+      const int32_t slot = (old == 4 ? 0 : old) + 4 * col;
+      if (slot >= 0 && slot < static_cast<int32_t>(sizeof(named) / sizeof(named[0]))) named[slot] = gi;
+    }
     if (defer && fd > limit) {  // P22D fix 1: a column past the limit, after the layer
       beyond.push_back([entry, x1, fa, fb, fc, fd, ly]() { entry(x1, fa, fb, fc, fd, ly); });
       // the font the entry leaves selected is what the next entry or the scroll bar would see (font(small) after a wide entry)
@@ -2316,8 +2335,21 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   font(big);
   const int32_t hover = static_cast<int32_t>(cm::call_peer(ctx, "hitEmployeeSlot435570", {a[0], a[1]}).eax);
+  // P32C item 5 (gfx.h gfx_set_explain_tips): a name drawn in a colour says why, in the same tip, each reason the colour rule above
+  // tests (the colour shows the last that holds: leaving, then Hunger, Thirst, Energy). The words are the golfer panel's own meters:
+  // Energy is word +0xaa (drawn there as clamp(+0xaa / 4)), Hunger +0xa6 and Thirst +0xa8 (GolferPanelEject's meter labels)
+  std::string why;
+  if (g.explain_tips && hover >= 0 && hover < static_cast<int32_t>(sizeof(named) / sizeof(named[0])) && named[hover] >= 0) {
+    const int32_t k = named[hover];
+    std::vector<std::string> r;
+    if (m.load<uint32_t>(rec(k) + 0x10) & (1u << 29)) r.push_back(lang::tr("Leaving the course"));
+    if (sword(k, 0xa6) > 0x10) r.push_back(lang::tr("Hungry"));
+    if (sword(k, 0xa8) > 0x10) r.push_back(lang::tr("Thirsty"));
+    if (sword(k, 0xaa) > 0xa0) r.push_back(lang::tr("Tired"));
+    for (size_t i = 0; i < r.size(); ++i) why += (i ? ", " : "") + r[i];
+  }
   dwell(g, ctx, hover, "tooltip: drawEmployeeViewPanel's dwell tip (drawMapLine bar and centred text)", [&]() {
-    gfxt::view_panel_tip(g, ctx, hover, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
+    gfxt::view_panel_tip(g, ctx, hover, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), why);
   });
   // P29A fix 1: while the page arrows are live (hitEmployeeSlot435570's own test: the band is not P26E's empty band) every one of the
   // 4 + n columns is drawn, the empty ones with the panel's art alone (an empty slot's look), so the right end and its arrows sit

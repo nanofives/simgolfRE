@@ -182,6 +182,15 @@ bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &pres
 void course_redo_begin(Ctx &ctx, uint32_t press);  // the journal entries the redo makes keep the step's press, the redo list stays
 void course_redo_orientation(Ctx &ctx, int32_t orientation);  // the next object the redo places gets it (-1 none)
 void course_redo_end(Ctx &ctx);
+// P32C item 6 (Mariano's play-test 14: "on the associate list I should be able to scroll down the list with mouse wheel";
+// log/roadmap/P32/P32C_notes.md). Word +0x90 (host, a recorded harness write): the mouse wheel notches a live host (app option
+// --list-wheel) took since the last one was consumed, signed (> 0 = rotated away from the player: up the list), written inside a
+// modal Blocking pump, so a replay applies it before the loop's next cursor read (TraceInput::cursor). showMembershipRoster
+// clears it as it opens and, after each cursor read, takes it as that many presses of its own up / down arrows (one arrow step,
+// 1 .. 3 rows, per notch). No host writes it otherwise, and nothing else reads it.
+constexpr uint32_t kPortViewWheelVa = kPortViewVa + 0x90u;
+int32_t view_take_wheel(Ctx &ctx);  // the pending notches (0: none, or no view block); clears the word
+
 // maps the block (width 800) when the context has none; true when it is mapped afterwards
 bool view_map(Ctx &ctx);
 // the logical view width: 800 when the block is not mapped or holds less than 800

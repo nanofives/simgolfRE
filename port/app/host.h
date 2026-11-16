@@ -194,6 +194,9 @@ struct HostOptions {
   // drawn: a picture of this frame's base and world with the last present's HUD layers and HUD text runs over it; the frame's own
   // present follows as before
   bool early_world = false;
+  // P32C item 6 (--list-wheel on): WM_MOUSEWHEEL notches (120 per notch, the remainder kept) go to view block word +0x90 (bridge.h
+  // kPortViewWheelVa) as a recorded write inside the next modal Blocking pump; showMembershipRoster takes them as arrow presses
+  bool list_wheel = false;
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -558,6 +561,10 @@ class LiveSession : public portsim::LiveHost {
   int32_t edge_zoom_ = 0;                     // P31B: g_zoomScale at the last frame head (apply_glide)
   uint64_t edge_frames_ = 0;                  // P31B: frame heads that took a zoom 8 edge move (session.json glide.edge_frames)
   bool arrow_clock_written_ = false;          // P22A
+  int32_t wheel_acc_ = 0;                     // P32C item 6: wheel delta not yet a whole notch (input thread, under mu_)
+  std::atomic<int32_t> wheel_pending_{0};     // P32C item 6: whole notches not yet written to the view block
+  uint64_t wheel_notches_ = 0, wheel_writes_ = 0;  // P32C item 6 (session.json p32c)
+  void apply_wheel(portsim::Ctx &ctx);        // P32C item 6: a modal pump's write of the pending notches
   uint64_t presents_world_ = 0, edge_reads_ = 0, edge_clamped_ = 0;  // P8B counters (summary_json)
   uint64_t presents_layered_ = 0;  // P9B: presents with the frame's HUD layers
   uint64_t presents_text_ = 0, text_runs_ = 0;  // P9C: presents with the frame's text runs, and the runs they carried

@@ -120,10 +120,13 @@ class Gfx {
   bool hover_help = false;  // P11C (gfx.h gfx_set_hover_help): the hover help lines are drawn
   bool hover_help_course = true;  // P13A (gfx.h gfx_set_hover_help_course): and the course line with no tool among them
   bool meter_tips = false;  // P22D fix 3 (gfx.h gfx_set_meter_tips): the status boxes' tips are drawn
+  bool explain_tips = false;  // P32C (gfx.h gfx_set_explain_tips): the cash asterisk, grey names and customize button explained
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   bool sharp_art = false;  // P26C item 11 (gfx.h gfx_set_sharp_art): the bulletin board's art words as text runs
   bool popup_fit = false;  // P30A item 2 (gfx.h gfx_set_popup_fit): showPopup drawn as wide as its translated lines
+  bool pair_cover = false;  // P32E fix 4 (gfx.h gfx_set_pair_cover): the golfer pair select's frame holds no terrain picture
+  int pair_frame = 0, back_pair = 0;  // P32E fix 4: the root / the back buffer holds the pair select (set by its cover drop)
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
   bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   bool walker_labels_top = false;  // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' labels over the sprite walk

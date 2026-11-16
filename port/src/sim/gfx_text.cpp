@@ -1484,7 +1484,11 @@ void action_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y) {
     case 7: text = pool(ctx, GSO(f_strpool_4c80d0, 0x218)); break;
     case 8: text = pool(ctx, GSO(f_strpool_4c5d20, 0xa8)); break;
     case 9: text = pool(ctx, GSO(f_strpool_4c80d0, 0x208)); break;
-    default: break;
+    default:
+      // P32C item 8 (gfx.h gfx_set_explain_tips): hotspot 0, the button clickGolferPanel answers with showCharacterEditor, has no
+      // text in the original's table (an empty backdrop)
+      if (hit == 0 && g.explain_tips) text = lang::tr("Customize golfer");
+      break;
   }
   backdrop(g, ctx, text, x, sub32(y, mode() == 10 ? 4 : 5));
 }
@@ -1497,12 +1501,13 @@ void tourney_starting_tip(Gfx &g, Ctx &ctx, int32_t x, int32_t y) { backdrop(g, 
 // y - 5) and drawCenteredText(text, x, y - 10, 0x80007fff)
 void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y) { backdrop(g, ctx, text, x, y); }  // P22D fix 3
 
-void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y) {
+void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why) {
   std::string text;
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));
   else if (hover == -3) text = pool(ctx, GSO(g_golferTypes, 0x10));
   else if (hover == -2) text = pool(ctx, GSO(f_strpool_4c5d20, 0xa8));
   text = lang::tr(text);  // P24D fix 5
+  if (text.empty() && !why.empty()) text = why;  // P32C item 5: a coloured name's reasons (already in the current language)
   const int32_t n3 = mul32(static_cast<int32_t>(text.size()), 3);
   map_bar(g, ctx, sub32(x, n3), add32(x, n3), sub32(y, 5));
   centred(g, ctx, text, x, sub32(y, 10));
@@ -1790,7 +1795,39 @@ void b_hover_terrain(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   gfxt::hover_help_terrain(g, ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]));
 }
 
+// showGolferPairSelect.bookHover() (P32E fix 3, dialogs.cpp; drawing only): the book button of the pair select backdrop
+// (PairBase: its ring spans x 692..782, y 57..147, centre (737, 102)) lit the way P26C lights the bulletin board's tick (the
+// pixels inside the ring, near-black ones excluded, lightened toward white by 80 / 256), and its one-line tip as the game draws
+// tips (drawPanelBackdrop) under the ring, its right end at x 0x316 (drawn after the slots: it may cover a card's corner, as a
+// tooltip). The tip is a minimal one until P32C's hover text is merged.
+void b_pair_book_hover(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  auto up = [](uint32_t c) { return c + ((31u - c) * 80u >> 8); };
+  constexpr int32_t cx = 737, cy = 102, rad = 36;
+  for (int32_t y = cy - rad; y <= cy + rad; ++y)
+    for (int32_t x = cx - rad; x <= cx + rad; ++x) {
+      if ((x - cx) * (x - cx) + (y - cy) * (y - cy) > rad * rad || x < 0 || y < 0 || x >= r.w || y >= r.h) continue;
+      uint16_t &w = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      if ((w >> 10 & 31u) + (w >> 5 & 31u) + (w & 31u) < 16) continue;
+      w = static_cast<uint16_t>((w & 0x8000u) | up(w >> 10 & 31u) << 10 | up(w >> 5 & 31u) << 5 | up(w & 31u));
+    }
+  const std::string tip = lang::tr("Golfers paired here start a story together");
+  const int32_t half = 3 * static_cast<int32_t>(tip.size());  // drawPanelBackdrop's half width (3 per character)
+  gfxt::backdrop(g, ctx, tip, 0x316 - half, cy + 45 + 14);
+}
+
+// showGolferPairSelect.cover() (P32E fix 4, gfx.h gfx_set_pair_cover; dialogs.cpp calls it only with the option on): the pair
+// select's backdrop covers the whole root, so the frame holds no terrain picture (as Gfx::note_root_write for a whole-surface write)
+void b_pair_cover(Gfx &g, Ctx &, const uint32_t *, int) {
+  if (!g.pair_cover) return;
+  g.root_terrain = 0;
+  g.pair_frame = 1;  // Window::refreshFull copies it to back_pair (gfx.h gfx_back_pair: the host's band hint)
+}
+
 const GfxBodyDef kBodies[] = {
+    {"showGolferPairSelect.bookHover", b_pair_book_hover},  // P32E fix 3
+    {"showGolferPairSelect.cover", b_pair_cover},  // P32E fix 4
     {"loading.banner", b_loading_banner},
     {"lang.selector", b_lang_selector},  // P24D
     {"text.box", b_text_box},            // P24D fix 5 option 2

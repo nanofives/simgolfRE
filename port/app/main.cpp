@@ -115,6 +115,12 @@
 //   P31B item 7: --early-world on|off (default on; SG_APP_P31=off: off; needs --arrow-glide and the world thread) the frame an
 //   arrow's glide start woke hands its world to the window at renderSpriteQueue's end, before its HUD is drawn (the last
 //   present's HUD layers over it), so the first move starts that much sooner (host.h HostOptions::early_world)
+//   P32C items 3, 5 and 8: --explain-tips on|off (default on; SG_APP_P32=off: off) after the HUD tips' dwell the game's own tip boxes
+//   explain the cash box's asterisk (the cash cheat key '+' was used), a golfer list name drawn in a colour (Tired / Thirsty /
+//   Hungry / Leaving the course, from the colour rule's meters) and Gary Golf's customize button (gfx.h gfx_set_explain_tips;
+//   drawing only; log/roadmap/P32/P32C_notes.md)
+//   P32C item 6: --list-wheel on|off (default on; SG_APP_P32=off: off) the mouse wheel scrolls the Membership Roster, one notch = one
+//   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa)
 //   P25B: --row-hover on|off (default on; SG_APP_P25=off: off) the amenity rows (benches, bridges, landmarks, flowers, trees)
 //   light the hovered item: its tile gets the picked tile's blue lightened toward white, a hovered bridge that blue over its art
 //   (gfx.h gfx_set_row_hover; drawing only; log/roadmap/P25/P25B_notes.md)
@@ -127,6 +133,9 @@
 //   800-space frame), and while it is open every point inside the drawn box reaches the game mapped onto the box its hit tests use
 //   (portsim::gfx_popup_warp through Translator::set_point_warp): rows and the close square answer where they are drawn. Drawing
 //   and input mapping only (gfx.h gfx_set_popup_fit; log/roadmap/P30/P30A_notes.md)
+//   P32E fix 4: --pair-cover on|off (default on; SG_APP_P32=off: off) in a wide window the golfer pair select screen fills the
+//   window's sides with the screens' bands (--screen-bands) instead of the course and the HUD beside it (gfx.h gfx_set_pair_cover;
+//   drawing only; log/roadmap/P32/P32E_notes.md)
 //   P26B item 3: --palette-names on|off (default on; SG_APP_P26=off: off) the Build Course palette's tool names: one font size for
 //   every name (no smaller font for a long translation), a name wider than its tile on two lines (broken at a space), the trees'
 //   names at their row's height (gfx.h gfx_set_palette_names; drawing only; log/roadmap/P26/P26B_notes.md)
@@ -571,11 +580,14 @@ struct Options {
   bool row_hover = true;           // P25B: --row-hover on|off (SG_APP_P25=off: off)
   bool sharp_art = true;           // P26C item 11: --sharp-art on|off (SG_APP_P26=off: off)
   bool popup_fit = true;           // P30A item 2: --popup-fit on|off (SG_APP_P30=off: off)
+  bool pair_cover = true;          // P32E fix 4: --pair-cover on|off (SG_APP_P32=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool edge_glide = true;          // P31B item 3: --edge-glide on|off (SG_APP_P31=off: off)
   bool tap_slide = true;           // P31B item 4: --tap-slide on|off (SG_APP_P31=off: off)
   bool early_world = true;         // P31B item 7: --early-world on|off (SG_APP_P31=off: off)
+  bool explain_tips = true;        // P32C items 3 / 5 / 8: --explain-tips on|off (SG_APP_P32=off: off)
+  bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool staff_labels_top = true;    // P26D item 9: --staff-labels-top on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
@@ -902,6 +914,8 @@ const ProfileMember kPlayProfile[] = {
     {"generateRandomCourse.riverOutside", 0},      // P28A (G30, D6)
     {"generateRandomCourse.smoothingOutside", 0},  // P28A (G30, D6)
     {"mainLoop.edgeScrollTileAtZoom8", 0},  // P31B item 3 (G33): the zoom 8 edge scroll at zoom 4's screen speed (the edge glide)
+    {"showGolferPairSelect.anyClickLeaves", 0},  // P32E fix 2 (play-test 14 item 11): only the check button (or a key) leaves the pair select
+    {"showGolferPairSelect.noButtonHover", 0},   // P32E fix 3: the pair select check / book buttons light under the cursor (book: its tip)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1305,10 +1319,12 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C
       if (ok && o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2
       if (ok && o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3
+      if (ok && o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
       if (ok && o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11
       if (ok && o.popup_fit) portsim::gfx_set_popup_fit(*ctx, true);  // P30A item 2
+      if (ok && o.pair_cover) portsim::gfx_set_pair_cover(*ctx, true);  // P32E fix 4
       if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
       if (ok && o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3
       if (ok && o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9
@@ -1593,6 +1609,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.hover_help) portsim::gfx_set_hover_help(*ctx, true);  // P11C: the hover help lines (gfx.h; drawing only)
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
+  if (o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C: the unexplained marks' tips (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
   if (o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11: the bulletin board's art words as runs (gfx.h; drawing only)
@@ -1602,6 +1619,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
     if (o.negctl != "p30a-no-warp") portapp::Translator::set_point_warp(&portsim::gfx_popup_warp);
   }
   if (o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2: the match scorecard as wide as the course (gfx.h; drawing only)
+  if (o.pair_cover) portsim::gfx_set_pair_cover(*ctx, true);  // P32E fix 4: the pair select gets the screen bands (gfx.h; drawing only)
   if (o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3: the palette's names (gfx.h; drawing only)
   if (o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9: staff labels over the sprites (drawing only)
   if (hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2: P9B's diff only (gfx.h)
@@ -1716,6 +1734,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     const int h = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");  // P22A: the held arrow's delay needs the clock offset
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;
   }
+  ho.list_wheel = o.list_wheel;  // P32C item 6: the wheel scrolls the Membership Roster
   ArrowGlide glide;  // P26A: --arrow-glide on with the frame-head arrow step (the `play` profile)
   if (o.arrow_glide && ho.arrow_head && ho.smooth_camera) {  // the window glides the picture (needs the camera slide)
     ho.glide = &glide;
@@ -2308,6 +2327,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p11d\":{\"undo_keys\":" + std::to_string(o.undo_keys ? 1 : 0) + "}";  // P11D
   s += ",\"p22d\":{\"golfer_list\":\"" + std::string(o.list_wide ? "wide" : "four") + "\",\"meter_tips\":" +
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
+  s += ",\"p32c_app\":{\"explain_tips\":" + std::to_string(o.explain_tips ? 1 : 0) + ",\"list_wheel\":" +
+       std::to_string(o.list_wheel ? 1 : 0) + "}";  // P32C
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
     // whose lines turned out to differ)
@@ -3709,6 +3730,16 @@ bool parse(int argc, char **argv, Options &o) {
       (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
       continue;
     }
+    if (a == "--explain-tips" || a == "--list-wheel") {  // P32C items 3 / 5 / 8 and 6 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      (a == "--explain-tips" ? o.explain_tips : o.list_wheel) = v == "on";
+      continue;
+    }
+    if (a == "--pair-cover") {  // P32E fix 4 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.pair_cover = v == "on";
+      continue;
+    }
     if (a == "--popup-fit") {  // P30A item 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.popup_fit = v == "on";
@@ -4210,6 +4241,8 @@ int main(int argc, char **argv) {
     }
   if (const char *ep = std::getenv("SG_APP_P31"))  // P31: G33's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = o.early_world = false;  // P31B items 3 / 4 / 7
+  if (const char *ep = std::getenv("SG_APP_P32"))  // P32: the fourteenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = false;  // P32C, P32E fix 4
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

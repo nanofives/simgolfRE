@@ -230,7 +230,8 @@ class ArrowGlide {
   bool tick(int64_t now_ns, int32_t cx, int32_t cy, int32_t rot, double &ox, double &oy);
   // the host, at a frame head in the frame loop: the speed (tiles / s per axis for one arrow) and the key switch's step (tiles)
   // for the zoom, the game's camera (gCameraTileX / Y) and rotation now; the step (dx, dy) to ask for (false: none)
-  bool head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t &dx, int32_t &dy);
+  // P32A: zoom = g_zoomScale, for the request's screen cap (kGlideScreenX / Y in present.cpp)
+  bool head(double v, double step, int32_t cx, int32_t cy, int32_t rot, int32_t zoom, int32_t &dx, int32_t &dy);
   void set_engaged(bool on);  // the host: the frame loop runs and the view block is mapped (false: D at rest)
   // P31A: the host, at a frame head: the camera's legal range per axis (bridge.h camera_range; 0..0x31 at the switch's 1)
   void set_range(const double lo[2], const double hi[2]);
@@ -247,6 +248,7 @@ class ArrowGlide {
   struct Stats {
     uint64_t keys = 0, starts = 0, heads_req = 0, tiles_req = 0, caps = 0, ticks_moving = 0, resyncs = 0;
     uint64_t edge_changes = 0, edge_ticks = 0, taps_fast = 0;  // P31B
+    uint64_t screen_caps = 0;  // P32A: frame heads whose request the screen cap shortened
   };
   Stats stats() const;
 

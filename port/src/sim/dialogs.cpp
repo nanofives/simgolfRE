@@ -67,6 +67,16 @@ int g_defect_bulletin_wide_photo = 1;
 // among them). 0 = a button answers only above the panel art's bottom edge (0x1a + the frame / background image's height; the story
 // page's band at 0xa5 included).
 int g_defect_info_tabs_below_frame = 1;
+// P32E fix 2 (Mariano's play-test 14 item 11, log/roadmap/P32/P32E_notes.md, class b): showGolferPairSelect.anyClickLeaves. 1 = the
+// original: the screen has no hit box for its check or book buttons (both are part of the backdrop art); any press outside the
+// golfer slots leaves it: nothing selected closes, one selected plays the refusal sound and closes, two selected pair them. 0 = a
+// press outside the slots leaves only on the check button (with one selected: the refusal sound and the screen stays), Esc
+// closes without pairing (the original's Esc with two selected pairs them), any other key leaves as in the original.
+int g_defect_pair_any_click_leaves = 1;
+// P32E fix 3 (same item, class b): showGolferPairSelect.noButtonHover. 1 = the original: the check and book buttons never change.
+// 0 = under the cursor the check button is drawn lit with the art the original loads for it and never draws (cell 4 of the
+// PairButtons cuts), and the book (no action) is lightened with its tip (gfx_text.cpp showGolferPairSelect.bookHover).
+int g_defect_pair_no_button_hover = 1;
 
 using cm::call_peer;
 using cm::cat;
@@ -1258,9 +1268,25 @@ int32_t show_golfer_pair_select(Ctx &ctx) {
   auto type_of = [&](int32_t g) { return GS(g_golferTypes) + u32(mul32(m.load<int16_t>(rec(ctx, g) + 0xb6), 0x230)); };
   uint32_t mask = 0;
   int32_t count = 0, listed[0x98] = {}, last = 0, hover = -1;
+  // P32E fixes 2 and 3: the check button of the backdrop art (PairBase), a circle around the centre of the lit check button cut
+  // (g_infoSprites821120 cell 4, 0x4b x 0x4b at (0x2b5, 0x1f6), which the original loads and never draws)
+  const bool stay = !SG_DEFECT(g_defect_pair_any_click_leaves);
+  const bool lit = !SG_DEFECT(g_defect_pair_no_button_hover);
+  auto on_check = [](int32_t x, int32_t y) {
+    const int32_t dx = x - (0x2b5 + 0x25), dy = y - (0x1f6 + 0x25);
+    return dx * dx + dy * dy < 0x25 * 0x25;
+  };
+  // fix 3: the book button's ring (PairBase x 692..782, y 57..147); no action, lit with its tip under the cursor
+  auto on_book = [](int32_t x, int32_t y) {
+    const int32_t dx = x - 737, dy = y - 102;
+    return dx * dx + dy * dy < 45 * 45;
+  };
+  bool check_lit = false, book_lit = false;
   d.gx("Surface_drawSprite", {GS(g_spriteRef_821040), d.root, 0, 0, 0x3e800000u, 0, 1});
   for (;;) {
     d.gx("Image_draw", {GS(g_infoSprites821120), d.root, 0, 0, 0});
+    if (gfx_pair_cover(ctx)) d.gx("showGolferPairSelect.cover", {});  // P32E fix 4 (app option --pair-cover)
+    if (check_lit) d.gx("Image_draw", {GS(g_infoSprites821120) + 0x2cu * 4u, d.root, 0x2b5, 0x1f6, 0});
     d.gx("setDrawTarget", {d.root, GS(g_fontRef_821020), 0, 0, 0});
     d.gx("drawCenteredText", {GS(f_strpool_4d3740) + 0xc, 0x152, 0xe, 0x80000000u});
     int32_t rating = 1;
@@ -1331,18 +1357,32 @@ int32_t show_golfer_pair_select(Ctx &ctx) {
         y += 0x12;
       }
     }
+    if (book_lit) d.gx("showGolferPairSelect.bookHover", {});  // P32E fix 3: over the slots (its tip is a tooltip)
     d.gx("Window::refreshFull", {win, 0});
     for (bool redraw = false; !redraw;) {
       const int32_t prev = hover;
       int32_t px = 0, py = 0;
       read_cursor(ctx, px, py, "showGolferPairSelect");
-      const int32_t bound = m.load<int32_t>(GS(g_infoSprites821120) + 0x44);
+      // the slot frame's cut width (cell 1's +0x18). P32E fix 1: the port's GameState does not hold the cuts of the art the
+      // graphics backend loaded (gfx_reports.h gfx_sprite_cut), so with one attached the word read 0 and the box ended at x
+      // 0x14f: only the left column's slots answered. With a backend the cut comes from it; without one (segments) the word.
+      int32_t bound = m.load<int32_t>(GS(g_infoSprites821120) + 0x44);
+      if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr) {
+        int32_t cw = 0, ch = 0;
+        if (gfx_sprite_cut(ctx, GS(g_infoSprites821120) + 0x2cu, cw, ch)) bound = cw;
+      }
       if (px >= 6 && py >= 0x32 && px < add32(bound, 0x14f) && py < add32(bound, 0x1ca))
         hover = add32(mul32(div32(sub32(py, 0x32), 0x88), 2), div32(sub32(px, 6), 0x14e));
       else
         hover = -1;
+      const bool at_check = on_check(px, py), at_book = on_book(px, py);
       cm::pump_messages(ctx, PumpKind::Blocking, "showGolferPairSelect");
       const int32_t button = gs.g_rootInput[kButton];
+      if (lit && (at_check != check_lit || at_book != book_lit)) {  // P32E fix 3: the buttons light under the cursor (a picture only)
+        check_lit = at_check;
+        book_lit = at_book;
+        redraw = true;
+      }
       if (button == 0 && cm::flush_redraw(ctx) == 0) {
         if (hover != prev) redraw = true;
         continue;
@@ -1363,10 +1403,20 @@ int32_t show_golfer_pair_select(Ctx &ctx) {
         redraw = true;
         continue;
       }
+      // P32E fix 2: a press outside the slots leaves only on the check button; a key still leaves as in the original
+      if (stay && gs.g_rootInput[kButton] != 0 && !at_check) continue;
+      // Esc closes without pairing (the original takes any key as the exit: with two chosen, Esc pairs them). The key-down's pass
+      // holds the key code in gDirtyFlagA before its character reaches gDirtyFlagB, so either names Esc; the words stay as the
+      // original leaves them (the next flushRedraw clears them)
+      if (stay && gs.g_rootInput[kButton] == 0 && (gs.gDirtyFlagA == 0x1b || gs.gDirtyFlagB == 0x1b)) return 0;
       if (mask == 0) return gs.g_rootInput[kButton];
       int32_t n = 0;
       for (int32_t c = 0; c < 16; ++c)
         if (mask & (1u << c)) ++n;
+      if (stay && n != 2 && gs.g_rootInput[kButton] != 0) {  // one golfer chosen: the refusal sound, the screen stays
+        cm::call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0});
+        continue;
+      }
       if (n != 2) return i32(cm::call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0}).eax);
       int32_t first = -1, second = last;
       for (int32_t c = 0; c < 16; ++c)
@@ -1526,6 +1576,13 @@ const DefectDef kDefects[] = {
      "the golfer info panel's buttons answer within 0x19 of their centres, about 16 rows below the panel art's bottom edge (over the "
      "course): a cursor there lights a button and a press there acts on it",
      &g_defect_info_tabs_below_frame},
+    {"showGolferPairSelect.anyClickLeaves", "P32E",
+     "the pair select screen has no hit box for its check button: any press outside the golfer slots leaves it (closes, or pairs two "
+     "selected golfers); Esc with two selected pairs them",
+     &g_defect_pair_any_click_leaves},
+    {"showGolferPairSelect.noButtonHover", "P32E",
+     "the pair select screen's check and book buttons never light under the cursor (the check's lit art is loaded, never drawn)",
+     &g_defect_pair_no_button_hover},
 };
 }  // namespace
 

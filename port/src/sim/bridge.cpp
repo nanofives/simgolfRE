@@ -107,6 +107,12 @@ bool view_take_glide(Ctx &ctx, int32_t &dx, int32_t &dy) {  // P26A
   ctx.mem.store<int32_t>(kPortViewGlideYVa, 0);
   return true;
 }
+int32_t view_take_wheel(Ctx &ctx) {  // P32C item 6
+  if (!ctx.view) return 0;
+  const int32_t n = ctx.mem.load<int32_t>(kPortViewWheelVa);
+  if (n != 0) ctx.mem.store<int32_t>(kPortViewWheelVa, 0);
+  return n;
+}
 int g_defect_edge_tile_z8 = 1;  // P31B item 3: mainLoop.edgeScrollTileAtZoom8
 bool view_edge_glide(Ctx &ctx) {
   return !SG_DEFECT(g_defect_edge_tile_z8) && ctx.view && ctx.mem.load<int32_t>(kPortViewEdgeGlideVa) != 0;
