@@ -103,6 +103,13 @@ int g_defect_title_esc = 1;
 // left press that H2_Select would end with nothing done (no golfer or walker within 0x28, no hole marker, no clubhouse) lands
 // the picked employee's move at the cursor tile exactly as the Move button's armed press does (P31C_notes.md lists what is excluded).
 int g_defect_staff_list_click = 1;
+// mainLoop.hiddenCheatKeys (P32C, G31 "the original's hidden + (money) / - and = (terrain) key actions are dropped in the app"):
+// H1's key switch (ML+0xcfec) takes the char '+' as the cash key (ML+0xda7b: 10,000 more cash and g_flags bit 29, the asterisk
+// after the cash), '-' / '=' as lower / raise the terrain cell. The app's --zoom-keys turns + / - into zoom only while the frame
+// body pumps; a + typed while a modal screen runs keeps its char, a screen that ends on any key (flush_redraw) leaves it in
+// gDirtyFlagB, and H1 reads it there after the screen (setDirtyFlagB, ML+0xcb12). Fixed (0): the chars 0x2b / 0x2d / 0x3d do
+// nothing in H1's key switch, whatever path they took.
+int g_defect_hidden_cheat_keys = 1;
 // mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
 // that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
 // nearestMenuSpot) or, below y 0x1e0, to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5); every other press takes
@@ -2248,6 +2255,10 @@ const DefectDef kDefects[] = {
      "with an employee picked in the Staff list a click on the course does not move him (only the Move button does); fixed: a "
      "left click on the course that selects nothing lands his move at the cursor tile, as the Move button's armed click does",
      &g_defect_staff_list_click},
+    {"mainLoop.hiddenCheatKeys", "P32C",
+     "the + key adds 10,000 cash and marks the cash with an asterisk, - and = lower / raise the terrain cell (also a + / - meant as "
+     "zoom that reached the game while a screen was open); fixed: those three keys do nothing in the game's key switch",
+     &g_defect_hidden_cheat_keys},
     {"mainLoop.vacatedPanelClick", "P9E",
      "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
      "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "

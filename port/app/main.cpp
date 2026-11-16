@@ -875,6 +875,7 @@ const ProfileMember kPlayProfile[] = {
     {"showPopup.escIgnoredNoKeys", 0},              // P9A item 2: Esc = the close button of a popup without keys
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
     {"mainLoop.titleEscIgnored", 0},                // P31C (G33 item 2a): a fresh Esc on the title menu = the exit icon (quit)
+    {"mainLoop.hiddenCheatKeys", 0},                // P32C (G31): + / - / = never reach the cash and terrain key actions
     {"showCharacterEditor.escKeepsEdits", 0},       // P31C (G33 item 2b): Esc in the character editor discards the edits and exits
     {"mainLoop.staffListCourseClickIgnored", 0},    // P31C (G33 item 6): a course click moves the employee picked in the Staff list
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo

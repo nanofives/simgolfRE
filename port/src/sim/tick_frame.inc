@@ -7563,6 +7563,8 @@ a41c587:
 a41c59e:
     eax = esi - 9;                            // ML+0xcfde lea eax,[esi-9]
     if ((u32)eax > 0x71) goto a41de11;        // ML+0xcfe1 cmp eax,0x71; ja
+    // P32C mainLoop.hiddenCheatKeys = 0 (tick.cpp): the cash key '+' and the terrain keys '-' / '=' take the switch's default
+    if (!SG_DEFECT(g_defect_hidden_cheat_keys) && (esi == 0x2b || esi == 0x2d || esi == 0x3d)) goto a41de11;
     ecx = sw_h1_key(eax);              // ML+0xcfec mov cl,[eax+ML+0x1235c]
     switch (ecx) {                            // ML+0xcff2 jmp [ecx*4+ML+0x12278]
         case 0:  goto a41c9ea; case 1:  goto a41c9c8; case 2:  goto a41c9c4;
