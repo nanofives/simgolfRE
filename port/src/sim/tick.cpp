@@ -39,6 +39,7 @@
 #include "portsim/execonst.h"
 #include "portsim/sim/integrator.h"
 #include "portsim/sim/live.h"
+#include "portsim/sim/shots.h"  // P32D item 7: the shot's margin of error (tick_frame.inc P32D_ShotMargin)
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"

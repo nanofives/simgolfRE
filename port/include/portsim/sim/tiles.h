@@ -40,6 +40,9 @@ int32_t object_at(Ctx &ctx, int32_t x, int32_t y);
 // field of g_tileFlags[row][col] (hi 200 or 0, lo 0), others from hi = lo = type; types 0xd..0x10 then draw hi
 // from g_rng by g_courseType 0..3. Advances g_rng exactly when the original does.
 int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col);
+// P32D: inRange with every window draw at its highest value (the widest window), no g_rng draw: 1 when some draw of
+// inRange would answer 1 (the shot margin's "tree in the path" test)
+int32_t in_range_widest(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col);
 
 }  // namespace portsim
 

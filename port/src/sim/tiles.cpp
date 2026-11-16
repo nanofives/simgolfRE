@@ -102,7 +102,10 @@ int32_t object_at(Ctx &ctx, int32_t x, int32_t y) {
   return -1;
 }
 
-int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col) {
+namespace {
+// inRange's body; `widest` (P32D, in_range_widest): every Random::range(n) of the window answers n - 1 (the highest window) and
+// g_rng is not drawn
+int32_t in_range_body(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col, bool widest) {
   int32_t hi, lo;
   if (type == 0x16 || type == 0x15) {
     const uint8_t f = state_grid(ctx, &GameState::g_tileFlags, kGridW).cell(row, col).as<uint8_t>().get();
@@ -112,7 +115,10 @@ int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col) {
     hi = lo = type;  // the window is empty
   }
   uint32_t &seed = state_obj(ctx, &GameState::g_rng).field(&Random::state).ref();
-  auto r = [&](uint32_t n) { return static_cast<int32_t>(random_range(seed, n) & 0xFFFFu); };
+  auto r = [&](uint32_t n) {
+    if (widest) return static_cast<int32_t>((n & 0xFFFFu) ? (n & 0xFFFFu) - 1 : 0);
+    return static_cast<int32_t>(random_range(seed, n) & 0xFFFFu);
+  };
   const int mode = SG_NEGCTL(g_negctl_in_range);
   const auto arm16 = [&] {  // type 0x10, shared by modes 0..2
     if (type != 0x10) return;
@@ -149,6 +155,12 @@ int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col) {
       break;
   }
   return (v < hi && v > lo) ? 1 : 0;
+}
+}  // namespace
+
+int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col) { return in_range_body(ctx, type, v, row, col, false); }
+int32_t in_range_widest(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col) {
+  return in_range_body(ctx, type, v, row, col, true);
 }
 
 // ------------------------------------------------------------------------------------------------ adapters

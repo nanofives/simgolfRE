@@ -51,6 +51,25 @@ int32_t narrate_shot(Ctx &ctx, int32_t slot, int32_t dist, int32_t yards, int32_
 // P31D (narrateShot.wideViewFit): the side margin E the box test adds on each side, (view width - 800) / 2; 0 with the switch at 1
 int32_t narrate_fit_margin(Ctx &ctx);
 
+// P32D item 7 (play-test 14: "a margin of error when throwing the ball"), RENDER-ONLY. The app option --shot-spread (off by
+// default here; main.cpp sets it) makes mainLoop's aim drawing show the margin of error of the player's pending shot.
+void shot_margin_set(bool on);
+bool shot_margin_on();
+// The margin of the pending shot of golfer g (aim tile in the record's +0xc4 / +0xc8, as mainLoop keeps it while aiming), from
+// the shot's own random draws taken at their extremes (every combination; shots.cpp "P32D") on `scratch` (overwritten with a
+// copy of live's GameState; live is only read), the ball flown in the air only, to where it first comes down. ang_lo / ang_hi:
+// the landing's angle from the no-random landing's direction (radians, world x / y); len_lo / len_hi: its distance over the
+// no-random distance. false (valid 0) when no estimate could be made.
+struct ShotMargin {
+  bool valid = false;
+  double ang_lo = 0, ang_hi = 0, len_lo = 1, len_hi = 1;
+  int combos = 0;
+  // the no-random flight passes a point where the game's tree test can catch the ball (world units), when tree is set
+  bool tree = false;
+  int32_t tree_x = 0, tree_y = 0;
+};
+bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out);
+
 }  // namespace portsim
 
 #endif  // PORTSIM_SIM_SHOTS_H

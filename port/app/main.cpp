@@ -147,6 +147,10 @@
 //   P32E fix 4: --pair-cover on|off (default on; SG_APP_P32=off: off) in a wide window the golfer pair select screen fills the
 //   window's sides with the screens' bands (--screen-bands) instead of the course and the HUD beside it (gfx.h gfx_set_pair_cover;
 //   drawing only; log/roadmap/P32/P32E_notes.md)
+//   P32D item 7: --shot-spread on|off (default on; SG_APP_P32=off: off) while the player aims a shot, its margin of error as one
+//   shape around the aim point: the shot's own random draws taken at their extremes on a scratch copy of the state (never the
+//   live one), the ball in the air only, drawn under the aim line with its lines (shots.h shot_margin; drawing only; none for a
+//   putt from the green; log/roadmap/P32/P32D_notes.md)
 //   P26B item 3: --palette-names on|off (default on; SG_APP_P26=off: off) the Build Course palette's tool names: one font size for
 //   every name (no smaller font for a long translation), a name wider than its tile on two lines (broken at a space), the trees'
 //   names at their row's height (gfx.h gfx_set_palette_names; drawing only; log/roadmap/P26/P26B_notes.md)
@@ -365,6 +369,7 @@
 #include "portsim/state_hash.h"
 #include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
 #include "portsim/sim/live.h"
+#include "portsim/sim/shots.h"  // P32D item 7: shot_margin_set
 #include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (the camera slide's clock)
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
@@ -602,6 +607,7 @@ struct Options {
   bool explain_tips = true;        // P32C items 3 / 5 / 8: --explain-tips on|off (SG_APP_P32=off: off)
   bool photo_banner = true;        // P32A item 9: --photo-banner on|off (SG_APP_P32=off: off)
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
+  bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
   bool staff_labels_top = true;    // P26D item 9: --staff-labels-top on|off (SG_APP_P26=off: off)
   bool wide_lines = true;          // P23E fix 2: --wide-lines on|off (SG_APP_P23=off: off)
@@ -1630,6 +1636,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.hover_help) portsim::gfx_set_hover_help_course(*ctx, o.hover_help_course);  // P13A item 2: and the course line
   if (o.meter_tips) portsim::gfx_set_meter_tips(*ctx, true);  // P22D fix 3: the status boxes' tips (gfx.h; drawing only)
   if (o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C: the unexplained marks' tips (gfx.h; drawing only)
+  portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
@@ -3752,6 +3759,11 @@ bool parse(int argc, char **argv, Options &o) {
       (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
       continue;
     }
+    if (a == "--shot-spread") {  // P32D item 7 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.shot_spread = v == "on";
+      continue;
+    }
     if (a == "--explain-tips" || a == "--list-wheel" || a == "--photo-banner") {  // P32C items 3 / 5 / 8 and 6, P32A item 9 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--explain-tips" ? o.explain_tips : a == "--list-wheel" ? o.list_wheel : o.photo_banner) = v == "on";
@@ -4269,7 +4281,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P31"))  // P31: G33's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = o.early_world = false;  // P31B items 3 / 4 / 7
   if (const char *ep = std::getenv("SG_APP_P32"))  // P32: the fourteenth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9
+    if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = o.shot_spread = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9, P32D item 7
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

@@ -18,6 +18,7 @@
 // below), a negative type would write below counts[] into other locals and throws FrameOverrun (U-0882).
 #include "portsim/sim/shots.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -61,6 +62,11 @@ int g_negctl_prepare_shot = 0;
 int g_negctl_choose_shot_target = 0;
 int g_negctl_scan_shot_area = 0;
 int g_negctl_narrate_shot = 0;
+// P32D item 7 (shot_margin): while the margin of error is estimated on a scratch context, the shot's random draws at the sites
+// below return a chosen extreme instead of drawing g_rng (0 = the smallest value, 1 = the largest, 2 = the middle), and the
+// thoughts prepareShot emits are muted (they play a sound). Outside an estimate both are off and nothing changes.
+enum DrawSite { kDrawWobble, kDrawMishit, kDrawLie, kDrawDir, kDrawSpeed, kDrawSpinRoll, kDrawSpinPro, kDrawSites };
+thread_local const uint8_t *t_draws = nullptr;
 
 // Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
 //   shotPower.cacheIgnoresPutt          model_defects#18: the cache key leaves out `putt`, so a putt result can answer a
@@ -189,6 +195,13 @@ struct World {
   int32_t dy(int32_t k) const { return m.load<int32_t>(dir_y + u32(mul32(k, 4))); }
   // Random::range(g_rng, n) & 0xffff
   int32_t rnd(int32_t n) const { return i32(random_range(c.gs().g_rng.state, u32(n)) & 0xFFFFu); }
+  // P32D: a draw at a margin site (t_draws): Random::range's range is [0, n & 0xffff)
+  int32_t rnd_at(int site, int32_t n) const {
+    if (!t_draws) return rnd(n);
+    const int32_t top = i32(u32(n) & 0xFFFFu);
+    const uint8_t pick = t_draws[site];
+    return top <= 0 ? 0 : pick == 0 ? 0 : pick == 1 ? top - 1 : (top - 1) / 2;
+  }
 };
 
 int32_t octant(int32_t dir) { return sar32(add32(sar32(dir, 28), 1), 1) & 7; }
@@ -272,7 +285,8 @@ int32_t shot_power(Ctx &ctx, int32_t dist, int32_t lie, int32_t putt) {
 }
 
 int32_t wobble(Ctx &ctx) {
-  const int32_t r = i32(random_range(ctx.gs().g_rng.state, 0x65) & 0xFFFFu);
+  const int32_t r = t_draws ? (t_draws[kDrawWobble] == 0 ? 0 : t_draws[kDrawWobble] == 1 ? 0x64 : 0x32)  // P32D margin sites
+                          : i32(random_range(ctx.gs().g_rng.state, 0x65) & 0xFFFFu);
   const int32_t s = r - 0x32;
   const int32_t sg = sign(s);
   int32_t m = s < 0 ? -s : s;
@@ -451,6 +465,11 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     return frame[32 + t];
   };
   int32_t aim = aim_in;  // the argument slot is rewritten
+  // P32D item 7: while the margin of error is estimated (shot_margin, a scratch context) the thoughts are not emitted (they play
+  // a sound); every other step is the shot's own
+  auto think = [&](std::initializer_list<int32_t> a) {
+    if (!t_draws) f_emitThought(ctx, a);
+  };
   const int32_t hole0 = r.hole();
   const int32_t reach = f_golferShotReach(ctx, {g});
   if (r.u(kFlags) & 1u) {
@@ -707,7 +726,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       }
     }
     if (!(s.g_flags & kFlagAiSearch) && dist > 0x4b) {  // a mishit roll
-      const int32_t roll = w.rnd(r.i(kSpeed));
+      const int32_t roll = w.rnd_at(kDrawMishit, r.i(kSpeed));
       const int32_t a = abs32(r.i(kSpin));
       if (roll > add32(sar32(a, 9), 0x200)) {
         r.u(kFlags, r.u(kFlags) | kGolferMishit);
@@ -732,7 +751,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     if (s.unk_005a9cc4 == 0 && (r.b(kKind) & 0xe0) == 0x20) {
       const int32_t sp = r.i(kSpin);
       r.i(kSpin, add32(mul32(sub32(dist, 100), sp) / 256, sp));
-      const int32_t roll = w.rnd(0x71c6);
+      const int32_t roll = w.rnd_at(kDrawSpinPro, 0x71c6);
       r.i(kSpin, add32(r.i(kSpin), sub32(roll, 0x38e38e3) / 50));
     }
   }
@@ -834,30 +853,30 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     }
     if (s.unk_005a9ce4 != 0 && w.ts(w.tile(World::cell(r.i(kTargetX), r.i(kTargetY))), 2) > 0 && w.ts(lie, 2) <= 0 &&
         mode == 0 && !(r.b(kFlags) & 1)) {
-      f_emitThought(ctx, {g, 8, 0x14});
+      think({g, 8, 0x14});
     } else if (f38 != 0) {
       if (f1c != 0)
-        f_emitThought(ctx, {g, 0x16, f1c - 1});
+        think({g, 0x16, f1c - 1});
       else
-        f_emitThought(ctx, {g, 0x14, f38});
+        think({g, 0x14, f38});
     } else if (f1c != 0) {
-      f_emitThought(ctx, {g, 0x16, f1c - 1});
+      think({g, 0x16, f1c - 1});
     } else if ((w.tflags(bcell) & 0x800) && f_thoughtFlag(ctx, {g}) != 0 && !(w.tflags(bcell) & 0x4000)) {
-      f_emitThought(ctx, {g, 0x18, 0x14});
+      think({g, 0x18, 0x14});
     } else {
       if (dist < 100 || mode != 0) s.g_shotFlags5a7140 &= ~3u;
       const int32_t v = i32(s.g_shotFlags5a7140);
       if (v != 0 && r.w(kShotKind) != 4) {
         if (v & 3)
-          f_emitThought(ctx, {g, (~v & 1) | 0x20, 0x14});
+          think({g, (~v & 1) | 0x20, 0x14});
         else if (w.ts(lie, 2) <= 0)
-          f_emitThought(ctx, {g, 6, 0x14});
+          think({g, 6, 0x14});
       } else {
         bool done = false;
         if (r.hole() > 1 && r.sb(kStrokes) == (g & 1) + 1) {
           const int32_t roll = w.rnd(3);
           if (w.hole_i(r.hole(), 0x1fc) <= roll) {
-            f_emitThought(ctx, {g, 0x1d, 0x14});
+            think({g, 0x1d, 0x14});
             done = true;
           }
         }
@@ -865,7 +884,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
           if (r.hole() > 1 && r.b(kStrokes) == 1) {
             const int32_t roll = w.rnd(3);
             if (w.hole_i(r.hole(), 0x1fc) > roll + 3) {
-              f_emitThought(ctx, {g, 0x1e, 0x14});
+              think({g, 0x1e, 0x14});
               done = true;
             }
           }
@@ -873,7 +892,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
             const int32_t roll = w.rnd(4);
             if (r.sb(kShotValue) <= add32(roll, mul32(s.g_difficulty, 2)) && dist > 100 && w.ts(lie, 2) <= 0 &&
                 flag100 == 0) {
-              f_emitThought(ctx, {g, 4, 0x14});
+              think({g, 4, 0x14});
               r.b(kShotValue, 0);
               done = true;
             }
@@ -890,7 +909,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
               const int32_t dd = sub32(bestDir, oct) & 7;
               kind = (dd < 2 || dd > 6) ? 0x26 : ((dd == 2 || dd == 6) ? 5 : 0x25);
             }
-            f_emitThought(ctx, {g, kind, bestType});
+            think({g, kind, bestType});
             r.b(kShotValue, r.sb(kShotValue) < 0x18 ? 10 : 20);
           } else {
             r.b(kShotValue, 6);
@@ -901,14 +920,14 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     r.u(kFlags, r.u(kFlags) & 0xffffff9fu);
     if (r.b(k7a) == e7 && r.b(k84) == 0) {
       if (flag100 != 0 && w.ts(lie, 2) < 1) {
-        f_emitThought(ctx, {g, 0x1c, flag100});
+        think({g, 0x1c, flag100});
       } else {
         if (aim == 1)
-          f_emitThought(ctx, {g, 0x37, 0x14});
+          think({g, 0x37, 0x14});
         else if (aim == -1)
-          f_emitThought(ctx, {g, 0x38, 0x14});
-        if ((r.b(kFlags) & 0x80) && dist > 100) f_emitThought(ctx, {g, 0x39, 0x14});
-        if (r.w(kShotKind) == 4) f_emitThought(ctx, {g, r.b(kStrokes) != 0 ? 0x3c : 9, lie});
+          think({g, 0x38, 0x14});
+        if ((r.b(kFlags) & 0x80) && dist > 100) think({g, 0x39, 0x14});
+        if (r.w(kShotKind) == 4) think({g, r.b(kStrokes) != 0 ? 0x3c : 9, lie});
         if (dist > 0x4b) {
           const int32_t sh = (r.b(kPrefs) & 2) ? 15 : 16;
           if (r.i(kSpin) > shl32(0x1e, sh)) r.u(kFlags, r.u(kFlags) | 0x20u);
@@ -918,7 +937,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
                              u32(mul32(r.sw(kType), 0x2c)) + u32(r.hole());
         if (r.b(k7a) == e7 && r.b(k84) == 0 && r.b(kStrokes) == 0 && ctx.mem.load<uint8_t>(tsv) != 0 &&
             r.b(kKind) == 0)
-          f_emitThought(ctx, {g, 0x3b, 0x14});
+          think({g, 0x3b, 0x14});
         const Rec pr = w.rec(r.sw(kPartner));
         if (r.b(k7a) == e7 && r.b(kStrokes) == 3 && ((r.b(kHole) + g) & 1) == 0 && r.b(kKind) == 0 &&
             pr.b(kKind) == 0) {
@@ -926,8 +945,8 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
           const int32_t t1 = f_typeBit7Clear(ctx, {pg});
           const int32_t t2 = f_typeBit7Clear(ctx, {g});
           if (t2 == t1 && pr.b(k84) == 0 && r.b(k84) == 0) {
-            f_emitThought(ctx, {g, 0x30, 0x14});
-            f_emitThought(ctx, {pg, 0x31, 0x14});
+            think({g, 0x30, 0x14});
+            think({pg, 0x31, 0x14});
             pr.b(k84, pr.b(k84) + 1);
           }
           e7 = b7a;
@@ -936,23 +955,23 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     }
     if (r.b(k84) != 0) e7 = -1;
     if (r.b(k7a) == e7 && r.hole() > 1 && r.sb(kClub) < 0xd && !(r.sw(kClubsUsed) & shl32(1, r.b(kClub) & 31)))
-      f_emitThought(ctx, {g, 0x36, r.sb(kClub)});
+      think({g, 0x36, r.sb(kClub)});
     r.w(kClubsUsed, r.w(kClubsUsed) | i32(shl32(1, r.b(kClub) & 31) & 0xffff));
     if (r.b(k7a) == e7) {
       {
         const int32_t h1 = f_heightBlend(ctx, {r.i(kTargetX), r.i(kTargetY), 0});
         const int32_t h2 = f_heightBlend(ctx, {btx, bty, 0});
-        if (h2 > h1) f_emitThought(ctx, {g, 0x2e, 0x14});
+        if (h2 > h1) think({g, 0x2e, 0x14});
       }
       {
         const int32_t h1 = f_heightBlend(ctx, {r.i(kTargetX), r.i(kTargetY), 0});
         const int32_t h2 = f_heightBlend(ctx, {btx, bty, 0});
-        if (h2 < h1) f_emitThought(ctx, {g, 0x2d, 0x14});
+        if (h2 < h1) think({g, 0x2d, 0x14});
       }
     }
     if (r.b(k7a) == e7 && r.b(kKind) == 0 && r.b(k84) == 0 && lie == 1 &&
         (add32(add32(r.b(kStrokes), g), r.b(kHole)) & 3) == 0)
-      f_emitThought(ctx, {g, 0x3e, 0x14});
+      think({g, 0x3e, 0x14});
   }
   // the aim offset, the power cap, the lie
   r.u(kFlags, r.u(kFlags) & ~2u);
@@ -998,14 +1017,14 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     }
   }
   if (r.b(kKind) != 0 && w.ts(lie, 2) > 0) {
-    const int32_t roll = w.rnd(mul32(w.ts(lie, 2), 10));
+    const int32_t roll = w.rnd_at(kDrawLie, mul32(w.ts(lie, 2), 10));
     if (r.b(0xf8) >= roll) {
       lie = 2;
       r.u(kFlags, r.u(kFlags) | kGolferMishit);
     }
   }
   if (s.unk_005a9cc4 == 0 && lie != 1) {
-    const int32_t roll = w.rnd(0x5555);
+    const int32_t roll = w.rnd_at(kDrawDir, 0x5555);
     const int32_t b2 = w.ts(lie, 2);
     const int32_t sg = sign(r.i(kSpin));
     r.i(kDir, add32(r.i(kDir), mul32(mul32(sg, add32(roll, 0x1555555)), b2)));
@@ -1019,7 +1038,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   {  // the lie switch
     int32_t sp = r.i(kSpeed);
     auto spread = [&](int32_t n, int32_t div) {  // roll = rnd(n), then speed = speed / div - roll + speed
-      const int32_t roll = w.rnd(n);
+      const int32_t roll = w.rnd_at(kDrawSpeed, n);
       sp = r.i(kSpeed);
       r.i(kSpeed, add32(sub32(sp / div, roll), sp));
     };
@@ -1045,7 +1064,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       case 21:
       case 22: {
         spread(sp / 2, 4);
-        const int32_t roll = w.rnd(r.i(kSpin) / 2);
+        const int32_t roll = w.rnd_at(kDrawSpinRoll, r.i(kSpin) / 2);
         r.i(kSpin, add32(r.i(kSpin), roll));
         if (lie == (s.g_courseType != 1 ? 5 : 4)) r.i(kDir, add32(r.i(kDir), shl32(r.i(kSpin), 2)));
         if (!(s.g_tournamentPrep & 4u)) break;
@@ -1060,19 +1079,19 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
         spread(sp / 2, 4);
         break;
       case 9:
-        r.i(kSpeed, w.rnd(shl32(sp, 1)));
+        r.i(kSpeed, w.rnd_at(kDrawSpeed, shl32(sp, 1)));
         r.i(kDir, add32(r.i(kDir), shl32(r.i(kSpin), 4)));
         break;
       case 11:
       case 12: {
-        const int32_t roll = w.rnd(sp);
+        const int32_t roll = w.rnd_at(kDrawSpeed, sp);
         sp = r.i(kSpeed);
         r.i(kSpeed, add32(sp / 2, roll));
         break;
       }
       default:
       def : {
-        const int32_t roll = w.rnd(sp);
+        const int32_t roll = w.rnd_at(kDrawSpeed, sp);
         sp = r.i(kSpeed);
         r.i(kSpeed, add32(sub32(sp / 2, roll), sp));
         break;
@@ -1979,6 +1998,148 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
   const int32_t b = R.sb(kMoodByte);
   if (!(b < 0)) R.b(kMoodByte, 0xff);
   return i32((u32(flag) & 0xffffff00u) | zx8(u32(b)));
+}
+
+// ================================================================================================== P32D: the shot's margin of error
+// Play-test 14 item 7, Mariano's design (2026-11-16): an ESTIMATE from the shot's own formulas, not a history of outcomes.
+// RENDER-ONLY: every step runs on `scratch`, a copy of the live GameState with no host mappings (an access outside it faults and
+// the estimate is dropped), so the live state, its g_rng and the host are never touched.
+//
+// The random draws of the player's shot in prepareShot (the margin sites, t_draws):
+//   kDrawWobble    wobble's Random::range(101): the curve (spin = wobble * 5 << 16, then scaled by difficulty, the club / tee
+//                  skills, the aim style and the mood)
+//   kDrawMishit    the mishit roll rnd(speed) against |spin| >> 9 + 0x200 (shots longer than 0x4b yards): spin 0, bias + 4
+//   kDrawLie       the bad-lie roll rnd(lie class * 10) against skill byte 0xf8 (lie class > 0): lie 2 and the mishit flag
+//   kDrawDir       the lie's direction roll: dir += sign(spin) * (rnd(0x5555) + 0x1555555) * lie class
+//   kDrawSpeed     the lie's speed spread (the lie switch: tee 1/8, green 1/12, rough 1/6, sand / trees 1/4, ...)
+//   kDrawSpinRoll  the extra spin rnd(spin / 2) of lies 4 / 5 / 8 / 21 / 22
+//   kDrawSpinPro   rnd(0x71c6) of a tournament golfer's curve
+// Every combination of each draw's extremes (wobble: smallest / middle / largest; the others smallest / largest) is set up with
+// prepareShot(g, 1, -1, 0, 0) and flown in the air only, as updateGolfers flies it (updateGolfers+0x3c81..+0x3ead: the step, the
+// height change, drag (speed >> 4) / 2, the curve spin / 2), to the point where it first comes down (+0x4438), with no tree
+// (inRange), no bounce and no roll: those are the course, not the swing. The reference is the same set-up with every draw at its
+// neutral value (wobble middle = no curve, no mishit, no bad lie, the middle speed). The margin is each landing's angle from the
+// reference direction and its length over the reference length; the extremes of those over all combinations are the bounds.
+// The reference flight also gives the "tree in the path" point (margin_carry's `tree`): where the game's tree test can catch it.
+namespace {
+std::atomic<int> g_margin_on{0};
+
+// the air-only flight of golfer g's prepared ball from its start to the first touch-down; false when it never comes down. tree
+// (optional): the first point where updateGolfers' tree test (+0x3ed4..+0x3f78) can catch the ball: inRange with its widest window
+// (in_range_widest) for the tile the tick started on, the ball's flag bit 1 clear, and the distance to that tile's centre (plus
+// skill byte 0xf9's share, +0x3f2d..+0x3f60) below the largest Random::range(0x180) draw
+bool margin_carry(Ctx &c, const World &w, const Rec &r, int32_t &x, int32_t &y, int32_t *tree = nullptr) {
+  for (int32_t t = 0; t < 2000; ++t) {
+    if (r.i(kSpeed) == 0) break;
+    const int32_t L18 = sar32(r.i(kBallX), 10), L20 = sar32(r.i(kBallY), 10);
+    const int32_t L14 = tile_blocked(c, L18, L20) ? 0x14 : w.tile(World::cell(L18, L20));
+    const int32_t hb = f_heightAt(c, {r.i(kBallX), r.i(kBallY)});
+    r.i(kBallX, add32(r.i(kBallX), fold_range(c, r.i(kDir), r.i(kSpeed) / 16)));
+    r.i(kBallY, sub32(r.i(kBallY), abs_diff(c, r.i(kDir), r.i(kSpeed) / 16)));
+    const int32_t z = add32(r.i(kBallZ), r.i(kVz) / 32);
+    r.i(kBallZ, z);
+    if (z != 0 || r.i(kVz) != 0) r.i(kVz, sub32(r.i(kVz), 0x40));
+    if (r.i(kBallZ) > 1) {
+      r.i(kBallZ, add32(r.i(kBallZ), sub32(hb, f_heightAt(c, {r.i(kBallX), r.i(kBallY)}))));
+      r.i(kSpeed, sub32(r.i(kSpeed), sar32(r.i(kSpeed), 4) / 2));
+      r.i(kDir, add32(r.i(kDir), r.i(kSpin) / 2));
+      if (tree && tree[0] == 0 && in_range_widest(c, L14, r.i(kBallZ), L18, L20) != 0 && (r.b(kFlags) & 2) == 0) {
+        int32_t d = distance(sub32(sub32(r.i(kBallX), shl32(L18, 10)), 0x200), sub32(sub32(r.i(kBallY), shl32(L20, 10)), 0x200));
+        if (r.b(kKind) != 0 && (r.w(kSkillMask) & 0x200)) d = add32(d, mul32(r.b(0xf9), d) / 4);
+        if (d < 0x17f) {
+          tree[0] = 1;
+          tree[1] = r.i(kBallX);
+          tree[2] = r.i(kBallY);
+        }
+      }
+    }
+    if (r.i(kBallZ) <= 0 && r.i(kVz) < 0) {
+      x = r.i(kBallX);
+      y = r.i(kBallY);
+      return true;
+    }
+  }
+  return false;
+}
+}  // namespace
+
+void shot_margin_set(bool on) { g_margin_on.store(on ? 1 : 0, std::memory_order_relaxed); }
+bool shot_margin_on() { return g_margin_on.load(std::memory_order_relaxed) != 0; }
+
+bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out) {
+  out = ShotMargin{};
+  if (g < 0 || g >= 0x98) return false;
+  std::memcpy(scratch.bytes(), live.bytes(), sizeof(GameState));
+  if (scratch.mem.data_base() != live.mem.data_base() && !scratch.mem.set_data_base(live.mem.data_base())) return false;
+  scratch.exe_ptr = live.exe_ptr;
+  scratch.files_ptr = live.files_ptr;
+  GameState &s = scratch.gs();
+  const GameState &l = live.gs();
+  struct Off {
+    ~Off() { t_draws = nullptr; }
+  } off;
+  const World w(scratch);
+  const Rec r = w.rec(g);
+  const int32_t bx = l.g_golfers[g].ball_x, by = l.g_golfers[g].ball_y;
+  // one set-up and carry with the draws `d`; the landing point relative to the ball
+  auto take = [&](const uint8_t *d, double &dx, double &dy, int32_t *tree) -> bool {
+    // the records, holes, type attributes and shotPower's ring cache as they are live (what prepareShot reads and writes)
+    std::memcpy(&s.g_golfers, &l.g_golfers, sizeof(s.g_golfers));
+    std::memcpy(&s.g_holes, &l.g_holes, sizeof(s.g_holes));
+    std::memcpy(&s.g_tileTypeAttrs, &l.g_tileTypeAttrs, sizeof(s.g_tileTypeAttrs));
+    std::memcpy(&s.g_shotPowerCache, &l.g_shotPowerCache, sizeof(s.g_shotPowerCache));
+    std::memcpy(&s.g_shotPowerCacheArg2, &l.g_shotPowerCacheArg2, sizeof(s.g_shotPowerCacheArg2));
+    std::memcpy(&s.g_shotPowerCacheDist, &l.g_shotPowerCacheDist, sizeof(s.g_shotPowerCacheDist));
+    s.g_shotPowerRingIndex = l.g_shotPowerRingIndex;
+    s.g_rng = l.g_rng;  // the draws outside the margin sites (the thoughts' rolls) do not move the ball
+    // the click (mainLoop ML+0xfd18): the aim tile becomes the target; updateGolfers clears flags 0x800 / 0x1000 (+0x32cf),
+    // runs prepareShot(g, 1, -1, 0, 0) (+0x35e8) and keeps the ball's start (+0x36ad)
+    r.i(kTargetX, r.i(0xc4));
+    r.i(kTargetY, r.i(0xc8));
+    r.u(kFlags, r.u(kFlags) & ~0x1800u);
+    t_draws = d;
+    prepare_shot(scratch, g, 1, -1, 0, 0);
+    t_draws = nullptr;
+    r.i(0xc4, r.i(kBallX));
+    r.i(0xc8, r.i(kBallY));
+    int32_t lx = 0, ly = 0;
+    if (!margin_carry(scratch, w, r, lx, ly, tree)) return false;
+    dx = static_cast<double>(lx - bx);
+    dy = static_cast<double>(ly - by);
+    return true;
+  };
+  try {
+    const uint8_t neutral[kDrawSites] = {2, 0, 1, 0, 2, 0, 2};  // no curve, no mishit, no bad lie, middle speed
+    double nx = 0, ny = 0;
+    int32_t tree[3] = {0, 0, 0};
+    if (!take(neutral, nx, ny, tree)) return false;
+    out.tree = tree[0] != 0;
+    out.tree_x = tree[1];
+    out.tree_y = tree[2];
+    const double nl = std::sqrt(nx * nx + ny * ny);
+    if (nl < 256.0) return false;  // a quarter of a tile: nothing to show
+    out.ang_lo = out.ang_hi = 0.0;
+    out.len_lo = out.len_hi = 1.0;
+    for (int k = 0; k < 3 * 64; ++k) {
+      uint8_t d[kDrawSites];
+      d[kDrawWobble] = static_cast<uint8_t>(k % 3);
+      for (int b = 1; b < kDrawSites; ++b) d[b] = static_cast<uint8_t>(((k / 3) >> (b - 1)) & 1);
+      double dx = 0, dy = 0;
+      if (!take(d, dx, dy, nullptr)) continue;
+      const double a = std::atan2(nx * dy - ny * dx, nx * dx + ny * dy);  // from the reference direction
+      const double len = std::sqrt(dx * dx + dy * dy) / nl;
+      out.ang_lo = std::min(out.ang_lo, a);
+      out.ang_hi = std::max(out.ang_hi, a);
+      out.len_lo = std::min(out.len_lo, len);
+      out.len_hi = std::max(out.len_hi, len);
+      ++out.combos;
+    }
+  } catch (...) {  // a Fault (an access outside the scratch GameState), MissingResource, FrameOverrun: no estimate
+    out = ShotMargin{};
+    return false;
+  }
+  out.valid = out.combos > 0;
+  return out.valid;
 }
 
 // ================================================================================================== adapters

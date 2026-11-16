@@ -5917,6 +5917,92 @@ bool P19B_HoleLineEnds(u32 F, bool firstOnScreen) {
     return true;
 }
 
+// P32D item 7 (play-test 14, the app option --shot-spread; shots.h shot_margin), RENDER-ONLY: while the player aims (the aim
+// drawing below ML+0xc553), the margin of error of the pending shot as ONE shape around the aim point: the shot's random draws
+// (curve, mishit, bad lie, the lie's direction and speed rolls) taken at their extremes on a scratch copy of the state (never this
+// context), the ball flown in the air only to where it first comes down. The shape spans the landing's angle range sideways and
+// its length range (as a share of the no-random length) along the aim line, both applied at the aim point; trees, bounces and
+// roll are not in it. Recomputed only when the aim, the ball, the shot style or the golfer's state changes; drawn with the aim
+// line's own primitives (setLinePoint / lineTo, its width and alpha, a black shadow one pixel lower, then white), before the aim
+// line so the line stays on top. Nothing for a putt from the green (Mariano, 2026-11-16): the ball's tile of type 1. A small red
+// cross ("tree in the path", Mariano 2026-11-16) marks where the no-random flight can be caught by the game's tree test.
+struct P32D_Margin {
+    std::unique_ptr<Ctx> scratch;
+    int32_t key[12] = {};
+    bool valid = false;
+    ShotMargin m;
+};
+void P32D_ShotMargin() {
+    if (!shot_margin_on()) return;
+    static thread_local P32D_Margin sp;
+    const int g = G32(GS(g_playerGolfer));
+    if (g < 0 || g >= 0x98) return;
+    const u32 rec = (u32)g << 8;
+    const int bx = (int)G32((GS(g_golfers) + 0xd4) + rec), by = (int)G32((GS(g_golfers) + 0xd8) + rec);
+    if (cc("typeAtPos", bx, by) == 1) return;   // the ball on a green (the shot panel's Lie tile): no margin
+    const int32_t key[12] = {g, bx, by, (int32_t)G32((GS(g_golfers) + 0xc4) + rec), (int32_t)G32((GS(g_golfers) + 0xc8) + rec),
+                             (int32_t)G32(GS(g_playerShotStyle)), (int32_t)G32((GS(g_golfers) + 0x10) + rec),
+                             (int32_t)GU8((GS(g_golfers) + 0x36) + rec), (int32_t)GU8((GS(g_golfers) + 0x22) + rec),
+                             (int32_t)GU8((GS(g_golfers) + 0x21) + rec), (int32_t)G32(GS(g_difficulty)),
+                             (int32_t)G32(GS(g_courseIndex))};
+    if (!sp.valid || std::memcmp(key, sp.key, sizeof(key)) != 0) {
+        if (!sp.scratch) sp.scratch = std::make_unique<Ctx>();
+        shot_margin(ctx, *sp.scratch, g, sp.m);
+        std::memcpy(sp.key, key, sizeof(key));
+        sp.valid = true;
+    }
+    if (!sp.m.valid) return;
+    // the aim point as the aim line takes it (ML+0xbdac..ML+0xbdda): the tile's centre unless flag 0x10000000
+    const int ax = (key[3] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
+    const int ay = (key[4] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
+    const double vx = ax - bx, vy = ay - by;
+    // centred where the aim line ends: the aim distance in yards clamped to the reach (ML+0xbdf3..ML+0xbe2c: golferShotReach,
+    // 13 / 18 of it for shot style 3, half for style 4; ML+0xbedf..ML+0xbf83: 25 * distance / 1024 clamped), back in world units
+    int reach = cc("golferShotReach", g);
+    const int style = G32(GS(g_playerShotStyle));
+    if (style == 3) reach = (13 * reach) / 18;
+    else if (style == 4) reach = reach / 2;
+    const int yards = std::max(0, std::min((25 * cc("distance", bx - ax, by - ay)) / 1024, reach));
+    const double vl = yards * 1024.0 / 25.0;
+    if (vl < 256.0) return;
+    const double base = std::atan2(vy, vx);
+    const int pitch = G32(GS(g_zoomScale));
+    const int width = pitch < 4 ? 1 : (G32(GS(unk_005a9cbc)) != 0 ? 3 : 2);   // the aim line's width (ML+0xc016..ML+0xc037)
+    const int kFar = 1 << 24;
+    // the outline: the far arc, the near arc back, closed (the angle range and the length range at the aim distance)
+    constexpr int kSteps = 12;
+    int px[2 * kSteps + 3], py[2 * kSteps + 3], n = 0;
+    auto put = [&](double ang, double len) {
+        const double a = base + ang, r = vl * len;
+        world_to_screen(ctx, (int32_t)std::lround(bx + r * std::cos(a)), (int32_t)std::lround(by + r * std::sin(a)), px[n], py[n],
+                        kFar);
+        ++n;
+    };
+    for (int k = 0; k <= kSteps; ++k) put(sp.m.ang_lo + (sp.m.ang_hi - sp.m.ang_lo) * k / kSteps, sp.m.len_hi);
+    for (int k = kSteps; k >= 0; --k) put(sp.m.ang_lo + (sp.m.ang_hi - sp.m.ang_lo) * k / kSteps, sp.m.len_lo);
+    px[n] = px[0];
+    py[n] = py[0];
+    ++n;
+    for (int pass = 0; pass < 2; ++pass) {
+        const int dy = pass == 0 ? 1 : 0;
+        cc("setLinePoint", px[0], py[0] + dy);
+        for (int k = 1; k < n; ++k) cc("lineTo", px[k], py[k] + dy, pass == 0 ? 0x80000000u : 0x80007fffu, width, 7);
+    }
+    if (sp.m.tree) {  // "tree in the path": a small red cross where the no-random flight can be caught by a tree
+        int tx = 0, ty = 0;
+        world_to_screen(ctx, sp.m.tree_x, sp.m.tree_y, tx, ty, kFar);
+        const int h = 3 + 2 * width;
+        for (int pass = 0; pass < 2; ++pass) {
+            const int dy = pass == 0 ? 1 : 0;
+            const u32 col = pass == 0 ? 0x80000000u : 0x80007c00u;
+            cc("setLinePoint", tx - h, ty - h + dy);
+            cc("lineTo", tx + h, ty + h + dy, col, width + 1, 7);
+            cc("setLinePoint", tx - h, ty + h + dy);
+            cc("lineTo", tx + h, ty - h + dy, col, width + 1, 7);
+        }
+    }
+}
+
 bool P13A_HoleReady() {
     const int h = G32(GS(g_holesPlusOne));
     if (h < 0 || h >= 0x13) return false;
@@ -7205,6 +7291,7 @@ L41baf4:
     if (g_gfx_hud_capture.load(std::memory_order_relaxed) != 0) gfx_layer_end(ctx);   // P9B
 
     // === swing-arc box: 6 line segments around the drag, with foldRange/absDiff fixed-point ===
+    P32D_ShotMargin();   // P32D item 7 (--shot-spread): the shot's margin of error, under the aim line
     { int x0 = FD(0x5c), y0 = FD(0x54); cc("setLinePoint", x0, y0); FD(0x20) = x0; FD(0x10) = y0; }  // ML+0xc553..ML+0xc565 setLinePoint
     edi = FD(0x34);                                     // ML+0xc57d (edi = ang, constant through the box)
     esi = FD(0x30) * 0x0aaaaaaa;                        // ML+0xc56e/ML+0xc573
