@@ -903,6 +903,7 @@ const ProfileMember kPlayProfile[] = {
     {"hitGolferPanel.shotButtonsAsDrawn", 0},  // P27A fix 5: the shot buttons answer where drawn live; a greyed one takes no press
     {"mainLoop.messageDismissBand", 0},  // P27A fix 6: the message window dismisses on its drawn frame only
     {"clickAmenityPanel.blankPressPicksHovered", 0},  // P27A fix 7: a press on blank palette space picks no row item
+    {"clickGolferPanel.namePlateCentresCamera", 0},  // P32B item 4: a press on a match scorecard name plate centres the camera on that golfer
     {"trialShot.edgeNeighbourType", 0},      // P28A (G30, D5): grid-edge neighbour type 0x14
     {"updateGolfers.edgeNeighbourType", 0},  // P28A (G30, D5)
     {"scanTileLine.edgeCellType", 0},        // P28A (G30, D5)

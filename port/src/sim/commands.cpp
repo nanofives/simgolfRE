@@ -41,6 +41,13 @@ int g_defect_shot_buttons_as_drawn = 1;
 // commits g_panelState[0] for the row tools (amenity_action's fall-through), so a press on blank palette space picks the item last
 // hovered. Fixed (0): such a press commits only when the row has an item under the press point; elsewhere nothing changes.
 int g_defect_blank_press_picks = 1;
+// clickGolferPanel.namePlateCentresCamera (P32B item 4, Mariano's play-test 14: "when clicking on the golfer's name on the golfers
+// panel it should take me to their location"): in a match drawMatchScoreboard writes the player golfer's name and its partner's
+// (record word +0xa2) on the two plates of the scorecard art, and a press there reaches clickGolferPanel, whose hit test finds at
+// most hotspots 2 / 3 (the plates' left knob), which act only with no player golfer: nothing happens. Fixed (0): a press on a plate
+// that no acting hotspot claims puts the camera on that plate's golfer, the way clickEmployeeView's golfer slot does (the golfer's
+// position >> 10, then the camera bound).
+int g_defect_name_plate_camera = 1;
 
 namespace {
 // Negative controls: mode 0 is the correct body.
@@ -805,6 +812,11 @@ const DefectDef kDefects[] = {
      "a press on the amenities palette that hits no hotspot commits the row item last hovered (g_panelState[0], never cleared), "
      "wherever the press is; fixed: it commits only an item under the press",
      &g_defect_blank_press_picks},
+    {"clickGolferPanel.namePlateCentresCamera", "P32B",
+     "in a match a press on a name plate of the scorecard does nothing (the hit test finds no hotspot there, or the plates' knob "
+     "hotspots 2 / 3, which act only with no player golfer); fixed: it puts the camera on that plate's golfer (the player golfer, "
+     "then its partner, record word +0xa2) as clickEmployeeView's golfer slot does, within the camera bound",
+     &g_defect_name_plate_camera},
     {"showFinancialReport.sumWriteBack", "model_defects#24",
      "the report writes each drawn year row's column sum back into the row's entry 8 (+0x10)", &g_defect_finance_sum_write_back},
     {"courseActionMenu.escIgnored", "P9A", "the world map ignores Esc; fixed: Esc acts as its Back button",

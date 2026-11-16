@@ -507,9 +507,38 @@ int32_t click_employee_view(Ctx &ctx, int32_t x, int32_t y) {
 bool golfer_panel_takes_press(const GameState &gs) {
   return gs.g_ui_561254 == 0 || (!SG_DEFECT(g_defect_shot_buttons_as_drawn) && gs.g_panelListMode == 3);
 }
+// P32B item 4 (clickGolferPanel.namePlateCentresCamera = 0): the golfer whose name plate of the match scorecard is under (x, y), or
+// -1. The plates of the scorecard art (g_sprites541a18 + 0x108 drawn at (0x129, 0x1ed), measured on JoeCoolPanel.pcx): the upper one
+// with its knob x 0x12c..0x1b0, y 0x225..0x239 (drawMatchScoreboard's first name at y 0x228: the player golfer), the lower one
+// y 0x23a..0x24d (the second name at y 0x23d: the player golfer's partner, record word +0xa2). Only in a match (word +0xcc of the
+// player golfer's record != -1), when drawGolferActionPanel draws the scorecard.
+int32_t name_plate_golfer(Ctx &ctx, int32_t x, int32_t y) {
+  const GameState &gs = ctx.gs();
+  const int32_t p = gs.g_playerGolfer;
+  if (p < 0 || p > 0xff) return -1;
+  const uint32_t golfers = state_va(ctx, &GameState::g_golfers);
+  const uint32_t rec = golfers + (u32(p) << 8);
+  if (ctx.mem.load<int32_t>(rec + 0xcc) == -1) return -1;
+  if (x < 0x12c || x > 0x1b0 || y < 0x225 || y > 0x24d) return -1;
+  const int32_t g = y < 0x23a ? p : static_cast<int32_t>(ctx.mem.load<int16_t>(rec + 0xa2));
+  return g >= 0 && g <= 0xff ? g : -1;
+}
 int32_t click_golfer_panel(Ctx &ctx, int32_t x, int32_t y) {
   if (!golfer_panel_takes_press(ctx.gs())) return handle_employee_action(ctx, x, y);
-  return golfer_panel_action(ctx, hit_golfer_panel(ctx, x, y));
+  const int32_t spot = hit_golfer_panel(ctx, x, y);
+  // P32B item 4: hotspots 1..3 act only with no player golfer (golfer_panel_action), so in a match none of them claims a plate
+  if (!SG_DEFECT(g_defect_name_plate_camera) && (spot == -1 || spot == 1 || spot == 2 || spot == 3)) {
+    const int32_t g = name_plate_golfer(ctx, x, y);
+    if (g != -1) {
+      GameState &gs = ctx.gs();
+      const uint32_t rec = state_va(ctx, &GameState::g_golfers) + (u32(g) << 8);
+      gs.gCameraTileX = sar32(ctx.mem.load<int32_t>(rec), 10);
+      gs.gCameraTileY = sar32(ctx.mem.load<int32_t>(rec + 4), 10);
+      camera_on_map(ctx);  // P6A / P31A: the camera bound (mainLoop.cameraBoundByZoom)
+      return -1;
+    }
+  }
+  return golfer_panel_action(ctx, spot);
 }
 int32_t click_build_tool(Ctx &ctx, int32_t x, int32_t y) { return build_tool_action(ctx, hit_build_tool(ctx, x, y)); }
 int32_t pick_building(Ctx &ctx, int32_t x, int32_t y) {
