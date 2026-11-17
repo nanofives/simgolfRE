@@ -104,6 +104,9 @@
 //   P32B item 2: --plate-clip on|off (default on; SG_APP_P32=off: off) the match scorecard's names keep only the letters that fit whole
 //   inside their plates, nothing after them (drawMatchScoreboard draws them unclipped; gfx.h gfx_set_plate_clip; drawing only;
 //   log/roadmap/P32/P32B_notes.md)
+//   P33B item 6: --lot-box on|off (default on; SG_APP_P33=off: off) the Buy Land tool's lot panel (value, clearing, preparation,
+//   profit) as wide as its widest line in the current language, right edge where the original's is (gfx.h gfx_set_lot_box; drawing
+//   only; log/roadmap/P33/P33B_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -601,6 +604,7 @@ struct Options {
   bool pair_cover = true;          // P32E fix 4: --pair-cover on|off (SG_APP_P32=off: off)
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool plate_clip = true;          // P32B item 2: --plate-clip on|off (SG_APP_P32=off: off)
+  bool lot_box = true;             // P33B item 6: --lot-box on|off (SG_APP_P33=off: off)
   bool edge_rows = true;           // P32B item 2: --edge-rows on|off (SG_APP_P32=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool edge_glide = true;          // P31B item 3: --edge-glide on|off (SG_APP_P31=off: off)
@@ -1355,6 +1359,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.pair_cover) portsim::gfx_set_pair_cover(*ctx, true);  // P32E fix 4
       if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
       if (ok && o.plate_clip) portsim::gfx_set_plate_clip(*ctx, true);  // P32B item 2
+      if (ok && o.lot_box) portsim::gfx_set_lot_box(*ctx, true);  // P33B item 6
       if (ok && o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3
       if (ok && o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9
       if (ok && hud_layers_on(o) && !o.hud_writes) portsim::gfx_set_hud_writes(*ctx, false);  // P10C fix 2
@@ -1651,6 +1656,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   }
   if (o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2: the match scorecard as wide as the course (gfx.h; drawing only)
   if (o.plate_clip) portsim::gfx_set_plate_clip(*ctx, true);  // P32B item 2: the scorecard's names inside their plates (gfx.h; drawing only)
+  if (o.lot_box) portsim::gfx_set_lot_box(*ctx, true);  // P33B item 6: the lot panel as wide as its lines (gfx.h; drawing only)
   if (o.pair_cover) portsim::gfx_set_pair_cover(*ctx, true);  // P32E fix 4: the pair select gets the screen bands (gfx.h; drawing only)
   if (o.palette_names) portsim::gfx_set_palette_names(*ctx, true);  // P26B item 3: the palette's names (gfx.h; drawing only)
   if (o.staff_labels_top) portsim::gfx_set_walker_labels_top(*ctx, true);  // P26D item 9: staff labels over the sprites (drawing only)
@@ -3797,6 +3803,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.pair_cover = v == "on";
       continue;
     }
+    if (a == "--lot-box") {  // P33B item 6 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.lot_box = v == "on";
+      continue;
+    }
     if (a == "--plate-clip" || a == "--edge-rows") {  // P32B item 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--plate-clip" ? o.plate_clip : o.edge_rows) = v == "on";
@@ -4305,6 +4316,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.edge_glide = o.tap_slide = o.early_world = false;  // P31B items 3 / 4 / 7
   if (const char *ep = std::getenv("SG_APP_P32"))  // P32: the fourteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = o.shot_spread = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9, P32D item 7
+  if (const char *ep = std::getenv("SG_APP_P33"))  // P33: the fifteenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.lot_box = false;  // P33B item 6
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

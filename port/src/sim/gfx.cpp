@@ -2467,6 +2467,30 @@ bool gfx_photo_banner(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   return g != nullptr && g->photo_banner;
 }
+// P33B item 6 (gfx.h gfx_set_lot_box)
+void gfx_set_lot_box(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->lot_box = on;
+}
+bool gfx_lot_box(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->lot_box;
+}
+// the width draw_text_string gives the text at va: redirected to its translation, measured in the current font (fonts[0]); the
+// box's texts are drawn with text.box at the frame's width, so lang_fit_font keeps that font and nothing is squeezed. Reads only.
+int32_t gfx_lot_box_measure(Ctx &ctx, uint32_t va) {
+  Gfx *g = gfx(ctx);
+  TextMetrics *tm = text_metrics(ctx);
+  if (!g || !tm || va == 0) return 0;
+  g->ensure_root(ctx);
+  const uint32_t font = g->fonts[0];
+  if (font == 0 || ctx.mem.load<uint32_t>(font + 4) == 0) return 0;
+  const uint32_t v = lang::language() != lang::kEnglish ? lang::redirect(ctx, va) : va;
+  const int32_t n = static_cast<int32_t>(vstrlen(ctx.mem, v));
+  int32_t w = 0;
+  if (n <= 0 || !tm->glyph_width(ctx, font, v, n, w)) return 0;
+  return w;
+}
 // P24G (gfx.h gfx_set_tourney_hold)
 void gfx_set_tourney_hold(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->tourney_hold = on;

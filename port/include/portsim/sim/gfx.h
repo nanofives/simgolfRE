@@ -93,6 +93,17 @@ bool gfx_explain_tips(Ctx &ctx);
 // the drop photo.banner, issued by mainLoop's HUD pass after P6_PauseLabel (centred). Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_photo_banner(Ctx &ctx, bool on);
 bool gfx_photo_banner(Ctx &ctx);
+// P33B item 6 (Mariano's play-test 15: "this box should be dynamic sized to fit its width"; log/roadmap/P33/P33B_notes.md), set by the
+// app's host (--lot-box on, the default; SG_APP_P33=off: off). The Buy Land tool's lot panel (mainLoop's tool-5 branch: drawFrameR3 at
+// a fixed 0x78-wide box, four drawCenteredText2 lines centred on its middle and a rule across it) keeps its fixed width whatever the
+// language, so the Spanish lines run past the frame. With it on, mainLoop measures the four lines first (gfx_lot_box_measure: the
+// text now at `va` as drawCenteredText2 draws it, in the current language and the current font, never a smaller font: the box's
+// texts are drawn with text.box set to the frame's width) and draws the box as wide as the widest plus the original's 12-column
+// margins (gfx_lot_box_frame). Drawing only: nothing of the GameState differs from the original's frame (the same strings end in
+// g_textBuffer). Off (the default): the original's box, nothing measured.
+void gfx_set_lot_box(Ctx &ctx, bool on);
+bool gfx_lot_box(Ctx &ctx);
+int32_t gfx_lot_box_measure(Ctx &ctx, uint32_t va);  // the drawn width of the text at va (0 when it cannot be measured)
 // P24G (Mariano's play-test 11 item 7: "an intermediate UI / indicator when tournament is starting, otherwise I can keep clicking on
 // tournament button or practice"; log/roadmap/P24/P24G_notes.md), set by the app's host (--tourney-hold on, the default;
 // SG_APP_P24=off: off). clickGolferPanel ignores Practice Round, Play <pro> and Begin Tournament while g_flags bit 21 (a tournament
