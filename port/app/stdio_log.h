@@ -9,6 +9,7 @@
 // simgolf_port_console.exe is the same program linked for the console subsystem (a terminal that waits for it).
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 namespace portapp {
@@ -22,5 +23,9 @@ struct StdioLogResult {
 // Call once, early in main (after the data directory is known). `data_dir` may be empty: then the log goes beside the exe.
 // SG_APP_STDIO=keep disables it (the inherited / absent handles stay as they are).
 StdioLogResult setup_stdio_log(const std::string &data_dir);
+
+// P33D fix 2: `text` written straight to the log file and the console (past the pipe and its copy thread, which a dying process
+// may never run again). false when setup_stdio_log redirected nothing (the caller then writes to stderr itself).
+bool stdio_log_direct(const char *text, size_t n);
 
 }  // namespace portapp

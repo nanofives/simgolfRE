@@ -24,6 +24,7 @@ need_exe = pytest.mark.skipif(not L.exe_path().exists(), reason="the user's golf
 # (function, mode, what): wrong bodies the vectors must see (RED)
 NEGCTL_RED = [
     ("sign", 1, "0 maps to 1"),
+    ("boundIndex", 1, "the bound itself kept (P33D fix 1)"),
     ("approxDistance", 1, "halves with a floor shift"), ("approxDistance", 2, "max + min / 2"),
     ("direction8", 1, "axis test >="), ("direction8", 2, "mixed quadrants swapped"),
     ("directionOf", 1, "tie goes horizontal"),

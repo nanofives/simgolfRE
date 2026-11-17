@@ -22,6 +22,11 @@ uint32_t random_range(uint32_t &seed, uint32_t n);
 // clamp: v raised to lo, then lowered to hi only when v > hi and hi >= lo (hi < lo leaves the raised v).
 int32_t clamp(int32_t v, int32_t lo, int32_t hi);
 
+// boundIndex (P33D fix 1): i when i < n (signed), else -1. buildSceneSprites takes the frames of build item 14 (Airstrip /
+// Casino / Theme Park / Castle by course type) on a Tropical course through it; until P33D it was never registered, so
+// drawing a Theme Park on a Tropical course stopped the sim with `missing: boundIndex` (Mariano's fifteenth play-test, item 5).
+int32_t bound_index(int32_t i, int32_t n);
+
 // distance: sqrt(dx*dx + dy*dy) of a fixed-point vector, truncated toward zero. A component with |c| > 0x4000 is divided
 // by 8 (toward zero) and the result scaled by 8 per such component. The squares wrap in 32 bits like the original;
 // a negative sum gives NaN, which the original's conversion turns into 0.

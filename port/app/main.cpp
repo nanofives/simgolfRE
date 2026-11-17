@@ -344,6 +344,7 @@
 #include <memory>
 #include <mutex>
 #include <set>  // P24J: lang_bench
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -360,6 +361,7 @@
 #include "profile.h"  // P10A
 #include "saves.h"
 #include "stdio_log.h"
+#include "crash.h"  // P33D fix 2
 #include "window.h"
 
 #include "portsim/arith.h"
@@ -1919,6 +1921,20 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   std::printf("READY hwnd=0x%llx client=%dx%d dpi=%u record=%s\n", static_cast<unsigned long long>(reinterpret_cast<uintptr_t>(hwnd)),
               win.client_w(), win.client_h(), win.dpi(), rec.string().c_str());
   std::fflush(stdout);
+  portapp::crash_set_context("record " + rec.string());  // P33D fix 2: named in a CRASH line
+  // P33D fix 2: faults on purpose, for port/test/test_app_crash.py (the handler's dump and log line)
+  if (o.negctl == "crash-av" || o.negctl == "crash-terminate") {
+    const bool av = o.negctl == "crash-av";
+    std::thread([av]() {
+      Sleep(1500);
+      if (av) {
+        volatile int *volatile p = nullptr;
+        *p = 1;
+      } else {
+        throw std::runtime_error("P33D crash-terminate");
+      }
+    }).detach();
+  }
   if (o.exit_after) SetTimer(hwnd, 1, o.exit_after, nullptr);
   // P10E (--paint-rate display): a pacer thread posts kMsgCursorTick at the display's refresh rate (GetDeviceCaps VREFRESH; 60
   // when it reports 0 / 1 or a value outside 30..360), at most one waiting at a time, so a paint longer than a refresh period
@@ -2312,6 +2328,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   latlog_close();  // P21B
   session.request_stop();
   sim.join();
+  // P33D fix 2: a sim stop (a portsim exception the sim thread caught: `missing: <callee>`, a fault in the sim's address space, a
+  // divide error) closed the window like a quit and left nothing in the log; one line now says what stopped it
+  if (lo.res.code != 0)
+    portapp::crash_log_line("SIM STOPPED: code " + std::to_string(lo.res.code) + " (" + lo.res.detail.substr(0, 1500) + ") after " +
+                            std::to_string(lo.res.live.records) + " records, stop " + lo.res.live.stop +
+                            "; the window was closed; record " + rec.string());
   if (log) std::fclose(log);
   if (shown) std::fclose(shown);
   std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"live\",\"install\":\"" + jesc(files.install_root()) + "\",\"data\":\"" +
@@ -4307,6 +4329,7 @@ int main(int argc, char **argv) {
     for (int i = 1; i + 1 < argc; ++i)
       if (!std::strcmp(argv[i], "--data")) data = argv[i + 1];
     setup_stdio_log(data.empty() ? AppFiles::default_data_dir() : data);
+    portapp::crash_install(data.empty() ? AppFiles::default_data_dir() : data);  // P33D fix 2: the last-chance handler
   }
   if (!parse(argc, argv, o)) {
     std::fprintf(stderr, "usage: see the head of port/app/main.cpp\n");

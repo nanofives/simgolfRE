@@ -28,6 +28,8 @@ namespace {
 //   tileDistance    1 = scale 25 / 1000
 //   cosScaled       1 = phase offset 0x40000000
 //   initSinTable    1 = entries shifted by one step
+//   boundIndex      1 = the bound itself is kept (i > n instead of i >= n gives -1)
+int g_negctl_bound_index = 0;
 int g_negctl_random_range = 0;
 int g_negctl_sign = 0;
 int g_negctl_approx_distance = 0;
@@ -76,6 +78,11 @@ int32_t clamp(int32_t v, int32_t lo, int32_t hi) {
   if (v < lo) v = lo;
   if (v > hi && hi >= lo) v = hi;
   return v;
+}
+
+int32_t bound_index(int32_t i, int32_t n) {
+  if (SG_NEGCTL(g_negctl_bound_index) == 1) return i > n ? -1 : i;
+  return i >= n ? -1 : i;
 }
 
 int32_t distance(int32_t dx, int32_t dy) {
@@ -267,6 +274,7 @@ void a_random_range(Ctx &ctx, const uint32_t *args, Ret &ret) {
   ret.set_u32(random_range(ctx.mem.ref<uint32_t>(args[0]), args[1]));
 }
 void a_clamp(Ctx &, const uint32_t *a, Ret &ret) { ret.set_i32(clamp(S(a, 0), S(a, 1), S(a, 2))); }
+void a_bound_index(Ctx &, const uint32_t *a, Ret &ret) { ret.set_i32(bound_index(S(a, 0), S(a, 1))); }
 void a_distance(Ctx &, const uint32_t *a, Ret &ret) { ret.set_i32(distance(S(a, 0), S(a, 1))); }
 void a_sign(Ctx &, const uint32_t *a, Ret &ret) { ret.set_i32(sign(S(a, 0))); }
 void a_approx_distance(Ctx &, const uint32_t *a, Ret &ret) { ret.set_i32(approx_distance(S(a, 0), S(a, 1))); }
@@ -289,6 +297,7 @@ const FuncDef kFuncs[] = {
     {"Random::next", "thiscall", "double", 1, 0x027F, a_random_next, nullptr},
     {"Random::range", "thiscall", "int", 2, 0x027F, a_random_range, &g_negctl_random_range},
     {"clamp", "default", "int", 3, 0, a_clamp, nullptr},
+    {"boundIndex", "default", "int", 2, 0, a_bound_index, &g_negctl_bound_index},
     {"distance", "default", "int", 2, 0x027F, a_distance, nullptr},
     {"sign", "default", "int", 1, 0, a_sign, &g_negctl_sign},
     {"approxDistance", "default", "int", 2, 0, a_approx_distance, &g_negctl_approx_distance},

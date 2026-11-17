@@ -81,3 +81,37 @@ def test_manifests_readable():
     # 190 from phase 2.4, plus course_season_6y's 10 (phase 3.8, stream 38f: the multi-year recording), plus one each of
     # cov_r_sve, cov_r_reload and cov_r_course (phase 4: the .sve and course-file round trips), plus cov_r_quit's two (the quit)
     assert sum(r["status"] == "accepted" for r in rows) == 205
+
+
+# P33D fix 1: a callee the tick names that nothing resolves stops the sim with `missing: <name>` the first time a frame reaches
+# it (TkBase::call in tick.cpp: a drop, a local, a registry function or a fallback). buildSceneSprites named boundIndex, which no
+# module registered: drawing a Theme Park on a Tropical course closed Mariano's game (P33 item 5).
+# Names known unresolved, with the reason they are not reached:
+TICK_UNRESOLVED_KNOWN = {
+    # mainLoop calls it when the report byte g_ui_569498 is 8. Of golf_clean.exe's stores to that byte, the immediate ones write
+    # 0, 1 and 9, the key toggles 2, 3, 4, 5, 6, 9 and 0xA, eight stores of al follow a strlen / strcat scan (`repne scasb`, al
+    # the terminator byte) and one follows `test eax, eax; jne` (log/roadmap/P33/P33D_notes.md); none was seen writing 8
+    "showCourseRanking",
+}
+
+
+def test_every_tick_callee_resolves():
+    sim = PORT / "src" / "sim"
+    texts = {p: p.read_text(encoding="utf-8", errors="replace") for p in list(sim.glob("*.cpp")) + list(sim.glob("*.inc"))
+             + list(sim.glob("*.h"))}
+    called = {}
+    for p, t in texts.items():
+        if not p.name.startswith("tick"):
+            continue
+        for m in re.finditer(r'\b(?:cc|tc|tcx)\(\s*"([A-Za-z_][\w:]*)"', t):
+            called.setdefault(m.group(1), p.name)
+    registered = set()
+    for t in texts.values():
+        registered |= set(re.findall(r'^\s*\{\s*"([A-Za-z_][\w:]*)"\s*,\s*"(?:default|thiscall|fastcall|stdcall|cdecl)"', t, re.M))
+        registered |= set(re.findall(r'(?:locals|fallbacks)\(\)\s*\[\s*"([^"]+)"\s*\]', t))
+    tick = texts[sim / "tick.cpp"]
+    i0 = tick.index("const Drop kDrops[] = {")
+    registered |= set(re.findall(r'\{\s*"([^"]+)"\s*,', tick[i0:tick.index("};", i0)]))
+    missing = {n: f for n, f in called.items() if n not in registered and n not in TICK_UNRESOLVED_KNOWN}
+    assert not missing, f"tick callees nothing resolves (each one stops the sim when reached): {missing}"
+    assert "boundIndex" in registered

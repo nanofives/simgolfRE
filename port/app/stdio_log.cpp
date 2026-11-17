@@ -73,6 +73,20 @@ void finish() {
 
 }  // namespace
 
+bool stdio_log_direct(const char *text, size_t n) {
+  Tee *t = g_tee;
+  if (!t) return false;
+  std::fflush(stdout);  // what is already in the CRT streams goes into the pipe first (the copier may still be behind)
+  std::fflush(stderr);
+  DWORD w = 0;
+  if (t->file != INVALID_HANDLE_VALUE) {
+    WriteFile(t->file, text, static_cast<DWORD>(n), &w, nullptr);  // a synchronous handle: the copier's writes do not interleave inside it
+    FlushFileBuffers(t->file);
+  }
+  if (t->con != INVALID_HANDLE_VALUE) WriteFile(t->con, text, static_cast<DWORD>(n), &w, nullptr);
+  return t->file != INVALID_HANDLE_VALUE || t->con != INVALID_HANDLE_VALUE;
+}
+
 StdioLogResult setup_stdio_log(const std::string &data_dir) {
   StdioLogResult r;
   if (const char *e = std::getenv("SG_APP_STDIO"))

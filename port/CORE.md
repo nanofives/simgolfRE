@@ -111,6 +111,7 @@ every negative-control mode in NEGCTL_RED reads RED. Coverage per re/port/vector
 |---|---|---|---|---|---|
 | util | Random::next / Random::range / clamp / distance (2.6) | 32 / 15 / 160 / 72 | 16 / 8 / 10 / 14 | full | no |
 | util | sign | 31 | 3 | full | no |
+| util | boundIndex (P33D fix 1, 2026-11-17: buildSceneSprites' callee, never registered before) | 63 | 8 | full | no |
 | util | approxDistance | 144 | 38 | full | no |
 | util | direction8 | 289 | 8 | full | no |
 | util | directionOf | 55 | 4 | full | no |
