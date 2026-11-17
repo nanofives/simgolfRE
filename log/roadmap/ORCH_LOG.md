@@ -676,3 +676,4 @@
 - 2026-11-17 48a4285e PUBLISHED (P33E fix 8, SGA report double HUD) + GitHub release
 - 2026-11-17 d26503aa PUBLISHED (P33B fix 2, --lot-box A) + GitHub release
 - 2026-11-17 d4344fbe PUBLISHED (P33E fix 9, P33B fix 3, P33C fix 3) + GitHub release
+- 2026-11-17 a4aba532 PUBLISHED (P33A fix 1, speed button) + GitHub release
