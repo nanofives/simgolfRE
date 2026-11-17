@@ -674,3 +674,4 @@
 - 2026-11-17 9bcbc62c PUBLISHED (P33E fix 7, reportScreens.arrowKeysClose) + GitHub release
 - 2026-11-17 bde0ab22 PUBLISHED (P33D fixes 1-2, Theme Park crash + crash handler) + GitHub release
 - 2026-11-17 48a4285e PUBLISHED (P33E fix 8, SGA report double HUD) + GitHub release
+- 2026-11-17 d26503aa PUBLISHED (P33B fix 2, --lot-box A) + GitHub release
