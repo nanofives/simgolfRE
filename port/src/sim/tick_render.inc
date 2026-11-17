@@ -192,10 +192,16 @@ struct Rend : TkBase {
       G32(sy) = G16(GS(g_tileScreenY) + cell * 2).get();
       return 1;
     }
-    cc("worldToScreen", (tx << 10) + 0x200, (ty << 10) + 0x200, sx, sy, 0);
+    // P33C tileToScreen.spriteReach at 0: projected with a margin (the point keeps its height off screen), and the window is the
+    // tile sprites' reach at the zoom (bridge.h tile_sprite_reach); at 1 the original's 0x40 / 0x2a
+    const bool reach = sprite_reach_fixed();
+    cc("worldToScreen", (tx << 10) + 0x200, (ty << 10) + 0x200, sx, sy, reach ? kSpriteReachProject : 0);
     const int x = G32(sx), y = G32(sy);
     const int E = wide_view_margin_t2s(ctx);   // P8B: tileToScreen.wideViewVisibility (0 = the original's window)
-    if (x >= -0x40 - E && x < gs().g_screenWidth + 0x40 + E && y >= -0x2a && y < gs().g_screenHeight + 0x2a) {
+    SpriteReach m;
+    m.x = 0x40, m.top = 0x2a, m.bottom = 0x2a;
+    if (reach) m = tile_sprite_reach(ctx);
+    if (x >= -m.x - E && x < gs().g_screenWidth + m.x + E && y >= -m.top && y < gs().g_screenHeight + m.bottom) {
       if (SG_NEGCTL(g_negctl_tile_to_screen) == 1) return 1;  // the on-screen point is not cached
       G16(GS(g_tileScreenX) + cell * 2) = static_cast<int16_t>(x);
       G16(GS(g_tileScreenY) + cell * 2) = static_cast<int16_t>(y);

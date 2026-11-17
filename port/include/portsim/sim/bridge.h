@@ -206,6 +206,20 @@ int32_t view_width(Ctx &ctx);
 // the side margin E = (view width - 800) / 2 the wide visibility switches add on each side; 0 with the switch at 1 (the original)
 int32_t wide_view_margin_w2s(Ctx &ctx);
 int32_t wide_view_margin_t2s(Ctx &ctx);
+// P33C (play-test 15 item 3): play switch tileToScreen.spriteReach. The original's tile pass queues a tile's sprites only while
+// its centre lies within 0x40 (x) / 0x2a (y) of the screen, one tile at zoom 4, while the art reaches further: a tree up to 21
+// units per zoom step above its tile centre, a placed object (drawn from its footprint's first tile) up to 94 sideways, so at the
+// port's zoom 8 and in the wide view buildings and trees vanish while still on screen. With the switch at 0 the margins are the
+// reach of the art at the zoom (log/roadmap/P33/P33C_notes.md): x / above the top edge / below the bottom edge, 800-space units.
+struct SpriteReach {
+  int32_t x = 0, top = 0, bottom = 0;
+};
+bool sprite_reach_fixed();                  // the switch at 0
+SpriteReach tile_sprite_reach(Ctx &ctx);    // a tile's own sprites (scenery, trees, paths); never less than the original's
+SpriteReach object_sprite_reach(Ctx &ctx);  // a placed object's sprites, from its first tile's centre
+// the margin tileToScreen and the object pass hand worldToScreen at the switch's 0, so a point outside the view still gets its
+// height (worldToScreen leaves an off-screen point without it)
+constexpr int32_t kSpriteReachProject = 0x1000;
 
 // P31A: the camera's legal range (mainLoop.cameraBoundByZoom) is declared in portsim/sim/camera_range.h
 

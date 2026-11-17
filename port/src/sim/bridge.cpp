@@ -1,6 +1,7 @@
 // The view / simulation bridge (see portsim/sim/bridge.h). Phase 3.3, written from the specification (analysis notes,
 // hook sources as reading reference, the C3 path-1 runs); no original address or code.
 #include "portsim/sim/bridge.h"
+#include <algorithm>  // P33C: std::max (tile_sprite_reach)
 #include <vector>
 #include <memory>
 #include <cmath>    // P19A: fabs (world_to_screen_exact)
@@ -65,6 +66,7 @@ int32_t play_sound(Ctx &ctx, int32_t idx, int32_t volume, int32_t pan, int32_t p
 // ------------------------------------------------------------------------------------------------ the view block (P8B)
 int g_defect_w2s_wide = 1;   // worldToScreen.wideViewVisibility
 int g_defect_t2s_wide = 1;   // tileToScreen.wideViewVisibility (tick_render.inc)
+int g_defect_t2s_reach = 1;  // tileToScreen.spriteReach (P33C: tick_render.inc, tick_frame.inc)
 bool view_map(Ctx &ctx) {
   if (ctx.view) return true;
   auto block = std::make_shared<std::vector<uint8_t>>(static_cast<size_t>(kPortViewSize));   // zero-filled
@@ -495,6 +497,29 @@ CameraRange camera_range(Ctx &ctx) {
 }
 int32_t wide_view_margin_t2s(Ctx &ctx) { return g_defect_t2s_wide ? 0 : (view_width(ctx) - 800) / 2; }
 
+// P33C: the reach of the art from a tile centre, per zoom step (g_zoomScale; the sprite queue scales art by zoom / 4). Measured
+// with a development probe over the tile pass and the object pass of seven saves (four course themes, every rotation, zooms 1 / 2 /
+// 4 / 8) and bounded from the loaded sheets' art boxes (P33C_notes.md): tile sprites 17 sideways, 21 above, 5.2 below; objects:
+// the largest art box 215 / 239 / 138 units (zoom 4) around its 0xf0 hotspot, plus the footprint centre's offset from the first
+// tile (6 tiles: 8 x 5 sideways, 5 x 5 vertically per zoom step).
+bool sprite_reach_fixed() { return !g_defect_t2s_reach; }
+SpriteReach tile_sprite_reach(Ctx &ctx) {
+  const int32_t z = ctx.gs().g_zoomScale;
+  SpriteReach r;
+  r.x = std::max<int32_t>(0x40, mul32(z, 18));
+  r.top = std::max<int32_t>(0x2a, mul32(z, 6));
+  r.bottom = std::max<int32_t>(0x2a, mul32(z, 22));
+  return r;
+}
+SpriteReach object_sprite_reach(Ctx &ctx) {
+  const int32_t z = ctx.gs().g_zoomScale;
+  SpriteReach r;
+  r.x = std::max<int32_t>(0x40, mul32(z, 94));
+  r.top = std::max<int32_t>(0x2a, mul32(z, 60));
+  r.bottom = std::max<int32_t>(0x2a, mul32(z, 85));
+  return r;
+}
+
 // ------------------------------------------------------------------------------------------------ worldToScreen
 namespace {
 // P19A item 7 (bridge.h world_to_screen_exact): the last call's exact projection on this thread (render-only)
@@ -792,6 +817,14 @@ const DefectDef kDefects[] = {
      "tileToScreen caches and returns a tile's screen point only inside x -0x40 .. 800 + 0x40 (the scenery buildSceneSprites queues); "
      "fixed: that x window is the wide view's (view block width W: (W - 800) / 2 more on each side)",
      &g_defect_t2s_wide},
+    {"tileToScreen.spriteReach", "P33C",
+     "the tile pass queues a tile's scenery, trees and placed object only while the tile's centre lies within x -0x40 .. 800 + "
+     "0x40 and y -0x2a .. 600 + 0x2a (one tile at zoom 4), while a tree's art reaches up to 21 units per zoom step above its "
+     "centre and a placed object's up to 94 sideways, so near the screen's edges (most at the port's zoom 8 and in the wide "
+     "view) they vanish while still on screen; fixed: tileToScreen's window is widened by the tile sprites' reach at the zoom, "
+     "a tile beyond it still queues its placed object when the object's art can reach the view, and both project with a margin "
+     "so a point outside the view keeps its height",
+     &g_defect_t2s_reach},
     {"mainLoop.cameraBoundByZoom", "P31A,G33",
      "the camera tile pair is clamped to 0..0x31 on both axes (the view's centre on the grid), so at the map's edge up to half "
      "the view is black; fixed: each axis is clamped to the range that keeps every land corner (the tiles whose type is not 0x14) "

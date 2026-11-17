@@ -1644,7 +1644,8 @@ void P2_objects(u32 F) {
         y = off + (FD(0x30) << 10) + 0x200;    // ML+0x3c89 / ML+0x3c8f / ML+0x3c92
         x = off + (FD(0x20) << 10) + 0x200;    // ML+0x3c9e / ML+0x3caa / ML+0x3cad
     }
-    cc("worldToScreen", x, y, FA(0xe0), FA(0xe4), 0);   // ML+0x3beb worldToScreen (ML+0x3bea push x)
+    // P33C tileToScreen.spriteReach at 0: a margin, so an anchor outside the view keeps its height
+    cc("worldToScreen", x, y, FA(0xe0), FA(0xe4), sprite_reach_fixed() ? kSpriteReachProject : 0);   // ML+0x3beb worldToScreen (ML+0x3bea push x)
     int root = Root();                         // ML+0x3bf0
     k -= 1;                                    // ML+0x3bf9
     tc("setDrawTarget", root, GS(g_font51b360), 0, 0, 0); // ML+0x3c05 setDrawTarget
@@ -1667,6 +1668,21 @@ void P2_objects(u32 F) {
     StrCat(kBuf, (u32)(ebx + GS(f_tab_buildItems_4c26b0)));     // ML+0x3f0e..ML+0x3f3a
 }
 
+// P33C (tileToScreen.spriteReach at 0): a tile tileToScreen left off screen whose placed object's art can still reach the view
+// (bridge.h object_sprite_reach, from the tile's centre) queues that object as P2_objects does; nothing else of the tile is drawn
+void P2_far_object(u32 F, int a, int b) {
+    const int ti = FD(0x14);
+    const u8 ty = GU8(GS(g_tileType) + ti);
+    if (ty != 0x15 && ty != 0x16) return;
+    if ((GU8(GS(g_tileFlags) + 2 * ti) & 0x1f) == 0) return;
+    cc("worldToScreen", (a << 10) + 0x200, (b << 10) + 0x200, FA(0x3c), FA(0x38), kSpriteReachProject);
+    const int x = FD(0x3c), y = FD(0x38);
+    const int E = wide_view_margin_t2s(ctx);
+    const SpriteReach m = object_sprite_reach(ctx);
+    if (x < -m.x - E || x >= ctx.gs().g_screenWidth + m.x + E || y < -m.top || y >= ctx.gs().g_screenHeight + m.bottom) return;
+    P2_objects(F);
+}
+
 // ML+0x2d9a..ML+0x3f61: one tile (a, b).
 void P2_tile(u32 F, int& a, int& b) {
     if (cc("tileBlocked", a, b) != 0) return;     // ML+0x2d9c tileBlocked / ML+0x2da6 -> ML+0x3f61
@@ -1675,7 +1691,10 @@ void P2_tile(u32 F, int& a, int& b) {
     FD(0x14) = idx;                            // ML+0x2dbe
     if (GU16(GS(g_tileFlags) + 2 * idx) & 0x4000)   // ML+0x2dc2..ML+0x2dd3
         FD(0x10) = GU8(GS(tile_anim_frame) + idx);      // ML+0x2dd5..ML+0x2ddd
-    if (cc("tileToScreen", a, b, FA(0x3c), FA(0x38)) == 0) return;   // ML+0x2ded tileToScreen / ML+0x2df7 -> ML+0x3f61
+    if (cc("tileToScreen", a, b, FA(0x3c), FA(0x38)) == 0) {   // ML+0x2ded tileToScreen / ML+0x2df7 -> ML+0x3f61
+        if (sprite_reach_fixed()) P2_far_object(F, a, b);     // P33C
+        return;
+    }
     P2_bars(F, idx);                           // ML+0x2dfd..ML+0x2eab
     u32 ecx = P2_label(F, a, idx);             // ML+0x2eab..ML+0x308f
     P2_paths(F, idx, ecx);                     // ML+0x308f..ML+0x33e4
