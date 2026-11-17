@@ -117,6 +117,10 @@ struct WindowOptions {
   // P24D: a mouse move / left press / release at the game's logical point (x, y) goes here first; true = taken (the game and the
   // recording never see it). Null = every mouse message goes to the game as before.
   std::function<bool(uint32_t msg, int32_t x, int32_t y)> on_mouse;
+  // P33A item 1: a left press (or double-click) at the game's logical point (x, y) after the HUD remap (a point over a moved HUD
+  // layer is its 800-space place; a vacated place is never offered) goes here first; true = taken: the press and its release
+  // never reach the game or the recording. Null = every press goes to the game as before.
+  std::function<bool(int32_t x, int32_t y)> on_hud_press;
   // P27C fix 2: true while the picture is a flat screen (no world, no layers: the title menu, the full-screen modal screens). Then
   // a mouse button message whose point lies outside the 800 x 600 content (the side bands) is dropped: in the original no point
   // past the screen's edge can be clicked. Null = every button message goes to the game as before.
@@ -187,6 +191,7 @@ class AppWindow {
   uint32_t dpi_ = 96;
   uint32_t paints_ = 0;
   uint32_t seq_ = 0;
+  bool hud_press_taken_ = false;  // P33A item 1: a press on_hud_press took; its release is dropped too
   Translator tr_;
   std::function<void(const InputEvent &)> sink_;
   std::function<bool(uint32_t msg)> app_message_;  // P23B

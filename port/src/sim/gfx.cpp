@@ -2467,6 +2467,38 @@ bool gfx_photo_banner(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   return g != nullptr && g->photo_banner;
 }
+// P33A item 1 (gfx.h gfx_set_speed_button, gfx_set_quiet_frame, gfx_world_quiet_begin / end)
+void gfx_set_speed_button(Ctx &ctx, int speed) {
+  if (Gfx *g = gfx(ctx)) {
+    g->speed_button = speed;
+    if (speed == 0) g->world_root.clear();  // (the title menu: the next session's first frame draws its world)
+  }
+}
+
+void gfx_set_quiet_frame(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->quiet_frame = on;
+}
+void gfx_set_speed_over(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->speed_over = on;
+}
+void gfx_world_quiet_begin(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
+  Gfx *g = gfx(ctx);
+  if (!g || g->speed_button == 0) return;
+  // a quiet frame needs a world to put back: the first frames after the button came on draw theirs
+  g->quiet_world = g->quiet_on() && g->world_root.size() == g->root.px.size();
+}
+void gfx_world_quiet_end(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
+  Gfx *g = gfx(ctx);
+  if (!g || g->speed_button == 0) return;
+  if (g->quiet_world) {
+    g->quiet_world = false;
+    if (g->world_root.size() == g->root.px.size()) g->root.px = g->world_root;
+    return;
+  }
+  g->world_root = g->root.px;  // a full world pass: the world a later quiet frame puts back
+}
 // P33B item 6 (gfx.h gfx_set_lot_box)
 void gfx_set_lot_box(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->lot_box = on;
@@ -2510,6 +2542,14 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);
   if (!g) return false;
+  // P33A item 1 (gfx.h gfx_set_quiet_frame): a quiet frame's world phases draw nothing but the terrain family's passes, and its
+  // HUD panels' own drawing bodies (no screen opens from those bodies: a dialog is drawn by its own) are left for the shown frame
+  if (g->quiet_on() && ((g->quiet_world && std::strncmp(name, "terrain.", 8) != 0) || !std::strcmp(name, "showInfoCursorPanel.draw") ||
+                         !std::strcmp(name, "drawGolferActionPanel.draw") || !std::strcmp(name, "drawEmployeeViewPanel.draw") ||
+                         !std::strcmp(name, "drawEmployeeDetailPanel.draw"))) {
+    ++g->quiet_drops;
+    return false;
+  }
   if (GfxBody body = gfxb::find_body(name)) {
     const PerfGfxScope perf_scope;  // P10A (perf.h kPerfGfx)
     ++g->handled[name];

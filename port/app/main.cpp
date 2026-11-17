@@ -132,6 +132,11 @@
 //   (post_event set it; the camera jumps to an off-screen place, the photo is taken, the board opens about 20 frames later) the
 //   game's one-line tip "Taking a photo for the bulletin board" sits at the top of the frame (gfx.h gfx_set_photo_banner; drawing
 //   only; log/roadmap/P32/P32A_notes.md)
+//   P33A item 1: --speed-button on|off (default on; SG_APP_P33=off: off) a button under the radial menu's pause (the pause's own
+//   face with 1, 2 or 3 triangles) cycles the game speed normal -> 2x -> 4x -> normal; at 2x / 4x the game's frames run in groups
+//   of 2 / 4 whose frames but the last draw no world and show nothing, and the group waits one frame period (host.h
+//   HostOptions::speed_button; gfx.h gfx_set_speed_button; log/roadmap/P33/P33A_notes.md). --game-speed 1|2|4 the speed a session
+//   starts at (default 1).
 //   P32C item 6: --list-wheel on|off (default on; SG_APP_P32=off: off) the mouse wheel scrolls the Membership Roster, one notch = one
 //   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa); FIX 3: also the routing map's walker
 //   list, the saved-game browser, the character editor's preset picker (modal pumps) and the golfer / staff lists (frame heads)
@@ -612,6 +617,8 @@ struct Options {
   bool early_world = true;         // P31B item 7: --early-world on|off (SG_APP_P31=off: off)
   bool explain_tips = true;        // P32C items 3 / 5 / 8: --explain-tips on|off (SG_APP_P32=off: off)
   bool photo_banner = true;        // P32A item 9: --photo-banner on|off (SG_APP_P32=off: off)
+  bool speed_button = true;        // P33A item 1: --speed-button on|off (SG_APP_P33=off: off)
+  int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
   bool palette_names = true;       // P26B item 3: --palette-names on|off (SG_APP_P26=off: off)
@@ -1774,6 +1781,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;
   }
   ho.list_wheel = o.list_wheel;  // P32C item 6: the wheel scrolls the Membership Roster
+  ho.speed_button = o.speed_button;  // P33A item 1: the speed button
+  ho.game_speed = o.game_speed;
   ArrowGlide glide;  // P26A: --arrow-glide on with the frame-head arrow step (the `play` profile)
   if (o.arrow_glide && ho.arrow_head && ho.smooth_camera) {  // the window glides the picture (needs the camera slide)
     ho.glide = &glide;
@@ -1842,6 +1851,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
       wo.undo_context = [&session]() { return session.in_frame_body(); };
     }
   }
+  if (o.speed_button)  // P33A item 1: a press on the speed button (after the HUD remap) is the app's, not the game's
+    wo.on_hud_press = [&session](int32_t x, int32_t y) { return session.speed_press(x, y); };
   if (lang_ui().available.load())  // P24D: the title menu's language selector takes its own clicks (lang_ui.h)
     wo.on_mouse = [&session](uint32_t msg, int32_t x, int32_t y) { return session.at_title() && lang_ui().mouse(msg, x, y); };
   // P27C fix 2 (window thread: the presenter's frame); negative control --negctl p27c-band-clicks: the side bands answer as before
@@ -2388,6 +2399,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
   s += ",\"p32c_app\":{\"explain_tips\":" + std::to_string(o.explain_tips ? 1 : 0) + ",\"list_wheel\":" +
        std::to_string(o.list_wheel ? 1 : 0) + ",\"photo_banner\":" + std::to_string(o.photo_banner ? 1 : 0) + "}";  // P32C, P32A item 9
+  s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
     // whose lines turned out to differ)
@@ -3799,6 +3811,16 @@ bool parse(int argc, char **argv, Options &o) {
       (a == "--explain-tips" ? o.explain_tips : a == "--list-wheel" ? o.list_wheel : o.photo_banner) = v == "on";
       continue;
     }
+    if (a == "--speed-button") {  // P33A item 1 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.speed_button = v == "on";
+      continue;
+    }
+    if (a == "--game-speed") {  // P33A item 1 (before the chain too)
+      if (!val(v) || (v != "1" && v != "2" && v != "4")) return false;
+      o.game_speed = v[0] - '0';
+      continue;
+    }
     if (a == "--pair-cover") {  // P32E fix 4 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.pair_cover = v == "on";
@@ -4318,7 +4340,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P32"))  // P32: the fourteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = o.shot_spread = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9, P32D item 7
   if (const char *ep = std::getenv("SG_APP_P33"))  // P33: the fifteenth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.lot_box = false;  // P33B item 6
+    if (!std::strcmp(ep, "off")) o.speed_button = o.lot_box = false;  // P33A item 1, P33B item 6
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

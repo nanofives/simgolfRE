@@ -40,6 +40,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -1288,6 +1289,104 @@ void b_terrain_toolbar(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // Surface_stretchBlit + 0x2c / g_sprites568fc8 + 0x2c at (7, 0x1b4) and Surface_drawScaled + 0x18c at (0x22, 0x1fd); 1 + 0xb0 /
 // + 0x84 at (0x54, 0x1cf) and + 0x1b8 at (0x5f, 0x20d); 2..4 + 0x134 / + 0xdc at (0x92, 0x1f8) and + 0x1e4 at (0x8e, 0x22b);
 // tip: drawPanelBackdrop at the words of f_tab_point16_4c7930 + 4 s
+// P33A item 1 (gfx.h gfx_set_speed_button; log/roadmap/P33/P33A_notes.md section 2). The pause button of the radial menu's art (its
+// spot 4 of f_tab_point16_4c7930) is the disk of the 27 x 27 root box at (94, 554), centre (107, 567), radius 12 with its dark rim;
+// its face is the gold inside it and its two bars are the navy columns x 101..104 and 109..112, rows 561..573 (measured on the root
+// after the panel's Surface_stretchBlit). The speed button is that disk scaled by 0.76 (radius 9.5) at (105, 590): under the pause
+// on the groove that runs down from it, whole above the frame's bottom row 599. Its face is the pause's face with the bars removed
+// (each row's non-gold run inside the face interpolated between the gold words at its two ends) and 1, 2 or 3 triangles in the
+// bars' own navy (speed 1, 2, 4).
+constexpr int32_t kPauseBoxX = 94, kPauseBoxY = 554, kPauseBox = 27;
+constexpr double kPauseR = 12.0, kPauseFaceR = 9.5;
+constexpr int32_t kNavyX = 102, kNavyY = 567;
+constexpr double kSpeedX = 105.0, kSpeedY = 590.0, kSpeedScale = 0.76;
+constexpr int32_t kSpeedTipY = 590, kSpeedW = 800, kSpeedH = 600;  // the 800 x 600 root
+struct Rgb {
+  double r = 0, g = 0, b = 0;
+};
+Rgb rgb_of(uint16_t w) { return {static_cast<double>((w >> 10) & 31), static_cast<double>((w >> 5) & 31), static_cast<double>(w & 31)}; }
+uint16_t word_of(const Rgb &c) {
+  auto q = [](double v) { return static_cast<uint16_t>(std::min(31.0, std::max(0.0, v + 0.5))); };
+  return static_cast<uint16_t>((q(c.r) << 10) | (q(c.g) << 5) | q(c.b));
+}
+bool gold(const Rgb &c) { return c.r >= 23 && c.r - c.b >= 8; }
+// the speed button drawn into the root (inside showMainRadialMenu's HUD layer: every stored word marked); `pause` is the pause box
+// as the panel's art left it
+void speed_button(Gfx &g, const std::vector<Rgb> &pause, int32_t speed) {
+  Surface16 &r = g.root;
+  if (r.w < kSpeedW || r.h < kSpeedH || pause.size() != static_cast<size_t>(kPauseBox * kPauseBox)) return;
+  const double c0 = (kPauseBox - 1) / 2.0;
+  std::vector<Rgb> face = pause;
+  for (int32_t j = 0; j < kPauseBox; ++j) {  // the bars out: per row, the interior's non-gold runs between their gold ends
+    int32_t lo = -1, hi = -1;
+    for (int32_t i = 0; i < kPauseBox; ++i)
+      if ((i - c0) * (i - c0) + (j - c0) * (j - c0) <= kPauseFaceR * kPauseFaceR) {
+        if (lo < 0) lo = i;
+        hi = i;
+      }
+    if (lo < 0) continue;
+    int32_t i = lo;
+    while (i <= hi) {
+      if (gold(face[static_cast<size_t>(j * kPauseBox + i)])) {
+        ++i;
+        continue;
+      }
+      int32_t e = i;
+      while (e <= hi && !gold(face[static_cast<size_t>(j * kPauseBox + e)])) ++e;
+      const bool hl = i > lo, hr = e <= hi;
+      const Rgb L = hl ? face[static_cast<size_t>(j * kPauseBox + i - 1)] : face[static_cast<size_t>(j * kPauseBox + std::min(e, hi))];
+      const Rgb R = hr ? face[static_cast<size_t>(j * kPauseBox + e)] : L;
+      for (int32_t k = i; k < e; ++k) {
+        const double t = static_cast<double>(k - i + 1) / static_cast<double>(e - i + 1);
+        face[static_cast<size_t>(j * kPauseBox + k)] = {L.r + (R.r - L.r) * t, L.g + (R.g - L.g) * t, L.b + (R.b - L.b) * t};
+      }
+      i = e;
+    }
+  }
+  const Rgb navy = pause[static_cast<size_t>((kNavyY - kPauseBoxY) * kPauseBox + (kNavyX - kPauseBoxX))];
+  const int32_t n = speed >= 4 ? 3 : speed >= 2 ? 2 : 1;
+  // triangles in the target's pixels: height th, each tw wide, side by side, centred (one triangle a little right: its weight)
+  const double th = 9.0, tw = n == 1 ? 7.0 : n == 2 ? 5.5 : 4.3, tot = tw * n, tx0 = kSpeedX - tot / 2 + (n == 1 ? 0.7 : 0.3);
+  auto in_tri = [&](double x, double y) {
+    if (y < kSpeedY - th / 2 || y > kSpeedY + th / 2 || x < tx0 || x >= tx0 + tot) return false;
+    const double lx = std::fmod(x - tx0, tw);  // within its triangle: the left side full height, the tip at tw
+    return std::fabs(y - kSpeedY) <= (th / 2) * (1.0 - lx / tw);
+  };
+  auto sample = [&](double sx, double sy) {  // bilinear over the face box
+    sx = std::min(std::max(sx, 0.0), kPauseBox - 1.0);
+    sy = std::min(std::max(sy, 0.0), kPauseBox - 1.0);
+    const int32_t x0 = std::min(static_cast<int32_t>(sx), kPauseBox - 2), y0 = std::min(static_cast<int32_t>(sy), kPauseBox - 2);
+    const double fx = sx - x0, fy = sy - y0;
+    const Rgb &a00 = face[static_cast<size_t>(y0 * kPauseBox + x0)], &a10 = face[static_cast<size_t>(y0 * kPauseBox + x0 + 1)];
+    const Rgb &a01 = face[static_cast<size_t>((y0 + 1) * kPauseBox + x0)], &a11 = face[static_cast<size_t>((y0 + 1) * kPauseBox + x0 + 1)];
+    auto mix = [&](double p, double q, double s, double t) { return (p * (1 - fx) + q * fx) * (1 - fy) + (s * (1 - fx) + t * fx) * fy; };
+    return Rgb{mix(a00.r, a10.r, a01.r, a11.r), mix(a00.g, a10.g, a01.g, a11.g), mix(a00.b, a10.b, a01.b, a11.b)};
+  };
+  const double rt = kPauseR * kSpeedScale;
+  for (int32_t y = static_cast<int32_t>(kSpeedY - rt) - 1; y <= static_cast<int32_t>(kSpeedY + rt) + 1; ++y)
+    for (int32_t x = static_cast<int32_t>(kSpeedX - rt) - 1; x <= static_cast<int32_t>(kSpeedX + rt) + 1; ++x) {
+      if (x < 0 || y < 0 || x >= kSpeedW || y >= kSpeedH) continue;
+      int32_t cover = 0, tri = 0;  // 4 x 4 subsamples: inside the disk, and inside a triangle
+      for (int32_t sj = 0; sj < 4; ++sj)
+        for (int32_t si = 0; si < 4; ++si) {
+          const double px = x + (si + 0.5) / 4.0, py = y + (sj + 0.5) / 4.0;
+          const double dx = px - (kSpeedX + 0.5), dy = py - (kSpeedY + 0.5);
+          if (dx * dx + dy * dy > rt * rt) continue;
+          ++cover;
+          if (in_tri(px - 0.5, py - 0.5)) ++tri;
+        }
+      if (cover == 0) continue;
+      const Rgb f = sample(c0 + (x - kSpeedX) / kSpeedScale, c0 + (y - kSpeedY) / kSpeedScale);
+      const double ta = tri / 16.0, ca = cover / 16.0;
+      const Rgb top = {f.r + (navy.r - f.r) * ta / ca, f.g + (navy.g - f.g) * ta / ca, f.b + (navy.b - f.b) * ta / ca};
+      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      const Rgb under = rgb_of(o);
+      o = word_of({under.r + (top.r - under.r) * ca, under.g + (top.g - under.g) * ca, under.b + (top.b - under.b) * ca});
+      hud_mark(&o);
+    }
+}
+const char *speed_tip(int32_t speed) { return speed >= 4 ? "Speed: 4x" : speed >= 2 ? "Speed: 2x" : "Speed: normal"; }
+
 void b_radial_menu(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   const uint32_t root = g.root_va(ctx);
@@ -1302,6 +1401,15 @@ void b_radial_menu(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const uint32_t spr = va(ctx, GSO(g_sprites5873a8, 0)), msk = va(ctx, GSO(g_sprites568fc8, 0));
   call(g, ctx, "Display::setScale", {1, 1, 1});
   stretch(va(ctx, GSO(g_sprites541a18, 0)), va(ctx, GSO(g_sprites58b390, 0)), 0, 0x1b3);
+  // P33A item 1: the pause button as the panel's art drew it (the speed button's face is made from it)
+  std::vector<Rgb> pause_box;
+  if (g.speed_button > 0 && g.root.w >= kSpeedW && g.root.h >= kSpeedH) {
+    pause_box.resize(static_cast<size_t>(kPauseBox * kPauseBox));
+    for (int32_t j = 0; j < kPauseBox; ++j)
+      for (int32_t i = 0; i < kPauseBox; ++i)
+        pause_box[static_cast<size_t>(j * kPauseBox + i)] =
+            rgb_of(g.root.px[static_cast<size_t>(kPauseBoxY + j) * static_cast<size_t>(g.root.w) + static_cast<size_t>(kPauseBoxX + i)]);
+  }
   const int32_t s = static_cast<int32_t>(cm::call_peer(ctx, "nearestMenuSpot", {a[0], a[1]}).eax);
   const int32_t mode_now = ctx.gs().g_panelListMode;
   if (s != -1 && s != mode_now) {
@@ -1334,6 +1442,13 @@ void b_radial_menu(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (a[2] != 0 && s >= 0)
     call(g, ctx, "drawPanelBackdrop", {static_cast<uint32_t>(w16(GSO(f_tab_point16_4c7930, 4 * s))),
                                        static_cast<uint32_t>(w16(GSO(f_tab_point16_4c7930, 4 * s + 2)))});
+  if (!pause_box.empty()) {  // P33A item 1: the speed button, and its tip after the pause's dwell (frames shown only)
+    speed_button(g, pause_box, g.speed_button);
+    const bool over = g.speed_over;  // the host answered the panels' hover read over the button (gfx.h gfx_set_speed_over)
+    if (!over) g.speed_hover = 0;
+    else if (!g.quiet_frame) ++g.speed_hover;
+    if (over && g.speed_hover > 10) gfxt::meter_tip(g, ctx, lang::tr(speed_tip(g.speed_button)), static_cast<int32_t>(kSpeedX), kSpeedTipY);
+  }
 }
 // showInfoCursorPanel.draw(x, y) (the original's showInfoCursorPanel, written from its instructions: re/analysis/ui/
 // 00433190_showInfoCursorPanel.md is the C2 transcription; commands_layout.inc keeps its state, and hands the drawing over).
@@ -2706,6 +2821,16 @@ const GfxBodyDef kBodies[] = {
 }  // namespace
 
 extern const GfxFamily kGfxFamily_hud = {"hud", kBodies, sizeof(kBodies) / sizeof(kBodies[0]), nullptr, 0};
+
+// P33A item 1 (gfx.h): the speed button's hit test and centre (800-space)
+bool gfx_speed_button_hit(int32_t x, int32_t y) {
+  const double dx = x - kSpeedX, dy = y - kSpeedY, r = kPauseR * kSpeedScale + 0.5;
+  return dx * dx + dy * dy <= r * r;
+}
+void gfx_speed_button_centre(int32_t &x, int32_t &y) {
+  x = static_cast<int32_t>(kSpeedX);
+  y = static_cast<int32_t>(kSpeedY);
+}
 
 namespace gfxh {
 const std::array<uint16_t, 0x10000> &half_bright_table() { return half_bright_lut(); }

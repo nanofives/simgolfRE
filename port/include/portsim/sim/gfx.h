@@ -93,6 +93,26 @@ bool gfx_explain_tips(Ctx &ctx);
 // the drop photo.banner, issued by mainLoop's HUD pass after P6_PauseLabel (centred). Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_photo_banner(Ctx &ctx, bool on);
 bool gfx_photo_banner(Ctx &ctx);
+// P33A item 1 (Mariano's play-test 15: "add a button below the pause that looks like a fast forward ... double speed one click, 4x
+// speed two clicks, third click goes back to normal"; log/roadmap/P33/P33A_notes.md), set by the app's host (--speed-button on, the
+// default; SG_APP_P33=off: off). RENDER-ONLY: nothing here writes the GameState.
+// - gfx_set_speed_button(speed): showMainRadialMenu.draw adds the speed button under the pause button (the pause button's own face
+//   with 1, 2 or 3 triangles for speed 1, 2 or 4) and its hover tip; 0 (the default) = no button.
+// - gfx_set_quiet_frame(on): the host runs this frame as one of a faster speed's frames that are not shown. Between
+//   gfx_world_quiet_begin and gfx_world_quiet_end (tick.cpp, around mainLoop's world phases P1..P4) a drop of any family but the
+//   terrain family's draws nothing (gfx_drop returns false, as without a backend), and the end puts back into the root the world the
+//   last full world pass left there, so the HUD and any screen the frame draws after it lie over a whole picture. The terrain
+//   family keeps its passes (its picture of the course is incremental). Off (the default, and every frame of speed 1): the two
+//   calls only keep that copy of the world while a speed button is on.
+void gfx_set_speed_button(Ctx &ctx, int speed);
+void gfx_set_quiet_frame(Ctx &ctx, bool on);
+// the cursor of the frame's HUD panels' hover read lies over the speed button (the host answered the game a point of no HUD control)
+void gfx_set_speed_over(Ctx &ctx, bool on);
+void gfx_world_quiet_begin(Ctx &ctx);
+void gfx_world_quiet_end(Ctx &ctx);
+// the speed button's hit test in 800-space (true inside its face), and its centre; used by the app's window for the click
+bool gfx_speed_button_hit(int32_t x, int32_t y);
+void gfx_speed_button_centre(int32_t &x, int32_t &y);
 // P33B item 6 (Mariano's play-test 15: "this box should be dynamic sized to fit its width"; log/roadmap/P33/P33B_notes.md), set by the
 // app's host (--lot-box on, the default; SG_APP_P33=off: off). The Buy Land tool's lot panel (mainLoop's tool-5 branch: drawFrameR3 at
 // a fixed 0x78-wide box, four drawCenteredText2 lines centred on its middle and a rule across it) keeps its fixed width whatever the

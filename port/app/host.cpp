@@ -223,6 +223,7 @@ std::string jesc(const std::string &s) {
 
 LiveSession::LiveSession(HostOptions opt, const std::string &record_dir) : opt_(opt), rec_(record_dir) {
   session_t0_ = timeGetTime();  // P6B item 2
+  speed_.store(opt_.game_speed == 2 || opt_.game_speed == 4 ? opt_.game_speed : 1);  // P33A item 1
 }
 
 LiveSession::~LiveSession() {
@@ -643,6 +644,12 @@ void LiveSession::title_menu_overlay(portsim::Ctx &ctx) {
 // P6B item 1 (host.h request_close)
 void LiveSession::title_menu(portsim::Ctx &ctx) {
   title_seen_.store(true);
+  if (opt_.speed_button) {  // P33A item 1: the title menu runs no frame group; the next session draws its first world
+    quiet_ = false;
+    group_pos_ = 0;
+    portsim::gfx_set_quiet_frame(ctx, false);
+    portsim::gfx_set_speed_button(ctx, 0);
+  }
   world_map_ = false;  // P13B item 18
   title_ever_ = true;  // P6B item 2: loads after this are world loads (no game loading screen)
   at_menu_.store(true);
@@ -2111,6 +2118,33 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
   early_due_ = opt_.early_world && woke && glide_wrote_;  // P31B item 7: this frame's world goes over at its queue end
   apply_arrow(ctx);               // P21B: an arrow key-down (recorded writes, before the frame body)
   apply_arrow_clock(ctx);         // P22A: the clock offset for the held arrow's delay (recorded write, once)
+  if (opt_.speed_button) {        // P33A item 1 (HostOptions::speed_button): is this frame a quiet one of a faster speed's group
+    const int sp = speed_.load();
+    portsim::gfx_set_speed_button(ctx, sp);
+    if (group_pos_ == 0) group_head_ = head_t_;
+    bool pending = false;
+    {
+      std::lock_guard<std::mutex> lk(mu_);
+      pending = !queue_.empty();
+    }
+    // the frames a screen can open in by itself are shown, with the frame before them (its published HUD is what a screen is drawn
+    // over): the month's end (g_date reaching a multiple of 1024: the monthly reports, the year end at 8192, the SGA offer at
+    // 0x1000 into the year), the scenario intro's date 0x20, a pending bulletin board photo (f_w_4e3db8 word 0) and a SimFoto
+    // (f_w_4c2e00 word 3)
+    const portsim::GameState &gs = ctx.gs();
+    auto month_edge = [](int32_t d) { return (d & 1023) == 0 || d == 0x20; };
+    const bool screen_due = month_edge(gs.g_date + 1) || month_edge(gs.g_date + 2) ||
+                            (gs.f_w_4e3db8[0] != -1 && gs.f_w_4e3db8[0] != 0x63) || gs.f_w_4c2e00[3] != -1;
+    quiet_ = sp > 1 && (flags & 4u) == 0 && !woke && !early_due_ && !pending && !screen_due && group_pos_ < sp - 1;
+    if (quiet_) {
+      ++group_pos_;
+      ++quiet_frames_;
+    } else {
+      if (sp > 1) ++shown_fast_;
+      group_pos_ = 0;
+    }
+    portsim::gfx_set_quiet_frame(ctx, quiet_);
+  }
   track_screen(ctx, true);        // P7: a frame head is the frame loop
   world_map_ = false;             // P13B item 18
   title_seen_.store(false);       // P6B item 1: a frame runs (a session, not the title menu)
@@ -2388,11 +2422,30 @@ bool LiveSession::live_cursor(int32_t &x, int32_t &y, int32_t &dx, bool hover) {
 // than the 4:3 content rectangle the side columns give x < 0 or x > 799, which H1 (ML+0xebc4..ML+0xebe3: x <= 0, x >= 0x31f)
 // would take as the edge. Here x is 0 / 0x31f only when the point is at or beyond the client's own left / right edge, else it is
 // clamped to 1..0x31e; y is unchanged (the content rectangle has the client's full height in a wide window).
+// P33A item 1 (host.h)
+bool LiveSession::speed_press(int32_t x, int32_t y) {
+  if (!opt_.speed_button || !in_frame_body() || at_title() || !portsim::gfx_speed_button_hit(x, y)) return false;
+  const int s = speed_.load();
+  speed_.store(s >= 4 ? 1 : s * 2);
+  speed_presses_.fetch_add(1);
+  return true;
+}
+
 void LiveSession::cursor_at(portsim::Ctx &ctx, bool modal, int32_t site, int32_t &x, int32_t &y) {
   edge_read_ = site == portsim::kCursorSiteEdgeScroll;  // P10E
   panels_read_ = site == portsim::kCursorSitePanels;     // P27A fix 1
   cursor(ctx, modal, x, y);
   edge_read_ = panels_read_ = false;
+  // P33A item 1: the HUD panels' hover read over the speed button answers a point of no HUD control (the radial menu would take its
+  // upper part for the pause's spot); the button's own hover goes to the drawing
+  if (opt_.speed_button && site == portsim::kCursorSitePanels) {
+    const bool over = !modal && portsim::gfx_speed_button_hit(x, y);
+    portsim::gfx_set_speed_over(ctx, over);
+    if (over) {
+      x = kVacatedHoverX;
+      y = kVacatedHoverY;
+    }
+  }
   if (!opt_.wide_edge || site != portsim::kCursorSiteEdgeScroll) return;
   Viewport vp;
   int32_t cw = 0;
@@ -2572,11 +2625,20 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
   if ((p.body && !p.must_deliver) || static_cast<uint32_t>(p.kind) == 3) {
     std::lock_guard<std::mutex> lk(mu_);
     if (p.body && opt_.glide && opt_.glide->engaged()) drop_glide_arrows();  // P26A
+    // P33A item 1: input that arrived during a quiet frame waits for the next frame head (which it makes a shown frame), so whatever
+    // it opens is drawn over a shown frame's HUD
+    if (p.body && quiet_ && !p.must_deliver) return portsim::LiveReply::Decline;
     if (!queue_.empty() && p.may_deliver && (!h1 || h1_takes())) return deliver();
     return portsim::LiveReply::Decline;
   }
   // a modal Blocking pump: what the loop drew is on screen before the host waits
   const bool paced = p.pace_site != 0;
+  if (!p.body && quiet_) {  // P33A item 1: a modal loop in a quiet frame: the rest of the frame presents and waits as a shown one
+    quiet_ = false;
+    group_pos_ = 0;
+    ++quiet_modal_;
+    portsim::gfx_set_quiet_frame(ctx, false);
+  }
   if (!p.body) present(ctx, paced ? 'p' : 'm');
   std::unique_lock<std::mutex> lk(mu_);
   const uint32_t start = timeGetTime();
@@ -2628,6 +2690,10 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
 void LiveSession::present_point(portsim::Ctx &ctx) {
   rpoint_seq_.fetch_add(1);  // P24D (at_title)
   if (opt_.defect == HostDefect::NoPresentPoint) return;  // negative control: S7.5's present points only
+  if (quiet_) {  // P33A item 1: a quiet frame's picture is not shown (the group's last frame shows the newest)
+    w_check_ = false;
+    return;
+  }
   present(ctx, 'r');
   w_check_ = false;
 }
@@ -2643,15 +2709,23 @@ void LiveSession::wait_point(portsim::Ctx &ctx) {
   const uint32_t work = timeGetTime() - head_t_;
   // S7.8: the back buffer changes only at Window::refreshFull (presented there) and inside modal screens; with neither since the
   // frame's last 'r' present the wait has nothing new to show (LiveTracePresenter checks every wait: 0 'w' presents, 8_notes.md)
+  if (quiet_) {  // P33A item 1: a quiet frame neither presents nor waits; the group's last frame waits for the whole group
+    if (waits_log_) {
+      std::fprintf(waits_log_, "%u\t%u\t0\t0\t0\t0\t-1\t-1\n", frame_, work);
+      std::fflush(waits_log_);
+    }
+    return;
+  }
   if (w_check_) present(ctx, 'w');
   else ++w_skipped_;
   if (opt_.defect == HostDefect::PacingOff) return;  // negative control: no frame wait
+  const uint32_t whead = opt_.speed_button ? group_head_ : head_t_;  // P33A item 1: the group's first head (head_t_ at speed 1)
   WaitClock clk(mu_, cv_, stop_, opt_.glide ? &glide_wake_ : nullptr);  // P26A: an arrow that starts a glide ends the wait
   const uint32_t flags = ctx.mem.load<uint32_t>(portsim::state_va(ctx, &portsim::GameState::g_flags));
   WaitStats ws;
   {
     const ProfScope prof(Phase::Wait);  // P10A
-    ws = frame_wait(clk, head_t_, flags, nullptr);
+    ws = frame_wait(clk, whead, flags, nullptr);
   }
   if (clk.woken()) ws.end = timeGetTime();  // (the woken clock read ahead)
   if (waits_log_) {  // live frame, work ms, the wait's first read and its last read relative to the head, waitTicks steps, target,
@@ -2659,7 +2733,7 @@ void LiveSession::wait_point(portsim::Ctx &ctx) {
     const long long tp = terrain_view ? static_cast<long long>(terrain_view->passes) : 0;
     const long long tx = terrain_view ? static_cast<long long>(terrain_view->pixels_drawn) : 0;
     std::fprintf(waits_log_, "%u\t%u\t%u\t%u\t%u\t%u\t%lld\t%lld\n", frame_, work, ws.frame_ms, ws.end - head_t_, ws.wait_ticks,
-                 frame_target(head_t_, flags) - head_t_, tp, tx);
+                 frame_target(whead, flags) - head_t_, tp, tx);
     std::fflush(waits_log_);
   }
 }
@@ -2803,6 +2877,10 @@ std::string LiveSession::summary_json(const Result &r) const {
          ",\"early_jobs\":" + std::to_string(early_jobs_) + ",\"early_skipped\":" + std::to_string(early_skipped_) +
          ",\"early_bub_px\":" + std::to_string(early_bub_px_) + "}";  // P31B
   }
+  if (opt_.speed_button)  // P33A item 1
+    s += ",\"speed\":{\"now\":" + std::to_string(speed_.load()) + ",\"presses\":" + std::to_string(speed_presses_.load()) +
+         ",\"quiet_frames\":" + std::to_string(quiet_frames_) + ",\"shown_fast\":" + std::to_string(shown_fast_) +
+         ",\"quiet_modal\":" + std::to_string(quiet_modal_) + "}";
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)
   s += ",\"loading_overlay\":" + std::to_string(opt_.loading_overlay ? 1 : 0) + ",\"loads\":[";
   for (size_t i = 0; i < loads_.size(); ++i) {

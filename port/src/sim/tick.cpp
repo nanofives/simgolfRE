@@ -724,10 +724,19 @@ struct Frame : TkBase {
   // MainLoopBody's frame order (c3fy.cpp): the preamble, P1..P7, H1, and H2 when H1 falls through
   FrameExit run(u32 F, bool retile) {
     FramePreamble(F, retile ? 1 : 0);
-    Ph_00410604(F);
-    Ph_0041234e(F);
-    Ph_0041353d(F);
-    Ph_00415847(F);
+    {
+      // P33A item 1 (gfx.h gfx_set_quiet_frame): the world phases of a faster speed's unshown frame draw nothing (drawing only;
+      // without a backend, or with no speed button, both calls return at once)
+      struct QuietWorld {
+        Ctx &c;
+        explicit QuietWorld(Ctx &x) : c(x) { gfx_world_quiet_begin(c); }
+        ~QuietWorld() { gfx_world_quiet_end(c); }
+      } quiet_world(ctx);
+      Ph_00410604(F);
+      Ph_0041234e(F);
+      Ph_0041353d(F);
+      Ph_00415847(F);
+    }
     Ph_004175f2(F);
     const int r6 = Ph_00418bc7(F);
     {

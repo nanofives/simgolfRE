@@ -124,6 +124,16 @@ class Gfx {
   bool photo_banner = false;  // P32A item 9 (gfx.h gfx_set_photo_banner): the pending photo's banner is drawn
   int32_t photo_record = -1;  // P32A item 9: the record whose photo place the banner saw (-1: none; drawing state only)
   bool explain_tips = false;  // P32C (gfx.h gfx_set_explain_tips): the cash asterisk, grey names and customize button explained
+  // P33A item 1 (gfx.h gfx_set_speed_button / gfx_set_quiet_frame): the speed shown on the button (0 = no button); this frame's
+  // world is not drawn (quiet_frame); the world drops are being skipped now (quiet_world); the root after the last full world
+  // pass (world_root) and the drops skipped (quiet_drops); the button's hover dwell (drawing state only)
+  int32_t speed_button = 0;
+  bool quiet_frame = false, quiet_world = false;
+  bool quiet_on() const { return quiet_frame && speed_button > 0 && !world_root.empty(); }
+  std::vector<uint16_t> world_root;
+  uint64_t quiet_drops = 0;
+  int32_t speed_hover = 0;
+  bool speed_over = false;
   // P32C FIX 3 (gfx_text.h modal_tip): the tip a modal screen shows over the root, with the root's words under its box before and
   // after it was drawn (modal_untip puts back each word still showing the tip)
   struct ModalTip {

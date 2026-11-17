@@ -194,6 +194,15 @@ struct HostOptions {
   // drawn: a picture of this frame's base and world with the last present's HUD layers and HUD text runs over it; the frame's own
   // present follows as before
   bool early_world = false;
+  // P33A item 1 (--speed-button on, log/roadmap/P33/P33A_notes.md): the speed button under the radial menu's pause (gfx.h
+  // gfx_set_speed_button); a press on it (AppWindow on_hud_press -> LiveSession::speed_press) cycles the speed 1 -> 2 -> 4 -> 1. At
+  // speed k > 1 the game's frames run in groups of k: the first k - 1 are quiet (their world phases draw nothing, gfx.h
+  // gfx_set_quiet_frame; no present, no frame wait), the last is drawn, presented and waits for the frame period counted from the
+  // group's first frame head. A frame is a shown one when the game is paused (g_flags bit 2), input waits at its head, a glide
+  // starts there, or a modal loop runs in it. Every frame runs the whole frame code, so the game state per frame is the speed 1
+  // one. game_speed: the speed the session starts at (--game-speed 1|2|4).
+  bool speed_button = false;
+  int game_speed = 1;
   // P32C item 6 (--list-wheel on): WM_MOUSEWHEEL notches (120 per notch, the remainder kept) go to view block word +0x90 (bridge.h
   // kPortViewWheelVa) as a recorded write inside the next modal Blocking pump; showMembershipRoster takes them as arrow presses
   bool list_wheel = false;
@@ -329,6 +338,10 @@ class LiveSession : public portsim::LiveHost {
   bool in_frame_body() const { return body_mode_.load(); }
   // P24D: the picture on screen is the title menu's (its latest refreshFull followed title_menu_overlay); the window thread asks
   bool at_title() const { return rpoint_seq_.load() == title_mark_.load() + 1; }
+  // P33A item 1 (HostOptions::speed_button): a left press at logical (x, y) (window thread): true when it lies on the speed button
+  // while the game runs its frame body (not the title menu, not a modal loop); the speed then cycles 1 -> 2 -> 4 -> 1
+  bool speed_press(int32_t x, int32_t y);
+  int speed() const { return speed_.load(); }
   // the newest presented frame (WM_APP + 2); false when none is waiting. `band` (P7): Extend when the frame is a full-screen
   // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
   // the world-load screens), Black once the frame loop runs (the course view, and every report or dialog over it)
@@ -529,6 +542,14 @@ class LiveSession : public portsim::LiveHost {
   static void queue_end_hook(void *user, portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w);
   void early_world(portsim::Ctx &ctx, const portsim::LiveTerrainWorld &w);
   bool early_due_ = false;          // this frame's head answered a glide start with a step (sim thread)
+  // P33A item 1 (HostOptions::speed_button): the speed; the group's first frame head and the frames of it run so far; this frame is
+  // quiet (sim thread); counts for session.json
+  std::atomic<int> speed_{1};
+  uint32_t group_head_ = 0;
+  int group_pos_ = 0;
+  bool quiet_ = false;
+  uint64_t quiet_frames_ = 0, shown_fast_ = 0, quiet_modal_ = 0;
+  std::atomic<uint64_t> speed_presses_{0};
   bool early_ok_ = false;           // early_f_ holds the last present's HUD layers
   portsim::GfxHudFrame early_f_;    // the last present's HUD frame without its base / back
   portsim::GfxTextFrame early_tf_;  // the last present's text runs in HUD layers (layer >= 0)

@@ -317,6 +317,20 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
     e.lp = lp;  // P9B: the event carries the point the game got (LiveSession's --cursor message answers read e.lp)
     if (piece_vac) lp = 0xffffffffu;  // P27A fix 2: (-1, -1) for the press's translation only
   }
+  // P33A item 1 (WindowOptions::on_hud_press): an app control drawn in a HUD layer takes the press and its release
+  if (opt_.on_hud_press && (msg == kWmLButtonDown || msg == kWmLButtonDblClk || msg == kWmLButtonUp)) {
+    if (msg == kWmLButtonUp && hud_press_taken_) {
+      hud_press_taken_ = false;
+      return;
+    }
+    if (msg != kWmLButtonUp && !e.vacated) {
+      const Point p = Translator(e.vp).lparam_point(e.lp);
+      if (opt_.on_hud_press(p.x, p.y)) {
+        hud_press_taken_ = true;
+        return;
+      }
+    }
+  }
   if (opt_.input_defect == InputDefect::Bypass) {
     // the wrong path: client coordinates straight into a click, no reads
     e.evidence = Translator::evidence_of(msg);
