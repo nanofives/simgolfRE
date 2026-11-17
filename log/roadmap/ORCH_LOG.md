@@ -673,3 +673,4 @@
 - 2026-11-17 bc4a52cf PUBLISHED (P33B fix 1, Top 10 banner pack art; 4 files) + GitHub release port-2026-11-17-bc4a52cf
 - 2026-11-17 9bcbc62c PUBLISHED (P33E fix 7, reportScreens.arrowKeysClose) + GitHub release
 - 2026-11-17 bde0ab22 PUBLISHED (P33D fixes 1-2, Theme Park crash + crash handler) + GitHub release
+- 2026-11-17 48a4285e PUBLISHED (P33E fix 8, SGA report double HUD) + GitHub release
