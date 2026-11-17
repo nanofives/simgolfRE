@@ -1811,6 +1811,8 @@ d4344fbe (batch), a4aba532, bd2d5d37 and aea899e3, each with its GitHub release.
   shown frame. The pause's face with 1 / 2 / 3 triangles, 76% size under the pause (placement A; his answer on A / B / C and a lit
   face at 2x / 4x is open). On LIVING-PC 4x reaches 2.6-3.0x (a speed-1 frame already takes 112-141 ms). Open: at 4K 4x the window
   took 1 of 5-6 frames for 1-2 s per run, cause not found.
+  Fix 2 (d9f3191c, his request after the round): keys 1 / 2 / 3 (main row and keypad, no modifier) set normal / 2x / 4x in the
+  frame body; the original's select-hole 1 / 2 / 3 keys (mainLoop key switch, cases 0x31..0x33) are given up, holes 4-18 keep theirs.
 - Item 2, the Top 10 Designers banner (P33B fix 1, bc4a52cf): the pack's redraw column-filled the plaque's end tabs (strips) and
   left English letter edges under the Spanish text. redraw_art.py fill=letters (only letter pixels refilled; LAN pack art only).
 - Items 3 and 4, the wide view (P33C). Fix 3 (d4344fbe), play switch tileToScreen.spriteReach: the tile pass queued art only while
