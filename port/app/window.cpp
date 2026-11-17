@@ -268,6 +268,17 @@ void AppWindow::input(uint32_t msg, uint32_t wp, uint32_t lp) {
   e.msg = msg;
   if (latlog_on() && (msg == kWmKeyDown || msg == kWmKeyUp))  // P21B (SG_P21_LATLOG)
     latlog('K', portsim::perf_now_ns(), msg, wp, lp, e.seq);
+  // P34A item 4 (WindowOptions::caps_context; Mariano's play-test of d9f3191c: "i can't open hole 1 ... i could after minimizing
+  // and coming back": his recording has Caps Lock's key-down, then 33 H presses arriving as the character 'H', which H1's key
+  // switch has no case for, and the first 'h' after he came back opened the hole). SG_P34_CAPS_FORCE=1: Caps Lock taken as on
+  // (tests post characters).
+  if (opt_.caps_context && msg == kWmChar && ((wp >= 'A' && wp <= 'Z') || (wp >= 'a' && wp <= 'z'))) {
+    static const bool force = std::getenv("SG_P34_CAPS_FORCE") && std::atoi(std::getenv("SG_P34_CAPS_FORCE")) != 0;
+    if ((force || (GetKeyState(VK_CAPITAL) & 1) != 0) && opt_.caps_context()) {
+      wp ^= 0x20;
+      ++caps_folds_;
+    }
+  }
   e.wp = wp;
   e.lp = lp;
   e.vp = tr_.viewport();

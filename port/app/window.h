@@ -118,6 +118,11 @@ struct WindowOptions {
   // it returns true for the key-down (the game is in its frame body, LiveSession::speed_key); their key-down, auto-repeat,
   // character and key-up are then never handed to the game or the recording. Null = the keys go to the game as before.
   std::function<bool(int n)> on_speed_key;
+  // P34A item 4 (--caps-shortcuts): while caps_context() says the game is in its frame body, a letter's WM_CHAR typed with Caps
+  // Lock on reaches the game in the case it has without Caps Lock (Shift still gives the capital). mainLoop H1's key switch
+  // takes the character: 'h' opens / closes the hole, 'g' and others have no capital case, and 'S' / 'L' / 'N' / 'P' / 'R' / 'T' /
+  // 'W' / 'X' are other commands than their small letters. Never in a text box, popup or menu. Null = as typed.
+  std::function<bool()> caps_context;
   // P24D: a mouse move / left press / release at the game's logical point (x, y) goes here first; true = taken (the game and the
   // recording never see it). Null = every mouse message goes to the game as before.
   std::function<bool(uint32_t msg, int32_t x, int32_t y)> on_mouse;
@@ -168,6 +173,7 @@ class AppWindow {
   void input(uint32_t msg, uint32_t wp, uint32_t lp);
   void client_changed();       // P5B item 4: re-read the client size, refit the viewport
   uint32_t speed_vk_ = 0;      // P33A fix 2: the 1 / 2 / 3 key whose repeats, character and key-up are kept from the game
+  uint64_t caps_folds_ = 0;    // P34A item 4: letters whose case Caps Lock had changed, given back
   uint32_t undo_vk_ = 0;       // P11D: the Z / Y key whose character and key-up are being kept from the game (0: none)
   uint32_t zoom_char_ = 0;     // P5B item 2: the character the next WM_CHAR becomes (0: none)
   uint32_t zoom_remaps_ = 0;

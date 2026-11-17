@@ -249,6 +249,7 @@ class ArrowGlide {
     uint64_t keys = 0, starts = 0, heads_req = 0, tiles_req = 0, caps = 0, ticks_moving = 0, resyncs = 0;
     uint64_t edge_changes = 0, edge_ticks = 0, taps_fast = 0;  // P31B
     uint64_t screen_caps = 0;  // P32A: frame heads whose request the screen cap shortened
+    uint64_t turns = 0;  // P34A: new directions while moving that ended the frame wait
   };
   Stats stats() const;
 
@@ -268,6 +269,7 @@ class ArrowGlide {
   uint32_t held_ = 0;  // bit 0 Left, 1 Up, 2 Right, 3 Down
   Axis ax_[2];
   bool moving_ = false, settled_ = true;  // settled: at rest on the picture's camera (D follows it)
+  bool turned_ = false;  // P34A: dir_locked took a new direction on an axis
   int32_t rot_ = 0;
   double v_ = 0, step_ = 4, lead_s_ = 0.15;
   double lo_[2] = {0, 0}, hi_[2] = {49, 49};  // P31A: the clamp of each axis (the key switch's 0..0x31 until the host sets it)

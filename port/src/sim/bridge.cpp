@@ -420,6 +420,7 @@ int32_t wide_view_margin_w2s(Ctx &ctx) { return g_defect_w2s_wide ? 0 : (view_wi
 // ------------------------------------------------------------------------------------------------ the camera's range (P31A)
 int g_defect_camera_bound_zoom = 1;  // mainLoop.cameraBoundByZoom
 int32_t g_camera_bound_margins[4] = {kCameraBoundMargin, kCameraBoundMargin, kCameraBoundMargin, kCameraBoundBottom};
+int32_t g_camera_bound_extra_pct = kCameraBoundExtraPct;  // P34A
 namespace {
 // twice the 800-space offset from the view's centre of the world point (u, v) (whole tiles: a land corner) seen from camera tile
 // (cx, cy), flat ground: worldToScreen's per-rotation formulas with (world - (camera << 10) - 0x200) * zoom / 128 = 8 zoom per
@@ -456,7 +457,11 @@ CameraRange camera_range(Ctx &ctx) {
       }
   if (x1 < 0) return r;
   const int32_t Vw = view_width(ctx);
-  const int32_t *M = g_camera_bound_margins;
+  // P34A: each margin moves g_camera_bound_extra_pct of the way from P31A's margin to the view's middle on its axis
+  auto wider = [](int32_t margin, int32_t half) { return margin + (half - margin) * g_camera_bound_extra_pct / 100; };
+  const int32_t Mx[4] = {wider(g_camera_bound_margins[0], Vw / 2), wider(g_camera_bound_margins[1], 300),
+                         wider(g_camera_bound_margins[2], Vw / 2), wider(g_camera_bound_margins[3], 300)};
+  const int32_t *M = g_camera_bound_margins;  // the pass below: P31A's margins first (the zoom 1 rule), then P34A's
   int32_t m[4] = {0, 0, 0, 0};  // margins in tiles: x low, x high, y low, y high
   auto fits = [&](const int32_t *t) {
     const int32_t lx = x0 + t[0], hx = x1 - t[1], ly = y0 + t[2], hy = y1 - t[3];
@@ -471,6 +476,13 @@ CameraRange camera_range(Ctx &ctx) {
     return true;
   };
   bool small[2] = {false, false};  // the land is smaller than the view on this axis
+  // P34A: two passes. P31A's margins decide `small` (the land smaller than the view: the camera pinned to its centre, as before);
+  // the wider margins give the range
+  for (int pass = 0; pass < (g_camera_bound_extra_pct != 0 ? 2 : 1); ++pass) {
+  if (pass == 1) {
+    M = Mx;
+    m[0] = m[1] = m[2] = m[3] = 0;
+  }
   bool grew = true;
   while (grew) {
     grew = false;
@@ -485,8 +497,9 @@ CameraRange camera_range(Ctx &ctx) {
         grew = true;
         break;
       }
-      if (i < 2 ? x0 + t[0] > x1 - t[1] : y0 + t[2] > y1 - t[3]) small[i / 2] = true;
+      if (pass == 0 && (i < 2 ? x0 + t[0] > x1 - t[1] : y0 + t[2] > y1 - t[3])) small[i / 2] = true;
     }
+  }
   }
   r.lo[0] = x0 + m[0];
   r.hi[0] = x1 - m[1];

@@ -22,6 +22,13 @@ constexpr int32_t kCameraBoundMargin = 16;
 // the bottom band's panels start at y 0x1da (the panels' art top: log/roadmap/P27/P27A_notes.md section 10), 600 - 0x1da = 126 units
 constexpr int32_t kCameraBoundBottom = 600 - 0x1da + kCameraBoundMargin;
 extern int32_t g_camera_bound_margins[4];  // left, top, right, bottom (800-space units); a development override only changes them
+// P34A (Mariano's play-test of d9f3191c: "i need to be able to move the camera out of bounds 30% more of what i can today because
+// things on the corners are difficult to see": the HUD panels sit in the window's corners, over a land corner standing 16 units
+// inside the view). Each margin moves this share of the way from P31A's margin to the view's middle on its axis, so a land
+// corner can be brought that much further into the view. The camera's centre still never leaves the land's box (the
+// margins only stop growing earlier), and the zoom 1 rule is unchanged. 0 = P31A's margins.
+constexpr int32_t kCameraBoundExtraPct = 30;
+extern int32_t g_camera_bound_extra_pct;
 struct CameraRange {
   int32_t lo[2] = {0, 0}, hi[2] = {0x31, 0x31};  // [0] gCameraTileX, [1] gCameraTileY
 };

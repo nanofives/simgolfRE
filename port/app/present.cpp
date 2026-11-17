@@ -218,7 +218,25 @@ constexpr double kGlideReqMax = 8.0;
 // P32A: the screen shift (800-space, camera_shift's formula) a request may ask for from D: 0.9 of the slide's far test
 // (Presenter::kSlideMaxX / kSlideMaxY), so a picture of the glide is always slid; zoom 4 at rotation 0: 5 tiles diagonally (64
 // units a tile), 6 along a screen-vertical arrow (40 units a tile); zoom 8 half of those
-constexpr double kGlideScreenX = 0.9 * Presenter::kSlideMaxX, kGlideScreenY = 0.9 * Presenter::kSlideMaxY;
+constexpr double kGlideScreenX0 = 0.9 * Presenter::kSlideMaxX, kGlideScreenY0 = 0.9 * Presenter::kSlideMaxY;
+// P34A (Mariano's play-test of d9f3191c: "camera movement with arrows is still choppy ... changing directions suddenly makes it
+// glitch"; log/roadmap/P34/P34A_notes.md; SG_P34_GLIDE=0: as before). Class a, three parts:
+// (1) P32A's cap is shorter than the glide needs: at zoom 4 it is 5 tiles while 30.1 tiles / s x (one frame period + the
+//     picture's hand-over, 0.2-0.3 s on LIVING-PC) is 6-9, so D met the newest picture's camera and stood still until the next
+//     one came (71 % of the moving ticks capped, a quarter of the paints without a move). While the glide drives the slide the
+//     far test that counts is the picture's offset from D (Presenter::slide_start, kGlideFar of the client), so the cap is
+//     kGlideScreenX / Y from D: 8 tiles along a screen axis at zoom 4 (kGlideReqMax), 4 at zoom 8.
+// (2) a reversal asks for a picture on the other side of D: its camera lies up to two caps from the painted picture's, past
+//     kSlideMaxX / Y, so slide_start dropped the underlay and the window showed that picture unmoved until the next one (a jump
+//     of the whole request and back: 433 px for 170 ms at 1920 x 1080). slide_start skips that test while the glide drives.
+// (3) a new direction while the glide moves ends the sim's frame wait like a start does (ArrowGlide::key's answer), so the
+//     first picture of the new direction is not a frame wait away.
+bool p34_glide() {
+  static const bool on = !(std::getenv("SG_P34_GLIDE") && std::atoi(std::getenv("SG_P34_GLIDE")) == 0);
+  return on;
+}
+constexpr double kGlideScreenX1 = 0.7 * 800, kGlideScreenY1 = 0.6 * 600;  // 800-space, from D
+constexpr double kGlideFar = 0.8;  // of the client's width / height: the offset past which a glide picture is a jump
 // the camera axes' move of one arrow at rotation rot (tick_frame.inc P21_ArrowStep: direction + rotation, & 7)
 void arrow_axes(uint32_t vk, int32_t rot, double &x, double &y) {
   const int base = vk == 0x26 ? 0 : vk == 0x27 ? 2 : vk == 0x28 ? 4 : 6;
@@ -247,7 +265,10 @@ void ArrowGlide::dir_locked() {
     Axis &a = ax_[i];
     const double e = edge_f_[i] / period_s_;  // P31B item 3: the edge scroll's move (tiles / s), 0 without --edge-glide
     if (n[i] != 0 || e != 0) {
-      if (n[i] != 0 && (a.ud == 0 || (a.ud > 0) != (n[i] > 0))) a.st = a.d;  // a new direction: the tap minimum counts from here
+      if (n[i] != 0 && (a.ud == 0 || (a.ud > 0) != (n[i] > 0))) {  // a new direction: the tap minimum counts from here
+        a.st = a.d;
+        turned_ = true;  // P34A
+      }
       a.ud = n[i];
       a.ue = e;
       a.ur = 0;
@@ -319,10 +340,15 @@ bool ArrowGlide::key(uint32_t vk, bool down, int64_t t_ns) {
   ++st_.keys;
   if (!engaged_) return false;
   const bool rest = !moving_;
+  turned_ = false;
   dir_locked();
   if (rest && moving_) {
     ++st_.starts;
     last_ns_ = t_ns;
+    return true;
+  }
+  if (turned_ && moving_ && p34_glide()) {  // P34A: a new direction while moving: the frame wait ends as for a start
+    ++st_.turns;
     return true;
   }
   return false;
@@ -434,7 +460,8 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
     for (int guard = 0; cap && zoom > 0 && guard < 64; ++guard) {
       double sx = 0, sy = 0;
       if (!camera_shift_f(zoom, rot_, tt[0] - ax_[0].d, tt[1] - ax_[1].d, sx, sy)) break;
-      if (std::fabs(sx) <= kGlideScreenX && std::fabs(sy) <= kGlideScreenY) break;
+      const double capx = p34_glide() ? kGlideScreenX1 : kGlideScreenX0, capy = p34_glide() ? kGlideScreenY1 : kGlideScreenY0;
+      if (std::fabs(sx) <= capx && std::fabs(sy) <= capy) break;
       const int i = std::fabs(tt[0] - ax_[0].d) >= std::fabs(tt[1] - ax_[1].d) ? 0 : 1;
       const double gap = tt[i] - ax_[i].d;
       if (std::fabs(gap) < 1.0) break;  // within a tile of D on both axes: nothing to take back
@@ -573,10 +600,13 @@ void Presenter::slide_start(const WorldImage &w) {
   }
   st.ndx = nd_x_;
   st.ndy = nd_y_;
+  // P34A: while the arrow glide drives the slide, the picture is drawn at the glide's offset (D - its camera), whatever the
+  // painted picture's camera was: only that offset can be too far (below)
+  const bool glide_drives = glide_ && glide_on_ && p34_glide();
   if (!layered() || w.hud_none || dim) reason = 4;
   else if (!w.cam.ok || !painted_cam_.ok || !(scene_ok_ || prev_ok_)) reason = 1;
   else if (!camera_shift(painted_cam_, w.cam, dx, dy)) reason = 2;
-  else if (std::abs(dx) > kSlideMaxX || std::abs(dy) > kSlideMaxY) reason = 3;
+  else if (!glide_drives && (std::abs(dx) > kSlideMaxX || std::abs(dy) > kSlideMaxY)) reason = 3;
   st.dx = dx;
   st.dy = dy;
   const int zi = w.cam.zoom == 1 ? 0 : w.cam.zoom == 2 ? 1 : w.cam.zoom == 4 ? 2 : w.cam.zoom == 8 ? 3 : -1;
@@ -591,7 +621,8 @@ void Presenter::slide_start(const WorldImage &w) {
     s0x = painted_x_ - static_cast<double>(dx) * pv.client_w / kLogicalW;
     s0y = painted_y_ - static_cast<double>(dy) * pv.client_h / kLogicalH;
     const int32_t pw = scene_ok_ ? scene_w_ : prev_w_, ph = scene_ok_ ? scene_h_ : prev_h_;
-    if (std::fabs(s0x) >= 0.6 * pw || std::fabs(s0y) >= 0.6 * ph) reason = 3;
+    const double far_f = glide_drives ? kGlideFar : 0.6;
+    if (std::fabs(s0x) >= far_f * pw || std::fabs(s0y) >= far_f * ph) reason = 3;
     else if (std::fabs(s0x) < 0.5 && std::fabs(s0y) < 0.5) reason = 5;
   }
   st.reason = reason;

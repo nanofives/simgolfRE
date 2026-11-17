@@ -132,6 +132,8 @@
 //   (post_event set it; the camera jumps to an off-screen place, the photo is taken, the board opens about 20 frames later) the
 //   game's one-line tip "Taking a photo for the bulletin board" sits at the top of the frame (gfx.h gfx_set_photo_banner; drawing
 //   only; log/roadmap/P32/P32A_notes.md)
+//   P34A item 4: --caps-shortcuts on|off (default on; SG_APP_P34=off: off) in the frame body a letter typed with Caps Lock on
+//   reaches the game in the case it has without it (the game's key switch takes the character: 'H' opens no hole).
 //   P33A item 1: --speed-button on|off (default on; SG_APP_P33=off: off) a button under the radial menu's pause (the pause's own
 //   face with 1, 2 or 3 triangles) cycles the game speed normal -> 2x -> 4x -> normal; at 2x / 4x the game's frames run in groups
 //   of 2 / 4 whose frames but the last draw no world and show nothing, and the group waits one frame period (host.h
@@ -620,6 +622,7 @@ struct Options {
   bool explain_tips = true;        // P32C items 3 / 5 / 8: --explain-tips on|off (SG_APP_P32=off: off)
   bool photo_banner = true;        // P32A item 9: --photo-banner on|off (SG_APP_P32=off: off)
   bool speed_button = true;        // P33A item 1: --speed-button on|off (SG_APP_P33=off: off)
+  bool caps_shortcuts = true;      // P34A item 4: --caps-shortcuts on|off (SG_APP_P34=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1856,6 +1859,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   if (o.speed_button)  // P33A item 1: a press on the speed button (after the HUD remap) is the app's, not the game's
     wo.on_hud_press = [&session](int32_t x, int32_t y) { return session.speed_press(x, y); };
+  if (o.caps_shortcuts)  // P34A item 4: Caps Lock does not change the letter shortcuts of the frame body
+    wo.caps_context = [&session]() { return session.in_frame_body(); };
   if (o.speed_button)  // P33A fix 2: the keys 1 / 2 / 3 set the speed in the frame body (the original's hole 1..3 keys there)
     wo.on_speed_key = [&session](int n) { return session.speed_key(n); };
   if (lang_ui().available.load())  // P24D: the title menu's language selector takes its own clicks (lang_ui.h)
@@ -3816,6 +3821,11 @@ bool parse(int argc, char **argv, Options &o) {
       (a == "--explain-tips" ? o.explain_tips : a == "--list-wheel" ? o.list_wheel : o.photo_banner) = v == "on";
       continue;
     }
+    if (a == "--caps-shortcuts") {  // P34A item 4 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.caps_shortcuts = v == "on";
+      continue;
+    }
     if (a == "--speed-button") {  // P33A item 1 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.speed_button = v == "on";
@@ -4346,6 +4356,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.explain_tips = o.list_wheel = o.pair_cover = o.plate_clip = o.photo_banner = o.edge_rows = o.shot_spread = false;  // P32C, P32E fix 4, P32B item 2, P32A item 9, P32D item 7
   if (const char *ep = std::getenv("SG_APP_P33"))  // P33: the fifteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.speed_button = o.lot_box = false;  // P33A item 1, P33B item 6
+  if (const char *ep = std::getenv("SG_APP_P34"))  // P34: the sixteenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.caps_shortcuts = false;  // P34A item 4
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

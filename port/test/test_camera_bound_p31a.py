@@ -18,7 +18,10 @@ from port.test.test_golfers import VL
 pytestmark = pytest.mark.port
 
 SEGMENTS = Path(__file__).resolve().parents[1] / "corpus" / "segments"
-MARGINS = (16, 16, 16, 600 - 0x1DA + 16)  # left, top, right, bottom (800-space units)
+EXTRA_PCT = 30  # P34A: each margin plus this share of the view on its axis (camera_range.h kCameraBoundExtraPct)
+MARGINS0 = (16, 16, 16, 600 - 0x1DA + 16)  # P31A's: left, top, right, bottom (800-space units); they decide the zoom 1 rule
+# P34A's, view width 800: each margin EXTRA_PCT of the way from P31A's to the view's middle; they give the range
+MARGINS = tuple(m + (h - m) * EXTRA_PCT // 100 for m, h in zip(MARGINS0, (400, 300, 400, 300)))
 
 
 @pytest.fixture(autouse=True)
@@ -53,7 +56,19 @@ def expected_range(types: bytes, z: int, rot: int, vw: int = 800):
     land = [(x, y) for x in range(50) for y in range(50) if types[x * 50 + y] != 0x14]
     x0, x1 = min(p[0] for p in land), max(p[0] for p in land)
     y0, y1 = min(p[1] for p in land), max(p[1] for p in land)
-    ml, mt, mr, mb = MARGINS
+    small = [False, False]
+    for margins in (MARGINS0, MARGINS):
+        m = _grow(x0, x1, y0, y1, z, rot, vw, margins, small if margins is MARGINS0 else [False, False])
+    lo, hi = [x0 + m[0], y0 + m[2]], [x1 - m[1], y1 - m[3]]
+    if small[0]:
+        lo[0] = hi[0] = (x0 + x1 + 1) // 2
+    if small[1]:
+        lo[1] = hi[1] = (y0 + y1 + 1) // 2
+    return lo, hi
+
+
+def _grow(x0, x1, y0, y1, z, rot, vw, margins, small):
+    ml, mt, mr, mb = margins
 
     def fits(t):
         lx, hx, ly, hy = x0 + t[0], x1 - t[1], y0 + t[2], y1 - t[3]
@@ -64,7 +79,7 @@ def expected_range(types: bytes, z: int, rot: int, vw: int = 800):
             if X2 < -(vw - 2 * ml) or X2 > vw - 2 * mr or Y2 < -(600 - 2 * mt) or Y2 > 600 - 2 * mb:
                 return False
         return True
-    m, small = [0, 0, 0, 0], [False, False]
+    m = [0, 0, 0, 0]
     grew = True
     while grew:
         grew = False
@@ -76,12 +91,7 @@ def expected_range(types: bytes, z: int, rot: int, vw: int = 800):
                 break
             if (x0 + t[0] > x1 - t[1]) if i < 2 else (y0 + t[2] > y1 - t[3]):
                 small[i // 2] = True
-    lo, hi = [x0 + m[0], y0 + m[2]], [x1 - m[1], y1 - m[3]]
-    if small[0]:
-        lo[0] = hi[0] = (x0 + x1 + 1) // 2
-    if small[1]:
-        lo[1] = hi[1] = (y0 + y1 + 1) // 2
-    return lo, hi
+    return m
 
 
 def _walk(lib, original, z, rot, goal, start=(25, 25), border=5):
@@ -139,7 +149,7 @@ def test_bound_stops_on_the_range_corner(portlib, z, rot, goal):
     lo, hi = expected_range(types, z, rot)
     want = (lo[0] if goal[0] == 0 else hi[0], lo[1] if goal[1] == 0 else hi[1])
     assert cam == want, f"zoom {z} rotation {rot}: camera {cam}, range x {lo[0]}..{hi[0]} y {lo[1]}..{hi[1]}"
-    assert 5 < want[0] < 44 and 5 < want[1] < 44, "the range lies inside the land, off its corner tiles"
+    assert 5 <= want[0] <= 44 and 5 <= want[1] <= 44, "the range lies inside the land's box"
 
 
 def test_zoom1_centred(portlib):
