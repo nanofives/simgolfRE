@@ -7692,6 +7692,8 @@ a41c54e:
 a41c553:
     // ---- ML+0xcf93  key dispatch loop head ----
     esi = FD(0x10);                           // ML+0xcf93 mov esi,[F+0x10]
+    g_terrain_press_now = g_terrain_press_key;   // P33C fix R: this pass's key came from a terrain tool press
+    g_terrain_press_key = false;
     if (!SG_DEFECT(g_defect_p_key_pauses)) {   // P21A mainLoop.pKeyPausesGame: p / P pause, a / A open the Improvements palette
         if (esi == 0x70) esi = 0x50;
         else if (esi == 0x61 || esi == 0x41) esi = 0x70;
@@ -7719,7 +7721,8 @@ a41c59e:
     eax = esi - 9;                            // ML+0xcfde lea eax,[esi-9]
     if ((u32)eax > 0x71) goto a41de11;        // ML+0xcfe1 cmp eax,0x71; ja
     // P32C mainLoop.hiddenCheatKeys = 0 (tick.cpp): the cash key '+' and the terrain keys '-' / '=' take the switch's default
-    if (!SG_DEFECT(g_defect_hidden_cheat_keys) && (esi == 0x2b || esi == 0x2d || esi == 0x3d)) goto a41de11;
+    if (!SG_DEFECT(g_defect_hidden_cheat_keys) && !g_terrain_press_now && (esi == 0x2b || esi == 0x2d || esi == 0x3d))
+        goto a41de11;  // P33C fix R: not a key a terrain tool press made
     ecx = sw_h1_key(eax);              // ML+0xcfec mov cl,[eax+ML+0x1235c]
     switch (ecx) {                            // ML+0xcff2 jmp [ecx*4+ML+0x12278]
         case 0:  goto a41c9ea; case 1:  goto a41c9c8; case 2:  goto a41c9c4;
@@ -8883,9 +8886,13 @@ a41e4be:
     eax = G32((GS(g_rootInput) + 16));                             // ML+0xef0b
     if (eax == ebx) {                                  // ML+0xef10 cmp eax,ebx; jne
         FD(0x10) = 0x3D;                               // ML+0xef14
+        g_terrain_press_key = true;                    // P33C fix R: a press, not a key
         goto a41e4eb;                                  // ML+0xef1c
     }
-    if (eax == 2) FD(0x10) = 0x2D;                     // ML+0xef1e cmp eax,2; jne; mov [F+0x10],0x2d
+    if (eax == 2) {
+        FD(0x10) = 0x2D;                               // ML+0xef1e cmp eax,2; jne; mov [F+0x10],0x2d
+        g_terrain_press_key = true;                    // P33C fix R
+    }
 a41e4eb:
     eax = G32(GS(g_ui_542f20));                             // ML+0xef2b
     G32((GS(g_rootInput) + 16)) = ebp;                             // ML+0xef30

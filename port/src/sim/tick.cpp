@@ -111,6 +111,12 @@ int g_defect_staff_list_click = 1;
 // gDirtyFlagB, and H1 reads it there after the screen (setDirtyFlagB, ML+0xcb12). Fixed (0): the chars 0x2b / 0x2d / 0x3d do
 // nothing in H1's key switch, whatever path they took.
 int g_defect_hidden_cheat_keys = 1;
+// P33C fix R (class a, a P32C regression): with the terrain tool, mainLoop hands a left / right press to the same key switch as
+// '=' / '-' (ML+0xef0b..ML+0xef1e), so at 0 the switch above dropped every raise and lower click as well. The press path marks the
+// key it made (g_terrain_press_key); the key dispatch head (ML+0xcf93) moves the mark to g_terrain_press_now for this pass, and
+// the switch drops only the keys no press made. Not GameState: set and read inside one mainLoop pass on the sim thread.
+thread_local bool g_terrain_press_key = false;
+thread_local bool g_terrain_press_now = false;
 // mainLoop.vacatedPanelClick (P9E fix 3, the widescreen HUD of G32 / P9B: "a click where a moved panel used to be still reaches
 // that panel"): the frame's click dispatch sends a press below y 0x1b8 to the System menu (x < 0xc8: showSystemMenu's
 // nearestMenuSpot) or, below y 0x1e0, to the panel handlers of g_panelListMode (ML+0xee40..ML+0xeec5); every other press takes
