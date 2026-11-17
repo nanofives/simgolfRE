@@ -125,6 +125,15 @@ void gfx_speed_button_centre(int32_t &x, int32_t &y);
 void gfx_set_lot_box(Ctx &ctx, bool on);
 bool gfx_lot_box(Ctx &ctx);
 int32_t gfx_lot_box_measure(Ctx &ctx, uint32_t va);  // the drawn width of the text at va (0 when it cannot be measured)
+// P34B (Mariano's play-test of d9f3191c: "this screen is not widescreen, has the UI in the background in the wrong place";
+// log/roadmap/P34/P34B_notes.md), set by the app's host after gfx_set_hud_modal (--results-layers on, the default; SG_APP_P34=off:
+// off). The tournament results scorecard (showTournamentResults' scorecard layout and its modal loop) is drawn inside the title
+// layer's scope that the frame opens around showTournamentResults (gfx_layer_of_callee), and its marker results.begin, unlike
+// reports.begin and dialogs.begin, did not close that layer: every refreshFull of its loop published a frame without layers (the
+// whole 800 root, HUD panels at their 800-space places, centred). With it on, results.begin closes the layer as those markers do
+// (Gfx::hud_modal_mark): the frame's panels publish as layers at their anchors, the dim and the card as the centred layer after
+// them. Records only. Off: as before.
+void gfx_set_results_layers(Ctx &ctx, bool on);
 // P24G (Mariano's play-test 11 item 7: "an intermediate UI / indicator when tournament is starting, otherwise I can keep clicking on
 // tournament button or practice"; log/roadmap/P24/P24G_notes.md), set by the app's host (--tourney-hold on, the default;
 // SG_APP_P24=off: off). clickGolferPanel ignores Practice Round, Play <pro> and Begin Tournament while g_flags bit 21 (a tournament

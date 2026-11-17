@@ -79,7 +79,7 @@ def pytest_configure(config):
     os.environ.setdefault("SG_APP_P31", "off")  # P31B item 3 --edge-glide, item 4 --tap-slide, item 7 --early-world
     os.environ.setdefault("SG_APP_P32", "off")  # P32C --explain-tips, --list-wheel, P32E fix 4 --pair-cover, P32A --photo-banner, P32D --shot-spread
     os.environ.setdefault("SG_APP_P33", "off")  # P33A item 1 --speed-button, P33B item 6 --lot-box
-    os.environ.setdefault("SG_APP_P34", "off")  # P34A item 4 --caps-shortcuts
+    os.environ.setdefault("SG_APP_P34", "off")  # P34A item 4 --caps-shortcuts, P34B --results-layers
     os.environ.setdefault("SG_APP_P22", "off")  # P22E item 7 --edge-previews, P22D --golfer-list / --meter-tips, P22C --trail-glide
     if config.getoption("--backend"):
         os.environ["SG_BACKEND"] = config.getoption("--backend")

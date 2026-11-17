@@ -2503,6 +2503,10 @@ void gfx_world_quiet_end(Ctx &ctx) {
 void gfx_set_lot_box(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->lot_box = on;
 }
+// P34B (gfx.h gfx_set_results_layers)
+void gfx_set_results_layers(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->results_layers = on;
+}
 bool gfx_lot_box(Ctx &ctx) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);

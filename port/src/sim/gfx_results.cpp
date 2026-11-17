@@ -11,6 +11,7 @@
 //       a marker tick's showTournamentResults puts before the scorecard's first drawing call; it draws nothing. With this
 //       family's probe on (negctl modes >= 0x10000, a measurement, not a control) the whole root surface is filled with the
 //       probe pattern (gfxs::probe_fill, gfx_simfoto.cpp): the strip is modal, nothing under it is redrawn while it waits.
+//       P34B: with gfx_set_results_layers on it first closes the open panel layer (Gfx::hud_modal_mark), as reports.begin does.
 //
 // The layout positions the original takes from the bands' SpriteRef fields +0x18 / +0x1c (the cut size cropSprite stores)
 // come from the backend's cuts (gfx_sprite_cut, gfx_reports.cpp) in tick_panels.inc; the cuts are loadInfoScreenArt's
@@ -43,6 +44,9 @@ int mode() { return SG_NEGCTL(g_negctl_gfx_results); }
 
 void b_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g.ensure_root(ctx);
+  // P34B (gfx.h gfx_set_results_layers): the scorecard is drawn inside the title layer's scope; it closes that layer here as
+  // reports.begin / dialogs.begin do, so its refreshFull publishes the frame's panels as layers and the card as a centred layer
+  if (g.results_layers) g.hud_modal_mark();
   gfxs::probe_fill(g, ctx, mode(), 0, 0, g.root.w, g.root.h);
 }
 

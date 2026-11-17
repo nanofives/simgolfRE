@@ -150,6 +150,7 @@ class Gfx {
   bool card_width = false;  // P26E fix 2 (gfx.h gfx_set_card_width): the match scorecard as wide as the course's holes
   bool plate_clip = false;  // P32B item 2 (gfx.h gfx_set_plate_clip): the match scorecard's names end inside their plates
   bool lot_box = false;  // P33B item 6 (gfx.h gfx_set_lot_box): the Buy Land lot panel as wide as its lines
+  bool results_layers = false;  // P34B (gfx.h gfx_set_results_layers): results.begin closes the open panel layer
   bool palette_names = false;  // P26B item 3 (gfx.h gfx_set_palette_names): the palette's tool names one size, wrapped, trees at row height
   bool walker_labels_top = false;  // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' labels over the sprite walk
   int32_t meter_prev = -1, meter_count = 0;  // P22D fix 3: the box under the cursor at the last status bar, and for how many

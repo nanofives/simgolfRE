@@ -107,6 +107,10 @@
 //   P33B item 6: --lot-box on|off (default on; SG_APP_P33=off: off) the Buy Land tool's lot panel (value, clearing, preparation,
 //   profit) as wide as its widest line in the current language, on the left side of the bar (gfx.h gfx_set_lot_box; drawing
 //   only; log/roadmap/P33/P33B_notes.md)
+//   P34B: --results-layers on|off (default on; SG_APP_P34=off: off; needs the layered HUD and --hud-modal) the tournament results
+//   scorecard publishes the frame's HUD panels as layers at their window anchors and the card centred over the wide course; it was
+//   drawn inside the title layer's scope and published the whole 800 frame, panels at their 800-space places (gfx.h
+//   gfx_set_results_layers; records only; log/roadmap/P34/P34B_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -614,6 +618,7 @@ struct Options {
   bool card_width = true;          // P26E fix 2: --card-width on|off (SG_APP_P26=off: off)
   bool plate_clip = true;          // P32B item 2: --plate-clip on|off (SG_APP_P32=off: off)
   bool lot_box = true;             // P33B item 6: --lot-box on|off (SG_APP_P33=off: off)
+  bool results_layers = true;      // P34B: --results-layers on|off (SG_APP_P34=off: off)
   bool edge_rows = true;           // P32B item 2: --edge-rows on|off (SG_APP_P32=off: off)
   bool arrow_glide = true;         // P26A: --arrow-glide on|off (SG_APP_P26=off: off)
   bool edge_glide = true;          // P31B item 3: --edge-glide on|off (SG_APP_P31=off: off)
@@ -1356,6 +1361,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_popups && o.closed_popups_hide) portsim::gfx_set_hud_left_hide(*ctx, true);  // P25C fix 2
       if (ok && hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2
+      if (ok && hud_layers_on(o) && o.hud_modal && o.results_layers) portsim::gfx_set_results_layers(*ctx, true);  // P34B
       if (ok && hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4
       if (ok && line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1
       if (ok && edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7
@@ -1649,6 +1655,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups) portsim::gfx_set_hud_popups(*ctx, true);  // P9E: the popups' place (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_popups && o.closed_popups_hide) portsim::gfx_set_hud_left_hide(*ctx, true);  // P25C fix 2 (gfx.h)
   if (hud_layers_on(o) && o.hud_modal && o.hud_close) portsim::gfx_set_hud_close(*ctx, true);  // P9E fix 2: the close frame (gfx.h)
+  if (hud_layers_on(o) && o.hud_modal && o.results_layers) portsim::gfx_set_results_layers(*ctx, true);  // P34B: the results card's layers (gfx.h)
   if (hud_layers_on(o) && o.hud_cursor) portsim::gfx_set_hud_cursor(*ctx, true);  // P9E fix 4: the cursor's previews (gfx.h)
   if (line_res_on(o)) portsim::gfx_set_hud_lines(*ctx, true);  // P10I fix 1: the tee lines (gfx.h; records only)
   if (edge_previews_on(o)) portsim::gfx_set_hud_edge(*ctx, true);  // P22E item 7: the placement box whole (gfx.h; records only)
@@ -3846,6 +3853,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.lot_box = v == "on";
       continue;
     }
+    if (a == "--results-layers") {  // P34B (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.results_layers = v == "on";
+      continue;
+    }
     if (a == "--plate-clip" || a == "--edge-rows") {  // P32B item 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--plate-clip" ? o.plate_clip : o.edge_rows) = v == "on";
@@ -4357,7 +4369,7 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P33"))  // P33: the fifteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.speed_button = o.lot_box = false;  // P33A item 1, P33B item 6
   if (const char *ep = std::getenv("SG_APP_P34"))  // P34: the sixteenth play-test's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.caps_shortcuts = false;  // P34A item 4
+    if (!std::strcmp(ep, "off")) o.caps_shortcuts = o.results_layers = false;  // P34A item 4, P34B
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

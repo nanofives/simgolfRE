@@ -1836,3 +1836,36 @@ d4344fbe (batch), a4aba532, bd2d5d37 and aea899e3, each with its GitHub release.
 Releases went one fix per check except one batch (P33E 9, P33B 3, P33C 3) after Mariano asked why the round took long: each fast
 check took 13-48 min. Full check of the round on aea899e3: x64 + Win32 0 errors / 0 warnings; static 7; all-checks smoke 1080 p14
 729 / 0 bad and 4K p14 154 / 0 bad, p16b / p17b 0 differing.
+
+## P34: Mariano's sixteenth play-test feedback (2026-11-17)
+Four items on release d9f3191c (base c0bad6a9), given in chat while he played. Notes log/roadmap/P34/P34A_notes.md and
+P34B_notes.md, his session files log/roadmap/P34/mariano_pc/, his picture log/roadmap/P34/mariano_item3_tournament_results.png.
+App option off switch SG_APP_P34=off. Published 036817d4 (items 1, 2, 4) with its GitHub release.
+- Item 1, "camera movement with arrows is still choppy ... changing directions suddenly makes it glitch" (P34A fix 1, 036817d4,
+  class a, SG_P34_GLIDE=0 as before; port/app/present.cpp). P32A's screen cap on a frame head's request (5 tiles at zoom 4) is
+  shorter than 30.1 tiles / s x (frame period + hand-over), so the glide camera met the newest picture and stood still; a
+  reversal's picture lies up to two caps from the painted one, past kSlideMaxX / Y, so slide_start called it a jump and the
+  window showed it unmoved for one picture (430-640 px and back). The cap is 8 tiles at zoom 4 (kGlideScreenX1 / Y1), slide_start
+  skips the picture-to-picture test while the glide drives the slide (the offset test at 0.8 of the client), and a new direction
+  while moving ends the frame wait as a start does. LIVING-PC, 1920 x 1080, same build off / on: paints on an unmoved picture
+  58 -> 0, largest step 641 -> 225 px, paints without a move in turns 43 % -> 28 % and in holds 22 % -> 12 %, longest hold stall
+  100 -> 41 ms. Left, sim-bound: the first moved picture 140-250 ms after the key-down and 110-180 ms after a reversal on
+  LIVING-PC (a frame body takes about 100 ms); removing it needs a world picture larger than the view.
+- Item 2, "move the camera out of bounds 30% more" (same commit; camera_range, mainLoop.cameraBoundByZoom = 0): each margin moves
+  kCameraBoundExtraPct = 30 % of the way from P31A's margin to the view's middle (800-wide: 16 -> 131 left / right, 16 -> 101 top,
+  142 -> 189 bottom); zoom 4 on a 5..44 land x 8..37 y 11..41 -> x 7..40 y 9..42. The zoom 1 rule is decided with P31A's margins.
+  A first version (30 % of the whole view) put the land's corner at the window's middle and was dropped before the merge.
+- Item 4, "i can't open hole 1 ... i could after minimizing and coming back" (same commit, class b, app option --caps-shortcuts):
+  his recording shows Caps Lock's key-down, then 33 H presses arriving as the character 'H', which mainLoop H1's key switch has no
+  case for ('h' opens the hole; capitals J L N P R S T W X are other commands than their small letters). In the frame body a
+  letter typed with Caps Lock on reaches the game in the case it has without it.
+- Item 3, "this screen is not widescreen, has the UI in the background in the wrong place" (the tournament results scorecard;
+  P34B fix 1, class b, app option --results-layers): mainLoop calls showTournamentResults inside the title panel layer's scope,
+  and the scorecard's marker results.begin did not close that layer as reports.begin and dialogs.begin do (Gfx::hud_modal_mark),
+  so every publish of the card was a frame without layers and the presenter showed the raw 800 root centred (HUD copy inside the
+  4:3 frame, sides undimmed). With the option results.begin closes the layer: panels at their anchors, the card a centred dim
+  layer. The only screen with this cause (F1-F5, F7-F10 and J open outside every layer scope; the hire dialog is marked).
+  Present time on the card 17.7 -> 18.6 ms at 1080, 20.2 -> 22.1 ms at 4K. Open: widen the card or keep it centred; the
+  whole-window dim.
+Checks: tree P34A x64 0 errors / 0 warnings, test_static + test_profiles + test_camera_bound_p31a 37 passed, segments 205 / 205
+equal to I25; fast check 036817d4: static 7, SMOKE OK, paint 94-100 % of the refresh.
