@@ -6813,9 +6813,11 @@ L41a5b8:
     // --- tool 5: lot/course value panel ---
     if (gfx_lot_box(ctx)) {
         // P33B item 6 (gfx.h gfx_set_lot_box; drawing only): the same four lines and the same calls as below, but the box as wide
-        // as the widest line plus the original's 12-column margins (the rule's ends: box + 0xc, box + w - 0xc), its right edge
-        // where the original's is (0x2a4 + 0x78), the lines centred on its middle; lines that clear the original's border keep its box. The lines are built once first to be measured
-        // (rateLot reads only); g_textBuffer / g_textBuf end with the same bytes the original leaves there.
+        // as the widest line plus the original's 12-column margins (the rule's ends: box + 0xc, box + w - 0xc; lines that clear
+        // the original's border keep its width), on the left side of the bar (Mariano's choice B): its left edge at the palette
+        // backdrop's (0xd8), its bottom on the backdrop's top row 0x1e2, drawn in the bottom layer (left-anchored, gfx.h), the
+        // lines centred on its middle. The profit text at the cursor stays where the original draws it. The lines are built once
+        // first to be measured (rateLot reads only); g_textBuffer / g_textBuf end with the same bytes the original leaves there.
         const int32_t rl = cc("rateLot", G32(GS(g_cursorTileX)), G32(GS(g_cursorTileY))) / 4;
         const int32_t prep = (int)G16((GS(f_tab_buildItems_4c26b0) + 118));
         const int32_t clear = FD(0x28);
@@ -6831,21 +6833,25 @@ L41a5b8:
             widest = std::max(widest, gfx_lot_box_measure(ctx, GS(g_textBuffer)));
         }
         // drawFrameR3 widens 0x78 to 0x7f (its 16-rounding): lines that clear its border there (4 columns a side, as the English
-        // lines do) keep the original's box and centre; wider ones get the 12-column margins
+        // lines do) keep the original's width; wider ones get the 12-column margins
         const int32_t bw = widest + 2 * 4 <= 0x7f ? 0x78 : widest + 2 * 0xc;
-        const int32_t bx = 0x2a4 + 0x78 - bw;
+        const int32_t bx = 0xd8;
+        const int32_t dy = 0x1e2 - 0x70 - 0x17c;
+        std::optional<GfxLayerScope> lay;
+        lay.emplace(ctx, kGfxLayerBottom);
         const int32_t mid = bx + bw / 2;
-        cc("drawFrameR3", bx, 0x17c, bw, 0x70, 1);
+        cc("drawFrameR3", bx, 0x17c + dy, bw, 0x70, 1);
         uint32_t box[1] = {static_cast<uint32_t>(bw)};
         gfx_drop(ctx, "text.box", box, 1);  // the frame's width: the lines keep the current font (lang_fit_font), none squeezed
         for (int i = 0; i < 4; ++i) {
-            if (i == 3) tc("Widget_fillRect", (GS(g_rootWindow) + 628), bx + 0xc, 0x1c2, bx + bw - 0xc, 0x1c2, 0x80006318);
+            if (i == 3) tc("Widget_fillRect", (GS(g_rootWindow) + 628), bx + 0xc, 0x1c2 + dy, bx + bw - 0xc, 0x1c2 + dy, 0x80006318);
             StrCpy(kBuf, pool[i]);
             Itoa(num[i], GS(g_textBuf), 0xa);
             StrCat(kBuf, GS(g_textBuf));
-            cc("drawCenteredText2", GS(g_textBuffer), mid, row[i], col[i]);
+            cc("drawCenteredText2", GS(g_textBuffer), mid, row[i] + dy, col[i]);
         }
         gfx_drop(ctx, "text.box", nullptr, 0);
+        lay.reset();
         StrCpy(kBuf, GS(f_strpool_4c6158));
         Itoa(num[3], GS(g_textBuf), 0xa);
         StrCat(kBuf, GS(g_textBuf));

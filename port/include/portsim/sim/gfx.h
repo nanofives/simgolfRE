@@ -99,7 +99,8 @@ bool gfx_photo_banner(Ctx &ctx);
 // language, so the Spanish lines run past the frame. With it on, mainLoop measures the four lines first (gfx_lot_box_measure: the
 // text now at `va` as drawCenteredText2 draws it, in the current language and the current font, never a smaller font: the box's
 // texts are drawn with text.box set to the frame's width) and draws the box as wide as the widest plus the original's 12-column
-// margins (gfx_lot_box_frame). Drawing only: nothing of the GameState differs from the original's frame (the same strings end in
+// margins, on the left side of the bar (left edge at the palette backdrop's x 0xd8, bottom on its top row 0x1e2, in the left-anchored
+// bottom layer; Mariano's choice B). Drawing only: nothing of the GameState differs from the original's frame (the same strings end in
 // g_textBuffer). Off (the default): the original's box, nothing measured.
 void gfx_set_lot_box(Ctx &ctx, bool on);
 bool gfx_lot_box(Ctx &ctx);

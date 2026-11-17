@@ -105,7 +105,7 @@
 //   inside their plates, nothing after them (drawMatchScoreboard draws them unclipped; gfx.h gfx_set_plate_clip; drawing only;
 //   log/roadmap/P32/P32B_notes.md)
 //   P33B item 6: --lot-box on|off (default on; SG_APP_P33=off: off) the Buy Land tool's lot panel (value, clearing, preparation,
-//   profit) as wide as its widest line in the current language, right edge where the original's is (gfx.h gfx_set_lot_box; drawing
+//   profit) as wide as its widest line in the current language, on the left side of the bar (gfx.h gfx_set_lot_box; drawing
 //   only; log/roadmap/P33/P33B_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
