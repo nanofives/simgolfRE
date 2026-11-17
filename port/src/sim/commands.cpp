@@ -141,11 +141,14 @@ int g_defect_report_any_click = 1;
 // P33E item 7 (Mariano's play-test 15: "some screens like this one disappear with keyboard arrows, that shouldn't happen"; class b,
 // the original closes them too: every F1..F10 screen of golf_clean.exe ended on a Left arrow in our own instance, and the routing
 // map and the trophy room then also scrolled the camera with it, log/roadmap/P33/P33E_notes.md): the screens that end on any key
-// (their flushRedraw exit test) also end on an arrow's key-down (rootWin_onKey(0, vk), gDirtyFlagA 0x25..0x28, no character).
-//   reportScreens.arrowKeysClose  play (0): at those exit tests (cm::screen_key) an arrow with no character is dropped (the code
-//                  word cleared) before flushRedraw, so the screen stays and the arrow never reaches the frame's camera keys; every
-//                  other key still ends the screen. Loops that use the arrows (popups, the text box, the scroll lists) are untouched.
-int g_defect_report_arrow_keys = 1;
+// (their flushRedraw exit test) also end on the key-down of any key that types no character (an arrow, PgUp / PgDn / Home / End,
+// Insert / Delete, an F key, a lone Shift / Ctrl / Alt: rootWin_onKey(0, vk), gDirtyFlagB 0, gDirtyFlagA the code).
+//   reportScreens.charlessKeysClose  play (0): at those exit tests (cm::screen_key) a key word with no character (gDirtyFlagB 0) is
+//                  dropped (the code word cleared) before flushRedraw, so the screen stays and the key never reaches the frame's
+//                  key switch (the camera keys). Esc, Enter and the letters still end the screen: their WM_CHAR puts the character
+//                  in gDirtyFlagB (P33E fix 9, Mariano: "only Esc, Enter, letters and the close button close them"; fix 7 dropped
+//                  the arrows only). Loops that use the arrows (popups, the text box, the scroll lists) are untouched.
+int g_defect_report_charless_keys = 1;
 // P27B fix 2 (Mariano, P27: "the button answers where it is drawn"; class b): loadGameBrowserScreen draws the selected save's
 // bar at x 0x136 (width 0x1c8), from its row's text y - 1, but takes a list press only right of the text column (press x >
 // 0x140) and from the text y (y >= 0x74), its input loop's list test: the bar's left 0xb columns and top row are dead.
@@ -446,8 +449,9 @@ void pump_light(Ctx &ctx, const char *where) {
 
 int32_t screen_key(Ctx &ctx) {
   GameState &gs = ctx.gs();
-  const uint32_t code = static_cast<uint32_t>(gs.gDirtyFlagA) & 0xffffu;   // the key-down's code without its modifier bits
-  if (!SG_DEFECT(g_defect_report_arrow_keys) && gs.gDirtyFlagB == 0 && code >= 0x25 && code <= 0x28) gs.gDirtyFlagA = 0;
+  // P33E fix 9: every key word without a character; a key that types one (Esc, Enter, a letter) puts it in gDirtyFlagB with its
+  // WM_CHAR, in the same pass as its key-down or in a later one, and ends the screen there
+  if (!SG_DEFECT(g_defect_report_charless_keys) && gs.gDirtyFlagB == 0) gs.gDirtyFlagA = 0;
   return flush_redraw(ctx);
 }
 
@@ -851,10 +855,11 @@ const DefectDef kDefects[] = {
      "a full-screen screen with a tick button (the reports, the routing map, the roster, the bulletin board) ends at a click "
      "anywhere; fixed: only a click on its tick (or a key) ends it",
      &g_defect_report_any_click},
-    {"reportScreens.arrowKeysClose", "P33E",
+    {"reportScreens.charlessKeysClose", "P33E",
      "a screen that ends on any key (the reports, the hole statistics, the routing map, the shortcuts, the roster, the bulletin "
-     "board, the hire and pair dialogs) also ends on an arrow key; fixed: an arrow is dropped there and the screen stays",
-     &g_defect_report_arrow_keys},
+     "board, the hire and pair dialogs) also ends on a key that types no character (an arrow, PgUp, Home, an F key); fixed: such "
+     "a key is dropped there and the screen stays (Esc, Enter, the letters still end it)",
+     &g_defect_report_charless_keys},
     {"loadGameBrowser.rowPressPastText", "P27B",
      "the load browser's list takes a press only right of the text column (x > 0x140) and from the text row's top, while the "
      "selection bar is drawn from x 0x136 and one row higher; fixed: a press over the drawn bar counts",

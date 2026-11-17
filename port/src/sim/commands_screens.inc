@@ -43,7 +43,7 @@ void click_or_key_loop(Ctx &ctx, bool button_first, const char *where, OkHover *
                        tick_close_click(ctx, h ? h->x : 0, h ? h->y : 0, h && h->plain ? 0x2c : 0, h && h->plain ? 0x2c : 0);
     if (button_first) {
       if (click) break;
-      if (screen_key(ctx) != 0) break;   // P33E: reportScreens.arrowKeysClose
+      if (screen_key(ctx) != 0) break;   // P33E: reportScreens.charlessKeysClose
     } else {
       const bool key = screen_key(ctx) != 0;
       if (click || key) break;
@@ -588,7 +588,7 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
     d.gx("Window::refreshFull", {d.window(), 0});
     pump_messages(ctx, PumpKind::Blocking, "showHireEmployeeDialog");
     if (gs.g_rootInput[kButton] != 0) break;
-    if (screen_key(ctx) == 0) continue;   // P33E: reportScreens.arrowKeysClose
+    if (screen_key(ctx) == 0) continue;   // P33E: reportScreens.charlessKeysClose
     if (gs.g_rootInput[kButton] == 0) return -1;
     break;
   }

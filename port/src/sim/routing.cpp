@@ -572,7 +572,7 @@ int32_t show_routing_map_screen(Ctx &ctx) {
       int32_t click = gs.g_rootInput[kButton];
       bool clicked = true;
       if (click == 0) {
-        if (cm::screen_key(ctx) == 0) continue;   // P33E: reportScreens.arrowKeysClose
+        if (cm::screen_key(ctx) == 0) continue;   // P33E: reportScreens.charlessKeysClose
         click = gs.g_rootInput[kButton];
         clicked = click != 0;
       }
@@ -771,7 +771,7 @@ int32_t show_shortcuts_screen(Ctx &ctx) {
       const int32_t b = gs.g_rootInput[kButton];
       if (b == 1 || (mutant == 1 && b == 2)) again = false;
     }
-    if (cm::screen_key(ctx) != 0 && mutant != 4) break;   // P33E: reportScreens.arrowKeysClose
+    if (cm::screen_key(ctx) != 0 && mutant != 4) break;   // P33E: reportScreens.charlessKeysClose
     if (!again) break;
   }
   gs.g_ui_569498 = mutant == 3 ? 1 : 0;
@@ -1009,7 +1009,7 @@ int32_t show_membership_roster(Ctx &ctx) {
       if (leave) break;
       cm::pump_messages(ctx, PumpKind::Blocking, "showMembershipRoster");
       if (gs.g_rootInput[kButton] != 0) break;
-      if (cm::screen_key(ctx) != 0) break;   // P33E: reportScreens.arrowKeysClose
+      if (cm::screen_key(ctx) != 0) break;   // P33E: reportScreens.charlessKeysClose
     }
     if (wheeled) continue;   // P32C item 6: the page again at the new offset
     const int32_t b = gs.g_rootInput[kButton];

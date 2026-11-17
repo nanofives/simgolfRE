@@ -106,7 +106,7 @@ void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr
                                : gs.g_rootInput[4];
     if (!left_only) {
       if (button != 0) break;
-      if (cm::screen_key(ctx) != 0) break;   // P33E: reportScreens.arrowKeysClose
+      if (cm::screen_key(ctx) != 0) break;   // P33E: reportScreens.charlessKeysClose
     } else {
       const bool end = button == 1 || (SG_NEGCTL(g_negctl_end_of_year) == 3 && button != 0);
       if (cm::screen_key(ctx) != 0) break;

@@ -60,8 +60,8 @@ void pump_light(Ctx &ctx, const char *where);
 // flushRedraw: a set g_redrawPending is cleared together with both key words; then (pumpInput483c30 dispatches nothing in
 // the port) a non-zero key word sets g_redrawPending and returns 1, else 0
 int32_t flush_redraw(Ctx &ctx);
-// P33E item 7 (reportScreens.arrowKeysClose): flushRedraw for a screen's "ends on any key" exit test; with the switch at 0 an
-// arrow's key-down with no character is dropped first (commands.cpp)
+// P33E item 7 (reportScreens.charlessKeysClose): flushRedraw for a screen's "ends on any key" exit test; with the switch at 0 a
+// key word with no character (an arrow, PgUp, an F key) is dropped first (commands.cpp)
 int32_t screen_key(Ctx &ctx);
 // pumpAndRedraw(0): waits for a click (button word), a key or the network flag; returns 1
 int32_t pump_and_redraw(Ctx &ctx, int32_t limit, const char *where);
@@ -96,7 +96,7 @@ int32_t window_height(Ctx &ctx);
 extern int g_defect_esc_course_action, g_defect_esc_buy_land, g_defect_esc_char_editor, g_defect_esc_char_picker,
     g_defect_esc_popup_close, g_defect_esc_skill_points;
 extern int g_defect_report_any_click;  // P26C item 4b (commands.cpp reportScreens.anyClickCloses)
-extern int g_defect_report_arrow_keys;  // P33E item 7 (commands.cpp reportScreens.arrowKeysClose)
+extern int g_defect_report_charless_keys;  // P33E item 7 (commands.cpp reportScreens.charlessKeysClose)
 extern int g_defect_browser_row_press;  // P27B fix 2 (commands.cpp loadGameBrowser.rowPressPastText)
 extern int g_defect_hire_no_row;        // P27B fix 3 (commands.cpp showHireEmployeeDialog.pressWithoutRowHires)
 extern int g_defect_editor_cancel_stays;  // P13B item 14: showCharacterEditor.cancelStaysOpen (commands.cpp)
