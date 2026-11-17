@@ -1840,7 +1840,7 @@ check took 13-48 min. Full check of the round on aea899e3: x64 + Win32 0 errors 
 ## P34: Mariano's sixteenth play-test feedback (2026-11-17)
 Four items on release d9f3191c (base c0bad6a9), given in chat while he played. Notes log/roadmap/P34/P34A_notes.md and
 P34B_notes.md, his session files log/roadmap/P34/mariano_pc/, his picture log/roadmap/P34/mariano_item3_tournament_results.png.
-App option off switch SG_APP_P34=off. Published 036817d4 (items 1, 2, 4) with its GitHub release.
+App option off switch SG_APP_P34=off. Published 036817d4 (items 1, 2, 4) and 8a8a3997 (item 3), each with its GitHub release.
 - Item 1, "camera movement with arrows is still choppy ... changing directions suddenly makes it glitch" (P34A fix 1, 036817d4,
   class a, SG_P34_GLIDE=0 as before; port/app/present.cpp). P32A's screen cap on a frame head's request (5 tiles at zoom 4) is
   shorter than 30.1 tiles / s x (frame period + hand-over), so the glide camera met the newest picture and stood still; a
