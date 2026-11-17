@@ -2431,6 +2431,14 @@ bool LiveSession::speed_press(int32_t x, int32_t y) {
   return true;
 }
 
+// P33A fix 2 (host.h)
+bool LiveSession::speed_key(int n) {
+  if (!opt_.speed_button || n < 1 || n > 3 || !in_frame_body() || at_title()) return false;
+  speed_.store(n == 3 ? 4 : n);
+  speed_keys_.fetch_add(1);
+  return true;
+}
+
 void LiveSession::cursor_at(portsim::Ctx &ctx, bool modal, int32_t site, int32_t &x, int32_t &y) {
   edge_read_ = site == portsim::kCursorSiteEdgeScroll;  // P10E
   panels_read_ = site == portsim::kCursorSitePanels;     // P27A fix 1
@@ -2879,6 +2887,7 @@ std::string LiveSession::summary_json(const Result &r) const {
   }
   if (opt_.speed_button)  // P33A item 1
     s += ",\"speed\":{\"now\":" + std::to_string(speed_.load()) + ",\"presses\":" + std::to_string(speed_presses_.load()) +
+         ",\"keys\":" + std::to_string(speed_keys_.load()) +
          ",\"quiet_frames\":" + std::to_string(quiet_frames_) + ",\"shown_fast\":" + std::to_string(shown_fast_) +
          ",\"quiet_modal\":" + std::to_string(quiet_modal_) + "}";
   // P6B item 2: the world loads (ms since the session object was made; from_input = since the last input message)

@@ -114,6 +114,10 @@ struct WindowOptions {
   // character and key-up messages are then never handed to the game. Null = both go to the game as before.
   std::function<void(int op)> on_undo_key;
   std::function<bool()> undo_context;
+  // P33A fix 2: the keys 1 / 2 / 3 (the main row's or the numeric keypad's, no Shift / Ctrl / Alt) call this with 1 / 2 / 3 while
+  // it returns true for the key-down (the game is in its frame body, LiveSession::speed_key); their key-down, auto-repeat,
+  // character and key-up are then never handed to the game or the recording. Null = the keys go to the game as before.
+  std::function<bool(int n)> on_speed_key;
   // P24D: a mouse move / left press / release at the game's logical point (x, y) goes here first; true = taken (the game and the
   // recording never see it). Null = every mouse message goes to the game as before.
   std::function<bool(uint32_t msg, int32_t x, int32_t y)> on_mouse;
@@ -163,6 +167,7 @@ class AppWindow {
   void size_for_dpi(uint32_t dpi, const void *suggested_rect);
   void input(uint32_t msg, uint32_t wp, uint32_t lp);
   void client_changed();       // P5B item 4: re-read the client size, refit the viewport
+  uint32_t speed_vk_ = 0;      // P33A fix 2: the 1 / 2 / 3 key whose repeats, character and key-up are kept from the game
   uint32_t undo_vk_ = 0;       // P11D: the Z / Y key whose character and key-up are being kept from the game (0: none)
   uint32_t zoom_char_ = 0;     // P5B item 2: the character the next WM_CHAR becomes (0: none)
   uint32_t zoom_remaps_ = 0;

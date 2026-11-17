@@ -136,7 +136,9 @@
 //   face with 1, 2 or 3 triangles) cycles the game speed normal -> 2x -> 4x -> normal; at 2x / 4x the game's frames run in groups
 //   of 2 / 4 whose frames but the last draw no world and show nothing, and the group waits one frame period (host.h
 //   HostOptions::speed_button; gfx.h gfx_set_speed_button; log/roadmap/P33/P33A_notes.md). --game-speed 1|2|4 the speed a session
-//   starts at (default 1).
+//   starts at (default 1). P33A fix 2: with it on, the keys 1 / 2 / 3 (main row or keypad, no modifier) set normal / 2x / 4x while
+//   the game runs its frame body; there they no longer select holes 1..3 (the original's H1 keys 0x31..0x33); in text boxes,
+//   popups, report screens and the title menu they go to the game as before.
 //   P32C item 6: --list-wheel on|off (default on; SG_APP_P32=off: off) the mouse wheel scrolls the Membership Roster, one notch = one
 //   press of its up / down arrow (host.h HostOptions::list_wheel, bridge.h kPortViewWheelVa); FIX 3: also the routing map's walker
 //   list, the saved-game browser, the character editor's preset picker (modal pumps) and the golfer / staff lists (frame heads)
@@ -1854,6 +1856,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   if (o.speed_button)  // P33A item 1: a press on the speed button (after the HUD remap) is the app's, not the game's
     wo.on_hud_press = [&session](int32_t x, int32_t y) { return session.speed_press(x, y); };
+  if (o.speed_button)  // P33A fix 2: the keys 1 / 2 / 3 set the speed in the frame body (the original's hole 1..3 keys there)
+    wo.on_speed_key = [&session](int n) { return session.speed_key(n); };
   if (lang_ui().available.load())  // P24D: the title menu's language selector takes its own clicks (lang_ui.h)
     wo.on_mouse = [&session](uint32_t msg, int32_t x, int32_t y) { return session.at_title() && lang_ui().mouse(msg, x, y); };
   // P27C fix 2 (window thread: the presenter's frame); negative control --negctl p27c-band-clicks: the side bands answer as before

@@ -384,6 +384,29 @@ intptr_t AppWindow::on_message(uint32_t msg, uintptr_t wp, intptr_t lp) {
       return 0;
     }
   }
+  // P33A fix 2 (WindowOptions::on_speed_key): 1 / 2 / 3 set the game speed. In the original H1's key switch takes the codes 0x31..0x39
+  // as "select hole n and centre the camera on it" (mainLoop ML+0xe731..ML+0xe766 -> ML+0xe7aa); with the option those three keys
+  // are the app's while the game runs its frame body, so their key-down, character and key-up never reach the game
+  if (opt_.on_speed_key) {
+    const auto down = [this](int vk) {
+      const int32_t s = opt_.key_state ? opt_.key_state(static_cast<uint32_t>(vk), false) : -1;
+      return s >= 0 ? (s & 0x8000) != 0 : (GetKeyState(vk) & 0x8000) != 0;
+    };
+    const uint32_t k = static_cast<uint32_t>(wp);
+    const int n = (k >= '1' && k <= '3') ? static_cast<int>(k - '0') : (k >= VK_NUMPAD1 && k <= VK_NUMPAD3) ? static_cast<int>(k - VK_NUMPAD0) : 0;
+    if (msg == WM_KEYDOWN && n != 0) {
+      if (speed_vk_ == k) return 0;  // auto-repeat of a taken key
+      if (!down(VK_SHIFT) && !down(VK_CONTROL) && !down(VK_MENU) && opt_.on_speed_key(n)) {
+        speed_vk_ = k;
+        return 0;
+      }
+    }
+    if (speed_vk_ && msg == WM_CHAR && wp >= '1' && wp <= '3') return 0;
+    if (speed_vk_ && msg == WM_KEYUP && k == speed_vk_) {
+      speed_vk_ = 0;
+      return 0;
+    }
+  }
   // P13B item 1: a double-click on the title bar maximizes (or restores) the window on its second press (WM_NCLBUTTONDBLCLK ->
   // SC_MAXIMIZE); the window then lies under the cursor, so that press's release arrives as a client WM_LBUTTONUP, which the
   // translator turns into the game's press handler: a click on whatever title-menu item was now under the cursor. A button-up

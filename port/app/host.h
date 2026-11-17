@@ -341,6 +341,8 @@ class LiveSession : public portsim::LiveHost {
   // P33A item 1 (HostOptions::speed_button): a left press at logical (x, y) (window thread): true when it lies on the speed button
   // while the game runs its frame body (not the title menu, not a modal loop); the speed then cycles 1 -> 2 -> 4 -> 1
   bool speed_press(int32_t x, int32_t y);
+  // P33A fix 2: the key 1 / 2 / 3 (window thread) sets speed 1 / 2 / 4 while the game runs its frame body; false = not taken
+  bool speed_key(int n);
   int speed() const { return speed_.load(); }
   // the newest presented frame (WM_APP + 2); false when none is waiting. `band` (P7): Extend when the frame is a full-screen
   // 2D screen shown before a game's frame loop runs (boot loading screens, title menu, its sub-screens, the location screen,
@@ -549,7 +551,7 @@ class LiveSession : public portsim::LiveHost {
   int group_pos_ = 0;
   bool quiet_ = false;
   uint64_t quiet_frames_ = 0, shown_fast_ = 0, quiet_modal_ = 0;
-  std::atomic<uint64_t> speed_presses_{0};
+  std::atomic<uint64_t> speed_presses_{0}, speed_keys_{0};  // fix 2: keys taken
   bool early_ok_ = false;           // early_f_ holds the last present's HUD layers
   portsim::GfxHudFrame early_f_;    // the last present's HUD frame without its base / back
   portsim::GfxTextFrame early_tf_;  // the last present's text runs in HUD layers (layer >= 0)
