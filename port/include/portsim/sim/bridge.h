@@ -220,6 +220,12 @@ SpriteReach object_sprite_reach(Ctx &ctx);  // a placed object's sprites, from i
 // the margin tileToScreen and the object pass hand worldToScreen at the switch's 0, so a point outside the view still gets its
 // height (worldToScreen leaves an off-screen point without it)
 constexpr int32_t kSpriteReachProject = 0x1000;
+// P33C (play-test 15 items 3 / 4): play switch drawWorldObjects.spriteReach. drawWorldObjects draws a ground animal or a flyer
+// (hot-air balloon, blimp, sailboat, pelicans) only while its ground point passes worldToScreen with margin 0, while the art
+// reaches beyond it (a blimp's body up to 58 units per zoom step above its shadow's point): at 0 a point outside the view is
+// still drawn when the art can reach the view (the drawing only: sounds and RNG rolls keep the original test)
+bool world_objects_reach_fixed();                       // the switch at 0
+SpriteReach world_object_reach(Ctx &ctx, bool flyer);  // from the ground point; flyer = the sky actors, else the animals
 
 // P31A: the camera's legal range (mainLoop.cameraBoundByZoom) is declared in portsim/sim/camera_range.h
 

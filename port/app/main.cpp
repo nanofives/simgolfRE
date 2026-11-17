@@ -888,6 +888,7 @@ const ProfileMember kPlayProfile[] = {
     {"worldToScreen.wideViewVisibility", 0},        // P8B (G32: the on-screen test over the wide view)
     {"tileToScreen.wideViewVisibility", 0},         // P8B (G32: the scenery of the wide view's side columns)
     {"tileToScreen.spriteReach", 0},                // P33C (play-test 15 item 3: buildings and trees drawn while their art reaches the view)
+    {"drawWorldObjects.spriteReach", 0},            // P33C (play-test 15 item 4: animals and flyers drawn while their art reaches the view)
     {"narrateShot.wideViewFit", 0},                 // P31D (G33 item 5: the shot narration and SimFoto over the wide view)
     {"mainLoop.simFotoWideFrame", 0},               // P31D (G33 item 5: the SimFoto event framed in the wide view)
     {"showBulletinBoard.widePhoto", 0},             // P31D (G33 item 5: the board's photo cut from the wide scene)

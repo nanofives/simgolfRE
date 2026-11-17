@@ -14,6 +14,17 @@ struct World : TkBase {
   int Date() { return G32(GS(g_date)); }
   int Kind(int x, int y) { return cc("typeAtPos", x, y); }
   int Sheet(int id) { return G32(GS(g_sheetCols) + 4u * static_cast<uint32_t>(id)); }
+  // P33C (play-test 15 items 3 / 4), play switch drawWorldObjects.spriteReach at 0: a ground point worldToScreen leaves off
+  // screen is projected again with a margin (it keeps its height) and still drawn when its art can reach the view
+  // (bridge.h world_object_reach: animals or flyers); only the drawing: the spawn sound and the RNG rolls keep the original test
+  bool FarVisible(int x, int y, LV &sx, LV &sy, bool flyer) {
+    if (!world_objects_reach_fixed()) return false;
+    cc("worldToScreen", x, y, &sx, &sy, kSpriteReachProject);
+    const int E = wide_view_margin_w2s(ctx);
+    const SpriteReach m = world_object_reach(ctx, flyer);
+    const int px = sx.get(), py = sy.get();
+    return px >= -m.x - E && px < ctx.gs().g_screenWidth + m.x + E && py >= -m.top && py < ctx.gs().g_screenHeight + m.bottom;
+  }
 
   // the spawn rise offsets the original builds in its frame (indexed by flags + 0x14, 20 used)
   static constexpr signed char kSpawnRise[20] = {-55, -54, -52, -49, -45, -40, -34, -27, -19, -10,
@@ -156,7 +167,16 @@ struct World : TkBase {
       }
       // draw
       const int cellId = a.kind() + a.state();
-      if (a.kind() != -1 && cc("worldToScreen", a.x().get(), a.y().get(), &sx, &sy, 0) != 0) {
+      if (a.kind() != -1 && cc("worldToScreen", a.x().get(), a.y().get(), &sx, &sy, 0) == 0) {
+        if (a.flags() >= 0 && FarVisible(a.x().get(), a.y().get(), sx, sy, false)) {  // P33C: only the sprite
+          int mode = 4;
+          if (a.leader() != -1) mode = a.kind() == 4 ? 2 : 3;
+          const int cell = cc("cellAt", cellId, lf, view);
+          G32(GS(unk_005a9cc8)) = cell;
+          gfx_mover_source(kGfxMoverAnimal, i, a.x().get(), a.y().get());  // P12A fix 2 (render-only)
+          cc("enqueueSprite", sx.get(), sy.get(), sy.get(), 0x1E, 0x28, cell, mode, a.kind() + 0x78);
+        }
+      } else if (a.kind() != -1) {
         int mode = 4;
         if (a.leader() != -1) mode = a.kind() == 4 ? 2 : 3;
         const int cell = cc("cellAt", cellId, lf, view);
@@ -194,7 +214,8 @@ struct World : TkBase {
           }
           continue;
         }
-        if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 && Kind(X, Y) != 0x14) {
+        if ((cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 || FarVisible(X.get(), Y.get(), sx, sy, true)) &&
+            Kind(X, Y) != 0x14) {  // P33C: FarVisible
           int c = cc("cellAt", 0xF1, 0, (Date() / 1000) & 3);
           G32(GS(unk_005a9cc8)) = c;
           gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
@@ -283,7 +304,8 @@ struct World : TkBase {
           }
           if (Y < 0x200 && DirY(D) == -1) X = -1;
         }
-        if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0) {
+        const bool on = cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0;
+        if (on || FarVisible(X.get(), Y.get(), sx, sy, true)) {  // P33C: FarVisible draws only; the sound and the roll keep `on`
           const int cam = G32(GS(g_cameraRot));
           const int view = G32((GS(g_sheetRows) + 0x684)) == 8 ? ((cam - static_cast<uint8_t>(D.get()) - 2) & 7)
                                                      : (sar32(cam - static_cast<uint8_t>(D.get()) - 2, 1) & 3);
@@ -291,10 +313,9 @@ struct World : TkBase {
           G32(GS(unk_005a9cc8)) = c;
           gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
           cc("enqueueSprite", sx.get(), sy.get(), sy.get(), 0x50, 0x50, c, 4, 0x53);
-          if ((GU8(GS(g_date)) & 0x7F) == 0) cc("playSoundAt", 0xD1, X.get(), Y.get(), 0);
-        } else if ((Range(200) & 0xFFFF) == 0) {
-          X = -1;
+          if (on && (GU8(GS(g_date)) & 0x7F) == 0) cc("playSoundAt", 0xD1, X.get(), Y.get(), 0);
         }
+        if (!on && (Range(200) & 0xFFFF) == 0) X = -1;
       } else if (kind == 2) {
         if (X == -1) {
           if ((Range(100) & 0xFFFF) == 0 && Date() > 0x2000) {
@@ -304,7 +325,8 @@ struct World : TkBase {
           }
           continue;
         }
-        if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 && Kind(X, Y) != 0x14) {
+        if ((cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 || FarVisible(X.get(), Y.get(), sx, sy, true)) &&
+            Kind(X, Y) != 0x14) {  // P33C: FarVisible
           int c = cc("cellAt", 0xF3, 0, (G32(GS(g_cameraRot)) / 2 - 2) & 3);
           G32(GS(unk_005a9cc8)) = c;
           gfx_mover_source(kGfxMoverSky, j, X.get(), Y.get());  // P12A fix 2 (render-only)
@@ -331,7 +353,8 @@ struct World : TkBase {
           }
           continue;
         }
-        if (cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 && Kind(X, Y) != 0x14) {
+        if ((cc("worldToScreen", X.get(), Y.get(), &sx, &sy, 0) != 0 || FarVisible(X.get(), Y.get(), sx, sy, true)) &&
+            Kind(X, Y) != 0x14) {  // P33C: FarVisible
           const int date = Date(), k = Sheet(0x207);
           int id, fr;
           if (mod32(date, 0x30) < 2 * k) {

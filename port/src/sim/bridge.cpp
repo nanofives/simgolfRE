@@ -67,6 +67,7 @@ int32_t play_sound(Ctx &ctx, int32_t idx, int32_t volume, int32_t pan, int32_t p
 int g_defect_w2s_wide = 1;   // worldToScreen.wideViewVisibility
 int g_defect_t2s_wide = 1;   // tileToScreen.wideViewVisibility (tick_render.inc)
 int g_defect_t2s_reach = 1;  // tileToScreen.spriteReach (P33C: tick_render.inc, tick_frame.inc)
+int g_defect_world_objects_reach = 1;  // drawWorldObjects.spriteReach (P33C: tick_world.inc)
 bool view_map(Ctx &ctx) {
   if (ctx.view) return true;
   auto block = std::make_shared<std::vector<uint8_t>>(static_cast<size_t>(kPortViewSize));   // zero-filled
@@ -511,6 +512,25 @@ SpriteReach tile_sprite_reach(Ctx &ctx) {
   r.bottom = std::max<int32_t>(0x2a, mul32(z, 22));
   return r;
 }
+// P33C: drawWorldObjects' art boxes (the loaded sheets, zoom-4 units around each sprite's hotspot, scaled by zoom / 4): animals
+// (0x1e / 0x28 hotspot) at most 30 sideways, 40 above, 20 below; flyers: the blimp's shadow 153 sideways of a point drawn 0x2c to
+// the left, its body 73 sideways and 181 above, lifted by up to (0x50 - 0x20) x zoom / 4; the balloon's body 123 above, moved up
+// to 20 and 0x16 left unscaled; the sailboat 49 / 71 / 38; the pelicans 31 / 134 above
+bool world_objects_reach_fixed() { return !g_defect_world_objects_reach; }
+SpriteReach world_object_reach(Ctx &ctx, bool flyer) {
+  const int32_t z = ctx.gs().g_zoomScale;
+  SpriteReach r;
+  if (flyer) {
+    r.x = add32(mul32(z, 39), 0x2c);
+    r.top = add32(mul32(z, 10), 0x16);
+    r.bottom = add32(mul32(z, 58), 20);
+  } else {
+    r.x = mul32(z, 8);
+    r.top = mul32(z, 5);
+    r.bottom = mul32(z, 10);
+  }
+  return r;
+}
 SpriteReach object_sprite_reach(Ctx &ctx) {
   const int32_t z = ctx.gs().g_zoomScale;
   SpriteReach r;
@@ -825,6 +845,13 @@ const DefectDef kDefects[] = {
      "a tile beyond it still queues its placed object when the object's art can reach the view, and both project with a margin "
      "so a point outside the view keeps its height",
      &g_defect_t2s_reach},
+    {"drawWorldObjects.spriteReach", "P33C",
+     "drawWorldObjects queues a ground animal or a flyer (the hot-air balloon, the blimp, the sailboat, the pelicans) only while "
+     "its ground point passes worldToScreen with margin 0, while the art reaches beyond that point (the blimp's body up to 58 "
+     "units per zoom step above its shadow's point), so they vanish near the screen's edges and come back as the camera moves; "
+     "fixed: a point outside the view is still drawn when the art can reach the view (sounds and RNG rolls keep the original "
+     "test)",
+     &g_defect_world_objects_reach},
     {"mainLoop.cameraBoundByZoom", "P31A,G33",
      "the camera tile pair is clamped to 0..0x31 on both axes (the view's centre on the grid), so at the map's edge up to half "
      "the view is black; fixed: each axis is clamped to the range that keeps every land corner (the tiles whose type is not 0x14) "

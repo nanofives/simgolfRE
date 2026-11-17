@@ -438,6 +438,17 @@ bool ArrowGlide::head(double v, double step, int32_t cx, int32_t cy, int32_t rot
       const int i = std::fabs(tt[0] - ax_[0].d) >= std::fabs(tt[1] - ax_[1].d) ? 0 : 1;
       const double gap = tt[i] - ax_[i].d;
       if (std::fabs(gap) < 1.0) break;  // within a tile of D on both axes: nothing to take back
+      // P33C item 4 (class a; SG_P33_GLIDELINE=0: as P32A): a glide that moves both axes (one arrow on a screen axis, its tiles
+      // diagonal) steps both back, so the picture asked for stays on the glide's line. Stepping one axis made a Right tap ask
+      // for (+5, +6) tiles: every picture ahead of D sat 20 units per zoom step off D's path, and when the key-up stopped D behind
+      // it the strip along the top or bottom edge that neither it nor the underlay covers showed black until the stop's own
+      // picture came (P33C_notes.md)
+      static const bool line = !(std::getenv("SG_P33_GLIDELINE") && std::atoi(std::getenv("SG_P33_GLIDELINE")) == 0);
+      const int o = 1 - i;
+      const double gap_o = tt[o] - ax_[o].d;
+      if (line && (ax_[o].ud != 0 || ax_[o].ue != 0) && (ax_[i].ud != 0 || ax_[i].ue != 0) &&
+          std::fabs(gap_o) >= 1.0 && std::fabs(std::fabs(gap) - std::fabs(gap_o)) < 1.0)
+        tt[o] -= gap_o > 0 ? 1.0 : -1.0;
       tt[i] -= gap > 0 ? 1.0 : -1.0;
       capped = true;
     }
