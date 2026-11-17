@@ -678,3 +678,4 @@
 - 2026-11-17 d4344fbe PUBLISHED (P33E fix 9, P33B fix 3, P33C fix 3) + GitHub release
 - 2026-11-17 a4aba532 PUBLISHED (P33A fix 1, speed button) + GitHub release
 - 2026-11-17 bd2d5d37 PUBLISHED (P33C fix R, terraform presses) + GitHub release
+- 2026-11-17 aea899e3 PUBLISHED (P33C fix 4, glide stop flicker) + GitHub release
