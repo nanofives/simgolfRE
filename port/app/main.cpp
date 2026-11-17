@@ -919,6 +919,7 @@ const ProfileMember kPlayProfile[] = {
     {"generateRandomCourse.startingFeatureOutside", 0},  // P24E (play-test 11 item 5: the free practice green inside the course edge)
     {"drawEmployeeViewPanel.scrollBarAlways", 0},  // P26E fix 1 (play-test 13 item 6: no scroll band when the golfer list fits)
     {"reportScreens.anyClickCloses", 0},            // P26C item 4b (play-test 13: the full-screen screens close only with their tick)
+    {"reportScreens.arrowKeysClose", 0},            // P33E item 7 (play-test 15: an arrow key does not close a report screen)
     {"showRoutingMapScreen.modeTopStripLeaves", 0},  // P27B fix 1: a lit routing mode button takes the press over its whole box
     {"loadGameBrowser.rowPressPastText", 0},         // P27B fix 2: a load-list press counts over the drawn selection bar
     {"showHireEmployeeDialog.pressWithoutRowHires", 0},  // P27B fix 3: OK / a press off the rows hires nobody; OK lights over its image

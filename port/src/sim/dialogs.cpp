@@ -1220,7 +1220,7 @@ void show_bulletin_board(Ctx &ctx) {
     // P26C item 4b (reportScreens.anyClickCloses = 0): only a click on the tick (cell 36, loadInterfaceArt.bulletinArt's last cut
     // of the second load, drawn at its own place: gfx_bulletin.cpp) ends the board
     if (gs.g_rootInput[kButton] != 0 && cm::tick_close_click(ctx, 0x2dc, 0x1ff, 0x35, 0x34)) break;
-    if (cm::flush_redraw(ctx) != 0) break;
+    if (cm::screen_key(ctx) != 0) break;   // P33E: reportScreens.arrowKeysClose
   }
   const int16_t award = m.load<int16_t>(GS(g_skillMaskBlock) + 8);
   gs.g_rootInput[kButton] = 0;
@@ -1383,7 +1383,7 @@ int32_t show_golfer_pair_select(Ctx &ctx) {
         book_lit = at_book;
         redraw = true;
       }
-      if (button == 0 && cm::flush_redraw(ctx) == 0) {
+      if (button == 0 && cm::screen_key(ctx) == 0) {   // P33E: reportScreens.arrowKeysClose
         if (hover != prev) redraw = true;
         continue;
       }
