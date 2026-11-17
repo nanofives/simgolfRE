@@ -98,6 +98,91 @@ def stack_plate(im: Image.Image, rects, agree: int = 8) -> Image.Image:
     return out
 
 
+def letters_fill(im: Image.Image, px, rect, opts: dict) -> None:
+    """P33B item 2 (log/roadmap/P33/P33B_notes.md): a shaped plate (the TOP TEN DESIGNERS plaque: notched end tabs, a bevelled frame,
+    a dithered gradient across x) with engraved letters (dark strokes, pale pink-grey highlights). Only the letter pixels change: the
+    rectangle may hold the wood around the tabs and the frame, which stay byte for byte. Wood = r > `wood` * g (1.5); pixels within
+    `margin` (2) of wood stay; `fill_h=N` limits the change to the first N rows. A letter pixel is a highlight (b > 0.6 g and r > g) or darker than `cut` (0.82) of the plate's local
+    brightness (the 75th percentile of r + g + b over the non-highlight plate pixels in x +- 12, y +- 3), grown by `grow` (1) pixel.
+    Each row's run of letter pixels takes the line between the mean of the 3 plate pixels on each side (the gradient runs across x),
+    then the rows are blended with their neighbours (1/4, 1/2, 1/4) and an 8-bit image's pixels are error-diffused onto its palette
+    (the plate is dithered: a flat fill shows bands)."""
+    x, y, w, h = rect
+    h = int(opts.get("fill_h", h))  # `fill_h=N`: only the rectangle's first N rows change (the text is still centred in all h)
+    wood_r, margin, cut = float(opts.get("wood", 1.5)), int(opts.get("margin", 2)), float(opts.get("cut", 0.82))
+    xs, ys = range(x, x + w), range(y, y + h)
+    # wood: the reddish pixels connected to the box's border (a reddish letter pixel inside the plate is not wood)
+    bx0, by0 = max(0, x - margin), max(0, y - margin)
+    bx1, by1 = min(im.size[0], x + w + margin), min(im.size[1], y + h + margin)
+    red = {(xx, yy) for yy in range(by0, by1) for xx in range(bx0, bx1) if px[xx, yy][0] > wood_r * px[xx, yy][1]}
+    todo = [p for p in red if p[0] in (bx0, bx1 - 1) or p[1] in (by0, by1 - 1)]
+    wood = set(todo)
+    while todo:
+        a, b = todo.pop()
+        for q in ((a + 1, b), (a - 1, b), (a, b + 1), (a, b - 1)):
+            if q in red and q not in wood:
+                wood.add(q)
+                todo.append(q)
+    plate = {(xx, yy) for yy in ys for xx in xs
+             if not any((xx + dx, yy + dy) in wood for dx in range(-margin, margin + 1) for dy in range(-margin, margin + 1))}
+    hi = {p for p in plate if px[p][2] > 0.6 * px[p][1] and px[p][0] > px[p][1]}
+    lum = {p: sum(px[p]) for p in plate}
+    bad = set(hi)
+    for (xx, yy) in plate:
+        if (xx, yy) in hi:
+            continue
+        near = sorted(lum[q] for q in ((a, b) for b in range(yy - 3, yy + 4) for a in range(xx - 12, xx + 13)) if q in lum and q not in hi)
+        if near and lum[(xx, yy)] < cut * near[(3 * len(near)) // 4]:
+            bad.add((xx, yy))
+    for _ in range(int(opts.get("grow", 1))):
+        bad |= {(a + dx, b + dy) for a, b in bad for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)) if (a + dx, b + dy) in plate}
+    fill = {}
+    for yy in ys:
+        good = [xx for xx in xs if (xx, yy) in plate and (xx, yy) not in bad]
+        for xx in xs:
+            if (xx, yy) not in bad:
+                continue
+            left = [q for q in good if q < xx][-3:]
+            right = [q for q in good if q > xx][:3]
+            if not left and not right:
+                continue
+            side = lambda qs: tuple(sum(px[q, yy][c] for q in qs) / len(qs) for c in range(3))
+            if left and right:
+                lx, rx = sum(left) / len(left), sum(right) / len(right)
+                t = (xx - lx) / (rx - lx)
+                fill[(xx, yy)] = tuple(a * (1 - t) + b * t for a, b in zip(side(left), side(right)))
+            else:
+                fill[(xx, yy)] = side(left or right)
+    smooth = {}
+    for (xx, yy), v in fill.items():
+        up, dn = fill.get((xx, yy - 1)), fill.get((xx, yy + 1))
+        if up and dn:
+            smooth[(xx, yy)] = tuple(0.25 * a + 0.5 * b + 0.25 * c for a, b, c in zip(up, v, dn))
+        else:
+            smooth[(xx, yy)] = v
+    pal = None
+    if im.mode == "P":
+        raw = im.getpalette()
+        pal = [tuple(raw[i:i + 3]) for i in range(0, min(len(raw), 768), 3)]
+    err = {}
+    for yy in ys:
+        for xx in xs:
+            if (xx, yy) not in smooth:
+                continue
+            v = tuple(a + b for a, b in zip(smooth[(xx, yy)], err.pop((xx, yy), (0.0, 0.0, 0.0))))
+            if pal is None:
+                q = tuple(max(0, min(255, round(c))) for c in v)
+            else:
+                q = min(pal, key=lambda p: sum((p[c] - v[c]) ** 2 for c in range(3)))
+            px[xx, yy] = q
+            e = tuple(v[c] - q[c] for c in range(3))
+            for (dx, dy), k in (((1, 0), 7 / 16), ((-1, 1), 3 / 16), ((0, 1), 5 / 16), ((1, 1), 1 / 16)):
+                n = (xx + dx, yy + dy)
+                if n in smooth:
+                    o = err.get(n, (0.0, 0.0, 0.0))
+                    err[n] = tuple(o[c] + k * e[c] for c in range(3))
+
+
 def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path, info: list | None = None,
            cover: Image.Image | None = None) -> Image.Image:
     """`cover` (an "L" image of im's size, P30A): the drawn letters' coverage (0..255) is written into it, inside the rectangle."""
@@ -152,6 +237,8 @@ def redraw(im: Image.Image, rect, text: str, opts: dict, font_dir: pathlib.Path,
             if len(nxt) == len(todo):
                 break
             todo = nxt
+    elif opts.get("fill", "column") == "letters":
+        letters_fill(im, px, rect, opts)
     elif opts.get("fill", "column") == "stack":
         # P32B item 13 (log/roadmap/P32/P32B_notes.md): every plate of the image with fill=stack is the same plate art under
         # different words, so the rectangle takes the clean plate stack_plate() built from all of them (no trace of the English)
