@@ -1456,6 +1456,14 @@ void Gfx::hud_modal_mark() {
   c.cur = -1;
   gfxb::hud_writes_arm_gap(*this);  // P13D item 17: the screen's drawing in the rest of the scope is marked
 }
+// P33E item 8 (gfx_body.h Gfx::note_blend): SG_P33E_REDIM=0 (development) records a dim over this segment's earlier dim as before
+bool gfx_redim_off() {
+  static const bool off = [] {
+    const char *e = std::getenv("SG_P33E_REDIM");
+    return e && e[0] == '0';
+  }();
+  return off;
+}
 // the report screens' dim covered every root pixel with one source word (gfx_reports.cpp Surface_drawSprite)
 void Gfx::note_dim(uint16_t src) {
   if (!hud.on || !hud.modal) return;

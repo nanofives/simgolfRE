@@ -32,6 +32,7 @@
 namespace portsim {
 
 struct GameFont;  // portsim/sim/gditext.h (P26C item 11: gfxb::text_run_end's explicit font)
+bool gfx_redim_off();  // P33E item 8 (gfx.cpp): SG_P33E_REDIM=0 (development) turns Gfx::note_blend's second-dim rule off
 
 // An 8 bpp image: jgld allocDrawBuffer's top-down DIB section (pitch (w + 3) & ~3) and the colour table the palette gives it.
 struct Image8 {
@@ -292,8 +293,15 @@ class Gfx {
       hud.rec.assign(hud.mark.size(), GfxLayerPx{});
     }
     GfxLayerPx &r = hud.rec[i];
+    // P33E item 8: a whole-frame dim over a pixel that this segment's earlier dim blended (and nothing wrote since) is still a dim
+    // of the frame beneath: showCourseReport(2) draws the grading page's head (the quarter black sprite over the root) and the
+    // failing grade's showCourseReport(1) draws it again before the first refreshFull; the second dim made every pixel kind 1 and
+    // the twice dimmed 800 frame, with the HUD panels at their 800-space places, was published over the wide scene (the HUD
+    // twice). SG_P33E_REDIM=0 (development): as before.
+    const bool redim = !gfx_redim_off() && kind == 4 && hud.rec_gen.size() == hud.mark.size() && hud.rec_gen[i] == hud.gen &&
+                       r.kind == 4 && r.px == before;
     // P25C fix 2: a pixel a closed popup left, still holding its word, counts as the background (the blend of the frame beneath)
-    if (before != hud.mark[i] && !hud_left_untouched(i, before, false)) {  // over the layer's own pixel: the result is the layer's (opaque)
+    if (!redim && before != hud.mark[i] && !hud_left_untouched(i, before, false)) {  // over the layer's own pixel: the result is the layer's (opaque)
       r.kind = 1;
     } else {
       r.kind = kind;
