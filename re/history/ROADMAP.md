@@ -1792,3 +1792,45 @@ Release checks read PAINT RATE LOW four times with other runs on the PC (a SimCi
 new options (log/roadmap/P32/rate_ab, rate_ab_d7) read 96-111 paints/s in both arms, so those were load. Full check of the round on
 c7bfbd2f: clean P19Z mirror; builds x64 + Win32 0 errors / 0 warnings; static 6;
   all-checks smoke 1080 p14 564 / 0 bad and 4K p14 127 / 0 bad, p15 / p16b / p17b 0 differing.
+
+## P33: Mariano's fifteenth play-test feedback, 8 items + 1 regression (2026-11-17)
+Brief log/roadmap/P33/BRIEF.md (base 754d409d = port code of c7bfbd2f), notes log/roadmap/P33/P33A_notes.md .. P33E_notes.md,
+orchestrator state log/roadmap/P33/ORCH_HANDOFF.md. Five workers on claude2 (opus; P33B / P33E medium, the others high). His evidence
+was copied on MARIANO-PC into `SimGolf Test\saves_copy_p33` by a haiku child and the crash recordings pulled with remote_pull
+(log/roadmap/P33/mariano_pc/). App option off switch SG_APP_P33=off. Published bc4a52cf, 9bcbc62c, bde0ab22, 48a4285e, d26503aa,
+d4344fbe (batch), a4aba532, bd2d5d37 and aea899e3, each with its GitHub release.
+- Item 5, the crash (P33D fix 1, bde0ab22, class a): on a Tropical course the dearest palette item (build record 14, 5000) is the
+  Theme Park; buildSceneSprites draws kind 14 there through boundIndex, which the tick named but nothing registered, so the sim
+  stopped (MissingResource, code -11) and the window closed like a quit with no log, no WER dump. boundIndex ported (63 / 63
+  vectors); test_static test_every_tick_callee_resolves (one listed exception: showCourseRanking). Fix 2: a last-chance handler
+  (minidump under <data>\crashes + one CRASH line; SIM STOPPED line for a sim stop; off SG_APP_CRASHDUMP=off; fail-fast exits
+  not covered).
+- Item 1, the speed button (P33A fix 1, a4aba532): app option --speed-button (+ --game-speed 1|2|4 for tests). The original has no
+  game speed; at 2x / 4x frames run in groups of 2 / 4, only the last draws, presents and waits, so the state over the same game
+  time equals normal speed (381 frames, date and RNG equal); month ends, input, pause, glide starts and pending photos force a
+  shown frame. The pause's face with 1 / 2 / 3 triangles, 76% size under the pause (placement A; his answer on A / B / C and a lit
+  face at 2x / 4x is open). On LIVING-PC 4x reaches 2.6-3.0x (a speed-1 frame already takes 112-141 ms). Open: at 4K 4x the window
+  took 1 of 5-6 frames for 1-2 s per run, cause not found.
+- Item 2, the Top 10 Designers banner (P33B fix 1, bc4a52cf): the pack's redraw column-filled the plaque's end tabs (strips) and
+  left English letter edges under the Spanish text. redraw_art.py fill=letters (only letter pixels refilled; LAN pack art only).
+- Items 3 and 4, the wide view (P33C). Fix 3 (d4344fbe), play switch tileToScreen.spriteReach: the tile pass queued art only while
+  the tile centre lay one zoom-4 tile outside the screen, while trees reach 21 x zoom above and objects up to 94 x zoom sideways.
+  Fix 4 (aea899e3): play switch drawWorldObjects.spriteReach (flyers and animals drawn while their art reaches the view; drawing
+  only, RNG unchanged) and class a in ArrowGlide::head (P32A's cap steps both axes together, so the glide's ahead pictures stay on
+  its line: vertical offsets and black strips at stops 14 -> 0 paints at zoom 8). Known limit: at zoom 4 a trailing-corner strip of
+  up to 0.25 % of the window for up to 94 ms.
+- Item 6, the lot box (P33B fixes 2-3, d26503aa + d4344fbe): app option --lot-box, the Building Lot profit box is widest line + the
+  original's margins (English keeps the original box) and sits on the left side of the bar (his choice B, left-anchored HUD layer).
+  Seen, not changed: the skill dialog's "Golpe alto con backspin" plate overflows.
+- Item 7, report screens closing on keys (P33E fixes 7 + 9, 9bcbc62c + d4344fbe): the original closes every any-key screen on any
+  key; play switch reportScreens.charlessKeysClose drops every key with no character (his answer), Esc / Enter / letters / the close
+  button still close.
+- Item 8, the SGA report with a failing grade drew the HUD twice (P33E fix 8, 48a4285e, class a): showCourseReport(2) then (1) dim
+  the root twice in one segment and note_blend recorded the second dim as opaque, so the centred layer published the raw 800 root;
+  a dim over this segment's dim stays a dim pixel (dev switch SG_P33E_REDIM=0).
+- Regression R, terraforming (P33C fix R, bd2d5d37): P32C fix 1's mainLoop.hiddenCheatKeys (0 in play since 3c9cb346) also dropped
+  the '=' / '-' keys that terrain-tool presses become in mainLoop, so raise / lower did nothing; the press path marks the key it made
+  and only typed + / - / = are dropped. Terrain tests need a save outside a tournament (a selected golfer takes course presses).
+Releases went one fix per check except one batch (P33E 9, P33B 3, P33C 3) after Mariano asked why the round took long: each fast
+check took 13-48 min. Full check of the round on aea899e3: x64 + Win32 0 errors / 0 warnings; static 7; all-checks smoke 1080 p14
+729 / 0 bad and 4K p14 154 / 0 bad, p16b / p17b 0 differing.
