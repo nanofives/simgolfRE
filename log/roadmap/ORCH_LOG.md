@@ -672,3 +672,4 @@
 - 2026-11-16 14:51 FULL check c7bfbd2f GREEN (clean P19Z mirror; x64 + Win32 0 errors / 0 warnings; static 6; all-checks smoke 1080 p14 564 / 0 bad, 4K p14 127 / 0 bad, p15 / p16b / p17b 0 differing). re/history/ROADMAP.md: section P32. Round P32 closed: 13 items, eight releases (3c9cb346, 7051f1a1, 21cb4d1c, 6ce79fa2, 375653e3, f8f38006, f13683c1, c7bfbd2f); workers P32A-F closed, trees deleted. Open for Mariano: a picture of item 2's panel texture (fix 4 shipped on the found cause), G34's six tuning answers. Next: G29 wrap-up (gates full tier, per-section report).
 - 2026-11-17 bc4a52cf PUBLISHED (P33B fix 1, Top 10 banner pack art; 4 files) + GitHub release port-2026-11-17-bc4a52cf
 - 2026-11-17 9bcbc62c PUBLISHED (P33E fix 7, reportScreens.arrowKeysClose) + GitHub release
+- 2026-11-17 bde0ab22 PUBLISHED (P33D fixes 1-2, Theme Park crash + crash handler) + GitHub release
