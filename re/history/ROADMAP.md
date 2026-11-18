@@ -1890,3 +1890,11 @@ claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-
   13. At 0 both clamp to 3..18 (+15) on every course type and a press never moves a corner the other way. No table is indexed
   by level; a +15 fairway corner was played over for 60 s and a save with it reloads equal. Segments 205 / 205 equal to I25.
   Published 834af917 (GitHub port-2026-11-18-834af917).
+- Item 5, "at the edges of the screen, terrain grid looks distorted ... on the left side it stops rendering the grid" (P35C fix 1,
+  5ec0506b, class b, play switch mainLoop.gridEdgeCorners; log/roadmap/P35/P35C_notes.md). mainLoop's grid pass projects a
+  cell's three corners with worldToScreen at margin 0, which writes the flat-ground point and returns 0 before the height term
+  for a point outside the view, and the two far-corner calls never read the result: on raised ground a corner past the right
+  edge was the flat point (lines fanning down-right), and a cell whose first corner was left of the view was skipped. The
+  original does the same at its 800 edges. At 0 the three calls take the margin kSpriteReachProject and the cells are gated by
+  tileToScreen alone. Drawing only; segments 205 / 205 equal to I25 on the merged code. Published 5ec0506b
+  (GitHub port-2026-11-18-5ec0506b); fast check paint 91-97 % of a 120 Hz refresh.
