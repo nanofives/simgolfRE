@@ -955,6 +955,7 @@ const ProfileMember kPlayProfile[] = {
     {"skillPointDialog.escIgnored", 0},             // P9A item 2: Esc = OK
     {"mainLoop.titleEscIgnored", 0},                // P31C (G33 item 2a): a fresh Esc on the title menu = the exit icon (quit)
     {"mainLoop.hiddenCheatKeys", 0},                // P32C (G31): + / - / = never reach the cash and terrain key actions
+    {"loadGame.cheatMarkKept", 0},                  // P35E item 10: a load or a move to another course clears the cash asterisk
     {"showCharacterEditor.escKeepsEdits", 0},       // P31C (G33 item 2b): Esc in the character editor discards the edits and exits
     {"mainLoop.staffListCourseClickIgnored", 0},    // P31C (G33 item 6): a course click moves the employee picked in the Staff list
     {"showBulletinBoard.photoLastPostOnly", 0},     // P19D item 6: every record openHole posts at once gets the photo
@@ -971,6 +972,7 @@ const ProfileMember kPlayProfile[] = {
     {"hitGolferPanel.shotButtonsAsDrawn", 0},  // P27A fix 5: the shot buttons answer where drawn live; a greyed one takes no press
     {"mainLoop.messageDismissBand", 0},  // P27A fix 6: the message window dismisses on its drawn frame only
     {"clickAmenityPanel.blankPressPicksHovered", 0},  // P27A fix 7: a press on blank palette space picks no row item
+    {"clickAmenityPanel.categoryPressKeepsList", 0},  // P35E item 7: a press on the lit category button closes its item list
     {"clickGolferPanel.namePlateCentresCamera", 0},  // P32B item 4: a press on a match scorecard name plate centres the camera on that golfer
     {"trialShot.edgeNeighbourType", 0},      // P28A (G30, D5): grid-edge neighbour type 0x14
     {"updateGolfers.edgeNeighbourType", 0},  // P28A (G30, D5)

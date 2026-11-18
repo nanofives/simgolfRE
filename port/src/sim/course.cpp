@@ -776,9 +776,11 @@ Ret call_peer_or(Ctx &ctx, const char *fname, std::initializer_list<uint32_t> ar
 // the chosen record's course_type (set before those calls); applyCourseType(g_courseType) and refreshTerrain (render
 // backend, when registered) end it. The 3.1a callees are called through the registry (MissingResource while absent).
 extern int g_defect_cash_low_word;  // mainLoop.cashLowWordOnly (D23), tick.cpp: the same low-word store
+extern int g_defect_cheat_mark_kept;  // P35E item 10 (tick.cpp loadGame.cheatMarkKept)
 void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
   const int mode = SG_NEGCTL(g_negctl_switch_to_course);
   GameState &gs = ctx.gs();
+  if (!SG_DEFECT(g_defect_cheat_mark_kept)) gs.g_flags &= ~(1u << 29);  // P35E item 10: the new course starts without the cash mark
   const Ptr<CourseRecord> rec0 = state_arr(ctx, &GameState::g_courseTable);
   (rec0 + gs.g_courseIndex).field(&CourseRecord::year_left).set(static_cast<int8_t>(gs.g_year));
   const int32_t date = gs.g_date;

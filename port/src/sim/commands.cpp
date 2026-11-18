@@ -41,6 +41,13 @@ int g_defect_shot_buttons_as_drawn = 1;
 // commits g_panelState[0] for the row tools (amenity_action's fall-through), so a press on blank palette space picks the item last
 // hovered. Fixed (0): such a press commits only when the row has an item under the press point; elsewhere nothing changes.
 int g_defect_blank_press_picks = 1;
+// clickAmenityPanel.categoryPressKeepsList (P35E, Mariano's play-test 17 item 7: "clicking again on these menus is not closing
+// them"): the five category buttons of the amenities palette (pickAmenity434980 hotspots 3, 9, 4, 5, 6) set the amenity tool
+// f_w_4c2848[3] to 1, 0x13, 4, 2, 0x10 whatever it holds, and drawAmenitiesPanel draws that tool's item list, so a second press on
+// the lit button keeps the list open; for 0x13, 2 and 0x10 the press also stores a new Random::range variant in g_panelState[0] and
+// g_panelState[4], the picked cell drawAmenityRow lights. Fixed (0): a press on the button of the tool already held clears the tool
+// and both words to -1 (the state clickAmenityPanel's home-site case leaves with no home site), which closes the list.
+int g_defect_category_keeps_list = 1;
 // clickGolferPanel.namePlateCentresCamera (P32B item 4, Mariano's play-test 14: "when clicking on the golfer's name on the golfers
 // panel it should take me to their location"): in a match drawMatchScoreboard writes the player golfer's name and its partner's
 // (record word +0xa2) on the two plates of the scorecard art, and a press there reaches clickGolferPanel, whose hit test finds at
@@ -831,6 +838,11 @@ const DefectDef kDefects[] = {
      "a press on the amenities palette that hits no hotspot commits the row item last hovered (g_panelState[0], never cleared), "
      "wherever the press is; fixed: it commits only an item under the press",
      &g_defect_blank_press_picks},
+    {"clickAmenityPanel.categoryPressKeepsList", "P35E",
+     "a press on the lit category button of the amenities palette (benches, bridges, landmarks, flower beds, scenic trees) sets the "
+     "same tool again: the item list stays open, and bridges / flower beds / scenic trees draw a new random variant, which lights "
+     "another item of the list; fixed: that press closes the list (no amenity tool, no item picked)",
+     &g_defect_category_keeps_list},
     {"clickGolferPanel.namePlateCentresCamera", "P32B",
      "in a match a press on a name plate of the scorecard does nothing (the hit test finds no hotspot there, or the plates' knob "
      "hotspots 2 / 3, which act only with no player golfer); fixed: it puts the camera on that plate's golfer (the player golfer, "

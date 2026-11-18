@@ -421,6 +421,16 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_amenity_panel);
   int32_t &tool = gs.f_w_4c2848[3];
+  // P35E (clickAmenityPanel.categoryPressKeepsList = 0): a press on the lit category button closes its item list
+  if (!SG_DEFECT(g_defect_category_keeps_list)) {
+    const int32_t cat = r == 3 ? 1 : r == 9 ? 0x13 : r == 4 ? 4 : r == 5 ? 2 : r == 6 ? 0x10 : -1;
+    if (cat != -1 && tool == cat) {
+      tool = -1;
+      gs.g_panelState[4] = -1;
+      gs.g_panelState[0] = -1;
+      return -1;
+    }
+  }
   switch (r) {
     case 0: tool = 3; return -1;
     case 1: tool = 0; return -1;

@@ -112,6 +112,14 @@ int g_defect_staff_list_click = 1;
 // gDirtyFlagB, and H1 reads it there after the screen (setDirtyFlagB, ML+0xcb12). Fixed (0): the chars 0x2b / 0x2d / 0x3d do
 // nothing in H1's key switch, whatever path they took.
 int g_defect_hidden_cheat_keys = 1;
+// loadGame.cheatMarkKept (P35E item 10, Mariano's play-test 17: "* is showing on the money despite not being able to use the cheat
+// code for money"): g_flags bit 29, the asterisk P6_StatusBar draws after the cash (ML+0x9f9b), is set only by the cash key '+'
+// (ML+0xda81) and read by nothing else. The save writes g_flags whole, loadGame keeps the file's bit 29 (it rewrites bits 2, 3 and
+// 30 only), and switchToCourse (the career's move to another course) writes no flag bit, so a mark made before
+// mainLoop.hiddenCheatKeys follows a course through every save and onto the next course of the career; only the title menu's
+// reset (ML+0x11890) and startNewCourse clear it. Fixed (0): loadGame and switchToCourse clear bit 29 (the cash those presses
+// added stays: it cannot be told apart).
+int g_defect_cheat_mark_kept = 1;
 // mainLoop.terrainLiftCap13 (P35B, play-test 17 item 4: "i can't lift ground more than 10, but mountanous terrain already goes past
 // it, make it to 15"): H1's terrain keys (a terrain-tool press becomes one of them) clamp a corner of g_cornerLevel: raise ('=')
 // to 3..13 (clamp(level + 1, 3, 13) at ML+0xe5d5, and the brush's 2 x 2 loop raises its lowest corners only while they are below
@@ -2440,6 +2448,11 @@ const DefectDef kDefects[] = {
      "the + key adds 10,000 cash and marks the cash with an asterisk, - and = lower / raise the terrain cell (also a + / - meant as "
      "zoom that reached the game while a screen was open); fixed: those three keys do nothing in the game's key switch",
      &g_defect_hidden_cheat_keys},
+    {"loadGame.cheatMarkKept", "P35E",
+     "the cash's asterisk (g_flags bit 29, set by the + cash key) is saved with the game, kept by every load and carried onto "
+     "the next course of the career, so courses played before the + key was dropped keep showing it; fixed: a load and a move "
+     "to another course clear it",
+     &g_defect_cheat_mark_kept},
     {"mainLoop.terrainLiftCap13", "P35B",
      "the terrain tool raises a corner to level 13 at most (10 steps above the lowest ground, level 3) and lowers to 10 at most "
      "on every course type but Tropical (13 there), so a generated mountain corner at 15 drops to 13 on a raise and to 10 on a "

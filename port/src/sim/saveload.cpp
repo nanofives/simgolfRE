@@ -264,6 +264,7 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   f.close(ctx);
   course_undo_reset(ctx);  // P11D: the loaded course's tiles are not the journal's (mainLoop.courseUndo = 0 only)
   gs.g_flags = (((gs.g_flags & 0xFFFFFFF3u) | (mode == 1 ? 0u : (flags0 & 4u))) | (mode == 2 ? 0u : 0x40000000u));
+  if (!SG_DEFECT(g_defect_cheat_mark_kept)) gs.g_flags &= ~(1u << 29);  // P35E item 10: the file's cash mark is not kept
   gs.g_panelListMode = 0;
   gs.f_w_4c2848[3] = -1;
   gs.f_w_4c2848[0] = -1;
