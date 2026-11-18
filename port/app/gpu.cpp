@@ -3117,7 +3117,8 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
       cache_store = d.cache_px_gen != P.world_px_gen_;
       cache_px = px - d.cache_x0;
       cache_py = py - d.cache_y0;
-      if (c.gap_on) {
+      // (not under SG_P14_VERIFY: its CPU picture of the paint, render_impl, has no cache)
+      if (c.gap_on && d.verify_every == 0) {
         c.cache_on = 1;
         c.cax = ox - d.cache_x0;
         c.cay = oy - d.cache_y0;
