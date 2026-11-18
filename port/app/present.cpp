@@ -519,6 +519,19 @@ ArrowGlide::Stats ArrowGlide::stats() const {
   return st_;
 }
 
+// P35A (Mariano's play-test of 8a8a3997: "still there's minor glitches like black areas on the bottom right";
+// log/roadmap/P35/P35A_notes.md). The slide's invariant: a picture of camera C painted at offset s shows the course point of
+// client pixel p at p - (s + T(C)), T = camera_shift's translation in client pixels (slide_start: s0 = painted - T(C) + T(painted)).
+bool Presenter::slide_origin(const CameraSnap &cam, const Viewport &vp, int32_t slx, int32_t sly, int32_t &ox, int32_t &oy,
+                             std::array<int32_t, 6> &key) const {
+  double sx = 0, sy = 0;
+  if (!cam.ok || cam.zoom <= 0 || !camera_shift_f(cam.zoom, cam.rot, cam.cam_x, cam.cam_y, sx, sy)) return false;
+  ox = -(slx + static_cast<int32_t>(std::lround(sx * vp.client_w / kLogicalW)));
+  oy = -(sly + static_cast<int32_t>(std::lround(sy * vp.client_h / kLogicalH)));
+  key = {cam.zoom, cam.rot, vp.client_w, vp.client_h, vp.origin_x, vp.origin_y};
+  return true;
+}
+
 void Presenter::slide_start(const WorldImage &w) {
   SlideStart st;
   ++slide_stats_.frames;

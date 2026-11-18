@@ -61,6 +61,7 @@ cbuffer CB : register(b0) {
   int cb0, cb1, cb2, cb3;
   int shade_n0, shade_n1, toff_x, toff_y;
   int tn_x, tn_y, cpad1, cpad2;
+  int cache_on, cax, cay, gap_dbg;  // P35A: the ground cache (Presenter::set_slide_cache)
 };
 cbuffer QCB : register(b1) { int qox, qoy, qcw, qch; };
 // P15B: the FPS overlay drawn by the HUD pass: its box (darkened to half) and the slot of its runs in tlay
@@ -69,6 +70,7 @@ Texture2D<uint> tbase : register(t0);
 Texture2D<uint> tworld : register(t1);
 Texture2D<uint> twmask : register(t2);
 Texture2D<uint> tprev : register(t3);
+Texture2D<uint> tcache : register(t30);  // P35A: the ground cache, 2 cw x 2 ch (0 = nothing stored)
 Texture2D<uint> tcourse : register(t4);
 struct Layer { int x0, y0, x1, y1, base, centred, dx0, dim, dim_src, popups, bx0, bx1, by0, by1, p0, p1; };
 StructuredBuffer<Layer> layers : register(t5);
@@ -203,7 +205,20 @@ uint PSCourse(float4 pos : SV_Position) : SV_Target {
   }
   if (gap_on != 0) {  // fill_gap: outside the slid world rectangle, the last painted course picture moved with the slide
     bool inside = Y >= gin_y0 && Y < gin_y1 && gin_x1 > gin_x0 && X >= gin_x0 && X < gin_x1;
-    if (!inside) o = tprev.Load(int3(clamp(X - gux, 0, cw - 1), clamp(Y - guy, 0, ch - 1), 0));
+    if (!inside) {
+      // P35A: a pixel the last paint does not hold (its place lies outside that paint) comes from the ground cache; where the
+      // cache holds nothing either, the last paint's edge pixel as before
+      int px = X - gux, py = Y - guy;
+      bool out_prev = px < 0 || px >= cw || py < 0 || py >= ch;
+      uint cv = 0u;
+      if (out_prev && cache_on != 0) {
+        int ux = X + cax, uy = Y + cay;
+        if (ux >= 0 && ux < 2 * cw && uy >= 0 && uy < 2 * ch) cv = tcache.Load(int3(ux, uy, 0));
+      }
+      if (cv != 0u) o = cv;
+      else if (out_prev && gap_dbg != 0) o = 0xffff00ffu;
+      else o = tprev.Load(int3(clamp(px, 0, cw - 1), clamp(py, 0, ch - 1), 0));
+    }
   }
   return o;
 }
@@ -647,6 +662,7 @@ struct GpuCB {
   int32_t cb0, cb1, cb2, cb3;
   int32_t shade_n0, shade_n1, toff_x, toff_y;
   int32_t tn_x, tn_y, cpad1, cpad2;
+  int32_t cache_on, cax, cay, gap_dbg;  // P35A
 };
 static_assert(sizeof(GpuCB) % 16 == 0, "cbuffer rows");
 struct QuadCB {
@@ -770,6 +786,14 @@ struct GpuCompositor::Impl {
   SBuf lcol, lrow, bcol, brow, wcol, wrow;  // upload_tables
   std::string tables_key;
   Tex course, prev;       // the course picture targets (CPU: scene_last_, scene_prev_)
+  // P35A: the ground cache (2 cw x 2 ch; texel (0, 0) is the course point cache_x0 / y0 of Presenter::slide_origin), its spare,
+  // which takes the kept part when the cache moves, and the target a new picture is drawn into unslid before it is stored
+  Tex cache, cache2, cache_in;
+  bool cache_ok = false;
+  int32_t cache_x0 = 0, cache_y0 = 0;
+  std::array<int32_t, 6> cache_key{};
+  uint64_t cache_px_gen = ~0ull;  // the world picture stored last (Presenter::world_px_gen_)
+  uint64_t cache_stores = 0, cache_moves = 0, cache_resets = 0, cache_paints = 0;
   ID3D11Texture2D *occ = nullptr;  // the layers' block occupancy (Texture2DArray R8_UINT 100 x 75 x layers)
   ID3D11ShaderResourceView *occ_srv = nullptr;
   int32_t occ_n = 0;
@@ -1040,7 +1064,7 @@ void GpuCompositor::stop() {
     rel(t.a);
     rel(t.b);
   }
-  for (Tex *t : {&d.base, &d.world, &d.wmask, &d.tabs, &d.cur, &d.full, &d.dummy_u, &d.dummy_u2, &d.course, &d.prev, &d.atlas_c,
+  for (Tex *t : {&d.base, &d.world, &d.wmask, &d.tabs, &d.cur, &d.full, &d.dummy_u, &d.dummy_u2, &d.course, &d.prev, &d.cache, &d.cache2, &d.cache_in, &d.atlas_c,
                  &d.atlas_f})
     t->reset();
   for (SBuf *s : {&d.layers, &d.lpx, &d.shade, &d.pdx, &d.quads_c, &d.quads_f, &d.lcol, &d.lrow, &d.bcol, &d.brow, &d.wcol, &d.wrow})
@@ -1109,6 +1133,7 @@ void GpuCompositor::stop() {
   d.fov_ok = false;
   d.prev_fetch_gen = ~0ull;
   d.course_valid = d.prev_valid = false;
+  d.cache_ok = false;  // P35A
   d.flat_gen = ~0ull;
 }
 
@@ -1351,6 +1376,7 @@ bool GpuCompositor::ensure_size(int32_t cw, int32_t ch) {
     d.w = cw;
     d.h = ch;
     d.course_valid = d.prev_valid = false;
+    d.cache_ok = false;  // P35A
     d.course_key = ~0ull;
     d.final_key.clear();
     d.fstat_key.clear();
@@ -3047,6 +3073,58 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   c.gap_on = (slx != 0 || sly != 0) && P.prev_w_ == cw && P.prev_h_ == ch && d.prev_valid ? 1 : 0;
   c.gux = slx - P.s0x_i_;
   c.guy = sly - P.s0y_i_;
+  c.cache_on = c.cax = c.cay = 0;
+  // P35A: the ground cache. Every new world picture is stored whole at its place on the course (drawn unslid below, before the
+  // course pass), so the cache also holds the parts of a picture the slide left outside the window. The cache restarts when the
+  // zoom, the rotation or the viewport changed, and moves with the window (keeping what still fits) when the window leaves it.
+  bool cache_store = false;
+  int32_t cache_px = 0, cache_py = 0;  // the unslid picture's place in the cache
+  {
+    static const int dbg = std::getenv("SG_P35_GAPDBG") ? std::atoi(std::getenv("SG_P35_GAPDBG")) : 0;
+    c.gap_dbg = dbg;
+    int32_t ox = 0, oy = 0, px = 0, py = 0;
+    std::array<int32_t, 6> key{};
+    if (!P.slide_cache_ || W.empty() || !P.slide_origin(W.cam, vp, slx, sly, ox, oy, key) ||
+        !P.slide_origin(W.cam, vp, 0, 0, px, py, key) || !make_tex(d.dev, d.cache, 2 * cw, 2 * ch, DXGI_FORMAT_R32_UINT, true) ||
+        !make_tex(d.dev, d.cache2, 2 * cw, 2 * ch, DXGI_FORMAT_R32_UINT, true) ||
+        !make_tex(d.dev, d.cache_in, cw, ch, DXGI_FORMAT_R32_UINT, true)) {
+      d.cache_ok = false;
+    } else {
+      const float zero[4] = {0, 0, 0, 0};
+      if (!d.cache_ok || d.cache_key != key) {
+        d.ctx->ClearRenderTargetView(d.cache.rtv, zero);
+        d.cache_x0 = ox - cw / 2;
+        d.cache_y0 = oy - ch / 2;
+        d.cache_key = key;
+        d.cache_px_gen = ~0ull;
+        d.cache_ok = true;
+        ++d.cache_resets;
+      } else if (ox < d.cache_x0 || oy < d.cache_y0 || ox + cw > d.cache_x0 + 2 * cw || oy + ch > d.cache_y0 + 2 * ch) {
+        const int64_t nx = static_cast<int64_t>(ox) - cw / 2, ny = static_cast<int64_t>(oy) - ch / 2;
+        d.ctx->ClearRenderTargetView(d.cache2.rtv, zero);
+        const int64_t ax0 = std::max<int64_t>(d.cache_x0, nx), ax1 = std::min<int64_t>(d.cache_x0, nx) + 2 * cw;
+        const int64_t ay0 = std::max<int64_t>(d.cache_y0, ny), ay1 = std::min<int64_t>(d.cache_y0, ny) + 2 * ch;
+        if (ax0 < ax1 && ay0 < ay1) {
+          const D3D11_BOX b = {static_cast<UINT>(ax0 - d.cache_x0), static_cast<UINT>(ay0 - d.cache_y0), 0,
+                               static_cast<UINT>(ax1 - d.cache_x0), static_cast<UINT>(ay1 - d.cache_y0), 1};
+          d.ctx->CopySubresourceRegion(d.cache2.t, 0, static_cast<UINT>(ax0 - nx), static_cast<UINT>(ay0 - ny), 0, d.cache.t, 0, &b);
+        }
+        std::swap(d.cache, d.cache2);
+        d.cache_x0 = static_cast<int32_t>(nx);
+        d.cache_y0 = static_cast<int32_t>(ny);
+        ++d.cache_moves;
+      }
+      cache_store = d.cache_px_gen != P.world_px_gen_;
+      cache_px = px - d.cache_x0;
+      cache_py = py - d.cache_y0;
+      if (c.gap_on) {
+        c.cache_on = 1;
+        c.cax = ox - d.cache_x0;
+        c.cay = oy - d.cache_y0;
+        ++d.cache_paints;
+      }
+    }
+  }
   {
     Viewport vs = vp;
     vs.origin_x += slx;
@@ -3108,8 +3186,34 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   ID3D11ShaderResourceView *wsrv = d.obj_live && d.wlive.srv ? d.wlive.srv : d.world.srv;  // P15C: the world with the objects
   ID3D11ShaderResourceView *s1[4] = {d.base.srv, wsrv, d.wmask.srv, d.prev_valid ? d.prev.srv : d.dummy_u.srv};
   x->PSSetShaderResources(0, 4, s1);
+  if (cache_store) {  // P35A: this picture unslid, with no underlay, into cache_in; the part of it inside the cache is kept
+    GpuCB c0 = c;
+    c0.slx = c0.sly = 0;
+    c0.gap_on = c0.cache_on = 0;
+    d.ctx->UpdateSubresource(d.cb, 0, nullptr, &c0, 0, 0);
+    ID3D11ShaderResourceView *nc = d.dummy_u.srv;
+    x->PSSetShaderResources(30, 1, &nc);
+    x->OMSetRenderTargets(1, &d.cache_in.rtv, nullptr);
+    x->PSSetShader(d.ps_course, nullptr, 0);
+    x->Draw(3, 0);
+    x->OMSetRenderTargets(1, &d.course.rtv, nullptr);
+    const int32_t x0 = std::max(0, -cache_px), y0 = std::max(0, -cache_py);
+    const int32_t x1 = std::min(cw, 2 * cw - cache_px), y1 = std::min(ch, 2 * ch - cache_py);
+    if (x0 < x1 && y0 < y1) {
+      const D3D11_BOX b = {static_cast<UINT>(x0), static_cast<UINT>(y0), 0, static_cast<UINT>(x1), static_cast<UINT>(y1), 1};
+      d.ctx->CopySubresourceRegion(d.cache.t, 0, static_cast<UINT>(cache_px + x0), static_cast<UINT>(cache_py + y0), 0, d.cache_in.t, 0, &b);
+    }
+    d.cache_px_gen = P.world_px_gen_;
+    ++d.cache_stores;
+    d.ctx->UpdateSubresource(d.cb, 0, nullptr, &c, 0, 0);
+  }
+  x->PSSetShaderResources(30, 1, c.cache_on ? &d.cache.srv : &d.dummy_u.srv);  // P35A
   x->PSSetShader(d.ps_course, nullptr, 0);
   x->Draw(3, 0);
+  {
+    ID3D11ShaderResourceView *nc = nullptr;
+    x->PSSetShaderResources(30, 1, &nc);
+  }
   // 2. the course patches at the slide's offset
   if (!d.qc.empty()) {
     QuadCB q = {slx, sly, cw, ch};
@@ -3734,6 +3838,14 @@ std::string GpuCompositor::json() const {
     std::snprintf(e, sizeof e, ",\"p17b\":{\"world_gpu_copies\":%llu,\"world_gpu_fail\":%llu,\"ms_world_gpu\":%.1f,\"shared_open\":%zu}}",
                   static_cast<unsigned long long>(d.world_gpu_copies), static_cast<unsigned long long>(d.world_gpu_fail),
                   static_cast<double>(d.ns_world_gpu) / 1e6, d.shared.size());
+    j.pop_back();
+    j += e;
+  }
+  if (!j.empty() && j.back() == '}') {  // P35A: the ground cache
+    char e[200];
+    std::snprintf(e, sizeof e, ",\"p35a\":{\"cache\":%d,\"stores\":%llu,\"moves\":%llu,\"resets\":%llu,\"paints\":%llu}}", d.cache_ok ? 1 : 0,
+                  static_cast<unsigned long long>(d.cache_stores), static_cast<unsigned long long>(d.cache_moves),
+                  static_cast<unsigned long long>(d.cache_resets), static_cast<unsigned long long>(d.cache_paints));
     j.pop_back();
     j += e;
   }

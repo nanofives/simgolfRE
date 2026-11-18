@@ -111,6 +111,10 @@
 //   scorecard publishes the frame's HUD panels as layers at their window anchors and the card centred over the wide course; it was
 //   drawn inside the title layer's scope and published the whole 800 frame, panels at their 800-space places (gfx.h
 //   gfx_set_results_layers; records only; log/roadmap/P34/P34B_notes.md)
+//   P35A: --slide-cache on|off (default on; SG_APP_P35=off: off; GPU presenter) while the course picture slides (arrow glide, edge
+//   scroll), the pixels that neither the newest picture nor the last paint covers come from a ground cache of the pictures painted
+//   before, kept at their place on the course (twice the window each way); they showed the last paint's edge pixels stretched, or
+//   black (present.h set_slide_cache; drawing only; log/roadmap/P35/P35A_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -628,6 +632,7 @@ struct Options {
   bool photo_banner = true;        // P32A item 9: --photo-banner on|off (SG_APP_P32=off: off)
   bool speed_button = true;        // P33A item 1: --speed-button on|off (SG_APP_P33=off: off)
   bool caps_shortcuts = true;      // P34A item 4: --caps-shortcuts on|off (SG_APP_P34=off: off)
+  bool slide_cache = true;         // P35A: --slide-cache on|off (SG_APP_P35=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -720,6 +725,7 @@ static void setup_text(Presenter &p, const Options &o) {
   p.set_strip_near(o.strip_right && o.strip_near);  // P19C item 8
   p.set_line_native(line_res_on(o));  // P10I fix 1
   p.set_edge_rows(o.edge_rows);  // P32B item 2
+  p.set_slide_cache(o.slide_cache);  // P35A
   p.set_line_tiles(o.line_tiles);  // P23E fix 1
   p.set_course_tables(o.course_tables);  // P24C fix 2b
 }
@@ -3813,6 +3819,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.sharp_art = v == "on";
       continue;
     }
+    if (a == "--slide-cache") {  // P35A
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.slide_cache = v == "on";
+      continue;
+    }
     if (a == "--edge-glide" || a == "--tap-slide" || a == "--early-world") {  // P31B items 3 / 4 / 7 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
@@ -4370,6 +4381,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.speed_button = o.lot_box = false;  // P33A item 1, P33B item 6
   if (const char *ep = std::getenv("SG_APP_P34"))  // P34: the sixteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.caps_shortcuts = o.results_layers = false;  // P34A item 4, P34B
+  if (const char *ep = std::getenv("SG_APP_P35"))  // P35: the play-test of 8a8a3997's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.slide_cache = false;  // P35A
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

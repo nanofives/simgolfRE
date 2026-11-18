@@ -518,6 +518,14 @@ class Presenter {
   // P32B item 2 (--edge-rows): the layers' smooth taps above row 0 / below row 599 of the 800-space frame read that edge row
   void set_edge_rows(bool on) { edge_rows_ = on; }
   bool edge_rows() const { return edge_rows_; }
+  // P35A (--slide-cache; GPU presenter): the pixels of a slid course picture that neither it nor the last paint covers come from
+  // a ground cache, twice the client each way, that keeps every course picture whole at its place on the course
+  void set_slide_cache(bool on) { slide_cache_ = on; }
+  bool slide_cache() const { return slide_cache_; }
+  // the place on the course of client pixel (0, 0) for a picture of camera `cam` painted at slide offset (slx, sly): a client pixel
+  // p shows the course point p + (ox, oy), the same point for every picture of one zoom, rotation and viewport (key)
+  bool slide_origin(const CameraSnap &cam, const Viewport &vp, int32_t slx, int32_t sly, int32_t &ox, int32_t &oy,
+                    std::array<int32_t, 6> &key) const;
   // P23E fix 1: the GPU presenter renders a native line's CPU patch as pieces along the line, not its whole box (--line-tiles)
   void set_line_tiles(bool on) { line_tiles_ = on; }
   // P24C fix 2b: the GPU presenter draws the course runs from tables over its course picture, not as CPU course patches (--course-tables)
@@ -755,6 +763,7 @@ class Presenter {
   // P22C fix 3: a new world image (set_frame) not yet uploaded whole: the GPU uploads it whole even when objects_tick already rewrote
   // rectangles of it (set_frame_world draws a frame's trail lines before its first paint), then those rectangles over a shared picture
   mutable bool world_whole_ = true;
+  bool slide_cache_ = false;  // P35A (set_slide_cache)
   mutable uint64_t swap_gen_ = 0;     // bumped where slide_start swaps scene_prev_ / scene_last_
   mutable bool overlay_frozen_ = false;  // overlay_freeze
   mutable ProfLine overlay_line_;
