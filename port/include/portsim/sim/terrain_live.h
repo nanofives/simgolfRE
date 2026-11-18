@@ -53,6 +53,9 @@ struct LiveTerrainWorld {
   int32_t pw = 0, ph = 0;      // the world layer's pixels
   int32_t fw = 0, ox = 0;      // the 800 x 600 frame's width (= ph * 800 / 600) and left edge in world pixels
   int32_t margin = 0;          // isCulled's side margin in the frame's logical pixels
+  // P35D (terrain_world_set_reach, app option --world-reach): the extra tiles the passes walk each way and isCulled's bottom margin
+  // in logical pixels (terrain_render_set_world_reach); 0, 0 = the original's windows
+  int32_t reach = 0, cull_y = 0;
   std::unique_ptr<gl::GlRaster> raster;   // its pixels() are the world's root surface
   // the world's copy of the exe's back surface (P15A fix 2: shared and never written in place, so a copy of the root taken while
   // the root equals it is this buffer: b_queue_begin's root for the world thread)
@@ -210,6 +213,18 @@ std::vector<GfxWorldLine> *gfx_world_lines_chunk();
 void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines);
 // P15A fix 3: a world rasteriser's size-dependent state (the x clip planes and the dither phase of a pw x ph world)
 void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph);
+// P35D (app option --world-reach; RENDER-ONLY, the world layer's passes; log/roadmap/P35/P35D_notes.md). Process-wide, set before
+// the world layer is made. Off (the default) = as before. On: (1) the world layer's Terrain::render / pathUpdateRender walk the
+// tiles the whole wide window needs (Terrain::render walks 16 tiles each way at zoom 4 and 8, which the 800 frame needs; a wide
+// window's corners lie past them: at 2560 x 1351 its bottom-right corner is 16.4 tiles down, so that tile row was never drawn) and
+// isCulled keeps tiles up to kWorldCullY logical pixels below the view (its height term counts 5 pixels a level; raised
+// ground in front of the view's bottom edge was culled and left notches); (2) the x clip planes cover the world's last column when
+// pw - fw is odd (the planes stood at +-pw / 2 around the frame's centre, which lies half a pixel left of the world's centre then).
+void terrain_world_set_reach(bool on);
+bool terrain_world_reach();
+// the reach and margin of a world of the given size (exposed for the unit test): tiles = the rows past Terrain::render's 16 that
+// the window's farthest corner needs, with the kWorldCullY margin, plus 1
+void terrain_world_reach_of(int32_t margin, int32_t &tiles, int32_t &cull_y);
 
 // P15A (log/roadmap/P15/P15A_notes.md): LiveTerrain::world_frame / world_cursor over a given world and a given copy of its root
 // (the world thread's: the hr planes of its own LiveTerrainWorld, the root and the scene planes copied at the present). The same

@@ -82,6 +82,10 @@ void terrain_render_negctl(int32_t mode);
 // each side (shifted left by the Terrain object's zoom field, like halfW); 0 (the default) = the original's bounds. The caller sets
 // it around one pass and puts 0 back.
 void terrain_render_set_cull_margin(int32_t m);
+// P35D (app option --world-reach, log/roadmap/P35/P35D_notes.md): the world layer's passes walk `tiles` more tiles each way than
+// Terrain::render's 16 (pathUpdateRender's 15), both shifted left by the zoom field, and isCulled's bottom bound moves out by cull_y
+// logical pixels (shifted likewise). 0, 0 (the default) = the original's windows. Set and put back like the cull margin.
+void terrain_render_set_world_reach(int32_t tiles, int32_t cull_y);
 
 }  // namespace portsim
 

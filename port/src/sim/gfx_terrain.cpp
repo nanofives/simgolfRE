@@ -265,6 +265,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
   const int64_t before_px = r.stats.drawn_px;
   const auto t0 = std::chrono::steady_clock::now();
   terrain_render_set_cull_margin(w.margin);
+  terrain_render_set_world_reach(w.reach, w.cull_y);  // P35D (0, 0 without --world-reach)
   const int32_t kind = static_cast<int32_t>(a[0]);
   if (kind == kEntryRender || kind == kEntryStripRender) {   // G32: the camera's pivot and angle, for a redraw after a resize
     w.has_last = true;
@@ -281,6 +282,7 @@ void world_pass(Gfx &g, Ctx &ctx, LiveTerrain &lt, LiveTerrainWorld &w, const ui
     ok = terrain_render_entry(ctx, w.sink(), tg, kind, a[1], a[2], a[3], a[4]);   // P15A fix 3: through the world's sink
   }
   terrain_render_set_cull_margin(0);
+  terrain_render_set_world_reach(0, 0);  // P35D
   world_finish(w);
   pd_render.stop();  // P15A
   tg.view_index = view;
@@ -488,8 +490,10 @@ void b_frame_end(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   world_arrays(*w, tg);  // P15A fix 3
   world_fill(*w);
   terrain_render_set_cull_margin(w->margin);
+  terrain_render_set_world_reach(w->reach, w->cull_y);  // P35D
   terrain_render_entry(ctx, w->sink(), tg, kEntryRender, w->last_self, w->last_pivot, w->last_angle, 0);
   terrain_render_set_cull_margin(0);
+  terrain_render_set_world_reach(0, 0);  // P35D
   world_finish(*w);
   tg.view_index = view;
   world_back_take(*w);  // P15A fix 3

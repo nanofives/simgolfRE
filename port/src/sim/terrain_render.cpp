@@ -40,6 +40,7 @@ namespace {
 //  19 a turned fairway tile's piece-2 faces draw piece 0 (P13A fix 6; Tile::render.fairwayStripesFixed = 0 only)
 int32_t g_negctl_terrain_render = 0;
 int32_t g_cull_margin = 0;   // P8B: terrain_render_set_cull_margin
+int32_t g_world_reach = 0, g_world_cull_y = 0;   // P35D: terrain_render_set_world_reach
 
 // Terrain object fields
 constexpr uint32_t kTerWidth = 0x14, kTerHeight = 0x18, kTerZoom = 0x1C, kTerScreenW = 0x20, kTerScreenH = 0x24;
@@ -77,6 +78,11 @@ class Renderer {
         for (int32_t xn = 40; xn > 10; --xn) tile_render(tile_at(xn, yn));
     } else {
       const int32_t px = tile_x(ptile), py = tile_y(ptile);
+      // P35D: a world-layer pass walks g_world_reach more tiles each way (shifted by the zoom field like the 16), before the map clamps
+      up += g_world_reach << zoom;
+      down += g_world_reach << zoom;
+      left += g_world_reach << zoom;
+      right += g_world_reach << zoom;
       if (py < up) up = py;
       if (50 - py < down) down = 50 - py;
       if (px < left) left = px;
@@ -278,7 +284,7 @@ class Renderer {
   void path_update_render(uint32_t pivot, float angle) {
     const int32_t zoom = i32(terrain_ + kTerZoom);
     int32_t top, bottom, left, right;
-    top = bottom = left = right = 15 << zoom;
+    top = bottom = left = right = (15 + g_world_reach) << zoom;   // P35D: g_world_reach 0 outside the world layer's passes
     begin_pass(pivot, angle, pivot != 0);
     const int32_t px = tile_x(pivot), py = tile_y(pivot);
     if (py < top) top = py;
@@ -462,6 +468,9 @@ class Renderer {
     const int32_t w = i32(terrain_ + kTerScreenW), h = i32(terrain_ + kTerScreenH);
     // P8B: the world layer's side margin (0 = the original's test: adding 0 changes no comparison)
     const int32_t halfW = (w >> 1) * zoom + (g_cull_margin << zoom), halfH = (h >> 1) * zoom;
+    // P35D: the world layer's bottom margin (0 = the original's test). Only the bottom: the height term lifts a tile, so a tile
+    // whose lifted point is below the view can still reach into it, one above it cannot
+    const int32_t lowH = halfH + (g_world_cull_y << zoom);
     const int32_t dy = tile_y(t) - tile_y(center), dx = tile_x(t) - tile_x(center);
     // The four footprint constants per window size; any other size leaves them uninitialised (the debug build's stack fill)
     int32_t A = static_cast<int32_t>(0xCCCCCCCCu), B = A, C = A, D = A;
@@ -475,22 +484,22 @@ class Renderer {
       sx = (w >> 1) + dy * C + dx * C;
       sy = (h >> 1) + dy * D - dx * D;
       sy -= max_height(t) * 5;
-      return sx > w + halfW || sx < -A - halfW || sy > h + B + halfH || sy < -B - halfH;
+      return sx > w + halfW || sx < -A - halfW || sy > h + B + lowH || sy < -B - halfH;
     } else if (ang == (swap ? 180.0 : 90.0)) {
       sx = (w >> 1) - dy * C + dx * C;
       sy = (h >> 1) - dy * D - dx * D;
       sy -= max_height(t) * 5;
-      return sx > w + C + halfW || sx < -A - halfW || sy > h + B + halfH || sy < -B - halfH;
+      return sx > w + C + halfW || sx < -A - halfW || sy > h + B + lowH || sy < -B - halfH;
     } else if (ang == (swap ? 90.0 : 180.0)) {
       sx = (w >> 1) - dy * C - dx * C;
       sy = (h >> 1) - dy * D + dx * D;
       sy -= max_height(t) * 5;
-      return sx > w + A + halfW || sx < -C - halfW || sy > h + B + halfH || sy < -B - halfH;
+      return sx > w + A + halfW || sx < -C - halfW || sy > h + B + lowH || sy < -B - halfH;
     } else {
       sx = (w >> 1) + dy * C - dx * C;
       sy = (h >> 1) + dy * D + dx * D;
       sy -= max_height(t) * 5;
-      return sx > w + C + halfW || sx < -C - halfW || sy > h + D + halfH || sy < -B - D - halfH;
+      return sx > w + C + halfW || sx < -C - halfW || sy > h + D + lowH || sy < -B - D - halfH;
     }
   }
 
@@ -784,6 +793,10 @@ bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t e
 
 void terrain_render_negctl(int32_t mode) { g_negctl_terrain_render = mode; }
 void terrain_render_set_cull_margin(int32_t m) { g_cull_margin = m; }
+void terrain_render_set_world_reach(int32_t tiles, int32_t cull_y) {
+  g_world_reach = tiles;
+  g_world_cull_y = cull_y;
+}
 
 // No sg_call functions yet: the renderer needs a sink and the host's globals, so it has its own C entry points (portsim_c.h).
 extern const ModuleDef kModule_terrain_render = {"terrain_render", nullptr, 0};

@@ -121,6 +121,12 @@
 //   P35C item 2: --edge-ground on|off (default on; SG_APP_P35=off: off; the world layer) the art addSprite draws before the sprite
 //   queue (the tile passes' ground pieces under scenery, flower beds, the water's side sprites) outside the 800 frame's columns too:
 //   the queue's start rebuilt the wide scene there from the world layer, without them (gfx.h gfx_set_wide_prequeue; drawing only)
+//   P35D: --world-reach on|off (default on; SG_APP_P35=off: off; the world layer) the world layer's terrain passes walk the tiles the
+//   whole wide window needs and keep raised ground below the view: Terrain::render walks 16 tiles around the camera, which covers
+//   the 800 frame, so a wide window's far corner (at 2560 x 1351 the bottom-right one) lost a tile row (a black triangle with a
+//   straight edge, at rest and more while the picture slides), and isCulled's height term dropped raised tiles at the view's bottom
+//   edge; the world's last column is drawn when its width is odd around the frame (terrain_live.h terrain_world_set_reach; drawing
+//   only; log/roadmap/P35/P35D_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -397,6 +403,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
 #include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
+#include "portsim/sim/terrain_live.h"  // P35D: terrain_world_set_reach
 #include "portsim/sim/live.h"
 #include "portsim/sim/shots.h"  // P32D item 7: shot_margin_set
 #include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (the camera slide's clock)
@@ -642,6 +649,7 @@ struct Options {
   bool slide_cache = true;         // P35A: --slide-cache on|off (SG_APP_P35=off: off)
   bool shader_cache = true;        // P35A item 6: --shader-cache on|off (SG_APP_P35=off: off)
   bool edge_ground = true;         // P35C item 2: --edge-ground on|off (SG_APP_P35=off: off)
+  bool world_reach = true;         // P35D: --world-reach on|off (SG_APP_P35=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1076,6 +1084,7 @@ struct TerrainGuard {
                            std::to_string(ch.check.ms) + "}\n";
     write_file(rec / "terrain_renderer.json", js.data(), js.size());
     if (o.world_pw > 0 && o.world_ph > 0) {  // P8B: the world layer, before the first Terrain call
+      portsim::terrain_world_set_reach(o.world_reach);  // P35D (before the world's geometry is made)
       std::string wwhy;
       const bool won = live->set_world_view(o.world_pw, o.world_ph, &wwhy);
       std::fprintf(stderr, "simgolf_port: world layer %dx%d %s\n", o.world_pw, o.world_ph, won ? "on" : ("refused: " + wwhy).c_str());
@@ -2462,6 +2471,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     portsim::gfx_wide_prequeue_stats(pqd, pqf);
     s += ",\"p35c\":{\"edge_ground\":" + std::to_string(portsim::gfx_wide_prequeue() ? 1 : 0) + ",\"prequeue_drawn\":" +
          std::to_string(pqd) + ",\"prequeue_queues\":" + std::to_string(pqf) + "}";
+    s += ",\"p35d\":{\"world_reach\":" + std::to_string(portsim::terrain_world_reach() ? 1 : 0) + "}";  // P35D
   }
   s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
        std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
@@ -3855,6 +3865,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.slide_cache = v == "on";
       continue;
     }
+    if (a == "--world-reach") {  // P35D (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.world_reach = v == "on";
+      continue;
+    }
     if (a == "--edge-ground") {  // P35C item 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.edge_ground = v == "on";
@@ -4421,6 +4436,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.slide_cache = o.shader_cache = false;  // P35A, P35A item 6
       o.edge_ground = false;  // P35C item 2
+      o.world_reach = false;  // P35D
     }
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2

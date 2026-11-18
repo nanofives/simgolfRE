@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS  // the development switch SG_LIVE_GETTERS uses getenv
 #include "portsim/sim/terrain_live.h"
 
+#include <atomic>     // P35D: terrain_world_set_reach
 #include <algorithm>  // P10A: std::equal / std::fill (world_frame, world_cursor)
 #include <cmath>
 #include <cstdio>
@@ -277,6 +278,15 @@ void world_mask(LiveTerrainWorld &w) {
   if (w.sample) w.sample->set_mask(w.mask_rows, w.mask_cx0, w.mask_cx1);
 }
 
+// P35D (terrain_live.h terrain_world_set_reach)
+std::atomic<bool> g_world_reach_on{false};
+constexpr int32_t kWorldCullY = 200;
+// x clip planes at +-kx around the frame's centre: with --world-reach one more pixel when pw - fw is odd (the right side is the wider)
+float world_clip_x(int32_t pw, int32_t fw) {
+  const int32_t odd = g_world_reach_on.load(std::memory_order_relaxed) ? ((pw - fw) & 1) : 0;
+  return static_cast<float>(static_cast<double>(pw + odd) / static_cast<double>(fw));
+}
+
 // the size-dependent parts of a world layer (set_world_view, resize_world)
 void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
   w.pw = pw;
@@ -285,7 +295,9 @@ void world_geometry(LiveTerrainWorld &w, int32_t pw, int32_t ph) {
   w.ox = (pw - w.fw) / 2;
   // the side margin in logical pixels: the ox world pixels left of the frame, at fw / 800 world pixels per logical one, rounded up
   w.margin = static_cast<int32_t>((static_cast<int64_t>(w.ox) * 800 + w.fw - 1) / w.fw) + 1;
-  w.raster->set_clip_x(static_cast<float>(static_cast<double>(pw) / static_cast<double>(w.fw)));
+  w.reach = w.cull_y = 0;
+  if (g_world_reach_on.load(std::memory_order_relaxed)) terrain_world_reach_of(w.margin, w.reach, w.cull_y);  // P35D
+  w.raster->set_clip_x(world_clip_x(pw, w.fw));
   // the dither phase of the frame's own columns (window x - ox): exact at render scale 1; any scale keeps a 4x4 matrix
   w.raster->set_dither_dx(-w.ox);
   w.back = std::make_shared<const std::vector<uint16_t>>(static_cast<size_t>(pw) * static_cast<size_t>(ph), uint16_t{0});
@@ -319,8 +331,20 @@ void record_reset(int32_t pw, int32_t ph, bool resize) {
 
 void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph) {
   const int32_t fw = static_cast<int32_t>(static_cast<int64_t>(ph) * 800 / 600);
-  r.set_clip_x(static_cast<float>(static_cast<double>(pw) / static_cast<double>(fw)));
+  r.set_clip_x(world_clip_x(pw, fw));  // P35D
   r.set_dither_dx(-((pw - fw) / 2));
+}
+
+void terrain_world_set_reach(bool on) { g_world_reach_on.store(on, std::memory_order_relaxed); }
+bool terrain_world_reach() { return g_world_reach_on.load(std::memory_order_relaxed); }
+void terrain_world_reach_of(int32_t margin, int32_t &tiles, int32_t &cull_y) {
+  // a tile dx, dy from the pivot stands at sx = 400 + 32 (dx + dy), sy = 300 + 20 (dy - dx) at zoom 4 (isCulled's 800 x 600
+  // constants C = 32, D = 20); the farthest corner of the culled window (400 + margin, 300 + 40 + cull_y) needs
+  // max(|dx|, |dy|) = ((400 + margin) / 32 + (340 + cull_y) / 20) / 2, rounded up, plus 1 for the half tile a footprint reaches
+  cull_y = kWorldCullY;
+  const int64_t num = static_cast<int64_t>(400 + margin) * 20 + static_cast<int64_t>(340 + cull_y) * 32;
+  const int32_t need = static_cast<int32_t>((num + 1279) / 1280) + 1;
+  tiles = need > 16 ? need - 16 : 0;
 }
 
 bool LiveTerrain::set_world_view(int32_t pw, int32_t ph, std::string *why) {
