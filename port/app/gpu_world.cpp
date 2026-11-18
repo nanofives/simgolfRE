@@ -1,5 +1,6 @@
 // P17B: the world thread's hr planes and world image on the GPU (gpu_world.h; log/roadmap/P17/P17B_notes.md section 1).
 #include "gpu_world.h"
+#include "shader_cache.h"
 
 #include "gpu.h"
 #include "gpu_raster.h"
@@ -304,6 +305,7 @@ bool compile_world_shaders(std::vector<std::vector<uint8_t>> &code, std::string 
     why = "no D3DCompile";
     return false;
   }
+  compile = reinterpret_cast<pD3DCompile>(shader_cache_wrap(reinterpret_cast<void *>(compile), dc));  // P35A item 6
   size_t n = 0;
   const char *obj = gpu_objects_hlsl(n);
   const std::string text = std::string(obj, n) + kHlslWorld;

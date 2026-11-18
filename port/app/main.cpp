@@ -111,6 +111,9 @@
 //   scorecard publishes the frame's HUD panels as layers at their window anchors and the card centred over the wide course; it was
 //   drawn inside the title layer's scope and published the whole 800 frame, panels at their 800-space places (gfx.h
 //   gfx_set_results_layers; records only; log/roadmap/P34/P34B_notes.md)
+//   P35A item 6: --shader-cache on|off (default on; SG_APP_P35=off: off) the compiled HLSL of the GPU presenter, the GPU terrain
+//   raster and the GPU world is kept in <data>\shader_cache and read back at the next start instead of compiled again (11 of the
+//   12 s the window stayed black at a start; shader_cache.h; no picture changes: the same bytecode)
 //   P35A: --slide-cache on|off (default on; SG_APP_P35=off: off; GPU presenter) while the course picture slides (arrow glide, edge
 //   scroll), the pixels that neither the newest picture nor the last paint covers come from a ground cache of the pictures painted
 //   before, kept at their place on the course (twice the window each way); they showed the last paint's edge pixels stretched, or
@@ -374,6 +377,7 @@
 
 #include "audio_out.h"
 #include "gpu_raster.h"  // P16B
+#include "shader_cache.h"
 #include "gpu_world.h"   // P17B
 #include "host.h"
 #include "input_map.h"
@@ -636,6 +640,7 @@ struct Options {
   bool speed_button = true;        // P33A item 1: --speed-button on|off (SG_APP_P33=off: off)
   bool caps_shortcuts = true;      // P34A item 4: --caps-shortcuts on|off (SG_APP_P34=off: off)
   bool slide_cache = true;         // P35A: --slide-cache on|off (SG_APP_P35=off: off)
+  bool shader_cache = true;        // P35A item 6: --shader-cache on|off (SG_APP_P35=off: off)
   bool edge_ground = true;         // P35C item 2: --edge-ground on|off (SG_APP_P35=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
@@ -2489,6 +2494,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   Profiler::get().close_csv();
   s += ",\"p14\":" + presenter.gpu_json();  // P14A
+  s += ",\"p35a_shaders\":" + portapp::shader_cache_json();  // P35A item 6
   s += ",\"p15c_objects\":" + presenter.objects_json();  // P15C
   s += ",\"p15\":" + session.world_thread_json();  // P15A
   s += ",\"p16b\":" + portapp::gpu_raster_json();  // P16B
@@ -3836,6 +3842,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.sharp_art = v == "on";
       continue;
     }
+    if (a == "--shader-cache") {  // P35A item 6
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.shader_cache = v == "on";
+      continue;
+    }
     if (a == "--slide-cache") {  // P35A
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.slide_cache = v == "on";
@@ -4405,7 +4416,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.caps_shortcuts = o.results_layers = false;  // P34A item 4, P34B
   if (const char *ep = std::getenv("SG_APP_P35"))  // P35: the play-test of 8a8a3997's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) {
-      o.slide_cache = false;  // P35A
+      o.slide_cache = o.shader_cache = false;  // P35A, P35A item 6
       o.edge_ground = false;  // P35C item 2
     }
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
@@ -4463,6 +4474,8 @@ int main(int argc, char **argv) {
   if (o.negctl == "saves-inside") sd = SavesDefect::AllowInsideInstall;
   AppFiles files(o.install, o.data, sd);
   files.set_newest_first(o.newest_saves);  // P23A item 2
+  // P35A item 6: before any GPU device starts (the preparation thread compiles first)
+  if (o.shader_cache && o.gpu) portapp::shader_cache_set_dir((fs::path(files.data_root()) / "shader_cache").string());
   lang_ui().startup(o.install, o.data);  // P24D: the language pack and the remembered language (lang_ui.h)
   {  // P24D: the redrawn art (SG_LANG_ART=off: none)
     const char *art = std::getenv("SG_LANG_ART");

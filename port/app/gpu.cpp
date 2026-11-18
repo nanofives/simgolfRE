@@ -1,5 +1,6 @@
 // P14A: the GPU compositor (gpu.h; log/roadmap/P14/P14A_notes.md).
 #include "gpu.h"
+#include "shader_cache.h"
 
 #include "present.h"
 #include "gpu_world.h"  // P17B fix 2
@@ -1156,6 +1157,7 @@ bool GpuCompositor::start(void *hwnd, std::string &why) {
   if (!dc) return fail("no d3dcompiler_47.dll");
   auto compile = reinterpret_cast<pD3DCompile>(reinterpret_cast<void *>(GetProcAddress(dc, "D3DCompile")));
   if (!compile) return fail("no D3DCompile");
+  compile = reinterpret_cast<pD3DCompile>(shader_cache_wrap(reinterpret_cast<void *>(compile), dc));  // P35A item 6
   const D3D_FEATURE_LEVEL want[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
   D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_10_0;
   HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT, want, 2,

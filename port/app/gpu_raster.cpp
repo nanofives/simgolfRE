@@ -1,5 +1,6 @@
 // P16B: the world terrain rasteriser's pixel loop on the GPU (gpu_raster.h; log/roadmap/P16/P16B_notes.md section 1).
 #include "gpu_raster.h"
+#include "shader_cache.h"
 
 #include "portsim/sim/gl_raster.h"
 
@@ -695,6 +696,7 @@ struct Dev {
     if (!dc) return fail("no d3dcompiler_47.dll");
     auto compile = reinterpret_cast<pD3DCompile>(reinterpret_cast<void *>(GetProcAddress(dc, "D3DCompile")));
     if (!compile) return fail("no D3DCompile");
+    compile = reinterpret_cast<pD3DCompile>(shader_cache_wrap(reinterpret_cast<void *>(compile), dc));  // P35A item 6
     const D3D_FEATURE_LEVEL want[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
     D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_10_0;
     HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, want, 2, D3D11_SDK_VERSION, &dev, &got, &ctx);
