@@ -170,17 +170,18 @@ void world_finish(LiveTerrainWorld &w) {
   w.raster->finish();
   if (w.sample) w.sample->finish();
 }
-// the root filled with 0
+// the root filled with 0 (P35D fix 2: with terrain_world_backdrop, that colour: the void past the land)
 void world_fill(LiveTerrainWorld &w) {
+  const uint16_t v = terrain_world_backdrop();
   if (!w.rec) {
     std::vector<uint16_t> &px = w.raster->pixels();
-    std::fill(px.begin(), px.end(), static_cast<uint16_t>(0));
+    std::fill(px.begin(), px.end(), v);
     return;
   }
-  w.raster->fill_masked(0);
-  if (w.sample) w.sample->fill_masked(0);
-  gfx_world_op(kGwFill, [](LiveTerrainWorld &W) {
-    if (W.raster) W.raster->fill_masked(0);
+  w.raster->fill_masked(v);
+  if (w.sample) w.sample->fill_masked(v);
+  gfx_world_op(kGwFill, [v](LiveTerrainWorld &W) {
+    if (W.raster) W.raster->fill_masked(v);
   });
 }
 // the back surface has the root's size
@@ -237,12 +238,14 @@ LiveTerrainWorld *world_of(Gfx &g, Ctx &ctx) {
 void world_check(LiveTerrainWorld &w) {
   if (!w.check_central || w.fw != 800 || w.ph != 600) return;
   const std::vector<uint16_t> &px = w.raster->pixels();
+  const uint16_t bd = terrain_world_backdrop();  // P35D fix 2: the backdrop where the frame's root holds 0 is equal
   int64_t d = 0;
   for (int32_t y = 0; y < 600; ++y)
-    for (int32_t x = 0; x < 800; ++x)
-      if (px[static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(w.ox + x)] !=
-          w.terrain800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)])
-        ++d;
+    for (int32_t x = 0; x < 800; ++x) {
+      const uint16_t wv = px[static_cast<size_t>(y) * static_cast<size_t>(w.pw) + static_cast<size_t>(w.ox + x)];
+      const uint16_t tv = w.terrain800[static_cast<size_t>(y) * 800 + static_cast<size_t>(x)];
+      if (wv != tv && !(bd != 0 && wv == bd && tv == 0)) ++d;
+    }
   ++w.checks;
   if (d) ++w.checks_differing;
   w.diff_px += d;

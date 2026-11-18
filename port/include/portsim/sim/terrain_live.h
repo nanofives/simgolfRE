@@ -222,6 +222,13 @@ void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph);
 // pw - fw is odd (the planes stood at +-pw / 2 around the frame's centre, which lies half a pixel left of the world's centre then).
 void terrain_world_set_reach(bool on);
 bool terrain_world_reach();
+// P35D fix 2 (app option --edge-backdrop; RENDER-ONLY, the world layer). Process-wide. 0 (the default) = as before: the world
+// layer's root is filled with 0 before its terrain passes (b_window_paint, a strip pass drawn whole, the redraw after a resize), so
+// the window showed black past the land. Else that RGB555 value: the void past the land is that colour in the world picture and
+// in everything made from it (the wide scene's base, slid pictures, the last paint and the ground cache). The 800 frame's own root
+// keeps 0, and screens without terrain never show the world (world_frame_of needs back_terrain), so their black stays.
+void terrain_world_set_backdrop(uint16_t rgb555);
+uint16_t terrain_world_backdrop();
 // the reach and margin of a world of the given size (exposed for the unit test): tiles = the rows past Terrain::render's 16 that
 // the window's farthest corner needs, with the kWorldCullY margin, plus 1
 void terrain_world_reach_of(int32_t margin, int32_t &tiles, int32_t &cull_y);

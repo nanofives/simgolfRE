@@ -6,6 +6,7 @@
 #include "gpu_world.h"  // P17B fix 2
 #include "profile.h"
 #include "portsim/sim/perf.h"
+#include "portsim/sim/terrain_live.h"  // P35D fix 2: terrain_world_backdrop
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -38,6 +39,14 @@ namespace portapp {
 #ifdef _WIN32
 namespace {
 
+// P35D fix 2: the world's backdrop colour (terrain_world_backdrop) as the presenter's BGRA word, 0 = off (rgb555_to_bgra's rule)
+int32_t backdrop_bgra() {
+  const uint32_t v = portsim::terrain_world_backdrop();
+  if (v == 0) return 0;
+  const uint32_t r = (v >> 10) & 31, g = (v >> 5) & 31, bl = v & 31;
+  return static_cast<int32_t>(0xff000000u | (((r << 3) | (r >> 2)) << 16) | (((g << 3) | (g >> 2)) << 8) | ((bl << 3) | (bl >> 2)));
+}
+
 template <class T>
 void rel(T *&p) {
   if (p) {
@@ -61,7 +70,7 @@ cbuffer CB : register(b0) {
   int lines_on, pieces_on, npieces, edge_rows;  // edge_rows: P32B item 2 (Presenter::set_edge_rows)
   int cb0, cb1, cb2, cb3;
   int shade_n0, shade_n1, toff_x, toff_y;
-  int tn_x, tn_y, cpad1, cpad2;
+  int tn_x, tn_y, backdrop, cpad2;  // backdrop: P35D fix 2 (BGRA, 0 = off)
   int cache_on, cax, cay, gap_dbg;  // P35A: the ground cache (Presenter::set_slide_cache)
 };
 cbuffer QCB : register(b1) { int qox, qoy, qcw, qch; };
@@ -164,7 +173,7 @@ uint worldpx(int x, int y) { return bgra(tworld.Load(int3(x, y, 0)) & 0x7fffu); 
 
 uint PSCourse(float4 pos : SV_Position) : SV_Target {
   int X = (int)pos.x, Y = (int)pos.y;
-  uint o = 0xff000000u;
+  uint o = (has_world != 0 && backdrop != 0) ? (uint)backdrop : 0xff000000u;  // P35D fix 2: a course pixel nothing covers
   int vox = vpx + slx, voy = vpy + sly;  // the slid viewport vs
   int bx = X - vox, by = Y - voy;
   bool in_content = bx >= 0 && bx < vpw && by >= 0 && by < vph;
@@ -662,7 +671,7 @@ struct GpuCB {
   int32_t lines_on, pieces_on, npieces, edge_rows;  // edge_rows: P32B item 2 (Presenter::set_edge_rows)
   int32_t cb0, cb1, cb2, cb3;
   int32_t shade_n0, shade_n1, toff_x, toff_y;
-  int32_t tn_x, tn_y, cpad1, cpad2;
+  int32_t tn_x, tn_y, backdrop, cpad2;  // backdrop: P35D fix 2
   int32_t cache_on, cax, cay, gap_dbg;  // P35A
 };
 static_assert(sizeof(GpuCB) % 16 == 0, "cbuffer rows");
@@ -3165,6 +3174,7 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
   c.toff_y = 2 * ch;
   c.tn_x = 5 * cw;
   c.tn_y = 5 * ch;
+  c.backdrop = backdrop_bgra();  // P35D fix 2
   d.ctx->UpdateSubresource(d.cb, 0, nullptr, &c, 0, 0);
   std::vector<int32_t> pdx(P.piece_dx_.begin(), P.piece_dx_.end());
   make_sbuf(d.dev, d.ctx, d.pdx, 4, static_cast<uint32_t>(pdx.size()), pdx.data());
@@ -3354,6 +3364,7 @@ void GpuCompositor::paint_flat(const Presenter &P, int32_t cw, int32_t ch) {
   c.toff_y = 2 * ch;
   c.tn_x = 5 * cw;
   c.tn_y = 5 * ch;
+  c.backdrop = backdrop_bgra();  // P35D fix 2
   d.ctx->UpdateSubresource(d.cb, 0, nullptr, &c, 0, 0);
   const int64_t td0 = portsim::perf_now_ns();
   ts_begin();

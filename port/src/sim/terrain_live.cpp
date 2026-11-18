@@ -336,6 +336,11 @@ void terrain_world_raster_geometry(gl::GlRaster &r, int32_t pw, int32_t ph) {
 }
 
 void terrain_world_set_reach(bool on) { g_world_reach_on.store(on, std::memory_order_relaxed); }
+namespace {
+std::atomic<uint16_t> g_world_backdrop{0};  // P35D fix 2
+}  // namespace
+void terrain_world_set_backdrop(uint16_t rgb555) { g_world_backdrop.store(rgb555, std::memory_order_relaxed); }
+uint16_t terrain_world_backdrop() { return g_world_backdrop.load(std::memory_order_relaxed); }
 bool terrain_world_reach() { return g_world_reach_on.load(std::memory_order_relaxed); }
 void terrain_world_reach_of(int32_t margin, int32_t &tiles, int32_t &cull_y) {
   // a tile dx, dy from the pivot stands at sx = 400 + 32 (dx + dy), sy = 300 + 20 (dy - dx) at zoom 4 (isCulled's 800 x 600
