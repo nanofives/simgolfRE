@@ -906,6 +906,7 @@ const ProfileMember kPlayProfile[] = {
     {"tileToScreen.spriteReach", 0},                // P33C (play-test 15 item 3: buildings and trees drawn while their art reaches the view)
     {"drawWorldObjects.spriteReach", 0},            // P33C (play-test 15 item 4: animals and flyers drawn while their art reaches the view)
     {"mainLoop.terrainLiftCap13", 0},               // P35B (play-test 17 item 4: the terrain tool lifts to level 18, 15 steps, on every course type)
+    {"mainLoop.gridEdgeCorners", 0},                // P35C (play-test 17 item 5: the terrain grid whole at the view's edges)
     {"narrateShot.wideViewFit", 0},                 // P31D (G33 item 5: the shot narration and SimFoto over the wide view)
     {"mainLoop.simFotoWideFrame", 0},               // P31D (G33 item 5: the SimFoto event framed in the wide view)
     {"showBulletinBoard.widePhoto", 0},             // P31D (G33 item 5: the board's photo cut from the wide scene)
@@ -1796,6 +1797,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         const int k = portsim::defect_find(sw);
         if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
       }
+    // development (P35C's A / B): SG_P35_GRID=0 puts mainLoop.gridEdgeCorners back to the original's 1 for this run
+    if (std::getenv("SG_P35_GRID") && std::atoi(std::getenv("SG_P35_GRID")) == 0) {
+      const int k = portsim::defect_find("mainLoop.gridEdgeCorners");
+      if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+    }
     ho.arrow_head = d >= 0 && *portsim::defect_at(d, nullptr)->flag == 0;
     const int h = portsim::defect_find("mainLoop.arrowKeyHeldRepeat");  // P22A: the held arrow's delay needs the clock offset
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;

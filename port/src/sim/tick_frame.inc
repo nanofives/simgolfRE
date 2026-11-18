@@ -429,10 +429,13 @@ void P1_grid(u32 F, int ebp, int ebx) {
     if (G32(GS(g_ui_542f20)) == 3) return;                                              // ML+0x10a2
     int esi = ebx << 10;                                                           // ML+0x10bd
     int edi = ebp << 10;                                                           // ML+0x10c0
-    if (cc("worldToScreen", edi, esi, FA(0x13c), FA(0x11c), 0) == 0) return;            // ML+0x10c6 worldToScreen, ML+0x10d0
-    cc("worldToScreen", (ebp << 10) + 0x3ff, esi, FA(0x144), FA(0x134), 0);             // ML+0x10f5 worldToScreen
+    // P35C mainLoop.gridEdgeCorners at 0: the corners projected with a margin (a corner off the view keeps its height), the cell
+    // gated by P1_tile's tileToScreen alone
+    const int pm = SG_DEFECT(g_defect_ml_grid_edge) ? 0 : kSpriteReachProject;
+    if (cc("worldToScreen", edi, esi, FA(0x13c), FA(0x11c), pm) == 0) return;           // ML+0x10c6 worldToScreen, ML+0x10d0
+    cc("worldToScreen", (ebp << 10) + 0x3ff, esi, FA(0x144), FA(0x134), pm);            // ML+0x10f5 worldToScreen
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), FD(0x13c), FD(0x11c), FD(0x144), FD(0x134), (int)0x80000000);   // ML+0x1127 Widget_fillRect
-    cc("worldToScreen", edi, (ebx << 10) + 0x3ff, FA(0x144), FA(0x134), 0);             // ML+0x114a worldToScreen
+    cc("worldToScreen", edi, (ebx << 10) + 0x3ff, FA(0x144), FA(0x134), pm);            // ML+0x114a worldToScreen
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), FD(0x13c), FD(0x11c), FD(0x144), FD(0x134), (int)0x80000000);   // ML+0x117c Widget_fillRect
     if ((GU8(GS(g_flags)) & 0x20) == 0) return;                                     // ML+0x1188
     int v = G8(GS(g_tileLevel) + FD(0x14));                                             // ML+0x118e

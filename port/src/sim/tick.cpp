@@ -181,6 +181,13 @@ int g_defect_ml_edge_type = 1;
 // (it does not exist; calcTileWallMask writes masks for inside cells only), so a path ends at the map edge. Orchestrator's
 // choice (class b), vetoable alone, not derived from the code.
 int g_defect_ml_edge_no_flags = 1;
+// mainLoop.gridEdgeCorners (P35C, play-test 17 item 5): the terrain toolbar's grid (P1_grid) projects a cell's first corner with
+// worldToScreen margin 0 and skips the cell when that corner is off the view, and projects the two far corners with margin 0
+// without reading the result: a corner past the view's edge comes back as the flat-ground point (worldToScreen returns before the
+// height term), so on raised ground the edges at the view's edges run to wrong points and the edge column the first corner left
+// is missing. Fixed (0): the three corners are projected with kSpriteReachProject's margin (every corner keeps its height) and
+// the cell is gated by the tile pass's tileToScreen alone. Drawing only.
+int g_defect_ml_grid_edge = 1;
 // true when tile (x, y) is outside the 50 x 50 grid (the P28A switches above)
 inline bool p28_off(int x, int y) { return x < 0 || x >= 50 || y < 0 || y >= 50; }
 // updateGolfers.partnerWaitBlocksTee (P20A, Mariano's "the golfers are stuck", log/roadmap/P20/P20A_notes.md): a golfer at its ball
@@ -2327,6 +2334,12 @@ const DefectDef kDefects[] = {
      "the path, object kind 2 and flag-0x20 neighbour masks read tile_flags, and the water side sprites read a neighbour's wall "
      "mask, with no grid test; fixed: a cell outside the grid has no flags and a wall mask of 0 (orchestrator's choice)",
      &g_defect_ml_edge_no_flags},
+    {"mainLoop.gridEdgeCorners", "play-test 17,P35C",
+     "the terrain toolbar's grid projects a cell's corners with worldToScreen margin 0: the cell is skipped when its first corner "
+     "is off the view (the edge column of cells is missing) and a far corner off the view is the flat-ground point, so on raised "
+     "ground the lines at the view's edges run to wrong points; fixed: the corners are projected with a margin (each keeps its "
+     "height) and the tile pass's tileToScreen alone decides which cells draw",
+     &g_defect_ml_grid_edge},
     {"updateGolfers.partnerWaitBlocksTee", "P20A",
      "a golfer holds its shot while a golfer of its hole with more strokes stands near the tee, also one that already played and "
      "only waits there for its partner, whose own shot is held by the group ahead: they wait for each other for good; fixed: a "
