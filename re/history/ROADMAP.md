@@ -1961,3 +1961,9 @@ Published ed6800cb (GitHub port-2026-11-18-ed6800cb): items 7, 8, 10; segments 2
   each sentence follows from the row's scoring code (notes). Spanish through the LAN pack (18 lines, tuteo). A first version of
   ten-line tips over the rows was sent back. The tournament popup's loop has no tips.
 Published 066012e5 (GitHub port-2026-11-18-066012e5): items 1 (world reach) and 9; segments 205 / 205 equal to I25.
+- Item 11, "podemos renderizar ese texto en mejor resolución?" (the bulletin board's club note; P35G fix 2, 28f4406e, class b,
+  app option --sharp-notes, needs --sharp-art; log/roadmap/P35/P35G_notes.md). The note's to-do lines are art cells of the
+  board's second image (tacs&tees.pcx); P26C's sharp runs covered the first image only. The pack's tacs&tees.runs.tsv lines
+  become text runs too, recorded at the end of the board's fixed pass over a copy drawn without the note, so the club stays on
+  top and its shadow falls on sharp text. The heading and the green line are rotated pack art and stay; in English the note stays
+  as it was (no runs file for the original art). Published 28f4406e (GitHub port-2026-11-18-28f4406e). P35G DONE, closed.
