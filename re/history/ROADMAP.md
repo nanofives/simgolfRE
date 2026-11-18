@@ -1925,3 +1925,4 @@ height). Not run on this round: Win32, the full 4K check, GPU verify with --slid
   file with a checksum; a bad file is compiled again. Second launch: READY at 0.37 s, first picture at 1.3 s, both GPU self-tests
   pass on the cached bytecode. The first launch after an update that changes a shader still compiles once (not built: a picture
   shown during that compile). session.json p35a_shaders. Published e202f87b (GitHub port-2026-11-18-e202f87b).
+Mariano's answer (2026-11-18): the lift top stays +15, a little above the highest generated mountain (+12).
