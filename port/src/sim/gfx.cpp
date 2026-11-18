@@ -2342,6 +2342,15 @@ void gfx_set_meter_tips(Ctx &ctx, bool on) {
 void gfx_set_explain_tips(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->explain_tips = on;
 }
+// P35G item 9 (gfx.h gfx_set_criteria_tips)
+void gfx_set_criteria_tips(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->criteria_tips = on;
+}
+bool gfx_criteria_tips(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->criteria_tips;
+}
 bool gfx_explain_tips(Ctx &ctx) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);

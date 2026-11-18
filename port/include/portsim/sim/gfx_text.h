@@ -56,6 +56,11 @@ void meter_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t x, int32_t y);
 // still shows the tip (a word the screen redrew since is left: a full redraw has replaced the tip already)
 void modal_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t cx, int32_t y_bottom);
 void modal_untip(Gfx &g);
+// P35G item 9 (gfx.h gfx_set_criteria_tips): modal_tip's box for a longer text in the palette tip's small font
+// (g_fontRef_519fd8, showInfoCursorPanel's description), its words wrapped into lines at most max_w wide, the lines left-aligned,
+// the box's left column x_left and its bottom row y_bottom - 1, kept inside the 800 x 600 root; the same tip slot, so modal_untip
+// takes it away
+void modal_tip_box(Gfx &g, Ctx &ctx, const std::string &text, int32_t x_left, int32_t y_bottom, int32_t max_w);
 void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // drawAmenitiesPanel's dwell tip of item L and its mode-4 hovered building row r, at the cursor (a, b)
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);

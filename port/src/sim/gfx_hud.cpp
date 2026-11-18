@@ -2304,6 +2304,71 @@ void b_modal_tip(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 void b_modal_untip(Gfx &g, Ctx &, const uint32_t *, int) { gfxt::modal_untip(g); }
 
+// P35G item 9 (gfx.h gfx_set_criteria_tips; log/roadmap/P35/P35G_notes.md has the grading code behind every sentence): the
+// grading page's hovered criteria row: what raises its stars, then the page's target. "p35g.tip" (row 0..9 in the page's order,
+// class (the Selection Criteria word, 0 Municipal .. 3 Championship), the ideal yards, the minimum yards, the holes of each kind
+// wanted, the facility kinds wanted, g_difficulty, the box's left x, its bottom y). Drawing only.
+std::string criteria_tip_text(const uint32_t *a) {
+  const int32_t row = static_cast<int32_t>(a[0]), cls = static_cast<int32_t>(a[1]);
+  const int32_t ideal = static_cast<int32_t>(a[2]), minimum = static_cast<int32_t>(a[3]), want = static_cast<int32_t>(a[4]);
+  const int32_t kinds = static_cast<int32_t>(a[5]), diff = static_cast<int32_t>(a[6]);
+  char b[512];
+  // the English line with its numbers filled is what the pack translates (a %d pattern), so the numbers go in before lang::tr
+  auto en = [&](const char *f, int32_t x, int32_t y) {
+    std::snprintf(b, sizeof b, f, x, y);
+    return lang::tr(b);
+  };
+  switch (row) {
+    case 0:  // the Championship grade loses its last star at the minimum itself, the others just under it
+      return cls == 3 ? en("Lengthen your holes: move tees farther from their greens. %d yards or more earns every star; %d or less "
+                           "is not acceptable.", ideal, minimum)
+                      : en("Lengthen your holes: move tees farther from their greens. %d yards or more earns every star; under %d "
+                           "is not acceptable.", ideal, minimum);
+    case 1: {
+      static const char *const kClass[4] = {
+          "Open more holes: 5 earn every star as a Municipal course. With 6 to 9 the course is graded as Daily Fee.",
+          "Open more holes: 9 earn every star as a Daily Fee course. With 10 or more the course is graded as Country Club.",
+          "Open more holes: 17 earn every star as a Country Club. With 18 the course is graded as Championship.",
+          "All 18 holes are open: every star as a Championship course."};
+      return lang::tr(kClass[cls & 3]);
+    }
+    case 2:
+      return lang::tr("Shorten the round: golfers should finish in 4 hours or less. Over 5 hours is not acceptable.");
+    case 3:
+      return lang::tr("Make golfers happier on each hole: more things they like, fewer complaints. 100% earns every star.");
+    case 4:
+      return en("Make each hole unlike the one before it: change the par, the direction, the bend or the slope. %d such holes earn "
+                "every star.", want, 0);
+    case 5:
+      return en("Put flower beds and landmarks beside the path and near where shots land. %d scenic holes earn every star.", want, 0);
+    case 6:
+    case 7:
+    case 8: {
+      static const char *const kSkill[3][2] = {
+          {"Build holes where the length skill saves at least half a stroke. %d such holes earn every star.",
+           "Build holes where the length skill saves at least a quarter of a stroke. %d such holes earn every star."},
+          {"Build holes where the accuracy skill saves at least half a stroke. %d such holes earn every star.",
+           "Build holes where the accuracy skill saves at least a quarter of a stroke. %d such holes earn every star."},
+          {"Build holes where the imagination skill saves at least half a stroke. %d such holes earn every star.",
+           "Build holes where the imagination skill saves at least a quarter of a stroke. %d such holes earn every star."}};
+      return en(kSkill[row - 6][diff == 0 ? 1 : 0], want, 0);
+    }
+    case 9:  // at Easy every building counts, joined or not (rebuildTileCoverage)
+      return en(diff == 0 ? "Build more kinds of buildings. %d kinds earn every star."
+                          : "Build more kinds of buildings and join them to the clubhouse with a path. %d kinds earn every star.",
+                kinds, 0);
+    default:
+      return std::string();
+  }
+}
+void b_criteria_tip(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
+  if (!g.criteria_tips || n < 9 || a[0] > 9) return;
+  gfxt::modal_tip_box(g, ctx, criteria_tip_text(a), static_cast<int32_t>(a[7]), static_cast<int32_t>(a[8]), 0x1c0);
+}
+void b_criteria_untip(Gfx &g, Ctx &, const uint32_t *, int) {
+  if (g.criteria_tips) gfxt::modal_untip(g);
+}
+
 // P32A item 9 (gfx.h gfx_set_photo_banner): from mainLoop's HUD pass after P6_PauseLabel (no panel layer: centred), after showBulletinBoard (P5) ran this frame. f_w_4e3db8 word 0 is the
 // pending record (-1 none, 0x63 the board opened from the menu, run_bulletin_board_with_sound), word 1 its photo place until the
 // photo is taken (-1 after). The banner latches the record when word 1 names a place, or when the photo is taken (b_capture, for a
@@ -2814,6 +2879,8 @@ const GfxBodyDef kBodies[] = {
     {"photo.banner", b_photo_banner},  // P32A item 9
     {"p32c.tip", b_modal_tip},         // P32C FIX 3
     {"p32c.untip", b_modal_untip},     // P32C FIX 3
+    {"p35g.tip", b_criteria_tip},      // P35G item 9
+    {"p35g.untip", b_criteria_untip},  // P35G item 9
     {"drawEmployeeDetailPanel.draw", b_detail_panel},
     {"gfx_hud.recordPanels", b_record_panels},
 };

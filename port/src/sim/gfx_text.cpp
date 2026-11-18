@@ -1568,6 +1568,88 @@ void modal_tip(Gfx &g, Ctx &ctx, const std::string &text, int32_t cx, int32_t y_
   t.on = true;
 }
 
+// P35G item 9 (gfx_text.h modal_tip_box)
+void modal_tip_box(Gfx &g, Ctx &ctx, const std::string &text, int32_t x_left, int32_t y_bottom, int32_t max_w) {
+  modal_untip(g);
+  if (text.empty()) return;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  if (r.w < 800 || r.h < 600) return;
+  // the font of showInfoCursorPanel's description (the palette's item tip): setDrawTarget(root, g_fontRef_519fd8), the root's
+  // font slots put back afterwards (they are the backend's copy; the GameState is not written)
+  uint32_t keep_fonts[4];
+  std::memcpy(keep_fonts, g.fonts, sizeof keep_fonts);
+  const uint32_t root = g.root_va(ctx), f = state_va(ctx, &GameState::g_fontRef_519fd8);
+  call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+  TextMetrics *tm = text_metrics(ctx);
+  int32_t asc = 8;
+  auto width = [&](const std::string &s) {
+    int32_t w = 5 * static_cast<int32_t>(s.size());
+    if (tm)
+      with_saved_state(ctx, [&]() {
+        const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+        put_str(ctx, buf, s);
+        int32_t a = 0, m = 0;
+        if (tm->glyph_ascent(ctx, f, a)) asc = a;
+        if (tm->glyph_width(ctx, f, buf, static_cast<int32_t>(s.size()), m)) w = m;
+      });
+    return w;
+  };
+  // the words wrapped into lines no wider than max_w (a single longer word keeps its own line)
+  std::vector<std::string> lines;
+  std::vector<int32_t> widths;
+  std::string line;
+  size_t i = 0;
+  while (i < text.size()) {
+    size_t j = text.find(' ', i);
+    if (j == std::string::npos) j = text.size();
+    const std::string word = text.substr(i, j - i);
+    i = j + 1;
+    if (word.empty()) continue;
+    const std::string cand = line.empty() ? word : line + " " + word;
+    if (!line.empty() && width(cand) > max_w) {
+      lines.push_back(line);
+      line = word;
+    } else {
+      line = cand;
+    }
+  }
+  if (!line.empty()) lines.push_back(line);
+  int32_t tw = 0;
+  for (const std::string &l : lines) {
+    widths.push_back(width(l));
+    tw = std::max(tw, widths.back());
+  }
+  // P13B's box as modal_tip draws it, one text row per line: 4 pixels of black left and right of the widest line, 2 rows above
+  // the first line's top and 2 under the last line's descenders (a third of the ascent); the lines left-aligned at x_left + 4
+  const int32_t row = asc + asc / 3 + 1, h = 2 + row * static_cast<int32_t>(lines.size()) + 2;
+  Gfx::ModalTip &t = g.modal_tip;
+  t.x0 = std::max(0, std::min(x_left, 800 - (tw + 8)));
+  t.x1 = std::min(800, t.x0 + tw + 8);
+  t.y1 = std::max(h, std::min(600, y_bottom));
+  t.y0 = t.y1 - h;
+  const int32_t bw = t.x1 - t.x0, bh = t.y1 - t.y0;
+  auto grab = [&](std::vector<uint16_t> &v) {
+    v.resize(static_cast<size_t>(bw) * static_cast<size_t>(bh));
+    for (int32_t y = 0; y < bh; ++y)
+      std::memcpy(&v[static_cast<size_t>(y) * static_cast<size_t>(bw)],
+                  &r.px[static_cast<size_t>(t.y0 + y) * static_cast<size_t>(r.w) + static_cast<size_t>(t.x0)],
+                  static_cast<size_t>(bw) * sizeof(uint16_t));
+  };
+  grab(t.before);
+  for (int32_t y = t.y0; y < t.y1; ++y)
+    for (int32_t x = t.x0; x < t.x1; ++x) {
+      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      o = 0;
+      hud_mark(&o);
+    }
+  for (size_t k = 0; k < lines.size(); ++k)
+    centred(g, ctx, lines[k], t.x0 + 4 + widths[k] / 2, t.y0 + 2 + row * static_cast<int32_t>(k));
+  grab(t.after);
+  t.on = true;
+  std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
+}
+
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why) {
   std::string text;
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));

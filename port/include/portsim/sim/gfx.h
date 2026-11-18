@@ -83,6 +83,14 @@ void gfx_set_meter_tips(Ctx &ctx, bool on);
 // Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_explain_tips(Ctx &ctx, bool on);
 bool gfx_explain_tips(Ctx &ctx);
+// P35G item 9 (Mariano's play-test 17: "when hovering i want a text box saying what i should do to increase each of these";
+// log/roadmap/P35/P35G_notes.md), set by the app's host (--criteria-tips on, the default; SG_APP_P35=off: off). On the
+// association's grading page (showCourseReport mode 1, the one-button loop) a hovered selection criteria row shows a tip box
+// saying what raises that row's stars, with the numbers the grading uses (reports.cpp show_course_report computes them,
+// gfx_hud.cpp b_criteria_tip words them; English in port code, other languages through the pack). Drawing only: the
+// GameState is never written. Off: nothing.
+void gfx_set_criteria_tips(Ctx &ctx, bool on);
+bool gfx_criteria_tips(Ctx &ctx);
 // P32A item 9 (Mariano's play-test 14: "when the camera gets moved when it's about to take a picture there should be a visual
 // indicator", his answer: the banner, the camera still jumps; log/roadmap/P32/P32A_notes.md), set by the app's host (--photo-banner on,
 // the default; SG_APP_P32=off: off). post_event names a bulletin board record in f_w_4e3db8 word 0 with its photo place in word 1;

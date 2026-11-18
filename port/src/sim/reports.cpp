@@ -89,11 +89,44 @@ void hover(Ctx &ctx, Hover *h, int32_t px, int32_t py) {
   if (gfx_explain_tips(ctx) && (in)) gx2(ctx, "p32c.tip", {0, u32(add32(h->x, 0x16)), u32(sub32(h->y, 2))});
   gx2(ctx, "Window::refreshFull", {win, 0});
 }
-void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr) {
+// P35G item 9 (gfx.h gfx_set_criteria_tips): the grading page's ten criteria rows (label at x 0x77, y 0x68 + 0x11 k, the
+// value, the stars from x 0x12f and the wanted value at x 0x1ea on the same line; ReportDraw::page) as hover areas: a row spans
+// x 0x30 .. 0x2f0 and y 0x66 + 0x11 k .. 0x77 + 0x11 k. The row under the cursor gets its tip box in the recommendation area under the table ("p35g.tip",
+// gfx_hud.cpp b_criteria_tip, with the grading numbers in args 1..6); leaving it takes the tip away. Drawing only.
+struct CritHover {
+  bool on = false;
+  int32_t row = -1;
+  uint32_t args[9] = {0};
+};
+int32_t crit_row_at(int32_t px, int32_t py) {
+  if (px < 0x30 || px >= 0x2f0 || py < 0x66 || py >= 0x66 + 0x11 * 10) return -1;
+  return (py - 0x66) / 0x11;
+}
+void crit_hover(Ctx &ctx, CritHover *c, int32_t px, int32_t py) {
+  if (!c || !c->on || !backend_on()) return;
+  const int32_t row = crit_row_at(px, py);
+  if (row == c->row) return;
+  c->row = row;
+  const uint32_t win = state_va(ctx, &GameState::g_rootWindow);
+  gx2(ctx, "p35g.untip", {});
+  if (row >= 0) {
+    uint32_t a[9];
+    std::memcpy(a, c->args, sizeof a);
+    a[0] = u32(row);
+    a[7] = 0xc8;    // the box in the white recommendation area under the table (right of the association's logo), its
+    a[8] = 0x176;   // bottom at that area's foot: the rows, their labels and the area's heading stay clear
+    gfx_drop(ctx, "p35g.tip", a, 9);
+  }
+  gx2(ctx, "Window::refreshFull", {win, 0});
+}
+void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr, CritHover *ch = nullptr) {
   GameState &gs = ctx.gs();
   int32_t px = 0, py = 0;
   for (;;) {
-    if (!left_only && cursor_read(ctx, px, py)) hover(ctx, h, px, py);
+    if (!left_only && cursor_read(ctx, px, py)) {
+      hover(ctx, h, px, py);
+      crit_hover(ctx, ch, px, py);
+    }
     cm::pump_messages(ctx, PumpKind::Blocking, where);
     if (left_only && SG_NEGCTL(g_negctl_end_of_year) != 6) {
       const bool made = cursor_read(ctx, px, py);
@@ -570,6 +603,7 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
   } mark(ctx, mode != 0 && ReportDraw::on());
   if (mode != 0 && ReportDraw::on()) rd.head();
   Hover ok{0x2bd, 0x18e, false};   // the page's OK button
+  CritHover crit_tips;                // P35G item 9: the criteria rows' tips (mode 1, with a backend and --criteria-tips)
   if (mode == 0) {
     // the table's foot and its OK button (x 0x2de, y the foot's text line + 0xf)
     if (table_on) {
@@ -676,10 +710,21 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     }
     pg.score = score;
     if (ReportDraw::on()) rd.page(pg);
+    if (mode == 1 && gfx_criteria_tips(ctx)) {   // P35G item 9: the numbers the rows' tips name (drawing only)
+      crit_tips.on = true;
+      crit_tips.args[1] = u32(pg.flags);
+      crit_tips.args[2] = u32(pg.ideal);
+      crit_tips.args[3] = u32(pg.crit == 0x12 ? sub32(pg.ideal, 1000)
+                                         : sub32(pg.ideal, div32(mul32(pg.ideal, 10), add32(mul32(pg.flags, 5), 0x14))));
+      crit_tips.args[4] = u32(pg.cnt);
+      crit_tips.args[5] = u32(add32(pg.half, 1));
+      crit_tips.args[6] = u32(gs.g_difficulty);
+    }
   }
   if (mode == 2) return 0;
   if (ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
-  report_loop(ctx, false, "showCourseReport", &ok);
+  report_loop(ctx, false, "showCourseReport", &ok, &crit_tips);
+  if (crit_tips.row >= 0) gx2(ctx, "p35g.untip", {});   // P35G item 9: no tip left in the root after the page
   gs.g_ui_569498 = mutant == 6 ? 1 : 0;
   cm::pump_light(ctx, "showCourseReport");
   return 0;
