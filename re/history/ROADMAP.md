@@ -1926,3 +1926,20 @@ height). Not run on this round: Win32, the full 4K check, GPU verify with --slid
   pass on the cached bytecode. The first launch after an update that changes a shader still compiles once (not built: a picture
   shown during that compile). session.json p35a_shaders. Published e202f87b (GitHub port-2026-11-18-e202f87b).
 Mariano's answer (2026-11-18): the lift top stays +15, a little above the highest generated mountain (+12).
+Round reopened the same day with items 7-11 and item 1 again (workers P35D-P35G on claude2; brief sections added).
+- Item 8, "marina should be placed all above water, currently one tile has grass" (P35F fix 1, d99b78c3, class b, play switch
+  syncTiles.marinaAnchorLand; log/roadmap/P35/P35F_notes.md). The original already asks for four water tiles; stampCourseTiles
+  writes water back to every footprint tile but the anchor, which keeps the building type and is drawn as grass (the original
+  shows the same, instances/P35F). At 0 the Terrain is handed water for a marina's anchor tile on course types 0 and 2; the course
+  grids keep the building type (golfers, ball, saves unchanged). Not checked on a Tropical course.
+- Item 7, "clicking again on these menus is not closing them, instead is hovering over some items randomly" (P35E fix 1, ed6800cb,
+  class b, play switch clickAmenityPanel.categoryPressKeepsList; log/roadmap/P35/P35E_notes.md). The original's five category
+  buttons set their tool whatever it holds and three of them (bridges, flower beds, scenic trees) store a new random variant on
+  every press, which lights another item; benches always pick item 0 and landmarks none. At 0 a press on the lit category closes
+  its list.
+- Item 10, "* is showing on the money despite not being able to use the cheat code" (P35E fix 2, ed6800cb, class b, play switch
+  loadGame.cheatMarkKept). g_flags bit 29 is set only by the '+' cash key (dropped in play since P32C) and read only by the status
+  bar; saves carry it (Scorpion Cove clear on 12 Nov, set on 13 Nov) and switchToCourse carries it to the next course of a career
+  (how Jurassic Springs got it); a new game from the title does not. At 0 loadGame and switchToCourse clear the bit; the cash
+  the old presses added stays. No '+' in his four recorded sessions of 17-18 Nov.
+Published ed6800cb (GitHub port-2026-11-18-ed6800cb): items 7, 8, 10; segments 205 / 205 equal to I25 on the merged code.
