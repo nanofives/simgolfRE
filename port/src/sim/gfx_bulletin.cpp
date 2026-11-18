@@ -117,9 +117,19 @@ struct ArtRun {
 struct SharpCell {
   uint32_t blank = 0;  // the blank cell's sprite key
   std::vector<ArtRun> runs;
+  bool over_root = false;  // P35G item 11: a second-image cell (a note line), its runs recorded by b_fixed (gfx.h gfx_set_sharp_notes)
 };
 struct SharpState {
   std::map<uint32_t, SharpCell> cells;  // by the colour cell's SpriteRef
+  // P35G item 11: the note cells blt drew this pass (their runs are recorded after the whole fixed pass), and the replay of that
+  // pass without them (b_fixed)
+  struct Pending {
+    uint32_t src;
+    int32_t x, y;
+  };
+  std::vector<Pending> pending;
+  bool replay = false;
+  bool later_only = false, seen_note = false;  // a replay of only the sprites drawn after the first note cell
 };
 SharpState &sharp(Gfx &g) { return g.state_of<SharpState>("bulletin.sharp"); }
 
@@ -206,13 +216,15 @@ struct Cuts {
   std::vector<ArtRun> runs;
   bool colour = false;  // the cuts go into the colour cells (the blank cells are cut for those only)
   bool first_load = false;   // the set's first load (the plates, TROPHYparts): the only one whose lines become runs (P26C_notes.md)
+  bool second_image = false;  // P35G item 11: the cuts come from the set's second image (tacs&tees: the note's lines)
   void load(uint32_t off) {
     img = Image8{};
     have = gfxb::load_image(g, ctx, pool(ctx) + off, 0, 0, 0x100, 2, img) == 0;
     if (!have) g.unsup("loadInterfaceArt.bulletinArt: a file that did not load");
     blank = Image8{};
     runs.clear();
-    if (!have || !colour || !first_load || !ctx.files_ptr) return;
+    // P35G item 11: the second image's lines too with --sharp-notes (gfx.h gfx_set_sharp_notes)
+    if (!have || !colour || !(first_load || g.sharp_notes) || !ctx.files_ptr) return;
     std::string stem = gfxb::vstring(ctx.mem, pool(ctx) + off), ext = ".pcx";
     const size_t dot = stem.rfind('.'), sep = stem.find_last_of("/\\");
     if (dot != std::string::npos && (sep == std::string::npos || dot > sep)) {
@@ -241,6 +253,7 @@ struct Cuts {
     if (sc.runs.empty()) return;
     sc.blank = gfx_local_key(0x7e000) + (dest - state_va(ctx, &GameState::g_sprites53fd48));
     if (gfxb::crop_sprite(g, sc.blank, blank, x, y, w, h, false) != 0) return;
+    sc.over_root = second_image;  // P35G item 11
     sharp(g).cells[dest] = std::move(sc);
   }
   void row(uint32_t dest, int n, int32_t x, int32_t y, int32_t dy, int32_t w, int32_t h) {
@@ -267,6 +280,7 @@ struct Cuts {
                                       {0x289, 0xD, 0x82, 0xA3}};
     for (uint32_t i = 0; i < 7; ++i) cut(s + 0x2C * (22 + i), k12[i][0], k12[i][1], k12[i][2], k12[i][3]);
     row(s + 0x2C * 29, 3, s == state_va(ctx, &GameState::g_sprites53fd48) ? 0x119 : 0x11A, 0xBA, 0x23, 0xF8, 0x1E);
+    second_image = true;  // P35G item 11
     load(second);
     static const int16_t k13[5][4] = {{0x29C, 0x1FF, 0x35, 0x34}, {0x3F, 0xFB, 0xE5, 0xD1}, {0x3A, 0x31, 0xCF, 0xB2},
                                       {0x33, 0x1E2, 0xB8, 0x50},  {0x2DC, 0x1FF, 0x35, 0x34}};
@@ -304,9 +318,33 @@ bool art_font(Ctx &ctx, const ArtRun &r, GameFont &f) {
 void blt(Gfx &g, Ctx &ctx, uint32_t cell, int32_t x, int32_t y) {
   const uint32_t src = state_va(ctx, &GameState::g_sprites53fd48) + 0x2C * cell, mask = state_va(ctx, &GameState::g_sprites5a34f8) + 0x2C * cell;
   const uint32_t ux = static_cast<uint32_t>(x), uy = static_cast<uint32_t>(y);
-  const SharpState &ss = sharp(g);
+  SharpState &ss = sharp(g);
+  if (ss.later_only) {  // P35G item 11 (b_fixed): only the sprites after the first note cell, the note cells left out
+    const auto n = ss.cells.find(src);
+    if (n != ss.cells.end() && n->second.over_root) {
+      ss.seen_note = true;
+      return;
+    }
+    if (ss.seen_note) call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+    return;
+  }
   const auto it = g.sharp_art && g.text.on ? ss.cells.find(src) : ss.cells.end();
   if (it == ss.cells.end()) {
+    call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+    return;
+  }
+  // P35G item 11: a note cell is drawn as the art now and its lines recorded at the end of the fixed pass (b_fixed), over a plate
+  // that has every later sprite too (the right club's shadow falls over the lines' left part: a run recorded here lost those
+  // pixels to it, so the presenter showed them at the frame's resolution); the replay that makes that plate leaves the cell out.
+  // In the replay every other sharp cell is the plain art (its runs were recorded in the first pass).
+  if (it->second.over_root) {
+    if (!ss.replay) {
+      call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
+      ss.pending.push_back({src, x, y});
+    }
+    return;
+  }
+  if (ss.replay) {
     call_body(g, ctx, "Surface_stretchBlit", {src, mask, g.root_va(ctx), ux, uy, 0});
     return;
   }
@@ -549,7 +587,7 @@ int32_t mapped(Ctx &ctx, int32_t i) {
   return i;
 }
 
-void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+void fixed_pass(Gfx &g, Ctx &ctx, bool replay) {
   g.ensure_root(ctx);
   const Memory &m = ctx.mem;
   const uint32_t ev = state_va(ctx, &GameState::g_bulletinEvents) + 0x28;
@@ -583,9 +621,9 @@ void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   blt(g, ctx, 28, 0xB1, 0x18B);
   blt(g, ctx, 35, 0x33, 0x1E2);
   g.ensure_root(ctx);
-  board(g).tick_under = grab(g.root, kTickX, kTickY, kTickW, kTickH);  // P26C item 5
+  if (!replay) board(g).tick_under = grab(g.root, kTickX, kTickY, kTickW, kTickH);  // P26C item 5
   blt(g, ctx, 36, 0x2DC, 0x1FF);
-  board(g).tick_plain = grab(g.root, kTickX, kTickY, kTickW, kTickH);
+  if (!replay) board(g).tick_plain = grab(g.root, kTickX, kTickY, kTickW, kTickH);
   int32_t ly = mul32(count, -0xE);
   blt(g, ctx, 23, 0x11C, add32(ly, 0x130));
   blt(g, ctx, 26, 0x120, add32(ly, 0x153));
@@ -602,6 +640,73 @@ void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   }
   blt(g, ctx, 22, control(2) ? 0x121 : 0x120, 0x15F);
   blt(g, ctx, 24, 0x139, 0x1E4);
+}
+
+void b_fixed(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+  g.ensure_root(ctx);
+  SharpState &ss = sharp(g);
+  ss.pending.clear();
+  const std::vector<uint16_t> before = g.root.px;
+  fixed_pass(g, ctx, false);
+  if (ss.pending.empty()) return;
+  // P35G item 11 (gfx.h gfx_set_sharp_notes): the note cells' lines as runs from the replay without them (P) to the pass's
+  // picture (F); the root ends as F
+  Surface16 &r = g.root;
+  const std::vector<uint16_t> fin = r.px;
+  r.px = before;
+  ss.replay = true;
+  fixed_pass(g, ctx, true);
+  ss.replay = false;
+  // the note cells' mask leaves all but their letters alone (red letters on black in the image, the letters' alpha in its
+  // mask), so the plate is the picture without the cells, not their blank cells
+  struct Line {
+    const ArtRun *a;
+    int32_t x, y;
+    GameFont font;
+    gfxb::TextRunScope scope;
+  };
+  std::vector<Line> lines;
+  for (const SharpState::Pending &p : ss.pending) {
+    const auto it = ss.cells.find(p.src);
+    if (it == ss.cells.end()) continue;
+    for (const ArtRun &a : it->second.runs) {
+      Line l{&a, p.x, p.y, GameFont{}, gfxb::TextRunScope{}};
+      if (art_font(ctx, a, l.font)) lines.push_back(std::move(l));
+    }
+  }
+  // the sprites drawn after the note (the right club and its shadow) are in the plate and the picture. Where they let less than
+  // a quarter of what is under them through (the club's head: mask index 0 and its edge; its shadow lets 37 .. 87 % through),
+  // they cover the line: there the run's word is made to differ from the picture (low bit flipped), so the presenter leaves the
+  // picture's pixel and the head stays over the line's first letters. What they let through is measured by drawing only them
+  // over a black and over a white root (green channel, 5 bits)
+  const std::vector<uint16_t> plate = r.px;
+  auto later_over = [&](uint16_t fill) {
+    std::fill(r.px.begin(), r.px.end(), fill);
+    ss.later_only = true;
+    ss.seen_note = false;
+    fixed_pass(g, ctx, true);
+    ss.later_only = false;
+    return r.px;
+  };
+  const std::vector<uint16_t> t0 = later_over(0), t1 = later_over(0x7fff);
+  r.px = plate;
+  std::vector<uint16_t> marked = fin;
+  for (const Line &l : lines)
+    for (int32_t yy = std::max(0, l.y + l.a->y0); yy < std::min(r.h, l.y + l.a->y1); ++yy)
+      for (int32_t xx = std::max(0, l.x + l.a->x0); xx < std::min(r.w, l.x + l.a->x1); ++xx) {
+        const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(r.w) + static_cast<size_t>(xx);
+        const int32_t through = static_cast<int32_t>((t1[i] >> 5) & 31) - static_cast<int32_t>((t0[i] >> 5) & 31);
+        if (through < 8) marked[i] = static_cast<uint16_t>(fin[i] ^ 1u);
+      }
+  for (Line &l : lines)
+    gfxb::text_run_begin(g, r.px.data(), r.w, r.h, l.scope, std::max(0, l.y + l.a->y0), std::min(r.h, l.y + l.a->y1));
+  r.px = marked;
+  const int32_t clip[4] = {0, 0, r.w, r.h};
+  for (Line &l : lines)
+    gfxb::text_run_end(g, ctx, l.scope, r.px.data(), r.w, r.h, 0, 0, clip, 0, l.a->text, l.x + l.a->x, l.y + l.a->base, l.a->colorref, 0,
+                       &l.font);
+  r.px = fin;
+  ss.pending.clear();
 }
 
 // showBulletinBoard.tickHover(lit) (P26C item 5, dialogs.cpp; drawing only): lit = 1 draws the tick's pixels (those the tick

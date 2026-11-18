@@ -161,6 +161,12 @@ void gfx_set_row_hover(Ctx &ctx, bool on);
 // `<image>.blank.pcx` and `<image>.runs.tsv` (scripts/lang/redraw_art.py --sharp), draw their words as text runs at the window's
 // resolution over the blank plate; the root keeps the redrawn art's pixels (drawing only)
 void gfx_set_sharp_art(Ctx &ctx, bool on);
+// P35G item 11 (Mariano: "podemos renderizar ese texto en mejor resolución?", the club notes; log/roadmap/P35/P35G_notes.md),
+// set by the app's host before the board art loads (--sharp-notes on, the default; SG_APP_P35=off: off): with --sharp-art the
+// language art's lines of the colour set's second image (tacs&tees: the yellow note's to-do lines) become text runs too. Those
+// cells are letters over a mask that leaves every other pixel of the note alone, so their plate is the root before the cell
+// (the note itself), not the blank cell. Drawing only. Off: those lines stay the art's pixels.
+void gfx_set_sharp_notes(Ctx &ctx, bool on);
 // P30A item 2 (log/roadmap/P30/P30A_notes.md; app option --popup-fit, default on, SG_APP_P30=off: off). showPopup sizes its box
 // from the English lines (Text_put) and hit-tests that box; a translated line wider than it used to step the font down. With it on
 // and a language other than English, the popup is DRAWN at gfx_popup_draw_width (the same rule over the translated lines) and,

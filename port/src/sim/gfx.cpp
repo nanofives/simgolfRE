@@ -2360,6 +2360,10 @@ bool gfx_explain_tips(Ctx &ctx) {
 void gfx_set_row_hover(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->row_hover = on;
 }
+// P35G item 11 (gfx.h gfx_set_sharp_notes)
+void gfx_set_sharp_notes(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->sharp_notes = on;
+}
 // P26C item 11 (gfx.h gfx_set_sharp_art)
 void gfx_set_sharp_art(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->sharp_art = on;

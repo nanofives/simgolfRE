@@ -124,6 +124,9 @@
 //   P35G item 9: --criteria-tips on|off (default on; SG_APP_P35=off: off) on the association's grading page (F7) a hovered
 //   selection criteria row shows a tip box saying what raises its stars, with the grading's own numbers (gfx.h
 //   gfx_set_criteria_tips; drawing only; log/roadmap/P35/P35G_notes.md)
+//   P35G item 11: --sharp-notes on|off (default on; SG_APP_P35=off: off) with --sharp-art and a language's redrawn art, the
+//   bulletin board's yellow note's to-do lines are text runs at the window's resolution like the trophy's plates (gfx.h
+//   gfx_set_sharp_notes; drawing only)
 //   P35D: --world-reach on|off (default on; SG_APP_P35=off: off; the world layer) the world layer's terrain passes walk the tiles the
 //   whole wide window needs and keep raised ground below the view: Terrain::render walks 16 tiles around the camera, which covers
 //   the 800 frame, so a wide window's far corner (at 2560 x 1351 the bottom-right one) lost a tile row (a black triangle with a
@@ -653,6 +656,7 @@ struct Options {
   bool shader_cache = true;        // P35A item 6: --shader-cache on|off (SG_APP_P35=off: off)
   bool edge_ground = true;         // P35C item 2: --edge-ground on|off (SG_APP_P35=off: off)
   bool criteria_tips = true;       // P35G item 9: --criteria-tips on|off (SG_APP_P35=off: off)
+  bool sharp_notes = true;         // P35G item 11: --sharp-notes on|off (SG_APP_P35=off: off)
   bool world_reach = true;         // P35D: --world-reach on|off (SG_APP_P35=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
@@ -1410,6 +1414,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
       if (ok && o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11
+      if (ok && o.sharp_notes) portsim::gfx_set_sharp_notes(*ctx, true);  // P35G item 11
       if (ok && o.popup_fit) portsim::gfx_set_popup_fit(*ctx, true);  // P30A item 2
       if (ok && o.pair_cover) portsim::gfx_set_pair_cover(*ctx, true);  // P32E fix 4
       if (ok && o.card_width) portsim::gfx_set_card_width(*ctx, true);  // P26E fix 2
@@ -1706,6 +1711,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
   if (o.sharp_art) portsim::gfx_set_sharp_art(*ctx, true);  // P26C item 11: the bulletin board's art words as runs (gfx.h; drawing only)
+  if (o.sharp_notes) portsim::gfx_set_sharp_notes(*ctx, true);  // P35G item 11: and the club note's to-do lines (gfx.h; drawing only)
   if (o.popup_fit) {  // P30A item 2: popups as wide as their translated lines, and the drawn box's points mapped onto the game's box
     portsim::gfx_set_popup_fit(*ctx, true);
     // control `--negctl p30a-no-warp`: the popup drawn wide, no map: the widened parts answer as outside the popup
@@ -2458,7 +2464,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        std::to_string(o.meter_tips ? 1 : 0) + "}";  // P22D fixes 2 and 3
   s += ",\"p32c_app\":{\"explain_tips\":" + std::to_string(o.explain_tips ? 1 : 0) + ",\"list_wheel\":" +
        std::to_string(o.list_wheel ? 1 : 0) + ",\"photo_banner\":" + std::to_string(o.photo_banner ? 1 : 0) + "}";  // P32C, P32A item 9
-  s += ",\"p35g\":{\"criteria_tips\":" + std::to_string(o.criteria_tips ? 1 : 0) + "}";  // P35G item 9
+  s += ",\"p35g\":{\"criteria_tips\":" + std::to_string(o.criteria_tips ? 1 : 0) + ",\"sharp_notes\":" +
+       std::to_string(o.sharp_notes ? 1 : 0) + "}";  // P35G items 9 and 11
   s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
@@ -3877,9 +3884,9 @@ bool parse(int argc, char **argv, Options &o) {
       o.world_reach = v == "on";
       continue;
     }
-    if (a == "--criteria-tips") {  // P35G item 9 (before the chain too)
+    if (a == "--criteria-tips" || a == "--sharp-notes") {  // P35G items 9 and 11 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
-      o.criteria_tips = v == "on";
+      (a == "--criteria-tips" ? o.criteria_tips : o.sharp_notes) = v == "on";
       continue;
     }
     if (a == "--edge-ground") {  // P35C item 2 (before the chain too)
@@ -4448,7 +4455,7 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) {
       o.slide_cache = o.shader_cache = false;  // P35A, P35A item 6
       o.edge_ground = false;  // P35C item 2
-      o.criteria_tips = false;  // P35G item 9
+      o.criteria_tips = o.sharp_notes = false;  // P35G items 9 and 11
       o.world_reach = false;  // P35D
     }
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win

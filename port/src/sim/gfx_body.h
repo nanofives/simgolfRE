@@ -145,6 +145,7 @@ class Gfx {
   bool tourney_hold = false;  // P24G (gfx.h gfx_set_tourney_hold): the golfer panel's start buttons greyed while a round is on
   bool row_hover = false;  // P25B (gfx.h gfx_set_row_hover): the amenity rows' hovered item drawn lit
   bool sharp_art = false;  // P26C item 11 (gfx.h gfx_set_sharp_art): the bulletin board's art words as text runs
+  bool sharp_notes = false;  // P35G item 11 (gfx.h gfx_set_sharp_notes): and the yellow note's to-do lines
   bool popup_fit = false;  // P30A item 2 (gfx.h gfx_set_popup_fit): showPopup drawn as wide as its translated lines
   bool pair_cover = false;  // P32E fix 4 (gfx.h gfx_set_pair_cover): the golfer pair select's frame holds no terrain picture
   int pair_frame = 0, back_pair = 0;  // P32E fix 4: the root / the back buffer holds the pair select (set by its cover drop)
