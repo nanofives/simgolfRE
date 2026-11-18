@@ -1898,3 +1898,10 @@ claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-
   original does the same at its 800 edges. At 0 the three calls take the margin kSpriteReachProject and the cells are gated by
   tileToScreen alone. Drawing only; segments 205 / 205 equal to I25 on the merged code. Published 5ec0506b
   (GitHub port-2026-11-18-5ec0506b); fast check paint 91-97 % of a 120 Hz refresh.
+- Item 3, "cascades rendering over green that's above" (P35B fix 2, d0137f04, class b, play switch mainLoop.fallOverNearerGround;
+  log/roadmap/P35/P35B_notes.md). The type-0x11 tile pass draws a fall's column and spray with addSprite at once over the
+  finished terrain picture, so no ground covers them; the original draws the same spray over the green (checked in
+  instances/P35B). At 0 the fall's art pixels inside the drawn top of every nearer land tile whose lowest corner is above the
+  fall's source are not drawn; ground reaching down to the fall's top keeps the original picture (the fall by the bridge in his
+  scene is unchanged). Render-only; segments 205 / 205 equal to I25 on the merged code. Published d0137f04
+  (GitHub port-2026-11-18-d0137f04). P35B DONE, closed.
