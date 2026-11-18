@@ -691,6 +691,19 @@ struct DeferredLabel {
 };
 thread_local bool g_queue_walk = false;
 thread_local std::vector<DeferredLabel> g_deferred_labels;
+// P35C item 2 (gfx.h gfx_set_wide_prequeue): the entries addSprite drew at once between the frame's terrain picture and
+// renderSpriteQueue's start (LiveTerrainWorld::lines_open: the tile passes' ground art, the water's side sprites), kept with their
+// source, drawn again on the wide scene b_queue_begin builds (whose side columns come from the world layer, without them)
+struct PreQueueEntry {
+  int32_t x = 0, y = 0, shade = 0, flags = 0;
+  uint32_t obj = 0;
+  GfxMoverSrc src;
+  std::shared_ptr<const std::vector<std::vector<float>>> occ;  // P35B's occluders while it was drawn (a fall piece), else null
+};
+thread_local std::vector<PreQueueEntry> g_pre_queue;
+constexpr size_t kPreQueueMax = 4096;  // more than one frame's tile passes add (the queue arrays hold 1,024)
+std::atomic<bool> g_wide_prequeue{false};
+std::atomic<uint64_t> g_prequeue_drawn{0}, g_prequeue_frames{0};
 // P26D item 9 (gfx.h gfx_set_walker_labels_top): drawWalkers' staff / player name labels, drawn before renderSpriteQueue in the
 // original (drawCenteredText at drawWalkers+0x48f; mainLoop calls drawWalkers at ML+0x63ae and renderSpriteQueue at ML+0x65ad), so
 // every sprite of the walk (the walker's own figure, the pin flag and its shadow, a tree) covers them. With the option on, the label
@@ -2757,6 +2770,7 @@ void ground_flush(Gfx &g, LiveTerrainWorld &w) {
   g_draw_src = keep;
 }
 // renderSpriteQueue's start: the wide surface's base
+void pre_queue_flush(Gfx &g, Ctx &ctx, LiveTerrainWorld &w);  // P35C item 2 (after tagged, below)
 void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   g_queue_walk = true;  // P22C item 6
   g_deferred_labels.clear();
@@ -2774,6 +2788,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   if (w) w->lines_open = false;  // P13D item 7: the overlay lines drawn before the queue went on the world layer too
   if (!w || !w->valid || g.root.w != 800 || g.root.h != 600) {
     if (w) w->scene_w = 0;
+    g_pre_queue.clear();  // P35C item 2
     g.hud.ground.clear();  // P23D fix 6
     g.hud.ground_art.clear();  // P23D fix 8
     return;
@@ -2913,6 +2928,7 @@ void b_queue_begin(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   w->tag_pre.clear();
   w->hr_prep_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hr_t0).count();
   ground_flush(g, *w);  // P23D fix 6: the ground marks drawn before the queue, as its first hr commands
+  pre_queue_flush(g, ctx, *w);  // P35C item 2: then the entries addSprite drew before the queue
 }
 // P10D fix 1: f() draws on the wide scene (inside on_wide) with every word it writes tagged `val`; with `hr` the blitter
 // skeleton also draws into that world's hr plane
@@ -2933,6 +2949,50 @@ void tagged(Gfx &g, LiveTerrainWorld &w, uint8_t val, bool hr, F f, int plane = 
   g_hr_pass = keep;
 }
 
+// P35C item 2: the wide scene b_queue_begin built from the root (the frame's columns) and the world layer (the side columns), with the
+// entries addSprite drew before it drawn again into it and its hr plane, as queue entries drawn with the hr plane open (their words
+// tagged 1); the frame's 800 columns get back the words and tags the root gave them, so inside the frame the window shows what it
+// showed before and only the side columns gain the entries. Not for a golfer figure (flag 1 << 8: its palette is composed per draw).
+void pre_queue_flush(Gfx &g, Ctx &ctx, LiveTerrainWorld &w) {
+  std::vector<PreQueueEntry> list;
+  list.swap(g_pre_queue);
+  if (list.empty() || !g_wide_prequeue.load(std::memory_order_relaxed) || !w.hr_open || mode() != 0) return;
+  const int32_t E = w.scene_e, W = w.scene_w;
+  if (E <= 0 || W != 800 + 2 * E || w.scene.size() != static_cast<size_t>(W) * 600) return;
+  const bool tags = w.tag.size() == w.scene.size();
+  std::vector<uint16_t> keep_px(static_cast<size_t>(800) * 600);
+  std::vector<uint8_t> keep_tag(tags ? keep_px.size() : 0);
+  for (int32_t y = 0; y < 600; ++y) {
+    const size_t r = static_cast<size_t>(y) * static_cast<size_t>(W) + static_cast<size_t>(E), o = static_cast<size_t>(y) * 800;
+    std::copy_n(w.scene.begin() + static_cast<ptrdiff_t>(r), 800, keep_px.begin() + static_cast<ptrdiff_t>(o));
+    if (tags) std::copy_n(w.tag.begin() + static_cast<ptrdiff_t>(r), 800, keep_tag.begin() + static_cast<ptrdiff_t>(o));
+  }
+  const GfxMoverSrc keep = g_draw_src;
+  const std::vector<std::vector<float>> *keep_occ = g_occluders;
+  for (const PreQueueEntry &e : list) {
+    g_draw_src = e.src;
+    g_occluders = e.occ.get();   // P35B: a fall piece masked as when it was drawn, shifted with the wide scene
+    on_wide(g, w, [&] {
+      tagged(g, w, 1, true, [&] {
+        g_occluder_dx = E;
+        draw_entry(g, ctx, add32(e.x, E), e.y, e.shade, e.flags, e.obj);
+        g_occluder_dx = 0;
+      });
+    });
+  }
+  g_occluders = keep_occ;
+  g_draw_src = keep;
+  if (w.scene.size() == static_cast<size_t>(W) * 600)
+    for (int32_t y = 0; y < 600; ++y) {
+      const size_t r = static_cast<size_t>(y) * static_cast<size_t>(W) + static_cast<size_t>(E), o = static_cast<size_t>(y) * 800;
+      std::copy_n(keep_px.begin() + static_cast<ptrdiff_t>(o), 800, w.scene.begin() + static_cast<ptrdiff_t>(r));
+      if (tags && w.tag.size() == w.scene.size())
+        std::copy_n(keep_tag.begin() + static_cast<ptrdiff_t>(o), 800, w.tag.begin() + static_cast<ptrdiff_t>(r));
+    }
+  g_prequeue_drawn.fetch_add(list.size(), std::memory_order_relaxed);
+  g_prequeue_frames.fetch_add(1, std::memory_order_relaxed);
+}
+
 void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t i = static_cast<int32_t>(a[0]);
   if (i < 0 || i >= 1024) {
@@ -2941,6 +3001,17 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   const GameState &gs = ctx.gs();
   const size_t k = static_cast<size_t>(i);
+  if (!g_queue_walk && g_wide_prequeue.load(std::memory_order_relaxed) && mode() == 0 &&
+      !(static_cast<int32_t>(gs.g_spriteFlags[k]) != -1 && (gs.g_spriteFlags[k] & 0x100u))) {  // P35C item 2: an addSprite before the queue
+    LiveTerrain *lt = has_terrain_api(ctx) ? dynamic_cast<LiveTerrain *>(&terrain_api(ctx)) : nullptr;
+    LiveTerrainWorld *pw = lt ? lt->world() : nullptr;
+    if (pw && pw->valid && pw->lines_open && g_pre_queue.size() < kPreQueueMax)
+      g_pre_queue.push_back(PreQueueEntry{gs.g_spriteX[k], gs.g_spriteY[k], gs.g_spriteShade[k], static_cast<int32_t>(gs.g_spriteFlags[k]),
+                                          gs.g_spriteObj[k], gfx_mover_of(i),
+                                          g_occluders && !g_occluders->empty()
+                                              ? std::make_shared<const std::vector<std::vector<float>>>(*g_occluders)
+                                              : nullptr});
+  }
   g_occluder_dx = 0;   // P35B: the occluders are in the root's frame
   draw_entry(g, ctx, gs.g_spriteX[k], gs.g_spriteY[k], gs.g_spriteShade[k], static_cast<int32_t>(gs.g_spriteFlags[k]),
              gs.g_spriteObj[k]);
@@ -4274,6 +4345,13 @@ namespace {
 std::atomic<bool> g_wide_ground{false};   // P23D fix 6
 }
 void gfx_set_wide_ground(bool on) { g_wide_ground.store(on, std::memory_order_relaxed); }
+// P35C item 2 (gfx.h)
+void gfx_set_wide_prequeue(bool on) { g_wide_prequeue.store(on, std::memory_order_relaxed); }
+bool gfx_wide_prequeue() { return g_wide_prequeue.load(std::memory_order_relaxed); }
+void gfx_wide_prequeue_stats(uint64_t &drawn, uint64_t &frames) {
+  drawn = g_prequeue_drawn.load(std::memory_order_relaxed);
+  frames = g_prequeue_frames.load(std::memory_order_relaxed);
+}
 bool gfx_wide_ground() { return g_wide_ground.load(std::memory_order_relaxed); }
 void gfx_wide_ground_stats(uint64_t &queued, uint64_t &past) {
   queued = g_ground_queued.load(std::memory_order_relaxed);

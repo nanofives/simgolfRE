@@ -115,6 +115,9 @@
 //   scroll), the pixels that neither the newest picture nor the last paint covers come from a ground cache of the pictures painted
 //   before, kept at their place on the course (twice the window each way); they showed the last paint's edge pixels stretched, or
 //   black (present.h set_slide_cache; drawing only; log/roadmap/P35/P35A_notes.md)
+//   P35C item 2: --edge-ground on|off (default on; SG_APP_P35=off: off; the world layer) the art addSprite draws before the sprite
+//   queue (the tile passes' ground pieces under scenery, flower beds, the water's side sprites) outside the 800 frame's columns too:
+//   the queue's start rebuilt the wide scene there from the world layer, without them (gfx.h gfx_set_wide_prequeue; drawing only)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -633,6 +636,7 @@ struct Options {
   bool speed_button = true;        // P33A item 1: --speed-button on|off (SG_APP_P33=off: off)
   bool caps_shortcuts = true;      // P34A item 4: --caps-shortcuts on|off (SG_APP_P34=off: off)
   bool slide_cache = true;         // P35A: --slide-cache on|off (SG_APP_P35=off: off)
+  bool edge_ground = true;         // P35C item 2: --edge-ground on|off (SG_APP_P35=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1763,6 +1767,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   portsim::gfx_set_trail_glide(ho.smooth_objects && o.trail_glide);  // P22C fix 3 (the moving objects draw the trail lines)
   portsim::gfx_set_wide_grid(ho.world && o.wide_grid);  // P23D fix 1 (the grid on the world layer)
   portsim::gfx_set_wide_ground(ho.world && o.wide_ground);  // P23D fix 6 (the ground marks drawn before the queue, in hr)
+  portsim::gfx_set_wide_prequeue(ho.world && o.edge_ground);  // P35C item 2 (the addSprite art drawn before the queue, in hr)
   portsim::gfx_set_wide_bubbles(ho.world && o.wide_bubbles);  // P23D fix 3 (the comment bubbles in the wide scene's hr plane)
   ho.world_thread = o.world_thread && ho.world;  // P15A (the hr work recorded for it only with a world layer)
   portsim::gfx_set_hr_defer(ho.world_thread);
@@ -2445,6 +2450,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
          std::to_string(portsim::gfx_wide_bubbles() ? 1 : 0) + ",\"kept\":" + std::to_string(kept) +
          ",\"drawn\":" + std::to_string(drawn) + ",\"mismatch\":" + std::to_string(mismatch) + ",\"checked\":" +
          std::to_string(checked) + ",\"check_px\":" + std::to_string(check_px) + "}";
+    uint64_t pqd = 0, pqf = 0;   // P35C item 2
+    portsim::gfx_wide_prequeue_stats(pqd, pqf);
+    s += ",\"p35c\":{\"edge_ground\":" + std::to_string(portsim::gfx_wide_prequeue() ? 1 : 0) + ",\"prequeue_drawn\":" +
+         std::to_string(pqd) + ",\"prequeue_queues\":" + std::to_string(pqf) + "}";
   }
   s += ",\"p16a\":{\"prio\":" + std::to_string(p16_prio ? 1 : 0) + ",\"pace_forced_hz\":" +  // P16A
        std::to_string(std::getenv("SG_P16_PACE_HZ") ? std::atoi(std::getenv("SG_P16_PACE_HZ")) : 0) + "}";
@@ -3832,6 +3841,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.slide_cache = v == "on";
       continue;
     }
+    if (a == "--edge-ground") {  // P35C item 2 (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.edge_ground = v == "on";
+      continue;
+    }
     if (a == "--edge-glide" || a == "--tap-slide" || a == "--early-world") {  // P31B items 3 / 4 / 7 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       (a == "--edge-glide" ? o.edge_glide : a == "--tap-slide" ? o.tap_slide : o.early_world) = v == "on";
@@ -4390,7 +4404,10 @@ int main(int argc, char **argv) {
   if (const char *ep = std::getenv("SG_APP_P34"))  // P34: the sixteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.caps_shortcuts = o.results_layers = false;  // P34A item 4, P34B
   if (const char *ep = std::getenv("SG_APP_P35"))  // P35: the play-test of 8a8a3997's app changes off (port/test/conftest.py); flags win
-    if (!std::strcmp(ep, "off")) o.slide_cache = false;  // P35A
+    if (!std::strcmp(ep, "off")) {
+      o.slide_cache = false;  // P35A
+      o.edge_ground = false;  // P35C item 2
+    }
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

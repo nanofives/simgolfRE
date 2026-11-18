@@ -512,6 +512,14 @@ struct GfxBubbleScope {
 // Widget_fillRect ML+0x608d; inside GfxGroundScope) are kept as rectangles and, at renderSpriteQueue's start, queued into the wide
 // scene's hr plane as its first commands (under every queue sprite, as in the root), with the root pixels they left marked
 // (LiveTerrainWorld::bub800 / bub_word) so inside the frame the world image shows them. Off (the default): the 800 root only.
+// P35C item 2 (app option --edge-ground, log/roadmap/P35/P35C_notes.md): RENDER-ONLY. The entries addSprite draws at once BEFORE the
+// sprite queue (the tile passes' ground art under scenery, the water's side sprites) are drawn into the 800 root, and into the last
+// frame's wide scene, which renderSpriteQueue's start rebuilds from the root (the frame's columns) and the world layer (the side
+// columns): outside the frame they were lost. With this on they are kept and drawn again on the new wide scene and its hr plane; the
+// frame's own columns stay as they were. Off (the default): as before.
+void gfx_set_wide_prequeue(bool on);
+bool gfx_wide_prequeue();
+void gfx_wide_prequeue_stats(uint64_t &drawn, uint64_t &frames);   // entries drawn again so far, and the queues that drew some
 void gfx_set_wide_ground(bool on);
 bool gfx_wide_ground();
 void gfx_wide_ground_stats(uint64_t &queued, uint64_t &past);   // rectangles queued into hr so far, and of them past the root's edge
