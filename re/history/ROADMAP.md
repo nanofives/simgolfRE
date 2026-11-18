@@ -1916,3 +1916,12 @@ claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-
   (GitHub port-2026-11-18-31344e57). P35C DONE, closed.
 Round state (2026-11-18): the five items are published. Open with Mariano: the lift top +15 (built) or +12 (his mountains'
 height). Not run on this round: Win32, the full 4K check, GPU verify with --slide-cache / --edge-ground on.
+- Item 6 (added 2026-11-18), "when opening the game there's a long black window without nothing until the loading screen starts"
+  (P35A fix 2, e202f87b, class b, app option --shader-cache; port/app/shader_cache.h). Measured on LIVING-PC (startup.py: a
+  player's launch, PrintWindow every 100 ms): window at 0.1 s, first picture at 12.5-13.1 s; the GPU world's shader compile 6.5-6.7 s
+  on the preparation thread, then the presenter's until READY at 11.5-12.2 s (his log of 17 Nov: the world's compile alone 9.9 s).
+  With the option every D3DCompile of the presenter, the GPU raster and the GPU world goes through a wrapper that keeps the
+  bytecode in <data>\shader_cache (21 files, 344 KB), keyed by source, defines, entry, target, flags and the compiler DLL, each
+  file with a checksum; a bad file is compiled again. Second launch: READY at 0.37 s, first picture at 1.3 s, both GPU self-tests
+  pass on the cached bytecode. The first launch after an update that changes a shader still compiles once (not built: a picture
+  shown during that compile). session.json p35a_shaders. Published e202f87b (GitHub port-2026-11-18-e202f87b).
