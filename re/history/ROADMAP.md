@@ -1884,3 +1884,9 @@ claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-
   unchanged (45.0 / 45.1 ms at 1080, 42.7 / 41.9 ms at 4K on a day LIVING-PC painted at 23 / s either way). The cache steps aside
   under SG_P14_VERIFY (the CPU picture has none: the first fast check read 4 bad paints). What stays: ground no picture has
   drawn yet shows the last paint's edge pixels; removing that needs overscan.
+- Item 4, "i can't lift ground more than 10, but mountanous terrain already goes past it, make it to 15" (P35B fix 1, 834af917,
+  class b, play switch mainLoop.terrainLiftCap13; log/roadmap/P35/P35B_notes.md). The original's raise key clamps a corner to
+  level 3..13 and its lower key to 3..13 on Tropical and 3..10 elsewhere; the game labels a corner level - 3, so "+10" is level
+  13. At 0 both clamp to 3..18 (+15) on every course type and a press never moves a corner the other way. No table is indexed
+  by level; a +15 fairway corner was played over for 60 s and a save with it reloads equal. Segments 205 / 205 equal to I25.
+  Published 834af917 (GitHub port-2026-11-18-834af917).
