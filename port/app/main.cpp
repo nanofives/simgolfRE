@@ -907,6 +907,7 @@ const ProfileMember kPlayProfile[] = {
     {"drawWorldObjects.spriteReach", 0},            // P33C (play-test 15 item 4: animals and flyers drawn while their art reaches the view)
     {"mainLoop.terrainLiftCap13", 0},               // P35B (play-test 17 item 4: the terrain tool lifts to level 18, 15 steps, on every course type)
     {"mainLoop.gridEdgeCorners", 0},                // P35C (play-test 17 item 5: the terrain grid whole at the view's edges)
+    {"mainLoop.fallOverNearerGround", 0},           // P35B (play-test 17 item 3: a waterfall behind higher, nearer ground is covered by it)
     {"narrateShot.wideViewFit", 0},                 // P31D (G33 item 5: the shot narration and SimFoto over the wide view)
     {"mainLoop.simFotoWideFrame", 0},               // P31D (G33 item 5: the SimFoto event framed in the wide view)
     {"showBulletinBoard.widePhoto", 0},             // P31D (G33 item 5: the board's photo cut from the wide scene)

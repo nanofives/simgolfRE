@@ -657,6 +657,10 @@ extern std::atomic<int> g_gfx_text_capture;  // contexts with text capture on
 void gfx_mover_source(int8_t kind, int32_t index, int32_t wx, int32_t wy, float fx = 0, float fy = 0);
 void gfx_mover_queued(int32_t n);   // enqueueSprite: entry n takes the pending source (none when none was named); clears it
 void gfx_mover_reset();             // resetSpriteQueue
+// P35B (tick.cpp mainLoop.fallOverNearerGround = 0; RENDER-ONLY, this thread): while set, a queue entry drawn with a palette slot
+// (drawQueuedSprite.draw's last arm: the waterfall pieces addSprite draws at once) leaves out the art pixels whose centre lies inside
+// one of these convex polygons (x0, y0, x1, y1, ... in the 800 frame; the wide scene's draw shifts them with it). nullptr clears.
+void gfx_set_sprite_occluders(const std::vector<std::vector<float>> *polys);
 // P22C (development): SG_P22_TRAILLOG=<file>: one line per ball trail segment the golfer loop draws (drawMinimapSegment from the
 // ball's place to the place kept from the last frame, golfer flag bit 22): time us, golfer, the two ends (800-space)
 void gfx_mover_trail_log(int32_t golfer, int32_t x1, int32_t y1, int32_t x2, int32_t y2);

@@ -2015,6 +2015,56 @@ void sprite_draw(Gfx &g, Ctx &ctx, uint32_t key, int32_t x, int32_t y, uint32_t 
   if (op.bad) g.unsup(std::string(who) + ": a plane payload past build16BitColorTable's five blocks");
 }
 
+// P35B (gfx.h gfx_set_sprite_occluders): the polygons set by the frame code, and the x shift of the draw in progress (the wide
+// scene's scene_e; b_queue_draw sets it)
+thread_local const std::vector<std::vector<float>> *g_occluders = nullptr;
+thread_local int32_t g_occluder_dx = 0;
+bool occluded(const std::vector<std::vector<float>> &polys, float px, float py) {
+  for (const std::vector<float> &p : polys) {
+    const size_t n = p.size() / 2;
+    if (n < 3) continue;
+    bool in = true;
+    for (size_t i = 0; i < n && in; ++i) {   // counter-clockwise in screen axes: every edge has the point on its left or on it
+      const size_t j = (i + 1) % n;
+      const float ex = p[2 * j] - p[2 * i], ey = p[2 * j + 1] - p[2 * i + 1];
+      if (ex * (py - p[2 * i + 1]) - ey * (px - p[2 * i]) < 0) in = false;
+    }
+    if (in) return true;
+  }
+  return false;
+}
+// sprite_draw with the art pixels whose centre lies inside an occluder made transparent (0xff) first; the hr plane and the wide
+// scene take the same masked art (they copy it)
+void sprite_draw_occluded(Gfx &g, Ctx &ctx, uint32_t key, int32_t x, int32_t y, uint32_t pal_obj, const char *who) {
+  const Sprite8 *s0 = source(g, ctx, key, g.root_va(ctx), who);
+  if (!s0) return;
+  const Scale sc = cur_scale(g);
+  if (sc.den == 0) {
+    g.unsup(std::string(who) + ": a display scale with denominator 0");
+    return;
+  }
+  const uint16_t *pal = sprite_palette(g, ctx, key, *s0, pal_obj, true, who);
+  if (!pal) return;
+  const int32_t bx = add32(trim(s0->left, sc.nx, sc.den), x), by = add32(trim(s0->top, sc.ny, sc.den), y);
+  // blit16_core's placement: unscaled art pixel (u, v) at (bx + u, by + v); scaled at (bx + (int)f + u f) with f = |n| / den
+  const int32_t ax = abs32(sc.nx), ay = abs32(sc.ny), ad = abs32(sc.den);
+  const bool unscaled = (ax == ad && ay == ad) || mode() == 4;
+  const float fx = unscaled ? 1.0f : static_cast<float>(static_cast<double>(ax) / static_cast<double>(sc.den));
+  const float fy = unscaled ? 1.0f : static_cast<float>(static_cast<double>(ay) / static_cast<double>(sc.den));
+  const float ox = static_cast<float>(bx - g_occluder_dx) + (unscaled ? 0.0f : static_cast<float>(static_cast<int32_t>(fx)));
+  const float oy = static_cast<float>(by) + (unscaled ? 0.0f : static_cast<float>(static_cast<int32_t>(fy)));
+  Sprite8 s = *s0;
+  for (int32_t v = 0; v < s.h; ++v)
+    for (int32_t uu = 0; uu < s.w; ++uu) {
+      uint8_t &c = s.px[static_cast<size_t>(v) * static_cast<size_t>(s.w) + static_cast<size_t>(uu)];
+      if (c != 0xff && occluded(*g_occluders, ox + (static_cast<float>(uu) + 0.5f) * fx, oy + (static_cast<float>(v) + 0.5f) * fy))
+        c = 0xff;
+    }
+  PlaneOp op{g, pal};
+  blit16(g, s, g.root, bx, by, sc, who, op);
+  if (op.bad) g.unsup(std::string(who) + ": a plane payload past build16BitColorTable's five blocks");
+}
+
 // Sprite_drawScaled(this, dst, x, y, colour, sx, sy, den, mask, extra) -> Sprite::blt16c at (x + m_20 sx / den, y + m_24 sy /
 // den) under the scale (sx, sy, den), which it sets and restores; blt16c keeps the key as the sprite's palette word
 void sprite_draw_scaled(Gfx &g, Ctx &ctx, uint32_t key, int32_t x, int32_t y, uint32_t colour, Scale sc, uint32_t pal_obj,
@@ -2570,6 +2620,8 @@ void draw_entry_impl(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t p7, int32_t
   } else {
     if (u(a8) >= 190)
       g.unsup("drawQueuedSprite: a palette slot outside g_images");
+    else if (g_occluders && !g_occluders->empty())   // P35B mainLoop.fallOverNearerGround = 0: a fall piece behind higher ground
+      sprite_draw_occluded(g, ctx, obj, x, y, images_slot(ctx, u(a8)), who);
     else
       sprite_draw(g, ctx, obj, x, y, images_slot(ctx, u(a8)), who);
   }
@@ -2889,6 +2941,7 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   const GameState &gs = ctx.gs();
   const size_t k = static_cast<size_t>(i);
+  g_occluder_dx = 0;   // P35B: the occluders are in the root's frame
   draw_entry(g, ctx, gs.g_spriteX[k], gs.g_spriteY[k], gs.g_spriteShade[k], static_cast<int32_t>(gs.g_spriteFlags[k]),
              gs.g_spriteObj[k]);
   struct SrcScope {  // P12A fix 2: the entry's source for the hr draws (HrCmd::src)
@@ -2903,8 +2956,10 @@ void b_queue_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       const bool post = !w->hr_open && w->hr_valid && mode() == 0;
       const bool cur = post && g.hud.cursor_sprites && g.hud.cursor_depth > 0;
       tagged(g, *w, w->hr_open ? 1 : post ? (cur ? 2 : 1) : 0, w->hr_open || post, [&] {
+        g_occluder_dx = w->scene_e;   // P35B: the wide scene's draw is the root's moved by scene_e
         draw_entry(g, ctx, add32(gs.g_spriteX[k], w->scene_e), gs.g_spriteY[k], gs.g_spriteShade[k],
                    static_cast<int32_t>(gs.g_spriteFlags[k]), gs.g_spriteObj[k]);
+        g_occluder_dx = 0;
       }, w->hr_open ? 0 : cur ? 2 : 1);
     });
 }
@@ -3433,6 +3488,7 @@ void gfx_mover_reset() {
   g_mover_tab.fill(GfxMoverSrc{});
   g_mover_next = GfxMoverSrc{};
 }
+void gfx_set_sprite_occluders(const std::vector<std::vector<float>> *polys) { g_occluders = polys; }   // P35B
 GfxMoverSrc gfx_mover_of(int32_t n) {
   return n >= 0 && n < static_cast<int32_t>(g_mover_tab.size()) ? g_mover_tab[static_cast<size_t>(n)] : GfxMoverSrc{};
 }

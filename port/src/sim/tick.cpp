@@ -40,6 +40,7 @@
 #include "portsim/sim/integrator.h"
 #include "portsim/sim/live.h"
 #include "portsim/sim/shots.h"  // P32D item 7: the shot's margin of error (tick_frame.inc P32D_ShotMargin)
+#include "portsim/sim/terrain.h"  // P35B: corner_heights (the fall occluders)
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"
@@ -128,6 +129,146 @@ inline int terrain_lift_bound(int orig, int keep) {
   if (SG_DEFECT(g_defect_terrain_lift_cap)) return orig;
   return keep > kTerrainLiftTop ? keep : kTerrainLiftTop;
 }
+// mainLoop.fallOverNearerGround (P35B, play-test 17 item 3: "cascades rendering over green that's above"): the type-0x11 tile pass
+// draws a fall's column and foot (cells 0x237 / 0x238 / 0x23b / 0x23c, P1_t11_410ea4 / 410ff8 / 411282) at once with addSprite at
+// the foot tile, after the terrain picture is whole, so ground nearer the camera that rises above the foot (a green on a ledge in
+// front of the pool) never covers it: the original draws the spray over that ground (seen in the original's own instance,
+// log/roadmap/P35/P35B_notes.md item 3). Fixed (0), render-only: each fall piece is drawn with the screen outlines (the drawn top
+// faces) of the nearer land tiles that lie wholly above the fall's top as occluders, and the piece's art pixels inside them are not
+// drawn (gfx.h gfx_set_sprite_occluders). Ground reaching down to the fall's top keeps the original's picture.
+// The queue's order, the art and every GameState word stay as they are.
+int g_defect_fall_over_ground = 1;
+namespace p35b {
+using Poly = std::vector<float>;   // x0, y0, x1, y1, ... (800-frame pixels, convex, counter-clockwise)
+// worldToScreen's projection of a world point (1024 per tile) at level 3, without its integer divisions (bridge.cpp
+// world_to_screen's exs / eys)
+inline void ground_xy(const GameState &gs, double wx, double wy, double &sx, double &sy) {
+  const int32_t Z = gs.g_zoomScale;
+  double ix = (wx - gs.gCameraTileX * 1024.0 - 0x200) * Z / 128.0, iy = (wy - gs.gCameraTileY * 1024.0 - 0x200) * Z / 128.0;
+  const int32_t W = gs.g_screenWidth, H = gs.g_screenHeight;
+  if (W == 0x400) ix = ix * 80 / 64, iy = iy * 52 / 40;
+  else if (W == 0x500) ix = ix * 104 / 64, iy = iy * 68 / 40;
+  const double ax = ix * 20 / 32, ay = iy * 20 / 32;
+  switch (gs.g_cameraRot) {
+    case 0: sx = iy + W / 2 + Z * 8 + ix; sy = ay - ax + H / 2; break;
+    case 2: sx = W / 2 - ix + iy; sy = ix * -20 / 32 - ay + H / 2 - Z * 5; break;
+    case 4: sx = W / 2 - Z * 8 - iy - ix; sy = ax - ay + H / 2; break;
+    default: sx = W / 2 - iy + ix; sy = ay + ax + H / 2 + Z * 5; break;
+  }
+}
+// the camera's depth of a tile: larger = nearer the viewer (worldToScreen's sy grows with it at each even rotation)
+inline int depth(int rot, int x, int y) { return rot == 0 ? y - x : rot == 2 ? -(x + y) : rot == 4 ? x - y : x + y; }
+inline double cross(double ox, double oy, double ax, double ay, double bx, double by) {
+  return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
+}
+// convex hull (monotone chain) of n points, counter-clockwise in screen axes
+inline Poly hull(std::vector<std::pair<double, double>> p) {
+  std::sort(p.begin(), p.end());
+  std::vector<std::pair<double, double>> h(2 * p.size());
+  size_t k = 0;
+  for (size_t i = 0; i < p.size(); ++i) {
+    while (k >= 2 && cross(h[k - 2].first, h[k - 2].second, h[k - 1].first, h[k - 1].second, p[i].first, p[i].second) <= 0) --k;
+    h[k++] = p[i];
+  }
+  for (size_t i = p.size() - 1, t = k + 1; i > 0; --i) {
+    while (k >= t && cross(h[k - 2].first, h[k - 2].second, h[k - 1].first, h[k - 1].second, p[i - 1].first, p[i - 1].second) <= 0) --k;
+    h[k++] = p[i - 1];
+  }
+  Poly out;
+  for (size_t i = 0; i + 1 < k; ++i) {
+    out.push_back(static_cast<float>(h[i].first));
+    out.push_back(static_cast<float>(h[i].second));
+  }
+  return out;
+}
+// the occluders of a fall drawn at foot tile (tx, ty) from the water tile (sx, sy) behind it (the tile pass's neighbour in direction
+// (rot + 2) & 7 or rot & 7, both one row farther from the camera): every land tile up to kReach tiles away that lies nearer the
+// camera and lies wholly above the fall's top (its lowest corner above the highest corner of the source tile). Ground in front that
+// reaches down to the fall's top (the bank the water pours over, the rocks beside the pool) keeps the original's picture (the spray
+// drawn over it); only ground higher than the whole fall covers it, as a green on a ledge does.
+constexpr int kReach = 6;
+inline std::FILE *fall_log() {   // development: SG_P35B_FALL_LOG=<file>
+  static std::FILE *f = std::getenv("SG_P35B_FALL_LOG") ? std::fopen(std::getenv("SG_P35B_FALL_LOG"), "w") : nullptr;
+  return f;
+}
+static const int kCorner[4] = {7, 1, 3, 5};   // corner c at world (x + dx, y + dy): 7 (0, 0), 1 (1, 0), 3 (1, 1), 5 (0, 1)
+inline int tile_top(Ctx &ctx, int x, int y) {
+  int top = -1;
+  for (int c : kCorner) top = std::max(top, corner_heights(ctx, x, y, c, 1));
+  return top;
+}
+inline std::vector<Poly> fall_occluders(Ctx &ctx, int tx, int ty, int srcx, int srcy) {
+  std::vector<Poly> out;
+  const GameState &gs = ctx.gs();
+  const int rot = gs.g_cameraRot;
+  if (rot & 1 || tx < 0 || tx >= 50 || ty < 0 || ty >= 50 || srcx < 0 || srcx >= 50 || srcy < 0 || srcy >= 50) return out;
+  static const int kDx[4] = {0, 1, 1, 0}, kDy[4] = {0, 0, 1, 1};
+  const int fall_top = tile_top(ctx, srcx, srcy);   // the fall's top: nearer ground must rise above it to cover the fall
+  const double per = static_cast<double>(gs.f_w_4c2e00[0]) * gs.g_zoomScale / 4.0;   // pixels per level (worldToScreen)
+  const bool twice = gs.unk_005a9cc0 != 0;
+  const int d0 = depth(rot, tx, ty);
+  for (int nx = tx - kReach; nx <= tx + kReach; ++nx)
+    for (int ny = ty - kReach; ny <= ty + kReach; ++ny) {
+      if (nx < 0 || nx >= 50 || ny < 0 || ny >= 50 || depth(rot, nx, ny) <= d0) continue;
+      // land only: a tile the terrain does not draw (0x14), and water a fall pours into or a structure stands over (stream 0x0a,
+      // water 0x11, wetland 0x12, a placed object's tiles 0x15 / 0x16: a bridge's span) never covers it
+      const int8_t t = gs.g_tileType[nx * 50 + ny];
+      if (t == 0x14 || t == 0x0a || t == 0x11 || t == 0x12 || t == 0x15 || t == 0x16) continue;
+      int h[4], low = 1 << 30;
+      for (int k = 0; k < 4; ++k) low = std::min(low, h[k] = corner_heights(ctx, nx, ny, kCorner[k], 1));
+      if (low <= fall_top) continue;   // the whole tile above the whole fall; a bank down to the fall's top keeps the spray
+      std::vector<std::pair<double, double>> pts;
+      for (int k = 0; k < 4; ++k) {
+        double sx, sy;
+        ground_xy(gs, (nx + kDx[k]) * 1024.0, (ny + kDy[k]) * 1024.0, sx, sy);
+        double px = sx, py = sy - (h[k] - 3) * per;
+        if (twice) px = px * 2 - 400, py = py * 2 - 300;
+        pts.emplace_back(px, py);
+      }
+      out.push_back(hull(std::move(pts)));
+      if (fall_log()) {
+        std::fprintf(fall_log(), "  occluder %d %d corners %d %d %d %d top %d poly", nx, ny, h[0], h[1], h[2], h[3], fall_top);
+        for (const float v : out.back()) std::fprintf(fall_log(), " %.1f", v);
+        std::fprintf(fall_log(), "\n");
+      }
+    }
+  return out;
+}
+}  // namespace p35b
+// the fall pieces drawn while one lives are hidden by the nearer ground that rises above the fall from (sx, sy) to foot tile
+// (tx, ty) (switch at 0 only)
+struct P35B_FallScope {
+  std::vector<p35b::Poly> polys;
+  bool set = false;
+  P35B_FallScope(Ctx &ctx, int tx, int ty, int sx, int sy) {
+    // development A/B: SG_P35B_FALL=1 draws as at 1 under any profile; SG_P35B_FALL_FILE=<path>: as at 1 while that file exists
+    // (both arms in one run, the same camera)
+    static const bool dev_orig = std::getenv("SG_P35B_FALL") && std::strcmp(std::getenv("SG_P35B_FALL"), "1") == 0;
+    static const char *dev_file = std::getenv("SG_P35B_FALL_FILE");
+    if (SG_DEFECT(g_defect_fall_over_ground) || dev_orig) return;
+    if (dev_file) {
+      if (std::FILE *f = std::fopen(dev_file, "rb")) {
+        std::fclose(f);
+        return;
+      }
+    }
+    polys = p35b::fall_occluders(ctx, tx, ty, sx, sy);
+    // development: SG_P35B_FALL_LOG=<file>: one line per fall drawn: foot tile, rotation, zoom, occluder count, source tile
+    if (std::FILE *flog = p35b::fall_log()) {
+      std::fprintf(flog, "foot %d %d rot %d zoom %d occluders %zu source %d %d\n", tx, ty, ctx.gs().g_cameraRot, ctx.gs().g_zoomScale,
+                   polys.size(), sx, sy);
+      std::fflush(flog);
+    }
+    if (polys.empty()) return;
+    gfx_set_sprite_occluders(&polys);
+    set = true;
+  }
+  ~P35B_FallScope() {
+    if (set) gfx_set_sprite_occluders(nullptr);
+  }
+  P35B_FallScope(const P35B_FallScope &) = delete;
+  P35B_FallScope &operator=(const P35B_FallScope &) = delete;
+};
 // P33C fix R (class a, a P32C regression): with the terrain tool, mainLoop hands a left / right press to the same key switch as
 // '=' / '-' (ML+0xef0b..ML+0xef1e), so at 0 the switch above dropped every raise and lower click as well. The press path marks the
 // key it made (g_terrain_press_key); the key dispatch head (ML+0xcf93) moves the mark to g_terrain_press_now for this pass, and
@@ -2304,6 +2445,11 @@ const DefectDef kDefects[] = {
      "on every course type but Tropical (13 there), so a generated mountain corner at 15 drops to 13 on a raise and to 10 on a "
      "lower; fixed: raise and lower clamp to 3..18 (15 steps) on every course type and a press never moves a corner the other way",
      &g_defect_terrain_lift_cap},
+    {"mainLoop.fallOverNearerGround", "P35B",
+     "a waterfall's column and spray are drawn after the terrain picture, so a green or other ground nearer the camera that lies "
+     "wholly above the fall's top never covers them; fixed: the fall's art pixels inside the drawn top of such nearer land tiles "
+     "are not drawn (render-only)",
+     &g_defect_fall_over_ground},
     {"mainLoop.vacatedPanelClick", "P9E",
      "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
      "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "

@@ -547,6 +547,7 @@ void P1_t11_410ea4(u32 F, int ebp, int ebx, u32* pEsi, u32* pEdi) {
     u32 edi = GS(f_tab_dirDy_4c2898) + eax * 4;                                                // ML+0x199d
     idx = ebx + (G32(esi) + ebp) * 50 + G32(edi);                                  // ML+0x19a4..ML+0x19b3
     if (!ML_T(G32(esi) + ebp, G32(edi) + ebx) && (FD(0xcc) & G8(GS(g_tileWallMask) + idx)) != 0 && G8(GS(g_tileType) + idx) == 0x11) {   // ML+0x19c6, ML+0x19cf (P28A)
+        const P35B_FallScope fall(ctx, ebp, ebx, G32(esi) + ebp, G32(edi) + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
         int c = cc("cellAt", 0x237, (G32(GS(g_date)) + ebp * 7) % G32((GS(g_sheetCols) + 2268)), 2);   // ML+0x19f1 cellAt
         G32(GS(unk_005a9cc8)) = c;                                                       // ML+0x19fd
         cc("addSprite", G32(GS(g_tileStep4c2840)) / 2 + FD(0x50), FD(0x40) / 3 + FD(0x44), FD(0x44), 0x3c, 0x3c, c, 4, 0xb2);   // ML+0x1a30 addSprite
@@ -571,6 +572,7 @@ void P1_t11_410ff8(u32 F, int ebp, int ebx, u32 esi, u32 edi) {
     ecx = P1_t78(eax) + ebp;                                                       // ML+0x1ab5
     eax = P1_t98(eax);                                                             // ML+0x1aae
     if (ML_T(ecx, eax + ebx) || G8(GS(g_tileType) + eax + ecx * 50 + ebx) != 0x11) return;   // ML+0x1ac8 -> ML+0x1cc2 (P28A)
+    const P35B_FallScope fall(ctx, ebp, ebx, ecx, eax + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
     edx = (G32(GS(g_cameraRot)) - 3) & 7;                                               // ML+0x1ace
     eax = cc("cornerHeights", ecx, eax + ebx, edx, 0);                                 // ML+0x1ae1 cornerHeights
     eax -= FD(0x18);                                                               // ML+0x1aed
@@ -608,6 +610,7 @@ void P1_t11_411282(u32 F, int ebp, int ebx) {
     u32 esi = GS(f_tab_dirDx_4c2878) + eax * 4;                                                // ML+0x1ce4
     u32 edi = GS(f_tab_dirDy_4c2898) + eax * 4;                                                // ML+0x1ceb
     if (ML_T(G32(esi) + ebp, G32(edi) + ebx) || G8(GS(g_tileType) + ebx + (G32(esi) + ebp) * 50 + G32(edi)) != 0x11) return;   // ML+0x1d09 -> ML+0x1f25 (P28A)
+    const P35B_FallScope fall(ctx, ebp, ebx, G32(esi) + ebp, G32(edi) + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
     eax = cc("cornerHeights", ebp, ebx, (G32(GS(g_cameraRot)) + 1) & 7, 0);                 // ML+0x1d1e cornerHeights
     int edx = (G32(GS(g_cameraRot)) + 3) & 7;                                           // ML+0x1d23
     int ecx = G32(esi);                                                            // ML+0x1d29
