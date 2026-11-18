@@ -111,6 +111,23 @@ int g_defect_staff_list_click = 1;
 // gDirtyFlagB, and H1 reads it there after the screen (setDirtyFlagB, ML+0xcb12). Fixed (0): the chars 0x2b / 0x2d / 0x3d do
 // nothing in H1's key switch, whatever path they took.
 int g_defect_hidden_cheat_keys = 1;
+// mainLoop.terrainLiftCap13 (P35B, play-test 17 item 4: "i can't lift ground more than 10, but mountanous terrain already goes past
+// it, make it to 15"): H1's terrain keys (a terrain-tool press becomes one of them) clamp a corner of g_cornerLevel: raise ('=')
+// to 3..13 (clamp(level + 1, 3, 13) at ML+0xe5d5, and the brush's 2 x 2 loop raises its lowest corners only while they are below
+// 13, ML+0xe68c..ML+0xe69d), lower ('-') to 3..13 on a Tropical course (course record byte +0x1e = 2) and 3..10 on every other
+// (ML+0xe3fb..ML+0xe40c, clamp at ML+0xe445). The lowest ground is level 3, so a raise stops 10 steps up, and the generator
+// (heightBlend's clamp 3..15 plus terrain_gen's +2 steps) makes mountain corners at 15 to 17 that a raise pulls down to 13 and a
+// lower to 10 or 13 in one press. Fixed (0): both keys clamp to 3..kTerrainLiftTop (18, 15 steps above level 3), and a press never
+// moves a corner the other way (a raise leaves a corner at or above the top, a lower takes one step from any height). Every
+// reader of the levels takes 18 (log/roadmap/P35/P35B_notes.md item 4: bytes, int8 caches, products below 2^31 to level 54).
+int g_defect_terrain_lift_cap = 1;
+constexpr int kTerrainLiftTop = 18;
+// the clamp's upper bound for one terrain key: the original's `orig` at 1; at 0 the top, or the pressed corner's own value when
+// it is already above it (raise: the old level, so the press keeps it; lower: the new level, one step down)
+inline int terrain_lift_bound(int orig, int keep) {
+  if (SG_DEFECT(g_defect_terrain_lift_cap)) return orig;
+  return keep > kTerrainLiftTop ? keep : kTerrainLiftTop;
+}
 // P33C fix R (class a, a P32C regression): with the terrain tool, mainLoop hands a left / right press to the same key switch as
 // '=' / '-' (ML+0xef0b..ML+0xef1e), so at 0 the switch above dropped every raise and lower click as well. The press path marks the
 // key it made (g_terrain_press_key); the key dispatch head (ML+0xcf93) moves the mark to g_terrain_press_now for this pass, and
@@ -2275,6 +2292,11 @@ const DefectDef kDefects[] = {
      "the + key adds 10,000 cash and marks the cash with an asterisk, - and = lower / raise the terrain cell (also a + / - meant as "
      "zoom that reached the game while a screen was open); fixed: those three keys do nothing in the game's key switch",
      &g_defect_hidden_cheat_keys},
+    {"mainLoop.terrainLiftCap13", "P35B",
+     "the terrain tool raises a corner to level 13 at most (10 steps above the lowest ground, level 3) and lowers to 10 at most "
+     "on every course type but Tropical (13 there), so a generated mountain corner at 15 drops to 13 on a raise and to 10 on a "
+     "lower; fixed: raise and lower clamp to 3..18 (15 steps) on every course type and a press never moves a corner the other way",
+     &g_defect_terrain_lift_cap},
     {"mainLoop.vacatedPanelClick", "P9E",
      "a press in the bottom band's 800-space place goes to the System menu or the panel handlers even when the host shows the "
      "course there (the HUD moved to the window's edges); fixed: a press the host marked vacated (view block word +4) takes the "

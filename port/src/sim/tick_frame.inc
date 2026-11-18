@@ -8394,7 +8394,8 @@ a41d997:  // key 0x2d: lower terrain cell
         int p = cell + (row + cell * 2) + GS(g_cornerLevel);   // ML+0xe42d..ML+0xe430
         u8 cl = (u8)(GU8(p) - 1);                        // ML+0xe437 dec cl
         G8(p) = (s8)cl;                                 // ML+0xe43b
-        eax = cc("clamp", cl & 0xFF, 3, edx);        // ML+0xe445 clamp (push edx,3,eax)
+        // P35B mainLoop.terrainLiftCap13 = 0 (tick.cpp): the bound is the lift top, or the new level when above it
+        eax = cc("clamp", cl & 0xFF, 3, terrain_lift_bound(edx, cl & 0xFF));   // ML+0xe445 clamp (push edx,3,eax)
     }
     edx = G32(GS(g_cursorTileX));                              // ML+0xe44a
     edi = G32(GS(g_cursorTileY));                              // ML+0xe450
@@ -8484,9 +8485,11 @@ a41db46:  // key 0x3d: raise terrain cell
         int cell = ecx * 17;                            // ML+0xe5a9..ML+0xe5b0
         int row = G32(GS(g_cursorTileY));                      // ML+0xe5b2
         int p = cell + (row + cell * 2) + GS(g_cornerLevel);   // ML+0xe5b8..ML+0xe5c4
+        const int old = GU8(p);                          // P35B: the level before the press
         u8 cl = (u8)(GU8(p) + 1);                        // ML+0xe5bb inc cl
         G8(p) = (s8)cl;                                 // ML+0xe5cb
-        eax = cc("clamp", cl & 0xFF, 3, 0xD);        // ML+0xe5d5 clamp (push 0xd,3,eax)
+        // P35B mainLoop.terrainLiftCap13 = 0 (tick.cpp): the bound is the lift top, or the old level when above it
+        eax = cc("clamp", cl & 0xFF, 3, terrain_lift_bound(0xD, old));   // ML+0xe5d5 clamp (push 0xd,3,eax)
     }
     edx = G32(GS(g_cursorTileX));                              // ML+0xe5da
     edi = G32(GS(g_cursorTileY));                              // ML+0xe5e0
@@ -8530,7 +8533,8 @@ a41dbd5:
                 ecx = ebx + FD(0x2C) + GS(g_cornerLevel);      // ML+0xe67e
                 do {                                    // ML+0xe688
                     u8 al = GU8(ecx);                   // ML+0xe688
-                    if ((al & 0xFF) == FD(0x0C) && FD(0x0C) < 0xD) {  // ML+0xe68c..ML+0xe69d
+                    // P35B mainLoop.terrainLiftCap13 = 0: the brush raises its lowest corners while below the lift top
+                    if ((al & 0xFF) == FD(0x0C) && FD(0x0C) < (SG_DEFECT(g_defect_terrain_lift_cap) ? 0xD : kTerrainLiftTop)) {  // ML+0xe68c..ML+0xe69d
                         al = (u8)(al + 1);              // ML+0xe69f inc al
                         G8(ecx) = (s8)al;               // ML+0xe6a1
                     }
