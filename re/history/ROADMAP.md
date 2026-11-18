@@ -1943,3 +1943,21 @@ Round reopened the same day with items 7-11 and item 1 again (workers P35D-P35G 
   (how Jurassic Springs got it); a new game from the title does not. At 0 loadGame and switchToCourse clear the bit; the cash
   the old presses added stays. No '+' in his four recorded sessions of 17-18 Nov.
 Published ed6800cb (GitHub port-2026-11-18-ed6800cb): items 7, 8, 10; segments 205 / 205 equal to I25 on the merged code.
+- Item 1 again, "the previous issue i mentioned about the black areas when moving the camera is still present" (P35D fix 1,
+  c90f4b17, class b, app option --world-reach; log/roadmap/P35/P35D_notes.md). Found by re-driving his session of 13:33 on his
+  save: he plays maximized at 2560 x 1351 (not 1334 x 750), and the black is in the world picture itself, not in the slide.
+  Terrain::render walks 16 tiles around the camera at zooms 4 / 8, enough for the 800 frame (13.75 to its corners) while
+  the 2560 x 1351 window's bottom-right corner needs 16.4: a black triangle along a tile row at rest (his picture, taken 3.3 s
+  after his last arrow), in mid-window while the picture slides; also raised tiles below the bottom edge dropped by isCulled's
+  height term, and the world layer's last pixel column never drawn at that width. With the option the world layer's passes
+  walk 8 more tiles at that size, isCulled gets 200 px more at the bottom, and the x clip covers the last column; the 800 frame
+  keeps the original's ranges. Same re-drive off / on: moving paints with black 372 of 1,882 -> 0 of 1,821; the corner at rest
+  15,109 -> 0 client px. World pass 4.9 -> 6.3 ms. The overlay's "fps" counts paints whose picture changed. Open question with
+  Mariano: what to show past the land's edge where it ends without a wall (P35D_edge_options.png: black, backdrop, ground
+  continued, or the camera stopped there).
+- Item 9, "when hovering i want a text box saying what i should do to increase each of these" (P35G fix 1, 066012e5, class b, app
+  option --criteria-tips; log/roadmap/P35/P35G_notes.md). The SGA grading page's ten rows get a tip of at most 3 lines in the
+  palette tip's small font, inside the recommendation area under the table, action first and the page's own target numbers;
+  each sentence follows from the row's scoring code (notes). Spanish through the LAN pack (18 lines, tuteo). A first version of
+  ten-line tips over the rows was sent back. The tournament popup's loop has no tips.
+Published 066012e5 (GitHub port-2026-11-18-066012e5): items 1 (world reach) and 9; segments 205 / 205 equal to I25.
