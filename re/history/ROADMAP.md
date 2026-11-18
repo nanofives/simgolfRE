@@ -1905,3 +1905,14 @@ claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-
   fall's source are not drawn; ground reaching down to the fall's top keeps the original picture (the fall by the bridge in his
   scene is unchanged). Render-only; segments 205 / 205 equal to I25 on the merged code. Published d0137f04
   (GitHub port-2026-11-18-d0137f04). P35B DONE, closed.
+- Item 2, "some elements like flowers of the hotel on the edges of the screen might not be rendered from time to time" (P35C fix
+  2, 31344e57, class b, app option --edge-ground; log/roadmap/P35/P35C_notes.md). The tile passes draw some art with addSprite at
+  once, not through the queue (the ground pieces under scenery: flower beds, bush bases; the water's side sprites; the fall
+  pieces), and b_queue_begin then rebuilds the wide scene's side columns and the hr plane from the world raster, so those pieces
+  were lost outside the 800 frame and cut at its edge (379 px each side at 2560 x 1351). With the option the entries are
+  recorded and replayed on the new wide scene after ground_flush; the 800 frame's columns are put back as they were. Scorpion
+  Cove 2013, 16 arrow taps paused at 2274 x 1200: differences between neighbouring shots 126,844 -> 83,525 px (the rest: HUD,
+  blimp, walkers, labels). Not checked on his hotel (no save with it). Segments 205 / 205 equal to I25. Published 31344e57
+  (GitHub port-2026-11-18-31344e57). P35C DONE, closed.
+Round state (2026-11-18): the five items are published. Open with Mariano: the lift top +15 (built) or +12 (his mountains'
+height). Not run on this round: Win32, the full 4K check, GPU verify with --slide-cache / --edge-ground on.
