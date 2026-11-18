@@ -1865,7 +1865,7 @@ App option off switch SG_APP_P34=off. Published 036817d4 (items 1, 2, 4) and 8a8
   so every publish of the card was a frame without layers and the presenter showed the raw 800 root centred (HUD copy inside the
   4:3 frame, sides undimmed). With the option results.begin closes the layer: panels at their anchors, the card a centred dim
   layer. The only screen with this cause (F1-F5, F7-F10 and J open outside every layer scope; the hire dialog is marked).
-  Present time on the card 17.7 -> 18.6 ms at 1080, 20.2 -> 22.1 ms at 4K. Open: widen the card or keep it centred; the
-  whole-window dim.
+  Present time on the card 17.7 -> 18.6 ms at 1080, 20.2 -> 22.1 ms at 4K.
+Mariano's answers (2026-11-18): the card stays centred at its size, the whole-window dim stays, 30 % more camera travel is enough.
 Checks: tree P34A x64 0 errors / 0 warnings, test_static + test_profiles + test_camera_bound_p31a 37 passed, segments 205 / 205
 equal to I25; fast check 036817d4: static 7, SMOKE OK, paint 94-100 % of the refresh.
