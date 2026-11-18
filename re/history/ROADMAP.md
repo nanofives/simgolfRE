@@ -1869,3 +1869,18 @@ App option off switch SG_APP_P34=off. Published 036817d4 (items 1, 2, 4) and 8a8
 Mariano's answers (2026-11-18): the card stays centred at its size, the whole-window dim stays, 30 % more camera travel is enough.
 Checks: tree P34A x64 0 errors / 0 warnings, test_static + test_profiles + test_camera_bound_p31a 37 passed, segments 205 / 205
 equal to I25; fast check 036817d4: static 7, SMOKE OK, paint 94-100 % of the refresh.
+
+## P35: Mariano's seventeenth play-test feedback (2026-11-18)
+Five items on release 8a8a3997 (MARIANO-PC). Brief log/roadmap/P35/BRIEF.md, his pictures log/roadmap/P35/mariano/, his files of
+the day log/roadmap/P35/mariano_pc/. App option off switch SG_APP_P35=off. Workers P35B (items 3, 4) and P35C (items 5, 2) on
+claude2, P35A the orchestrator. Published so far: e5e3f2b4 (GitHub port-2026-11-18-e5e3f2b4).
+- Item 1, "scrolling is much better, but still there's minor glitches like black areas on the bottom right" (P35A fix 1, 3b4d3764 +
+  e5e3f2b4, class b, app option --slide-cache; log/roadmap/P35/P35A_notes.md). A slid course picture's uncovered pixels came from
+  the last paint alone, read with a clamp (stretched edge pixels or black). Two cases measured: ground painted more than one paint
+  ago, and in a turn the window's leading side, ahead of the newest picture on the screen while the glide's camera is behind it on
+  each tile axis. Now the GPU presenter keeps every world picture whole in a ground cache of twice the client each way, at its
+  place on the course (Presenter::slide_origin), and a gap pixel outside the last paint reads it. Eight sudden turns at 1920 x
+  1080: slid paints with uncovered pixels 408 of 452 -> 7 of 448, worst paint 10.4 % -> 1.4 % of the window. GPU time per paint
+  unchanged (45.0 / 45.1 ms at 1080, 42.7 / 41.9 ms at 4K on a day LIVING-PC painted at 23 / s either way). The cache steps aside
+  under SG_P14_VERIFY (the CPU picture has none: the first fast check read 4 bad paints). What stays: ground no picture has
+  drawn yet shows the last paint's edge pixels; removing that needs overscan.
