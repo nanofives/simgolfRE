@@ -43,6 +43,11 @@ int32_t in_range(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col);
 // P32D: inRange with every window draw at its highest value (the widest window), no g_rng draw: 1 when some draw of
 // inRange would answer 1 (the shot margin's "tree in the path" test)
 int32_t in_range_widest(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col);
+// P35F (terrain_dll.cpp, play switch syncTiles.marinaAnchorLand, render-only): the type the Terrain is handed for tile (x, y)
+// whose course type is t: t itself, or 0x11 for a Marina's anchor tile on course types 0 / 2 when the switch is 0.
+// terrain_tile_type = terrain_draw_type(tile_type(x, y)).
+int32_t terrain_draw_type(Ctx &ctx, int32_t x, int32_t y, int32_t t);
+int32_t terrain_tile_type(Ctx &ctx, int32_t x, int32_t y);
 
 }  // namespace portsim
 

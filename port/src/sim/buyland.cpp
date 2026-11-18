@@ -46,6 +46,7 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/terrain_api.h"
+#include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
 #include "commands_internal.h"
 
@@ -422,14 +423,14 @@ int32_t sync_tiles(Ctx &ctx) {
       const uint32_t tile =
           (x >= w || y >= m.load<int32_t>(t + 0x18)) ? 0u : t + 0x3a4 + u32(add32(x, mul32(y, w))) * 0x248u;
       const int32_t cur = m.load<int32_t>(tile + 0x24);
-      r = i32(call_peer(ctx, "tileType", {u32(x), u32(y)}).eax);
+      r = terrain_draw_type(ctx, x, y, i32(call_peer(ctx, "tileType", {u32(x), u32(y)}).eax));  // P35F syncTiles.marinaAnchorLand
       if (r == cur) {
         const int32_t v = i32(api.get_variation(t, tile));
         r = i32(call_peer(ctx, "tileByte", {u32(x), u32(y)}).eax);
         if (r == v) continue;
       }
       const int32_t var = i32(call_peer(ctx, "tileByte", {u32(x), u32(y)}).eax);
-      const int32_t type = i32(call_peer(ctx, "tileType", {u32(x), u32(y)}).eax);
+      const int32_t type = terrain_draw_type(ctx, x, y, i32(call_peer(ctx, "tileType", {u32(x), u32(y)}).eax));  // P35F
       r = i32(api.set_type(t, tile, type, var));
     }
   }

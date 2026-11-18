@@ -83,6 +83,25 @@ void set_terrain_api(Ctx &ctx, TerrainApi *api) {
   else apis().erase(&ctx);
 }
 bool has_terrain_api(Ctx &ctx) { return apis().count(&ctx) != 0; }
+
+// syncTiles.marinaAnchorLand (P35F, play-test 17 item 8: "marina should be placed all above water, currently one tile has grass").
+// evalPlacementArea refuses a Marina (build item 12) on course types 0 and 2 unless every footprint tile is water (type 0x11), but
+// stampCourseTiles then writes 0x11 back to every footprint tile except the anchor (c == 0, r == 0), which keeps the building type
+// 0x16; the Terrain draws a type-0x16 tile with the land texture, so one grass tile shows under the pier (the original draws it
+// so: log/roadmap/P35/P35F_notes.md). 1 = the original. 0: the Terrain is handed type 0x11 for that anchor tile, so it draws
+// water there like the other three; the course grids keep 0x16 (the placed-object pass, which draws the marina from the anchor,
+// the ball, golfers, walkers, the hover text and saves see what the original sees). RENDER-ONLY: only the type value passed to
+// Terrain::setType, and the compare against the Terrain tile's type before it, change.
+int g_defect_marina_anchor_land = 1;
+int32_t terrain_tile_type(Ctx &ctx, int32_t x, int32_t y) { return terrain_draw_type(ctx, x, y, tile_type(ctx, x, y)); }
+int32_t terrain_draw_type(Ctx &ctx, int32_t x, int32_t y, int32_t t) {
+  if (SG_DEFECT(g_defect_marina_anchor_land) || t != 0x16) return t;
+  const int8_t course = ctx.gs().g_courseType;
+  if (course != 0 && course != 2) return t;  // stampCourseTiles' and evalPlacementArea's water rule for item 12
+  // the anchor's flag word carries the build item + 1 in its low 5 bits (stampCourseTiles); 12 = Marina
+  const uint16_t w = (state_arr(ctx, &GameState::g_tileFlags) + add32(mul32(x, 50), y)).get();
+  return (w & ((1u << 5) - 1)) == 12 + 1 ? 0x11 : t;
+}
 TerrainApi &terrain_api(Ctx &ctx) {
   const auto it = apis().find(&ctx);
   if (it == apis().end()) throw MissingResource{"TerrainApi (Terrain.dll boundary) not attached"};
@@ -137,7 +156,7 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
     for (int32_t y = 49; y >= 0; --y) {
       const uint32_t tile = tile_at_va(ctx, x, y);
       const int32_t var = tile_byte(ctx, x, y);
-      const int32_t type = tile_type(ctx, x, y);
+      const int32_t type = terrain_tile_type(ctx, x, y);  // P35F syncTiles.marinaAnchorLand
       api().set_type(self, tile, type, var);
     }
   }
@@ -238,7 +257,7 @@ int32_t apply_tile_elevation(Ctx &ctx, uint32_t tile, int32_t x, int32_t y, int3
 int32_t apply_tile_variation(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   const int32_t cur = ctx.mem.load<int32_t>(tile + kTileType);  // no NULL test
-  if (tile_type(ctx, x, y) == cur) {
+  if (terrain_tile_type(ctx, x, y) == cur) {  // P35F syncTiles.marinaAnchorLand
     const uint32_t v = api().get_variation(terrain_self(ctx), tile);
     const int32_t r = tile_byte(ctx, x, y);
     if (u32(r) == v) return i32(u32(r) & ~0xFFu);
@@ -248,7 +267,7 @@ int32_t apply_tile_variation(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
        (tile_type(ctx, x, y) == 6 || ctx.mem.load<int32_t>(tile + kTileType) == 6)))
     need_normals(ctx).set(1);
   const int32_t b = tile_byte(ctx, x, y);
-  const int32_t t = tile_type(ctx, x, y);
+  const int32_t t = terrain_tile_type(ctx, x, y);  // P35F syncTiles.marinaAnchorLand
   return i32((api().set_type(terrain_self(ctx), tile, t, b) & ~0xFFu) | 1u);
 }
 
@@ -527,6 +546,11 @@ const DefectDef kDefects[] = {
      "placement changes the terrain far from it (river banks, ponds); fixed: the whole map is synced once when the terrain is "
      "initialised or repainted from scratch, then one full render",
      &g_defect_terrain_sync_after_edit},
+    {"syncTiles.marinaAnchorLand", "P35F",
+     "a Marina must stand on four water tiles (course types 0 and 2) but its anchor tile keeps the building type, which the "
+     "Terrain draws as grass under the pier; fixed: the Terrain is handed water for that tile (render-only, the course grids "
+     "keep the building type)",
+     &g_defect_marina_anchor_land},
 };
 }  // namespace
 
