@@ -1967,3 +1967,11 @@ Published 066012e5 (GitHub port-2026-11-18-066012e5): items 1 (world reach) and 
   become text runs too, recorded at the end of the board's fixed pass over a copy drawn without the note, so the club stays on
   top and its shadow falls on sharp text. The heading and the green line are rotated pack art and stay; in English the note stays
   as it was (no runs file for the original art). Published 28f4406e (GitHub port-2026-11-18-28f4406e). P35G DONE, closed.
+- Item 1, the land's edge (P35D fix 2, e94aaa72, class b, app option --edge-backdrop; Mariano's pick B of four, 2026-11-18). The
+  world layer's root is filled with RGB555 (5,6,8) before its terrain passes, so the void past the land is that colour in the
+  world picture and in everything made from it (slid pictures, last paint, ground cache, wide scene); the 800 frame's root and
+  the screens without terrain stay black. One flat colour (a gradient would seam against cached pictures). His session re-driven
+  at 2560 x 1351: paints with black past the land 2,734 of 4,000 -> 122 of 2,584 (summed 24.2 M -> 221 px). Not covered: the app
+  without a world layer, the CPU presenter's uncovered pixels. Published e94aaa72 (GitHub port-2026-11-18-e94aaa72). P35D DONE.
+Round P35 closed 2026-11-18: 11 items published. Not run on this round: Win32, the full 4K check, GPU verify with the new
+options on.
