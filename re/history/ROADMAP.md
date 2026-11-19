@@ -2013,3 +2013,10 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   command's output; worker REC rebuilds P17B_drive.py (the fast check's smoke driver, missing: releases wait for it), checks the
   routine scripts, the stale files and extracted/. Run logs, pictures and tsv outputs of those rounds are lost.
   Rule in log/roadmap/WORKER_BRIEF.md and auto-memory merge-trees-junctions-deleting-tools.
+- Item 2 part 2 (P36B fix 2, 6fd3177c, class b, app option --wait-reasons): the golfer info panel gets one dark-red line that
+  says why the golfer waits ("Waiting for Solomon to tee off", "Waiting for your shot"), from a per-golfer-tick tag set at every
+  wait rule's site of updateGolfers and kept beside the sim (no GameState byte); the golfers list tip shows the same; 35 Spanish
+  lines through the LAN pack. Published e4b9666e (GitHub port-2026-11-18-e4b9666e), the first release checked with the rebuilt
+  P17B_drive.py (REC point 1: rebuilt from three sed views of 8 Nov plus the later changes replayed, 75 later views agree) and
+  a P15Z_segs.sh patched by hand (the placed text was an old version). Open: the panel's line spacing (fix 3), 5 test_gfx_hud
+  failures P36B found on main (one golden fails on the published 2f1844a2 too), the options to cut waits.
