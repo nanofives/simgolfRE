@@ -930,6 +930,7 @@ const ProfileMember kPlayProfile[] = {
     {"updateGolfers.partnerWaitBlocksTee", 0},      // P20A (a golfer waiting at the tee for its partner holds no shot ahead)
     {"updateGolfers.playerWaitBlocksCourse", 0},    // P20A fix 2 (groups play through while the player's golfer waits for his shot)
     {"updateGolfers.playerPairBlocksShots", 0},     // P23B fix 2 (his waiting pair ahead on the hole holds no group's shot)
+    {"updateGolfers.playerPairBlocksWalkers", 0},   // P36B fix 1 (golfers walk through his pair while it waits for his shot)
     {"mainLoop.cameraFollowOffGrid", 0},            // P6A
     {"mainLoop.cameraBoundByZoom", 0},              // P31A (G33 item 1: the camera limited by zoom at the map edge)
     {"hoverTip.tenFrameDwell", 0},                  // P6B (the HUD panels' hover tips after 3 frames, not 10)

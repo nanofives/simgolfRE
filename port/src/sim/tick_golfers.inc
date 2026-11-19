@@ -992,6 +992,9 @@ int updateGolfers() {
                 k = (L1c + 1) % 0x98;                                                   // updateGolfers+0x2672..updateGolfers+0x267f
                 L1c = k;                                                                // updateGolfers+0x2683
                 L38 = k << 8;                                                           // updateGolfers+0x268a
+                // P36B updateGolfers.playerPairBlocksWalkers: the player's golfer holding its handed-over shot, or its partner on its
+                // hole, is in nobody's way here and does not count in L44
+                if (!SG_DEFECT(g_defect_player_pair_blocks_walkers) && k != i && P20A2_PlayerHolds(k)) goto L_b262;
                 if (!((FLAGS(k) & 0x20000000) && GB(k, (GS(g_golfers) + 33)) != 0 && i != k)) {     // updateGolfers+0x268e..updateGolfers+0x26a8
                     signed char kb = GC(k, (GS(g_golfers) + 33));                                   // updateGolfers+0x26ae
                     if (kb <= 0) goto L_b262;                                           // updateGolfers+0x26b4..updateGolfers+0x26b6
