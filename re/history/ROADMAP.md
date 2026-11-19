@@ -2079,3 +2079,5 @@ His picks: an approval tops the course's credits up to 2 (play switch mainLoop.l
 ball when a lot's centre tile is not for sale go to the lot's for-sale tile nearest its centre (showBuyLandScreen.
 lotLabelLeftover, 0 in play). Evidence: segments x64 205 / 205 differing 0, test_p38h_land_offer 7, test_buyland, test_routing,
 test_profiles, smoke 1080 OK; driven EN 1080 / ES 2560 dpi 120 on Jur2031 and a Christmas Pines save.
+- Published 2026-11-19 with the P37 panel style (d1a40689): fast check on fd1fd6c5 (x64 0 errors, test_static 7 / 7, SEGCMP 205 /
+  205 differing 0, SMOKE OK, paint 93-96 % of 120 Hz), LAN publish and GitHub release port-2026-11-19-fd1fd6c5.
