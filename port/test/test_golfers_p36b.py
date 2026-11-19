@@ -105,3 +105,114 @@ def test_walker_passes_player_pair(portlib):
     print(f"walkers {len(walkers)} stopped {stopped} passed {passed}")
     assert stopped > 0, "no walker reached the in-the-way test"
     assert passed == stopped, (passed, stopped)
+
+
+# ------------------------------------------------------------------------------------------------ P36B fix 4 (Mariano's picks A, B)
+OVERLAP = "updateGolfers.partnerWaitsBallRest"
+GATE = "updateGolfers.preShotGateByHole"
+
+
+def _world(lib, st, keep_n):
+    """mood5_fixture/00 loaded with only its first keep_n live golfers on the course (every other hole byte 0), outside a championship,
+    no player's golfer, no shot chosen this frame. Returns the objects map."""
+    from port.test.test_golfers import VL
+    o = _objs(lib)
+    st.set_data_base(VL.DATA_VA)
+    st.write(0, _seg_image("mood5_fixture", "00"))
+    G = o["g_golfers"]
+    live = [g for g in range(0x98) if st.read(G + g * 0x100 + 0x21, 1)[0] not in (0, 0xff)]
+    assert len(live) >= 2, live
+    for g in range(0x98):
+        if g not in live[:keep_n]:
+            st.write(G + g * 0x100 + 0x21, b"\x00")
+    fl = struct.unpack("<I", st.read(o["g_flags"], 4))[0]
+    st.write(o["g_flags"], struct.pack("<I", fl & ~0x4200000))
+    st.write(o["g_playerGolfer"], struct.pack("<i", -1))
+    st.write(o["unk_0059b738"], struct.pack("<i", 0))
+    st.write(o["unk_0059b04c"], struct.pack("<i", 0))
+    return o, live
+
+
+def _pair_shot(lib, switch, champ=False):
+    """golfer i (played: flag 0x400, ball at rest, ready +0x20 = 1) whose partner p has not played on the hole and has its ball in
+    the air (flag 0x40000, speed 0x400). Returns i's ball speed +0xe4 after one updateGolfers call (non-zero = i took its shot)."""
+    lib.defect(OVERLAP, switch)
+    with lib.state() as st:
+        o, live = _world(lib, st, 2)
+        if champ:   # a championship or pro match (g_flags 0x200000 of 0x4200000): the turn order stays the original's
+            fl = struct.unpack("<I", st.read(o["g_flags"], 4))[0]
+            st.write(o["g_flags"], struct.pack("<I", fl | 0x200000))
+        i, p = live[0], live[1]
+        G = o["g_golfers"]
+        ri, rp = G + i * 0x100, G + p * 0x100
+        hole = st.read(ri + 0x21, 1)
+        for r, other in ((ri, p), (rp, i)):
+            st.write(r + 0x21, hole)
+            st.write(r + 0xa2, struct.pack("<h", other))
+            x, y = struct.unpack("<ii", st.read(r, 8))
+            st.write(r + 0xd4, struct.pack("<iiiiiiI", x, y, 0, 0, 0, 0, 0))   # ball at the golfer's feet, at rest
+            st.write(r + 0x9e, struct.pack("<h", 0))
+        st.write(ri + 0x10, struct.pack("<I", 0x400))
+        st.write(ri + 0x1d, b"\x0b")
+        st.write(ri + 0x20, b"\x01")
+        st.write(ri + 0x22, b"\x01")
+        st.write(rp + 0x10, struct.pack("<I", 0x40000))
+        st.write(rp + 0x1d, b"\x0b")
+        st.write(rp + 0x22, b"\x00")
+        st.write(rp + 0xe4, struct.pack("<i", 0x400))
+        st.write(rp + 0xdc, struct.pack("<ii", 0x100, 0x40))
+        st.call("updateGolfers", [0])
+        return struct.unpack("<i", st.read(ri + 0xe4, 4))[0]
+
+
+def _gate(lib, switch, hole, seeds):
+    """one golfer alone, ready at its ball (+0x20 = 1, ball speed set), off the green: how many of the rng seeds let it into the
+    swing (state 0x10) in one updateGolfers call (the pre-shot gate at updateGolfers+0x373a)"""
+    lib.defect(GATE, switch)
+    n = 0
+    for seed in seeds:
+        with lib.state() as st:
+            o, live = _world(lib, st, 1)
+            i = live[0]
+            G = o["g_golfers"]
+            r = G + i * 0x100
+            st.write(r + 0x21, bytes([hole, 1]))                 # its hole, 1 stroke
+            st.write(r + 0x10, struct.pack("<I", 0))
+            st.write(r + 0x1d, b"\x0b")
+            st.write(r + 0x20, b"\x01")
+            st.write(r + 0x9e, struct.pack("<hh", 0, i))
+            x, y = struct.unpack("<ii", st.read(r, 8))
+            st.write(r + 0xd4, struct.pack("<ii", x, y))
+            st.write(r + 0xe4, struct.pack("<i", 0x100))
+            st.write(o["g_tileType"] + (y >> 10) + (x >> 10) * 50, b"\x02")   # the ball's tile: fairway (not a green)
+            st.write(o["g_rng"], struct.pack("<I", seed))
+            st.call("updateGolfers", [0])
+            n += st.read(r + 0x1d, 1)[0] == 0x10
+    return n
+
+
+def test_fix4_switches_registered_default_on(portlib):
+    d = portlib.defects()
+    for s in (OVERLAP, GATE):
+        assert s in d and d[s]["on"] == 1, s
+
+
+def test_overlap_partner_ball_in_air(portlib):
+    held, played = _pair_shot(portlib, 1), _pair_shot(portlib, 0)
+    print(f"ball speed after the call: switch 1 {held:#x}, switch 0 {played:#x}")
+    assert held == 0, "at 1 the golfer waits for its partner's ball to come to rest (the original)"
+    assert played != 0, "at 0 the golfer takes its shot while the partner's ball flies"
+
+
+def test_gate_hole1_draw(portlib):
+    seeds = [0x1000 + 977 * k for k in range(450)]
+    orig, fixed = _gate(portlib, 1, 5, seeds), _gate(portlib, 0, 5, seeds)
+    h1 = _gate(portlib, 1, 1, seeds)
+    print(f"hole 5: switch 1 {orig}, switch 0 {fixed}; hole 1 at 1: {h1} of {len(seeds)}")
+    assert orig > 0
+    assert fixed > 1.4 * orig, (orig, fixed)        # range(9) at 1 against range(5) at 0
+    assert fixed == h1                              # at 0 hole 5 draws as hole 1 does (the same seeds)
+
+
+def test_overlap_not_in_championship(portlib):
+    assert _pair_shot(portlib, 0, champ=True) == 0, "in a championship or pro match the golfer still waits at 0"

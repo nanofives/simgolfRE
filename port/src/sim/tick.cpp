@@ -379,6 +379,22 @@ int g_defect_player_pair_blocks_shots = 1;
 // shot is handed over and not played (P20A2_PlayerHolds), he and his partner are not in anybody's way in that test (golfers walk
 // through them, as balls fly through golfers), and they do not count among the hole's golfers still to tee off there (L44).
 int g_defect_player_pair_blocks_walkers = 1;
+// updateGolfers.partnerWaitsBallRest (P36B fix 4, Mariano's play-test 18 item 2, his pick A of log/roadmap/P36/P36B_notes.md section
+// 10): the two golfers of a pair take turns, and each waits until its partner's ball has come to rest: the partner-ahead flag L34
+// (updateGolfers+0x8e4..updateGolfers+0x905: the golfer played, flag 0x400, its partner has not) sends it back to its hole's tee to
+// stand there; L74 (updateGolfers+0x910..updateGolfers+0x9a2) holds the golfer nearer the cup; the tee order (updateGolfers+0x2416..
+// updateGolfers+0x2447) holds the lower index while the partner has no stroke (strokes count at the ball's stop); the green rule
+// (updateGolfers+0x24e4..updateGolfers+0x2576) and the watching rule (updateGolfers+0x13df..updateGolfers+0x14e2) stand it while
+// the partner's shot is under way. That turn-taking is 57 % of the time golfers stand on his Jurassic Springs save. Fixed (0):
+// outside a championship or pro match (g_flags 0x4200000 clear) each of these lets go once the partner's ball is in the air or
+// rolling (flag bit 18) and the watching rule does not stand it: the pair's shots overlap (golfer time per hole 19.5 -> 17.9
+// Time-to-Play minutes measured). Strokes, scores and the player's handed-over shot are untouched (it still waits for him); balls
+// and golfers have no collision.
+int g_defect_partner_waits_ball_rest = 1;
+// updateGolfers.preShotGateByHole (P36B fix 4, his pick B): at its ball, off the green, a golfer swings on a tick where
+// Random::range(hole + 4) is 0 (updateGolfers+0x373a..updateGolfers+0x375d), so the pause before a shot grows with the hole number
+// (a mean of 5 ticks per try on hole 1, 18 on hole 14). Fixed (0): Random::range(5), hole 1's draw, on every hole.
+int g_defect_pre_shot_gate_by_hole = 1;
 // mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
 // mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
 // forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
@@ -1148,7 +1164,7 @@ struct GolferWaitLog {
   bool on = false;
   std::string path;
   long long ticks[20][kGwCount] = {};   // [hole 1..18, 19 = leaving][reason]
-  long long done[20] = {}, quit[20] = {}, dur[20] = {}, durn[20] = {}, gdt[20] = {};
+  long long done[20] = {}, quit[20] = {}, dur[20] = {}, durn[20] = {}, gdt[20] = {}, score[20] = {};
   int enter[0x98] = {};   // the date the golfer was first seen on its current hole (0 = not seen)
   int date0 = -1, last_dump = -1;
   long long calls = 0;
@@ -1222,6 +1238,7 @@ struct GolferWaitTick {
     if (hole0 >= 1 && hole0 <= 18 && r.hole != hole0) {
       L.done[hole0]++;
       if (r.hole != 0x13 && L.enter[g] > 0) { L.dur[hole0] += date - L.enter[g]; L.durn[hole0]++; }   // seen from the hole's start
+      if (r.hole != 0x13) L.score[hole0] += r.hole_strokes[hole0];   // the hole's score matchUpdate wrote (+0x23 + hole)
       if (r.hole != 0x13) L.gdt[hole0] += date - stamp0;   // matchUpdate's own span (Time to Play: half of it per 40 is a minute)
       if (r.hole == 0x13) L.quit[hole0]++;
     }
@@ -1268,7 +1285,7 @@ void golfer_wait_dump(Ctx &ctx) {
   FILE *f = std::fopen(L.path.c_str(), "w");
   if (!f) return;
   std::fprintf(f, "# P36B waitlog dates %d..%d holes %d calls %lld\n", L.date0, s.g_date, s.g_holesPlusOne - 1, L.calls);
-  std::fprintf(f, "hole\tdone\tquit\tu1ec0\tu1ec\tshots0\tshots\tdur\tdurn\tgdt");
+  std::fprintf(f, "hole\tdone\tquit\tu1ec0\tu1ec\tshots0\tshots\tdur\tdurn\tgdt\tmood\tu024\tscore");
   for (int w = 1; w < kGwCount; w++) std::fprintf(f, "\t%s", gw_id(w));
   std::fprintf(f, "\n");
   for (int h = 1; h <= 19; h++) {
@@ -1276,6 +1293,8 @@ void golfer_wait_dump(Ctx &ctx) {
     std::fprintf(f, "%d\t%lld\t%lld\t%d\t%d\t%d\t%d\t%lld\t%lld\t%lld", h, L.done[h], L.quit[h], h <= 18 ? L.u1ec0[h] : 0,
                  h <= 18 ? s.g_holes[hr].u1ec : 0, h <= 18 ? L.shots0[h] : 0, h <= 18 ? s.g_holes[hr].first_shots : 0, L.dur[h], L.durn[h],
                  L.gdt[h]);
+    std::fprintf(f, "\t%d\t%d", h <= 18 ? s.g_holes[hr].mood_sum : 0, h <= 18 ? s.g_holes[hr].u024 : 0);
+    std::fprintf(f, "\t%lld", L.score[h]);
     for (int w = 1; w < kGwCount; w++) std::fprintf(f, "\t%lld", L.ticks[h][w]);
     std::fprintf(f, "\n");
   }
@@ -2691,6 +2710,15 @@ const DefectDef kDefects[] = {
      "jams; fixed: outside a championship or pro match the two are in nobody's way in that test and are not counted among the "
      "hole's golfers still to tee off there",
      &g_defect_player_pair_blocks_walkers},
+    {"updateGolfers.partnerWaitsBallRest", "P36B",
+     "the two golfers of a pair take turns and each waits until its partner's ball has come to rest (a golfer that teed off walks "
+     "back to the tee to wait, the one nearer the cup, the lower index at the tee and the one watching stand meanwhile); fixed: "
+     "outside a championship or pro match each lets go once the partner's ball is in the air or rolling, so the pair's shots overlap",
+     &g_defect_partner_waits_ball_rest},
+    {"updateGolfers.preShotGateByHole", "P36B",
+     "at its ball, off the green, a golfer swings on a tick where Random::range(hole + 4) is 0, so the pause before a shot grows with "
+     "the hole number; fixed: Random::range(5), hole 1's draw, on every hole",
+     &g_defect_pre_shot_gate_by_hole},
     {"mainLoop.treesHiddenFarZoom", "P11A",
      "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "

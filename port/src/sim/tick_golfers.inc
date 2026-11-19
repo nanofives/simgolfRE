@@ -91,6 +91,13 @@ bool P20A_WaitsForPartner(int k) {
 // P20A fix 2 updateGolfers.playerWaitBlocksCourse: golfer k is the player's own golfer while its shot is handed to the player and not
 // played (g_playerGolfer's target x +0xcc = -1, updateGolfers+0x34a8 / updateGolfers+0x35b5), or that golfer's partner on its hole,
 // outside a championship or pro match (g_flags 0x4200000 clear, as at updateGolfers+0x1044..updateGolfers+0x1060).
+// P36B fix 4 updateGolfers.partnerWaitsBallRest (part 3 option A, Mariano's pick): outside a championship or pro match (g_flags
+// 0x4200000 clear, as P20A2_PlayerHolds) the partner rules let a golfer go once its partner's ball is in the air or rolling
+// (flag bit 18, set at the club's contact updateGolfers+0x3b19, cleared at the ball's stop updateGolfers+0x49bf) instead of
+// after it has come to rest: the partner-ahead flag L34, the farther-plays-first flag L74, the tee order, the nearer-on-the-green
+// stand, and the watching-the-partner's-shot stand.
+bool P36B_OverlapOn() { return !SG_DEFECT(g_defect_partner_waits_ball_rest) && (GameFlags() & 0x4200000) == 0; }
+bool P36B_PartnerFlying(int p) { return P36B_OverlapOn() && p >= 0 && p < 0x98 && (FLAGS(p) & (1u << 18)) != 0; }
 bool P20A2_PlayerHolds(int k) {
     if (GameFlags() & 0x4200000) return false;
     const int pg = G<int>(GS(g_playerGolfer));
@@ -358,7 +365,8 @@ int updateGolfers() {
         p = GW(i, (GS(g_golfers) + 162));                                                            // updateGolfers+0x8d4
         {
             unsigned char pb = GB(p, (GS(g_golfers) + 33));                                         // updateGolfers+0x8de
-            if (pb != 0 && pb == GB(i, (GS(g_golfers) + 33)) && (FLAGS(i) & 0x400) && (FLAGS(p) & 0x400) == 0)   // updateGolfers+0x8e4..updateGolfers+0x903
+            if (pb != 0 && pb == GB(i, (GS(g_golfers) + 33)) && (FLAGS(i) & 0x400) && (FLAGS(p) & 0x400) == 0 &&
+                !P36B_PartnerFlying(p))   // updateGolfers+0x8e4..updateGolfers+0x903
                 L34 = 1;                                                                // updateGolfers+0x905
             L74 = 0;                                                                    // updateGolfers+0x916
             if ((FLAGS(i) & 0x400) && GD(i, (GS(g_golfers) + 212)) != 0 && GD(p, (GS(g_golfers) + 212)) != 0 && GB(i, (GS(g_golfers) + 33)) == pb) {   // updateGolfers+0x910..updateGolfers+0x93a
@@ -366,7 +374,7 @@ int updateGolfers() {
                 h = GC(i, (GS(g_golfers) + 33));                                                    // updateGolfers+0x946
                 int dp = kTileDistance(GD(p, (GS(g_golfers) + 212)), GD(p, (GS(g_golfers) + 216)), HD(hp, (GS(g_holes) + 24)), HD(hp, (GS(g_holes) + 28)));   // updateGolfers+0x957..updateGolfers+0x970
                 int dm = kTileDistance(GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), HD(h, (GS(g_holes) + 24)), HD(h, (GS(g_holes) + 28)));     // updateGolfers+0x975..updateGolfers+0x993
-                L74 = dm < dp;                                                          // updateGolfers+0x99b..updateGolfers+0x9a2
+                L74 = dm < dp && !P36B_PartnerFlying(p);                                                          // updateGolfers+0x99b..updateGolfers+0x9a2
             }
         }
         if (GD(i, (GS(g_golfers) + 212)) != 0 && GB(i, (GS(g_golfers) + 32)) != 0 && L34 == 0 && (FLAGS(i) & 0x20000000) == 0)   // updateGolfers+0x9a6..updateGolfers+0x9cc
@@ -540,7 +548,7 @@ int updateGolfers() {
         }
         if (FLAGS(i) & 0x4000) L24 = 0;                                                 // updateGolfers+0x13ac..updateGolfers+0x13b7
         if (GD(i, (GS(g_golfers) + 212)) == 0) L24 = i & 1;                                          // updateGolfers+0x13bf..updateGolfers+0x13d0
-        if (L14 != 1) {                                                                 // updateGolfers+0x13d4..updateGolfers+0x13d9
+        if (L14 != 1 && !P36B_OverlapOn()) {                                             // updateGolfers+0x13d4..updateGolfers+0x13d9
             p = GW(i, (GS(g_golfers) + 162));                                                        // updateGolfers+0x13df
             if (GB(p, (GS(g_golfers) + 33)) != 0) {                                                 // updateGolfers+0x13e9..updateGolfers+0x13f1
                 d = kDistance(GD(i, GS(g_golfers)) - GD(p, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)) - GD(p, (GS(g_golfers) + 4)));   // updateGolfers+0x13f7..updateGolfers+0x1415
@@ -894,8 +902,8 @@ int updateGolfers() {
                     }
                     if (bl == dl && GD(i, (GS(g_golfers) + 228)) == 0) {                             // updateGolfers+0x23f8..updateGolfers+0x2410
                         bool go = false;
-                        if (i < p) go = GB(p, (GS(g_golfers) + 34)) == 0 && (u & 0x4000) == 0;      // updateGolfers+0x2416..updateGolfers+0x242d
-                        else if (i > p) go = (u & 0x400) && GB(p, (GS(g_golfers) + 34)) == 0;       // updateGolfers+0x242f..updateGolfers+0x2447
+                        if (i < p) go = GB(p, (GS(g_golfers) + 34)) == 0 && (u & 0x4000) == 0 && !P36B_PartnerFlying(p);      // updateGolfers+0x2416..updateGolfers+0x242d
+                        else if (i > p) go = (u & 0x400) && GB(p, (GS(g_golfers) + 34)) == 0 && !P36B_PartnerFlying(p);       // updateGolfers+0x242f..updateGolfers+0x2447
                         if (go) {
                             GB(i, (GS(g_golfers) + 29)) = 0xb;                                      // updateGolfers+0x2449
                             p = GW(i, (GS(g_golfers) + 162));                                        // updateGolfers+0x2456
@@ -910,7 +918,7 @@ int updateGolfers() {
                 h = static_cast<signed char>(bl);                                       // updateGolfers+0x24b9
                 int cx = (HD(h, (GS(g_holes) + 24)) << 10) + 0x200;                               // updateGolfers+0x24c6..updateGolfers+0x24d8
                 int cy = (HD(h, (GS(g_holes) + 28)) << 10) + 0x200;                               // updateGolfers+0x24cc..updateGolfers+0x24de
-                if (dl == bl && GB(p, (GS(g_golfers) + 34)) != 0 && GD(i, (GS(g_golfers) + 212)) != 0) {         // updateGolfers+0x24e4..updateGolfers+0x2502
+                if (dl == bl && GB(p, (GS(g_golfers) + 34)) != 0 && GD(i, (GS(g_golfers) + 212)) != 0 && !P36B_PartnerFlying(p)) {         // updateGolfers+0x24e4..updateGolfers+0x2502
                     d = kDistance(GD(i, (GS(g_golfers) + 212)) - cx, GD(i, (GS(g_golfers) + 216)) - cy);          // updateGolfers+0x2504..updateGolfers+0x2510
                     p = GW(i, (GS(g_golfers) + 162));                                                // updateGolfers+0x2515
                     if (d < GD(p, (GS(g_golfers) + 216)) - cy) {                                     // updateGolfers+0x2522..updateGolfers+0x252c
@@ -1280,7 +1288,7 @@ int updateGolfers() {
                 bool look = false;
                 if (GB(i, (GS(g_golfers) + 34)) == 0 && (i & 1) && GW(GW(i, (GS(g_golfers) + 162)), (GS(g_golfers) + 158)) >= 0) look = true;   // updateGolfers+0x370c..updateGolfers+0x372f
                 else if (G<int>(GS(unk_0059b04c)) != 0) look = true;                          // updateGolfers+0x3731..updateGolfers+0x3738
-                else if ((Rand(L14 == 1 ? 0 : GC(i, (GS(g_golfers) + 33)) + 4) & 0xffff) == 0) look = true;   // updateGolfers+0x373a..updateGolfers+0x375d
+                else if ((Rand(L14 == 1 ? 0 : (SG_DEFECT(g_defect_pre_shot_gate_by_hole) ? GC(i, (GS(g_golfers) + 33)) : 1) + 4) & 0xffff) == 0) look = true;   // updateGolfers+0x373a..updateGolfers+0x375d
                 else if (FLAGS(i) & 0x4200) look = true;                                // updateGolfers+0x375f..updateGolfers+0x3768
                 if (!look) { gwt.tag(kGwAddress); continue; }                           // updateGolfers+0x3768
                 // updateGolfers+0x376e: the waiting golfer follows the ball unless someone further along is in the way
