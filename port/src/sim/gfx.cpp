@@ -2342,6 +2342,10 @@ void gfx_set_meter_tips(Ctx &ctx, bool on) {
 void gfx_set_explain_tips(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->explain_tips = on;
 }
+// P36B part 2 (gfx.h gfx_set_wait_reasons)
+void gfx_set_wait_reasons(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->wait_reasons = on;
+}
 // P35G item 9 (gfx.h gfx_set_criteria_tips)
 void gfx_set_criteria_tips(Ctx &ctx, bool on) {
   if (Gfx *g = gfx(ctx)) g->criteria_tips = on;

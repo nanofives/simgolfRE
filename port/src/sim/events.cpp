@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "events_hook.h"
+#include "golfer_wait.h"  // P36B
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 

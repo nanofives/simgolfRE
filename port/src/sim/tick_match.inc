@@ -425,6 +425,7 @@ void matchUpdate(int golfer) {
                 if (score >= (1 << (tflags & 7)) && (tflags & 7) < 5) {       // matchUpdate+0x1365 jl, matchUpdate+0x136b jge
                     ref<unsigned>((GS(g_golfers) + 16) + g) |= 0x80000000;              // matchUpdate+0x1378
                     ref<short>((GS(g_golfers) + 158) + g) = static_cast<short>(0xfff8);  // matchUpdate+0x137e
+                    golfer_wait_set(golfer, kGwMembership);   // P36B (golfer_wait.h)
                 }
             }
         }

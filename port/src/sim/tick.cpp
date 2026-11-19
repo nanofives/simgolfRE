@@ -45,6 +45,7 @@
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"
 #include "tick_hook.h"
+#include "golfer_wait.h"  // P36B
 
 namespace portsim {
 extern int g_defect_corner_level_clamp;  // terrain_course.cpp (D21)
@@ -1127,6 +1128,166 @@ struct Ball : TkBase {
   using TkBase::TkBase;
 #include "tick_ball.inc"
 };
+// P36B (golfer_wait.h): the wait reasons updateGolfers tags. Beside the simulation: nothing here is read by a sim branch,
+// saved or hashed. One table per process (the app runs one simulation; the panel line is an app option, off in tests).
+namespace {
+struct GolferWaitTable {
+  unsigned char tick[0x98] = {};    // the reason of the golfer's last tick
+  unsigned char held[0x98] = {};    // the reason of the wait the golfer runs (+0x9e < 0)
+  short other[0x98] = {};           // the golfer it waits for, -1 none
+  short held_other[0x98] = {};
+  bool fresh[0x98] = {};            // a tagged rule set the wait since the golfer's last tick
+  short last_wait[0x98] = {};       // +0x9e at the end of the golfer's last tick
+  int tick_date[0x98] = {};         // the date of the golfer's last tick
+};
+}  // namespace
+GolferWaitTable g_gw;
+namespace {
+// SG_P36B_WAITLOG=<file> (development only): golfer-ticks per hole and reason, hole changes, the holes' time words
+struct GolferWaitLog {
+  bool on = false;
+  std::string path;
+  long long ticks[20][kGwCount] = {};   // [hole 1..18, 19 = leaving][reason]
+  long long done[20] = {}, quit[20] = {}, dur[20] = {}, durn[20] = {}, gdt[20] = {};
+  int enter[0x98] = {};   // the date the golfer was first seen on its current hole (0 = not seen)
+  int date0 = -1, last_dump = -1;
+  long long calls = 0;
+  int u1ec0[20] = {}, shots0[20] = {};
+  GolferWaitLog() {
+    if (const char *p = std::getenv("SG_P36B_WAITLOG")) { on = *p != 0; path = p; }
+  }
+} g_gwlog;
+}  // namespace
+const char *gw_id(int why) {
+  static const char *const k[kGwCount] = {
+      "none", "walk", "swing", "ball", "address", "ahead_tee", "ahead_ball", "ahead_at_target", "ahead_line", "tee_queue",
+      "partner_tee", "partner_farther", "partner_swing", "partner_watch", "partner_prev_hole", "partner_order", "partner_green",
+      "bump", "crowded", "turn", "no_path", "react_good", "react_bad", "penalty", "green_read", "shot_throttle", "player_shot",
+      "clubhouse", "practice", "snack", "drinks", "restroom", "rest_spot", "thought", "story", "membership", "arrival", "holed",
+      "leaving", "stand", "idle", "other_wait"};
+  return why >= 0 && why < kGwCount ? k[why] : "?";
+}
+void gw_set(int g, int why, int other = -1) {
+  if (g < 0 || g >= 0x98) return;
+  g_gw.held[g] = static_cast<unsigned char>(why);
+  g_gw.held_other[g] = static_cast<short>(other);
+  g_gw.fresh[g] = true;
+}
+int gw_reason(Ctx &ctx, int g, int &other) {
+  other = -1;
+  if (g < 0 || g >= 0x98) return kGwNone;
+  const GameState &s = ctx.gs();
+  if (s.g_date - g_gw.tick_date[g] > 2 || s.g_date < g_gw.tick_date[g]) return kGwNone;   // no tick of this golfer lately
+  if (s.g_golfers[g].wait < 0) {
+    other = g_gw.held_other[g];
+    return g_gw.held[g];
+  }
+  other = g_gw.other[g];
+  return g_gw.tick[g];
+}
+// one golfer's tick of updateGolfers: the reason from the tags, else from what the golfer did
+struct GolferWaitTick {
+  Ctx &ctx;
+  int g, date, x, y, wait0, hole0, stamp0, why = kGwNone, other = -1;
+  GolferWaitTick(Ctx &c, int i) : ctx(c), g(i) {
+    const GameState &s = c.gs();
+    const Golfer &r = s.g_golfers[i];
+    date = s.g_date; x = r.x; y = r.y; wait0 = r.wait; hole0 = r.hole; stamp0 = r.date_stamp;
+    if (wait0 < g_gw.last_wait[i] && !g_gw.fresh[i]) gw_set(i, kGwOtherWait);   // set outside updateGolfers, untagged
+    g_gw.fresh[i] = false;
+  }
+  void tag(int w, int o = -1) { why = w; other = o; }
+  void hold(int w, int o = -1) { why = w; other = o; gw_set(g, w, o); }
+  ~GolferWaitTick() {
+    const GameState &s = ctx.gs();
+    const Golfer &r = s.g_golfers[g];
+    int w = why;
+    if (wait0 < 0) w = (r.ball_speed != 0 && (r.flags & (1u << 18))) ? kGwBall : (g_gw.held[g] ? g_gw.held[g] : kGwOtherWait);
+    else if (w == kGwNone) {
+      if (r.x != x || r.y != y) w = kGwWalk;
+      else if (r.flags & (1u << 18)) w = kGwBall;   // the ball moves (set at the club's contact, cleared at its stop)
+      else if (r.counter20 >= 2) w = kGwSwing;
+      else w = kGwStand;
+    }
+    if (r.wait < 0 && (wait0 >= 0 || r.wait < wait0) && !g_gw.fresh[g]) gw_set(g, why != kGwNone ? why : kGwOtherWait, other);
+    g_gw.fresh[g] = false;
+    g_gw.last_wait[g] = r.wait;
+    g_gw.tick[g] = static_cast<unsigned char>(w);
+    g_gw.other[g] = static_cast<short>(wait0 < 0 ? g_gw.held_other[g] : other);
+    g_gw.tick_date[g] = date;
+    if (!g_gwlog.on) return;
+    GolferWaitLog &L = g_gwlog;
+    const int h = hole0 >= 1 && hole0 <= 18 ? hole0 : (hole0 == 0x13 ? 19 : 0);
+    if (h != 0) L.ticks[h][w]++;
+    if (hole0 >= 1 && hole0 <= 18 && r.hole != hole0) {
+      L.done[hole0]++;
+      if (r.hole != 0x13 && L.enter[g] > 0) { L.dur[hole0] += date - L.enter[g]; L.durn[hole0]++; }   // seen from the hole's start
+      if (r.hole != 0x13) L.gdt[hole0] += date - stamp0;   // matchUpdate's own span (Time to Play: half of it per 40 is a minute)
+      if (r.hole == 0x13) L.quit[hole0]++;
+    }
+    if (r.hole != hole0) L.enter[g] = r.hole >= 1 && r.hole <= 18 ? date : 0;
+  }
+};
+// the log's file, rewritten every 0x100 dates (called once per updateGolfers)
+void golfer_wait_dump(Ctx &ctx) {
+  {   // P36B pictures only (SG_P36B_PANEL=<dates>, unset in every test and release run): every <dates> dates the golfer info panel
+      // opens on a standing golfer whose reason differs from the last one shown (the word a click on a golfer writes,
+      // g_msgState53df54 = golfer + 1, read by mainLoop's P6_Panels)
+    static const int period = std::getenv("SG_P36B_PANEL") ? std::atoi(std::getenv("SG_P36B_PANEL")) : 0;
+    static int next = -1, last_why = -1, shown = 0;
+    GameState &s = ctx.gs();
+    if (period > 0) {
+      if (next < 0) next = s.g_date + period;
+      if (s.g_date >= next && (s.g_msgState53df54 == 0 || s.g_msgState53df54 == shown)) {
+        next = s.g_date + period;
+        for (int g = 0; g < 0x98; g++) {
+          int other = -1;
+          const int w = gw_reason(ctx, g, other);
+          const int h = s.g_golfers[g].hole;
+          if (h < 1 || h > 18 || w == kGwNone || w == kGwWalk || w == kGwSwing || w == kGwBall || w == kGwStand ||
+              w == kGwOtherWait || w == last_why)
+            continue;
+          last_why = w;
+          shown = s.g_msgState53df54 = g + 1;
+          break;
+        }
+      }
+    }
+  }
+  GolferWaitLog &L = g_gwlog;
+  if (!L.on) return;
+  const GameState &s = ctx.gs();
+  L.calls++;
+  if (L.date0 < 0) {
+    L.date0 = L.last_dump = s.g_date;
+    for (int h = 1; h <= 18; h++) { L.u1ec0[h] = s.g_holes[h].u1ec; L.shots0[h] = s.g_holes[h].first_shots; }
+    return;
+  }
+  if (s.g_date - L.last_dump < 0x100 && s.g_date >= L.last_dump) return;
+  L.last_dump = s.g_date;
+  FILE *f = std::fopen(L.path.c_str(), "w");
+  if (!f) return;
+  std::fprintf(f, "# P36B waitlog dates %d..%d holes %d calls %lld\n", L.date0, s.g_date, s.g_holesPlusOne - 1, L.calls);
+  std::fprintf(f, "hole\tdone\tquit\tu1ec0\tu1ec\tshots0\tshots\tdur\tdurn\tgdt");
+  for (int w = 1; w < kGwCount; w++) std::fprintf(f, "\t%s", gw_id(w));
+  std::fprintf(f, "\n");
+  for (int h = 1; h <= 19; h++) {
+    const int hr = h <= 18 ? h : 0;
+    std::fprintf(f, "%d\t%lld\t%lld\t%d\t%d\t%d\t%d\t%lld\t%lld\t%lld", h, L.done[h], L.quit[h], h <= 18 ? L.u1ec0[h] : 0,
+                 h <= 18 ? s.g_holes[hr].u1ec : 0, h <= 18 ? L.shots0[h] : 0, h <= 18 ? s.g_holes[hr].first_shots : 0, L.dur[h], L.durn[h],
+                 L.gdt[h]);
+    for (int w = 1; w < kGwCount; w++) std::fprintf(f, "\t%lld", L.ticks[h][w]);
+    std::fprintf(f, "\n");
+  }
+  std::fprintf(f, "# golfers: g hole strokes tx ty wait flags state counter20 partner order tick held other\n");
+  for (int g = 0; g < 0x98; g++) {
+    const Golfer &r = s.g_golfers[g];
+    if (r.hole == 0) continue;
+    std::fprintf(f, "G\t%d\t%d\t%d\t%.2f\t%.2f\t%d\t%08x\t%d\t%d\t%d\t%d\t%s\t%s\t%d\n", g, r.hole, r.strokes, r.x / 1024.0, r.y / 1024.0,
+                 r.wait, r.flags, r.state, r.counter20, r.partner, r.order, gw_id(g_gw.tick[g]), gw_id(g_gw.held[g]), g_gw.other[g]);
+  }
+  std::fclose(f);
+}
 // updateGolfers: P5's per-tick golfer state machine (converted from c3ec.cpp)
 struct Golfers : TkBase {
   using TkBase::TkBase;
@@ -2606,5 +2767,15 @@ const DefectDef kDefects[] = {
 
 extern const ModuleDef kModule_tick = {"tick", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
                                        sizeof(kDefects) / sizeof(kDefects[0])};
+
+// P36B: golfer_wait.h's entry points (the table lives in tk, beside updateGolfers)
+void golfer_wait_set(int g, int why, int other) { tk::gw_set(g, why, other); }
+int golfer_wait_reason(Ctx &ctx, int g, int &other) { return tk::gw_reason(ctx, g, other); }
+const char *golfer_wait_id(int why) { return tk::gw_id(why); }
+void golfer_wait_idle(int g) {
+  if (g < 0 || g >= 0x98) return;
+  const int t = tk::g_gw.tick[g];
+  tk::gw_set(g, t > kGwBall && t < kGwStand ? t : kGwIdle, tk::g_gw.other[g]);
+}
 
 }  // namespace portsim

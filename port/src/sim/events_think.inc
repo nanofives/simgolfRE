@@ -137,6 +137,7 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     if (pathMark) {
         G<unsigned char>(ctx, r + 0x1d) = 0xe;
         G<unsigned short>(ctx, r + 0x9e) = 0xffe8;
+        golfer_wait_set(g, kGwThought);   // P36B (golfer_wait.h)
     }
     if (typeFlagCall && (TypeFlags(G<short>(ctx, r + 0xb6)) & typeFlagBit)) (void)0;
     if (kind == 0x28)

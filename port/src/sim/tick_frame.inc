@@ -103,6 +103,7 @@ void SV_dateStory(u32 F, int count) {
     int ecxv = -6 - rnd6;                           // ML+0x8f4/ML+0x8f9 (fffffffa - rnd6)
     int e14 = G32(GS(g_proChallenger));                      // ML+0x8fb
     GU16(esi5 + (GS(g_golfers) + 158)) = (u16)ecxv;            // ML+0x900 mov word[um<<8 + g_golfers+0x9e], cx
+    golfer_wait_set(um, kGwArrival);  // P36B (golfer_wait.h)
     int ecx0 = (e14 == -1) ? 1 : 0;                 // ML+0x909 cmp [g_proChallenger],-1; ML+0x911 sete cl
     for (u32 p = (GS(g_golfers) + 24); p < (GS(g_golfers) + 38936); p += 0x100) {   // ML+0x914..ML+0x931 (golfer records)
         if (G8(p + 9) != 0 && (GU8(p) & 0xE0) == 0x20)       // ML+0x914/ML+0x917/ML+0x91b/ML+0x91d/ML+0x920
@@ -3762,6 +3763,7 @@ FD(0x48) = eax; // ML+0x594a  mov dword ptr [F+0x48], eax
 FD(0x4c) = 0x14; // ML+0x594e  mov dword ptr [F+0x4c], 0x14
 if (((GU16(ebp + (GS(g_golfers) + 158)))&0xffff) != ((0)&0xffff)) goto La_414f27; // ML+0x5956  jne ML+0x5967
 G16(ebp + (GS(g_golfers) + 158)) = 0xfffe; // ML+0x5958  mov word ptr [ebp + g_golfers+0x9e], 0xfffe
+golfer_wait_idle(ebp >> 8);  // P36B (golfer_wait.h)
 goto La_414f27; // ML+0x5961  jmp ML+0x5967
 La_414f23:;
 edx = FD(0x14); // ML+0x5963  mov edx, dword ptr [F+0x14]

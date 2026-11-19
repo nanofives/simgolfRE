@@ -392,6 +392,8 @@ int32_t advance_story(Ctx &ctx, int32_t g, int32_t force) {
   }
   partner().field(&Golfer::wait).set(static_cast<int16_t>(static_cast<uint16_t>(0xFFFCu - r.field(&Golfer::story_stage).get()) << 2));
   r.field(&Golfer::wait).set(partner().field(&Golfer::wait).get());
+  golfer_wait_set(g, kGwStory, r.field(&Golfer::partner).get());   // P36B (golfer_wait.h)
+  golfer_wait_set(r.field(&Golfer::partner).get(), kGwStory, g);
   const int32_t y = r.field(&Golfer::y).get(), x = r.field(&Golfer::x).get();
   const Ptr<Golfer> pr = partner();
   const int32_t a = angle_fixed(sub32(pr.field(&Golfer::x).get(), x), sub32(pr.field(&Golfer::y).get(), y));

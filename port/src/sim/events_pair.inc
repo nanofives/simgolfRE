@@ -79,6 +79,7 @@ int32_t pair_golfers_with_story(Ctx &ctx, int32_t p1, int32_t p2) {
     G<int>(ctx, GS(g_nextArrivalOrder)) = seq;
     const int r6 = Rnd(6);
     G<short>(ctx, r1 + 0x9e) = static_cast<short>(-6 - r6);
+    golfer_wait_set(p1, kGwArrival);   // P36B (golfer_wait.h)
     G<short>(ctx, r2 + 0x9e) = 0;
     G<short>(ctx, r2 + 0xb0) = -1;
     G<short>(ctx, r1 + 0xb0) = -1;

@@ -91,6 +91,13 @@ bool gfx_explain_tips(Ctx &ctx);
 // GameState is never written. Off: nothing.
 void gfx_set_criteria_tips(Ctx &ctx, bool on);
 bool gfx_criteria_tips(Ctx &ctx);
+// P36B part 2 (Mariano's play-test 18 item 2: "show why they are waiting within the golfers panel"; log/roadmap/P36/P36B_notes.md),
+// set by the app's host (--wait-reasons on, the default; off under SG_APP_P36=off): the golfer info panel shows one line saying why
+// the golfer stands (gfx_golfer_wait_line, from the reasons updateGolfers tags: golfer_wait.h) and the golfers list's name tip adds
+// it. English in port code, other languages through the pack. Drawing only (a name is built in g_textBuffer and the buffer put
+// back). Off: nothing.
+void gfx_set_wait_reasons(Ctx &ctx, bool on);
+void gfx_golfer_wait_line(Ctx &ctx, int32_t golfer, int32_t x, int32_t y);
 // P32A item 9 (Mariano's play-test 14: "when the camera gets moved when it's about to take a picture there should be a visual
 // indicator", his answer: the banner, the camera still jumps; log/roadmap/P32/P32A_notes.md), set by the app's host (--photo-banner on,
 // the default; SG_APP_P32=off: off). post_event names a bulletin board record in f_w_4e3db8 word 0 with its photo place in word 1;

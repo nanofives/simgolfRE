@@ -519,6 +519,7 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
   if (m.load<uint8_t>(R + 0xba) == 1) cat(ctx, tb, GS(f_strpool_4c5340));
   if (m.load<uint8_t>(R + 0xba) == 2) cat(ctx, tb, GS(f_strpool_4d3968) + 0xa0);
   centred(tb, 0x1a4, 0x69, 0x80000210u);
+  gfx_golfer_wait_line(ctx, g, 0x1a4, 0x73);   // P36B part 2 (gfx.h gfx_set_wait_reasons): why the golfer stands
   target(widget, GS(g_fontRef_519fd8));
   // the meters: only thoughtBalance is a call (the rest is drawing): a label and two fillWindowRect bands each, the
   // second v wide from the right, red over green when v > 0x28

@@ -158,6 +158,7 @@ int updateGolfers() {
     unsigned u;
     signed char c8;
 
+    golfer_wait_dump(ctx);   // P36B: SG_P36B_WAITLOG (development only)
     for (L10 = 0; L10 < 0x98; L10++) {                                                 // updateGolfers+0x7 / updateGolfers+0x14f2..updateGolfers+0x1500
         const int i = L10;
         unsigned char b9 = GB(i, (GS(g_golfers) + 33));                                             // updateGolfers+0x16
@@ -174,6 +175,7 @@ int updateGolfers() {
             if ((Rand(2) & 0xffff) != 0) GB(i, (GS(g_golfers) + 132))--;                             // updateGolfers+0x84..updateGolfers+0x99
             continue;                                                                   // updateGolfers+0x9f
         }
+        GolferWaitTick gwt(ctx, i);   // P36B: this tick's wait reason (golfer_wait.h, tick.cpp), beside the sim
 
         // ---- per-tick bookkeeping (updateGolfers+0xa4..updateGolfers+0x6f5)
         L28 = 0;                                                                        // updateGolfers+0xad
@@ -330,6 +332,7 @@ int updateGolfers() {
         L50 = FLAGS(i);                                                                 // updateGolfers+0x76e / updateGolfers+0x774
         FLAGS(i) = L50 & ~0x8000u;                                                      // updateGolfers+0x778..updateGolfers+0x77b
         if (GC(i, (GS(g_golfers) + 34)) >= 10) {                                                    // updateGolfers+0x781..updateGolfers+0x789
+        gwt.tag(kGwHoled);
             kMatchUpdate(i);                                                            // updateGolfers+0x78b..updateGolfers+0x790
             continue;                                                                   // updateGolfers+0x798
         }
@@ -423,6 +426,7 @@ int updateGolfers() {
             kPlaySound(0x29, 100, 0, 0, 0);                                             // updateGolfers+0xde3..updateGolfers+0xdea
             h = GC(i, (GS(g_golfers) + 33));                                                        // updateGolfers+0xdef
             GW(i, (GS(g_golfers) + 158)) = -99;                                                      // updateGolfers+0xdf6
+            gwt.hold(kGwLeaving);
             GB(i, (GS(g_golfers) + 29)) = 0xd;                                                      // updateGolfers+0xdff
             GB(i, (GS(g_golfers) + 33)) = 0x13;                                                     // updateGolfers+0xe08
             GD(i, (GS(g_golfers) + 212)) = 0;                                                        // updateGolfers+0xe0f
@@ -441,10 +445,12 @@ int updateGolfers() {
                 if (r & 0xffff) FLAGS(i) |= 0x20000;                                    // updateGolfers+0xebd..updateGolfers+0xecd
                 else FLAGS(i) &= ~0x20000u;                                             // updateGolfers+0xecf..updateGolfers+0xed4
                 GW(i, (GS(g_golfers) + 158)) = -99;                                                  // updateGolfers+0xeda
+                gwt.hold(kGwLeaving);
                 GW(i, (GS(g_golfers) + 164))--;                                                      // updateGolfers+0xee3
                 if (GW(i, (GS(g_golfers) + 164)) < -10) GB(i, (GS(g_golfers) + 33)) = 0;                         // updateGolfers+0xeea..updateGolfers+0xef8
                 continue;                                                               // updateGolfers+0xef2 / updateGolfers+0xeff
             }
+            gwt.tag(kGwLeaving);
             ebx = (G<int>((GS(g_holes) + 9888)) << 10) + 0x200;                                   // updateGolfers+0xf04..updateGolfers+0xf16
             esi = (G<int>((GS(g_holes) + 9892)) << 10) + 0x200;                                   // updateGolfers+0xf0a..updateGolfers+0xf1c
             goto L_a818;                                                                // updateGolfers+0xf22
@@ -549,6 +555,7 @@ int updateGolfers() {
                             v = (v ^ (v >> 31)) - (v >> 31);                            // updateGolfers+0x14af..updateGolfers+0x14b2
                             if (v < 0x4aaaaaaa) {                                       // updateGolfers+0x14b4..updateGolfers+0x14b9
                                 GB(i, (GS(g_golfers) + 29)) = 0xb;                                  // updateGolfers+0x14c1
+                                gwt.hold(kGwPartnerWatch, GW(i, (GS(g_golfers) + 162)));
                                 GB(i, (GS(g_golfers) + 26)) = AngleDir(a);                          // updateGolfers+0x14bb..updateGolfers+0x14d0
                                 GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-Rand(4));         // updateGolfers+0x14c9..updateGolfers+0x14e2
                                 goto L_9ec9;
@@ -789,6 +796,7 @@ int updateGolfers() {
             if (L1c == -2) {                                                            // updateGolfers+0x1f2b..updateGolfers+0x1f32
                 // a target tile (findNearestTargetTile): wander off it in random steps
                 GW(i, (GS(g_golfers) + 158)) = static_cast<short>((-GW(i, (GS(g_golfers) + 170)) * 8) / 20);      // updateGolfers+0x1f38..updateGolfers+0x1f5d
+                gwt.hold(kGwRestSpot);
                 GB(i, (GS(g_golfers) + 29)) = 0x11;                                                 // updateGolfers+0x1f64
                 FLAGS(i) &= ~0x1000u;                                                   // updateGolfers+0x1f6b..updateGolfers+0x1f75
                 kEmitThought(i, 0x1b, 0x14);                                            // updateGolfers+0x1f49..updateGolfers+0x1f7b
@@ -814,6 +822,7 @@ int updateGolfers() {
                     GW(i, (GS(g_golfers) + 168)) = 0;                                                // updateGolfers+0x204d
                     GW(i, (GS(g_golfers) + 166)) = 0;                                                // updateGolfers+0x2054
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(0xffd0);                       // updateGolfers+0x205b
+                    gwt.hold(kGwClubhouse);
                     GB(i, (GS(g_golfers) + 29)) = 0xb;                                              // updateGolfers+0x2064
                     kPlaySoundAt(0x29, GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)), 0);            // updateGolfers+0x206b..updateGolfers+0x207c
                     G<int>(GS(g_cash_div100)) += 5;                                            // updateGolfers+0x2081..updateGolfers+0x2096
@@ -823,6 +832,7 @@ int updateGolfers() {
                 if (G<short>(GS(g_placed_objects) + o) == 3) {                                    // updateGolfers+0x20cd..updateGolfers+0x20d5
                     r = Rand(8);                                                        // updateGolfers+0x20d7..updateGolfers+0x20de
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-12 - r);                      // updateGolfers+0x20e3..updateGolfers+0x20ee
+                    gwt.hold(kGwPractice);
                     GB(i, (GS(g_golfers) + 29)) = 0x13;                                             // updateGolfers+0x20f5
                     FLAGS(i) |= 0x4000000;                                              // updateGolfers+0x20fc..updateGolfers+0x2109
                     kEmitThought(i, 0x29, 0x14);                                        // updateGolfers+0x20e8..updateGolfers+0x210f
@@ -835,6 +845,7 @@ int updateGolfers() {
                 if (G<short>(GS(g_placed_objects) + o) == 6) {                                    // updateGolfers+0x214c..updateGolfers+0x2154
                     r = Rand(9);                                                        // updateGolfers+0x215a..updateGolfers+0x2161
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-16 - r);                      // updateGolfers+0x2166..updateGolfers+0x2175
+                    gwt.hold(kGwSnack);
                     GB(i, (GS(g_golfers) + 28)) = 0xd;                                              // updateGolfers+0x217c
                     GB(i, (GS(g_golfers) + 29)) = 0;                                                // updateGolfers+0x2183
                     FLAGS(i) |= 0x10;                                                   // updateGolfers+0x218a..updateGolfers+0x219a
@@ -847,6 +858,7 @@ int updateGolfers() {
                 if (G<short>(GS(g_placed_objects) + o) == 8) {                                    // updateGolfers+0x220d..updateGolfers+0x2215
                     r = Rand(9);                                                        // updateGolfers+0x221b..updateGolfers+0x2222
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-16 - r);                      // updateGolfers+0x2227..updateGolfers+0x2232
+                    gwt.hold(kGwDrinks);
                     FLAGS(i) |= 8;                                                      // updateGolfers+0x2239..updateGolfers+0x2242
                     kEmitThought(i, 0x34, 0x14);                                        // updateGolfers+0x222c..updateGolfers+0x2248
                     v = ((G<int>((GS(g_objectTypeLevel) + 32)) <= 1 ? 6 : 10) * 100) / 100;               // updateGolfers+0x224d..updateGolfers+0x2282
@@ -857,6 +869,7 @@ int updateGolfers() {
                 if (G<short>(GS(g_placed_objects) + o) == 10) {                                   // updateGolfers+0x22bd..updateGolfers+0x22c5
                     r = Rand(9);                                                        // updateGolfers+0x22cb..updateGolfers+0x22d2
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-16 - r);                      // updateGolfers+0x22d7..updateGolfers+0x22e4
+                    gwt.hold(kGwRestroom);
                     FLAGS(i) |= 4;                                                      // updateGolfers+0x22eb..updateGolfers+0x22f7
                     kEmitThought(i, 0x33, 0x14);                                        // updateGolfers+0x22dc..updateGolfers+0x22fd
                     v = ((G<int>((GS(g_objectTypeLevel) + 40)) <= 1 ? 8 : 12) * 100) / 100;               // updateGolfers+0x2302..updateGolfers+0x2337
@@ -874,6 +887,7 @@ int updateGolfers() {
                     if (GD(i, (GS(g_golfers) + 212)) == 0 && GD(p, (GS(g_golfers) + 212)) != 0 &&
                         static_cast<signed char>(bl) > static_cast<signed char>(dl)) {  // updateGolfers+0x2393..updateGolfers+0x23a9
                         GB(i, (GS(g_golfers) + 29)) = 0xb;                                          // updateGolfers+0x23ab
+                        gwt.tag(kGwPartnerPrevHole, GW(i, (GS(g_golfers) + 162)));
                         p = GW(i, (GS(g_golfers) + 162));                                            // updateGolfers+0x23b8
                         GB(i, (GS(g_golfers) + 26)) = AngleDir(kAngleFixed(GD(p, GS(g_golfers)) - GD(i, GS(g_golfers)), GD(p, (GS(g_golfers) + 4)) - GD(i, (GS(g_golfers) + 4))));   // updateGolfers+0x23b2..updateGolfers+0x23ed
                         goto L_9ec9;                                                    // updateGolfers+0x23f3
@@ -888,6 +902,7 @@ int updateGolfers() {
                             GB(i, (GS(g_golfers) + 26)) = AngleDir(kAngleFixed(GD(p, GS(g_golfers)) - GD(i, GS(g_golfers)), GD(p, (GS(g_golfers) + 4)) - GD(i, (GS(g_golfers) + 4))));   // updateGolfers+0x2450..updateGolfers+0x2492
                             GW(i, (GS(g_golfers) + 20)) = 0;                                        // updateGolfers+0x2498
                             GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-4 - Rand(4));         // updateGolfers+0x2490..updateGolfers+0x24ad
+                            gwt.hold(kGwPartnerTee, GW(i, (GS(g_golfers) + 162)));
                             continue;                                                   // updateGolfers+0x24b4
                         }
                     }
@@ -900,6 +915,7 @@ int updateGolfers() {
                     p = GW(i, (GS(g_golfers) + 162));                                                // updateGolfers+0x2515
                     if (d < GD(p, (GS(g_golfers) + 216)) - cy) {                                     // updateGolfers+0x2522..updateGolfers+0x252c
                         GB(i, (GS(g_golfers) + 29)) = 0xb;                                          // updateGolfers+0x252e
+                        gwt.hold(kGwPartnerGreen, GW(i, (GS(g_golfers) + 162)));
                         p = GW(i, (GS(g_golfers) + 162));                                            // updateGolfers+0x253b
                         GB(i, (GS(g_golfers) + 26)) = AngleDir(kAngleFixed(GD(p, GS(g_golfers)) - GD(i, GS(g_golfers)), GD(p, (GS(g_golfers) + 4)) - GD(i, (GS(g_golfers) + 4))));   // updateGolfers+0x2535..updateGolfers+0x2570
                         goto L_c379;                                                    // updateGolfers+0x2576
@@ -907,6 +923,7 @@ int updateGolfers() {
                 }
             }
             GD(i, (GS(g_golfers) + 204)) = 0;                                                        // updateGolfers+0x257b..updateGolfers+0x2583
+            if (!(L34 == 0 && L40 != 0 && L38 == 0)) gwt.tag(L34 != 0 ? kGwPartnerTee : L38 != 0 ? kGwTeeQueue : kGwPartnerOrder, L38 != 0 ? -1 : GW(i, (GS(g_golfers) + 162)));
             if (L34 == 0 && L40 != 0 && L38 == 0) {                                     // updateGolfers+0x2581..updateGolfers+0x2595
                 if (GD(i, (GS(g_golfers) + 212)) == 0) {                                             // updateGolfers+0x2597..updateGolfers+0x259d
                     GD(i, (GS(g_golfers) + 212)) = L64;                                              // updateGolfers+0x259f / updateGolfers+0x25a7
@@ -981,6 +998,7 @@ int updateGolfers() {
         // updateGolfers+0x2614
         if (L2c != 0 && GC(i, (GS(g_golfers) + 26)) == (L44 ^ 4)) {                                 // updateGolfers+0x2614..updateGolfers+0x262c
             GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-8 - Rand(4));                         // updateGolfers+0x262e..updateGolfers+0x2641
+            gwt.hold(kGwTurn);
             GB(i, (GS(g_golfers) + 29)) = 0xb;                                                      // updateGolfers+0x2648
         }
         // other golfers in the way (updateGolfers+0x264f..updateGolfers+0x2e1e)
@@ -1020,11 +1038,13 @@ int updateGolfers() {
                         r = Rand(4);                                                    // updateGolfers+0x27e9..updateGolfers+0x27f0
                         L40 = 1;                                                        // updateGolfers+0x27fa
                         GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-4 - r);                   // updateGolfers+0x27f5..updateGolfers+0x2804
+                        gwt.hold(kGwBump, k);
                         GB(i, (GS(g_golfers) + 29)) = 0xb;                                          // updateGolfers+0x280b
                     }
                     if (GB(i, (GS(g_golfers) + 112)) != 0x24 && (FLAGS(k) & 0x20000000)) {           // updateGolfers+0x2812..updateGolfers+0x2829
                         kEmitThought(i, 0x24, kTypeBit7Clear(k));                       // updateGolfers+0x282b..updateGolfers+0x283d
                         GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-4 - Rand(4));             // updateGolfers+0x2845..updateGolfers+0x285d
+                        gwt.hold(kGwBump, k);
                         GB(i, (GS(g_golfers) + 29)) = 0xb;                                          // updateGolfers+0x2865
                         GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>(kDirection8(edi, L6c));   // updateGolfers+0x2858..updateGolfers+0x2874
                         L40 = 1;                                                        // updateGolfers+0x287a
@@ -1043,6 +1063,7 @@ int updateGolfers() {
                 }
                 r = Rand(0x40);                                                         // updateGolfers+0x2bf8..updateGolfers+0x2bff
                 GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-32 - r);                          // updateGolfers+0x2c04..updateGolfers+0x2c12
+                gwt.hold(kGwCrowded);
                 if (G<int>(GS(g_difficulty)) == 0) {                                          // updateGolfers+0x2c0b..updateGolfers+0x2c19
                     GW(i, (GS(g_golfers) + 158)) = static_cast<short>(-100 - Rand(0x1c));            // updateGolfers+0x2c1b..updateGolfers+0x2c2e
                     FLAGS(i) |= 0x4000;                                                 // updateGolfers+0x2c35..updateGolfers+0x2c3e
@@ -1081,7 +1102,7 @@ int updateGolfers() {
         }
         // ---- the step (updateGolfers+0x2e23..updateGolfers+0x328e)
         if (GW(i, (GS(g_golfers) + 158)) < 0) goto L_9ec9;                                           // updateGolfers+0x2e23..updateGolfers+0x2e2b
-        if (GB(i, (GS(g_golfers) + 26)) == 0xff) goto L_9ec9;                                       // updateGolfers+0x2e31..updateGolfers+0x2e38
+        if (GB(i, (GS(g_golfers) + 26)) == 0xff) { gwt.tag(kGwNoPath); goto L_9ec9; }               // updateGolfers+0x2e31..updateGolfers+0x2e38
         L6c = L2c * 0x30;                                                               // updateGolfers+0x2e3e..updateGolfers+0x2e53
         L38 = kClamp(6 - G<signed char>((GS(g_tileTypeAttrs) + 37) + L6c), 3, GW(i, (GS(g_golfers) + 170)) < 0xa0 ? 5 : 3);   // updateGolfers+0x2e42..updateGolfers+0x2e7c
         if (i == G<int>(GS(g_playerGolfer)) || GW(i, (GS(g_golfers) + 162)) == G<int>(GS(g_playerGolfer)) || (FLAGS(i) & 0x4000) ||
@@ -1159,9 +1180,12 @@ int updateGolfers() {
         }
     L_bc75:
         if (GD(i, (GS(g_golfers) + 228)) == 0) continue;                                             // updateGolfers+0x3295..updateGolfers+0x329d
-        if (L34 != 0) goto L_db2b;                                                      // updateGolfers+0x32a3..updateGolfers+0x32a9
+        if (L34 != 0) { gwt.hold(kGwPartnerTee, GW(i, (GS(g_golfers) + 162))); goto L_db2b; }   // updateGolfers+0x32a3..updateGolfers+0x32a9
     L_bc8f:
-        if (GD(i, (GS(g_golfers) + 228)) == 0 && L74 != 0) goto L_db2b;                              // updateGolfers+0x32af..updateGolfers+0x32bf
+        if (GD(i, (GS(g_golfers) + 228)) == 0 && L74 != 0) {                                         // updateGolfers+0x32af..updateGolfers+0x32bf
+            gwt.hold(kGwPartnerFarther, GW(i, (GS(g_golfers) + 162)));
+            goto L_db2b;
+        }
         if (GD(i, (GS(g_golfers) + 228)) != 0) goto L_c0c2;                                          // updateGolfers+0x32c5..updateGolfers+0x32c9
         // ---- the ball lies still: walk to it, take the shot (updateGolfers+0x32cf..updateGolfers+0x36dd)
         FLAGS(i) &= ~0x1800u;                                                           // updateGolfers+0x32cf
@@ -1169,6 +1193,7 @@ int updateGolfers() {
         if (GB(p, (GS(g_golfers) + 33)) != 0 && GC(p, (GS(g_golfers) + 29)) < (GB(i, (GS(g_golfers) + 34)) != 0 ? 6 : 7)) {   // updateGolfers+0x32e3..updateGolfers+0x3303
             GB(i, (GS(g_golfers) + 26)) = AngleDir(kAngleFixed(GD(p, GS(g_golfers)) - GD(i, GS(g_golfers)), GD(p, (GS(g_golfers) + 4)) - GD(i, (GS(g_golfers) + 4))));   // updateGolfers+0x3305..updateGolfers+0x3336
             GB(i, (GS(g_golfers) + 29)) = 0xb;                                                      // updateGolfers+0x333c
+            gwt.tag(kGwPartnerSwing, GW(i, (GS(g_golfers) + 162)));
             GW(i, (GS(g_golfers) + 20)) = 0;                                                        // updateGolfers+0x3343
             continue;                                                                   // updateGolfers+0x334a
         }
@@ -1179,10 +1204,14 @@ int updateGolfers() {
             GB(i, (GS(g_golfers) + 34))++;                                                          // updateGolfers+0x33b0..updateGolfers+0x33b8
             G<int>((GS(g_golferStats) + 12) + 0xb8 * (GC(i, (GS(g_golfers) + 186)) + 4 * (GB(i, (GS(g_golfers) + 25)) & 7)))++;   // updateGolfers+0x33be..updateGolfers+0x33e8
             HW(GC(i, (GS(g_golfers) + 33)), (GS(g_holes) + 354))++;                                            // updateGolfers+0x33ea..updateGolfers+0x33f8
+            gwt.tag(kGwHoled);
             kMatchUpdate(i);                                                            // updateGolfers+0x3407..updateGolfers+0x340c
             continue;                                                                   // updateGolfers+0x3414
         }
-        if ((FLAGS(i) & 0x200) && (L14 != 1 || (!SG_DEFECT(g_defect_foreign_green_auto) && !P22B_OnHoleGreen(h, L18, L20))) &&   // P22B updateGolfers.foreignGreenAutoPutt
+        // P36B measurement only (SG_P36B_AUTOPLAYER=1, unset in every test and release run): the player's golfer plays its shots
+        // itself, so an unattended run is not held by the shot it hands to the player
+        static const bool p36b_auto = std::getenv("SG_P36B_AUTOPLAYER") != nullptr;
+        if ((FLAGS(i) & 0x200) && !p36b_auto && (L14 != 1 || (!SG_DEFECT(g_defect_foreign_green_auto) && !P22B_OnHoleGreen(h, L18, L20))) &&   // P22B updateGolfers.foreignGreenAutoPutt
             kTileDistance(GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), HD(h, (GS(g_holes) + 24)), HD(h, (GS(g_holes) + 28))) >= 0x19) {   // updateGolfers+0x3419..updateGolfers+0x346b
             // the player's own golfer: hand the shot to the player
             if (GD(i, (GS(g_golfers) + 204)) == 0) {                                                 // updateGolfers+0x3471..updateGolfers+0x3477
@@ -1215,11 +1244,12 @@ int updateGolfers() {
                 G<int>(GS(g_playerGolfer)) = i;                                                 // updateGolfers+0x35cc
                 G<int>(GS(g_ui_561254)) = 0;                                                 // updateGolfers+0x35d2
                 GB(i, (GS(g_golfers) + 29)) = 0xb;                                                  // updateGolfers+0x35dc
+                gwt.tag(kGwPlayerShot);
                 continue;                                                               // updateGolfers+0x35e3
             }
             kPrepareShot(i, 1, -1, 0, 0);                                               // updateGolfers+0x35e8..updateGolfers+0x3610
         } else {
-            if (G<int>(GS(unk_0059b738)) != 0) continue;                                      // updateGolfers+0x35f7..updateGolfers+0x35fd
+            if (G<int>(GS(unk_0059b738)) != 0) { gwt.tag(kGwShotThrottle); continue; }        // updateGolfers+0x35f7..updateGolfers+0x35fd
             kPrepareShot(i, 0, -1, 0, 0);                                               // updateGolfers+0x3603..updateGolfers+0x3610
         }
         // updateGolfers+0x3615
@@ -1229,6 +1259,7 @@ int updateGolfers() {
             HW(GC(i, (GS(g_golfers) + 33)), (GS(g_holes) + 354))++;                                            // updateGolfers+0x3665..updateGolfers+0x3673
             if ((G<unsigned char>(GS(g_tileFlags) + 2 * (L20 + L18 * 50)) & 0x80) == 0) {    // updateGolfers+0x3682..updateGolfers+0x369b
                 GW(i, (GS(g_golfers) + 158)) = static_cast<short>(0xffe7);                           // updateGolfers+0x369d
+                gwt.hold(kGwGreenRead);
                 GB(i, (GS(g_golfers) + 30)) = 0;                                                    // updateGolfers+0x36a6
             }
         }
@@ -1244,16 +1275,17 @@ int updateGolfers() {
             unsigned char sw = GB(i, (GS(g_golfers) + 32));                                         // updateGolfers+0x36e2
             if (sw == 0) goto L_c661;                                                   // updateGolfers+0x36e8..updateGolfers+0x36ea
             if (sw == 1) {                                                              // updateGolfers+0x36f0..updateGolfers+0x36f2
-                if (GB(i, (GS(g_golfers) + 29)) == 0x10) continue;                                  // updateGolfers+0x36f8..updateGolfers+0x36ff
+                if (GB(i, (GS(g_golfers) + 29)) == 0x10) { gwt.tag(kGwSwing); continue; }          // updateGolfers+0x36f8..updateGolfers+0x36ff
                 GB(i, (GS(g_golfers) + 29)) = 0xb;                                                  // updateGolfers+0x3705
                 bool look = false;
                 if (GB(i, (GS(g_golfers) + 34)) == 0 && (i & 1) && GW(GW(i, (GS(g_golfers) + 162)), (GS(g_golfers) + 158)) >= 0) look = true;   // updateGolfers+0x370c..updateGolfers+0x372f
                 else if (G<int>(GS(unk_0059b04c)) != 0) look = true;                          // updateGolfers+0x3731..updateGolfers+0x3738
                 else if ((Rand(L14 == 1 ? 0 : GC(i, (GS(g_golfers) + 33)) + 4) & 0xffff) == 0) look = true;   // updateGolfers+0x373a..updateGolfers+0x375d
                 else if (FLAGS(i) & 0x4200) look = true;                                // updateGolfers+0x375f..updateGolfers+0x3768
-                if (!look) continue;                                                    // updateGolfers+0x3768
+                if (!look) { gwt.tag(kGwAddress); continue; }                           // updateGolfers+0x3768
                 // updateGolfers+0x376e: the waiting golfer follows the ball unless someone further along is in the way
                 int keep = 1;                                                           // updateGolfers+0x3774
+                int gw_why = 0, gw_k = -1;   // P36B: the first test that cleared keep, and its golfer
                 GB(i, (GS(g_golfers) + 26)) = AngleDir(GD(i, (GS(g_golfers) + 224)));                            // updateGolfers+0x376e..updateGolfers+0x3792
                 for (k = 0; k < 0x98; k++) {                                            // updateGolfers+0x377f / updateGolfers+0x3788 / updateGolfers+0x3968..updateGolfers+0x397d
                     h = GC(i, (GS(g_golfers) + 33));
@@ -1267,14 +1299,19 @@ int updateGolfers() {
                         (SG_DEFECT(g_defect_partner_wait_blocks_tee) || !P20A_WaitsForPartner(k)) &&   // P20A updateGolfers.partnerWaitBlocksTee
                         (SG_DEFECT(g_defect_player_wait_blocks_course) || !P20A2_PlayerHolds(k))) {   // P20A updateGolfers.playerWaitBlocksCourse
                         keep = 0;                                                       // updateGolfers+0x3966
+                        if (!gw_why) { gw_why = kGwAheadTee; gw_k = k; }
                         continue;
                     }
                     // P23B updateGolfers.playerPairBlocksShots: the player's golfer holding its handed-over shot, or its partner on its
                     // hole, holds nobody's shot by the ball-near-target, golfer-at-target and line-of-fire tests below
                     if (!SG_DEFECT(g_defect_player_pair_blocks_shots) && P20A2_PlayerHolds(k)) continue;
-                    if (kTileDistance(GD(k, (GS(g_golfers) + 212)), GD(k, (GS(g_golfers) + 216)), GD(i, (GS(g_golfers) + 204)), GD(i, (GS(g_golfers) + 208))) < 0x25) keep = 0;   // updateGolfers+0x3844..updateGolfers+0x3867
+                    if (kTileDistance(GD(k, (GS(g_golfers) + 212)), GD(k, (GS(g_golfers) + 216)), GD(i, (GS(g_golfers) + 204)), GD(i, (GS(g_golfers) + 208))) < 0x25) {   // updateGolfers+0x3844..updateGolfers+0x3867
+                        keep = 0;
+                        if (!gw_why) { gw_why = kGwAheadBall; gw_k = k; }
+                    }
                     if (kTileDistance(GD(k, GS(g_golfers)), GD(k, (GS(g_golfers) + 4)), GD(i, (GS(g_golfers) + 204)), GD(i, (GS(g_golfers) + 208))) < 0x25) {   // updateGolfers+0x3869..updateGolfers+0x3890
                         keep = 0;                                                       // updateGolfers+0x3966
+                        if (!gw_why) { gw_why = kGwAheadAtTarget; gw_k = k; }
                         continue;
                     }
                     if (keep == 0) continue;                                            // updateGolfers+0x3896..updateGolfers+0x3898
@@ -1286,7 +1323,10 @@ int updateGolfers() {
                                          (GD(i, (GS(g_golfers) + 208)) << 10) - GD(i, (GS(g_golfers) + 4)) + 0x200);   // updateGolfers+0x391d..updateGolfers+0x394e
                     v = a1 - a2;                                                        // updateGolfers+0x3953
                     v = (v ^ (v >> 31)) - (v >> 31);                                    // updateGolfers+0x395a..updateGolfers+0x395d
-                    if (v < 0xaaaaaaa) keep = 0;                                        // updateGolfers+0x395f..updateGolfers+0x3966
+                    if (v < 0xaaaaaaa) {                                                // updateGolfers+0x395f..updateGolfers+0x3966
+                        keep = 0;
+                        if (!gw_why) { gw_why = kGwAheadLine; gw_k = k; }
+                    }
                 }
                 if ((FLAGS(i) & 0x200) || keep) {                                       // updateGolfers+0x3983..updateGolfers+0x3990
                     GB(i, (GS(g_golfers) + 29)) = 0x10;                                             // updateGolfers+0x39bc
@@ -1297,6 +1337,7 @@ int updateGolfers() {
                     continue;                                                           // updateGolfers+0x39f3
                 }
                 GB(i, (GS(g_golfers) + 29)) = 0xb;                                                  // updateGolfers+0x3992
+                gwt.hold(gw_why, gw_k);
                 goto L_c379;
             }
             if (sw == 2) {                                                              // updateGolfers+0x39f8..updateGolfers+0x39fa
@@ -1613,6 +1654,7 @@ int updateGolfers() {
             if (d1 < d0) {                                                              // updateGolfers+0x4c87..updateGolfers+0x4c89
                 GB(i, (GS(g_golfers) + 29)) = 0xc;                                                  // updateGolfers+0x4c93
                 GW(i, (GS(g_golfers) + 158)) = -99;                                                  // updateGolfers+0x4c9a
+                gwt.hold(kGwReactGood);
                 GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>((GB(i, (GS(g_golfers) + 26)) - 2) & 7);   // updateGolfers+0x4ca3..updateGolfers+0x4cb1
                 kEmitThought(i, 1, edi);                                                // updateGolfers+0x4c8f / updateGolfers+0x4cab..updateGolfers+0x4cb7
             }
@@ -1623,6 +1665,7 @@ int updateGolfers() {
             (G<unsigned short>(GS(g_tileFlags) + 2 * L74) & 0x100) == 0) {                   // updateGolfers+0x4cc4..updateGolfers+0x4cf5
             GB(i, (GS(g_golfers) + 29)) = 0xd;                                                      // updateGolfers+0x4cfb
             GW(i, (GS(g_golfers) + 158)) = -99;                                                      // updateGolfers+0x4d02
+            gwt.hold(kGwReactBad);
             GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>((GB(i, (GS(g_golfers) + 26)) - 2) & 7);    // updateGolfers+0x4d0b..updateGolfers+0x4d19
             kEmitThought(i, 2, edi);                                                    // updateGolfers+0x4cf7 / updateGolfers+0x4d13..updateGolfers+0x4d1f
         }
@@ -1635,6 +1678,7 @@ int updateGolfers() {
                     GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>((GB(i, (GS(g_golfers) + 26)) - 2) & 7);   // updateGolfers+0x4d82..updateGolfers+0x4d8e
                 }
                 GW(i, (GS(g_golfers) + 158)) = -99;                                                  // updateGolfers+0x4da3
+                gwt.hold(kGwReactBad);
                 kEmitThought(i, (edi != pt) + 2, edi);                                  // updateGolfers+0x4d94..updateGolfers+0x4dae
                 FLAGS(i) |= 0x20000;                                                    // updateGolfers+0x4db3..updateGolfers+0x4dc1
             }
@@ -1685,6 +1729,7 @@ int updateGolfers() {
             GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>((GB(i, (GS(g_golfers) + 26)) - 2) & 7);    // updateGolfers+0x4fe5..updateGolfers+0x4fef
         }
         GW(i, (GS(g_golfers) + 158)) = -99;                                                          // updateGolfers+0x4ff5
+        gwt.hold(kGwPenalty);
         FLAGS(i) |= 1;                                                                  // updateGolfers+0x4ffe..updateGolfers+0x5007
         if (GC(i, (GS(g_golfers) + 34)) < 8) GB(i, (GS(g_golfers) + 34))++;                                     // updateGolfers+0x500d..updateGolfers+0x5019
     L_d9ff:

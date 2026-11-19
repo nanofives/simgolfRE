@@ -57,6 +57,7 @@
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
 #include "portsim/sim/lang.h"  // P26B item 3: lang::tr
+#include "golfer_wait.h"  // P36B part 2
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/util.h"
@@ -2101,6 +2102,83 @@ std::string buffer_text(Ctx &ctx, const char *name, std::initializer_list<uint32
   for (uint32_t i = 0; i < n; ++i) ctx.mem.store<uint8_t>(buf + i, saved[i]);
   return out;
 }
+// P36B part 2 (gfx.h gfx_set_wait_reasons): why golfer k stands, one short line in the current language, from the reason
+// updateGolfers tagged (golfer_wait.h); "" when it moves, swings, watches its own ball or no rule holds it. A reason caused by the
+// player's own golfer (g_playerGolfer, its shot handed over: target x +0xcc = -1) or by that golfer's partner says so.
+std::string wait_line_text(Ctx &ctx, int32_t k, int32_t max_w = 0) {
+  int other = -1;
+  const int why = golfer_wait_reason(ctx, k, other);
+  const GameState &s = ctx.gs();
+  const int pg = s.g_playerGolfer;
+  const bool pending = pg >= 0 && pg < 0x98 && s.g_golfers[pg].target_x == -1 && s.g_golfers[pg].hole != 0;
+  const bool by_player = pending && other >= 0 && other == pg && k != pg;
+  const bool by_partner = pending && other >= 0 && other != pg && other == s.g_golfers[pg].partner && k != other;
+  const char *fmt = nullptr;   // English; one %s = the other golfer's name
+  if (by_player) {
+    switch (why) {
+      case kGwPartnerTee: case kGwPartnerFarther: case kGwPartnerGreen: case kGwPartnerOrder: case kGwPartnerSwing:
+      case kGwPartnerWatch: case kGwPartnerPrevHole:
+        fmt = "Waiting for your shot"; break;
+      case kGwAheadTee: case kGwAheadBall: case kGwAheadAtTarget: case kGwAheadLine: case kGwBump:
+        fmt = "Your golfer is in the way"; break;
+      default: break;
+    }
+  }
+  if (!fmt && by_partner && why >= kGwAheadTee && why <= kGwBump) fmt = "%s waits for your shot";
+  if (!fmt) switch (why) {
+    case kGwAddress: fmt = "Lining up the shot"; break;
+    case kGwAheadTee: fmt = "Waiting: %s near the tee"; break;
+    case kGwAheadBall: fmt = "Waiting: %s's ball in range"; break;
+    case kGwAheadAtTarget: fmt = "Waiting: %s in range"; break;
+    case kGwAheadLine: fmt = "%s is in the line of fire"; break;
+    case kGwTeeQueue: fmt = "Group ahead still on the tee"; break;
+    case kGwPartnerTee: fmt = "Waiting for %s to tee off"; break;
+    case kGwPartnerFarther: fmt = "Waiting for %s to play"; break;
+    case kGwPartnerSwing: fmt = "Waiting for %s to swing"; break;
+    case kGwPartnerWatch: fmt = "Watching %s's shot"; break;
+    case kGwPartnerPrevHole: fmt = "Waiting for %s (last hole)"; break;
+    case kGwPartnerOrder: fmt = "Waiting for %s at the tee"; break;
+    case kGwPartnerGreen: fmt = "Waiting for %s to putt"; break;
+    case kGwBump: fmt = "%s is in the way"; break;
+    case kGwCrowded: fmt = "The tee is crowded"; break;
+    case kGwTurn: case kGwNoPath: fmt = "Looking for the way"; break;
+    case kGwReactGood: fmt = "Enjoying a good shot"; break;
+    case kGwReactBad: fmt = "Upset about a bad lie"; break;
+    case kGwPenalty: fmt = "Taking a penalty drop"; break;
+    case kGwGreenRead: fmt = "Reading the green"; break;
+    case kGwShotThrottle: fmt = "Choosing a shot"; break;
+    case kGwPlayerShot: fmt = "Waiting for your shot"; break;
+    case kGwClubhouse: fmt = "In the clubhouse"; break;
+    case kGwPractice: fmt = "On the practice green"; break;
+    case kGwSnack: fmt = "At the snack bar"; break;
+    case kGwDrinks: fmt = "At the drinks stand"; break;
+    case kGwRestroom: fmt = "At the restrooms"; break;
+    case kGwRestSpot: fmt = "Resting"; break;
+    case kGwThought: fmt = "Thinking"; break;
+    case kGwStory: fmt = "Chatting with %s"; break;
+    case kGwMembership: fmt = "Asking about membership"; break;
+    case kGwArrival: fmt = "Arriving"; break;
+    case kGwHoled: fmt = "Holed out"; break;
+    default: return "";
+  }
+  const std::string t = lang::tr(fmt);   // the pattern translated as a whole, then the name put in
+  const size_t at = t.find("%s");
+  if (at == std::string::npos) return t;
+  std::string nm = other >= 0 ? buffer_text(ctx, "buildGolferName", {static_cast<uint32_t>(other), 0}) : std::string();
+  auto put = [&](const std::string &n) { return t.substr(0, at) + n + t.substr(at + 2); };
+  // max_w > 0: the name loses letters until the line fits max_w in the panel's font (g_font51b360)
+  TextMetrics *tm = max_w > 0 ? text_metrics(ctx) : nullptr;
+  const uint32_t font = state_va(ctx, &GameState::g_font51b360);
+  while (tm != nullptr && nm.size() > 3) {
+    const std::string line = put(nm);
+    int32_t w = 0;
+    bool ok = false;
+    with_scratch_buffer(ctx, line, [&](uint32_t buf) { ok = tm->glyph_width(ctx, font, buf, static_cast<int32_t>(line.size()), w); });
+    if (!ok || w <= max_w) break;
+    nm.pop_back();
+  }
+  return put(nm);
+}
 // a call of another family's body when the tree holds one (addSprite: the scene family's, S3.5; drawCircle: the overlay
 // lines, S3.8), else the reason
 void call_or_report(Gfx &g, Ctx &ctx, const char *name, std::initializer_list<uint32_t> args, const char *reason) {
@@ -2569,6 +2647,10 @@ void b_view_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     if (sword(k, 0xa6) > 0x10) r.push_back(lang::tr("Hungry"));
     if (sword(k, 0xa8) > 0x10) r.push_back(lang::tr("Thirsty"));
     if (sword(k, 0xaa) > 0xa0) r.push_back(lang::tr("Tired"));
+    if (g.wait_reasons) {   // P36B part 2: why the golfer stands
+      const std::string w = wait_line_text(ctx, k);
+      if (!w.empty()) r.push_back(w);
+    }
     for (size_t i = 0; i < r.size(); ++i) why += (i ? ", " : "") + r[i];
   }
   dwell(g, ctx, hover, "tooltip: drawEmployeeViewPanel's dwell tip (drawMapLine bar and centred text)", [&]() {
@@ -2897,6 +2979,26 @@ bool gfx_speed_button_hit(int32_t x, int32_t y) {
 void gfx_speed_button_centre(int32_t &x, int32_t &y) {
   x = static_cast<int32_t>(kSpeedX);
   y = static_cast<int32_t>(kSpeedY);
+}
+
+// P36B part 2 (gfx.h gfx_golfer_wait_line): the golfer info panel's line saying why golfer k stands, centred at (x, y) in the
+// panel's current font (drawGolferInfoPanel selects it), drawn only with the option on and a backend attached
+// the panel's beige text box between the portrait and the meters is x 0x126 .. 0x21d around the line's centre 0x1a4
+constexpr int32_t kWaitLineWidth = 0xec;
+void gfx_golfer_wait_line(Ctx &ctx, int32_t k, int32_t x, int32_t y) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
+  Gfx *g = gfx(ctx);
+  if (g == nullptr || !g->wait_reasons) return;
+  const std::string t = wait_line_text(ctx, k, kWaitLineWidth);
+  static const bool dbg = std::getenv("SG_P36B_LINEDBG") != nullptr;   // development: the line's text on stderr
+  if (dbg) std::fprintf(stderr, "P36B line g %d date %d '%s'\n", k, ctx.gs().g_date, t.c_str());
+  if (t.empty()) return;
+  // drawn as the panel's own lines are (a drop through the backend, so the HUD layers record it), from the text buffer, which
+  // is put back after
+  with_scratch_buffer(ctx, t, [&](uint32_t buf) {
+    const uint32_t a[4] = {buf, static_cast<uint32_t>(x), static_cast<uint32_t>(y), 0x80004000u};
+    gfx_drop(ctx, "drawCenteredText", a, 4);
+  });
 }
 
 namespace gfxh {
