@@ -2037,3 +2037,13 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   5,663 files in the same 95 directories, every game file equal to original/ (the cab's golf.exe is v1.00), movie_inventory
   --check and tests/test_movie_inventory.py 7 / 7 pass. Remaining loss: lost.tsv (2,051 paths, run outputs mostly; 126 scripts
   or notes) and the 812 rows of stale.tsv that may be older texts. No backup of log/ exists yet.
+- Item 2 part 3 (P36B fix 4, 11c13dae, class b, Mariano's picks A + B of the measured options): play switches
+  updateGolfers.partnerWaitsBallRest (outside a championship / pro match the partner rules let a golfer go once the partner's
+  ball is in the air or rolling; the watching stand is skipped) and updateGolfers.preShotGateByHole (the pre-shot gate draws
+  hole 1's range on every hole). Delivered build on his save, speed 4, 15,360 ticks: 19.3-19.6 -> 17.5 min per golfer-hole, a
+  14-hole round 270-274 -> about 245, standing 45.6 -> 39.5 %. Shorter reactions measured no effect (dropped). A first reading
+  of more "quits" was the round-end hole change: six more runs, three seeds per arm, 0 mid-round quits in both; more rounds end
+  in the same time (0.29 -> 0.53 per 1,000 ticks). Mood per hole: positives 3.60 -> 3.42 (less time per hole), the "ball almost
+  hit me" thought 0.04 -> 0.07 per finish. Published 11c13dae (GitHub port-2026-11-19-11c13dae). P36B DONE.
+Round P36 closed 2026-11-19: 3 items published. Not run on this round: Win32, the full 4K check. Open from it: test_gfx_hud's
+view golden (stale since at least 16 Nov), a backup for log/.
