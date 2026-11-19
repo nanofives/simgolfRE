@@ -23,6 +23,7 @@ namespace {
 //                         4 = placementBound 0 on location 4 still stamps the object at the last draw, 5 = placementBound 0
 //                         on locations 5, 6, 8, 12, 13, 15 still runs the object pass
 int g_negctl_generate = 0;
+int g_negctl_flat_course = 0;  // P38B generateFlatCourse: 1 = the owned square not scaled by N / 50
 
 // Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
 //   generateRandomCourse.searchBound  model_defects#52 (D52b1, D52b2): the type-0x11 search of layout kind 1 and the
@@ -768,11 +769,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   // ---- M: the walker at the clubhouse, the saved tile types, the border sweeps
   const int32_t w = i32(call_peer(ctx, "spawnWalker", {u32(-6)}).eax);
   if (w >= 0) {  // w is -1 only with spawnWalker.fullTable at 0
-    const int8_t px = static_cast<int8_t>(leaving.field(&HoleRecord::tee_x).get());
-    const int8_t py = static_cast<int8_t>(leaving.field(&HoleRecord::tee_y).get());
-    const Ptr<Walker> wk = state_arr(ctx, &GameState::g_walkers) + w;
-    wk.field(&Walker::post_x).set(px);
-    wk.field(&Walker::post_y).set(py);
+    // P38B: through world.h (stored as the original's int8 while N <= 127)
+    set_walker_post(ctx, w, 0, leaving.field(&HoleRecord::tee_x).get());
+    set_walker_post(ctx, w, 1, leaving.field(&HoleRecord::tee_y).get());
   }
   int32_t count = 0;
   {
@@ -812,12 +811,88 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   return i32(rebuild_heightfield(ctx));
 }
 
+// ------------------------------------------------------------------------------------------------ P38B: the flat course
+// generateFlatCourse (port-only, P38B; the app's --world-size N > 50 starts a new sandbox course with it in place of
+// generateRandomCourse, whose walks are sized for 50 until phase C): the course record as generateRandomCourse writes it
+// (index, type, year bought, height relief), every tile the base type (4 for course types 0..3, 0xe for 4, 5 / 0xc from
+// course 8 and 0xb / 0xc from 12, as section B), its path cost, every corner level 4 (key 0x58's flat ground), the
+// clubhouse (stampCourseTiles kind 0xf) at the centre with the leaving tee slots and the camera beside it, the walker
+// posted at the clubhouse, g_tileTypeSaved = g_tileType, and the tiles outside the owned square for sale (0x14): the square
+// keeps the original's proportion (section M's `count` from the acres, at 50 the rows cleared on each side, scaled by
+// N / 50). markTileKind11 and rebuildHeightfield end it; returns rebuildHeightfield's eax.
+int32_t generate_flat_course(Ctx &ctx, int32_t n) {
+  GameState &g = ctx.gs();
+  const int32_t N = world_n(ctx);
+  const Ptr<CourseRecord> rec = state_arr(ctx, &GameState::g_courseTable) + n;
+  g.g_courseIndex = n;
+  const int8_t ctype = rec.field(&CourseRecord::course_type).get();
+  rec.field(&CourseRecord::year_bought).set(static_cast<int8_t>(static_cast<uint8_t>(g.g_year)));
+  g.g_courseType = ctype;
+  const int32_t c2 = rec.field(&CourseRecord::relief).get();
+  g.g_heightRelief = c2 == 0 ? 0x30 : c2 == 1 ? 0x20 : c2 == 2 ? 0x10 : g.g_heightRelief;
+  int32_t base = u32(ctype) <= 3 ? 4 : 0xE;
+  if ((g.g_flags & 0x1000000u) == 0) {
+    if (n >= 8) base = ctype != 1 ? 5 : 0xC;
+    if (n >= 0xC) base = ctype != 1 ? 0xB : 0xC;
+  }
+  const int8_t cost = (state_arr(ctx, &GameState::g_tileTypeAttrs) + base).field(&TileTypeAttr::path_cost).get();
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) {
+    grid_ref(ctx, &GameState::g_tileType, k) = static_cast<int8_t>(base);
+    grid_ref(ctx, &GameState::g_tilePathCost, k) = cost;
+    grid_ref(ctx, &GameState::g_tileFlags, k) = 0;
+    grid_ref(ctx, &GameState::g_ballStopCount, k) = 0;
+    grid_ref(ctx, &GameState::g_tileMoodUp, k) = 0;
+    grid_ref(ctx, &GameState::g_tileMoodDown, k) = 0;
+    grid_ref(ctx, &GameState::g_tileVariant, k) = 0;
+  }
+  for (int32_t k = 0; k < world_verts(ctx); ++k) grid_ref(ctx, &GameState::g_cornerLevel, k) = 4;
+  // the clubhouse near the centre
+  const int32_t cx = N / 2 - 2, cy = N / 2 - 2;
+  stamp_course_tiles(ctx, cx, cy, 0xF, 0x60);
+  const Ptr<PlacedObject> objects = state_arr(ctx, &GameState::g_placed_objects);
+  objects.field(&PlacedObject::flags).set(static_cast<uint8_t>(objects.field(&PlacedObject::flags).get() | 0x40));
+  const Ptr<HoleRecord> leaving = state_arr(ctx, &GameState::g_holes) + 19;  // the clubhouse's tee slots
+  leaving.field(&HoleRecord::tee2_x).set(cx);
+  leaving.field(&HoleRecord::tee_x).set(cx);
+  uint16_t &w0 = grid_ref(ctx, &GameState::g_tileFlags, tile_index(ctx, cx, cy));
+  w0 = static_cast<uint16_t>(w0 & ~0x20u);
+  leaving.field(&HoleRecord::tee2_y).set(cy);
+  leaving.field(&HoleRecord::tee_y).set(cy);
+  g.gCameraTileX = add32(cx, 6);
+  g.gCameraTileY = sub32(cy, 4);
+  const int32_t w = i32(call_peer(ctx, "spawnWalker", {u32(-6)}).eax);
+  if (w >= 0) {
+    set_walker_post(ctx, w, 0, cx);
+    set_walker_post(ctx, w, 1, cy);
+  }
+  for (int32_t k = 0; k < world_tiles(ctx); ++k)
+    grid_ref(ctx, &GameState::g_tileTypeSaved, k) = grid_ref(ctx, &GameState::g_tileType, k);
+  // the owned square: section M's count at 50 (c from 0x19 down while c * c * 4 > acres * 10), scaled by N / 50
+  int32_t count50 = 0;
+  {
+    const int32_t e5 = rec.field(&CourseRecord::acres).get() * 10;
+    int32_t c = 0x19;
+    do {
+      ++count50;
+      --c;
+    } while (c * c * 4 > e5);
+  }
+  const int32_t count = SG_NEGCTL(g_negctl_flat_course) == 1 ? count50 : (count50 * N + kWorldOriginal / 2) / kWorldOriginal;
+  for (int32_t x = 0; x < N; ++x)
+    for (int32_t y = 0; y < N; ++y)
+      if (x < count || y < count || x >= N - count || y >= N - count) grid_ref(ctx, &GameState::g_tileType, tile_index(ctx, x, y)) = 0x14;
+  mark_tile_kind11(ctx);
+  return i32(rebuild_heightfield(ctx));
+}
+
 // ------------------------------------------------------------------------------------------------ adapters
 namespace {
 void a_generate(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(generate_random_course(c, static_cast<int32_t>(a[0]))); }
 
 const FuncDef kFuncs[] = {
     {"generateRandomCourse", "default", "int", 1, 0x027F, a_generate, &g_negctl_generate},
+    {"generateFlatCourse", "default", "int", 1, 0, [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(generate_flat_course(c, static_cast<int32_t>(a[0]))); },
+     &g_negctl_flat_course},  // P38B: port-only
 };
 
 const DefectDef kDefects[] = {

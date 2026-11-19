@@ -52,12 +52,22 @@ inline int32_t vertex_index(const Ctx &c, int32_t x, int32_t y) { return add32(m
 
 namespace detail {
 template <size_t K> constexpr bool is_world_grid() { return K == kGridTiles || K == kGridVerts || K == 8 * kGridTiles; }
+// P38B: the side address of the grid at GameState offset `off` (N != 50): its cluster's base + (off - lo) * scale
+inline uint32_t side_va(const Ctx &c, uint32_t off) {
+  for (int32_t k = 0; k < c.world_nclusters; ++k) {
+    const Ctx::WorldCluster &w = c.world_clusters[k];
+    if (off >= w.lo && off < w.hi) return w.va + (off - w.lo) * c.world_scale;
+  }
+  throw Fault{off, 0};
+}
 }  // namespace detail
 
-// The virtual address of element 0 of a world grid (a GameState member while N == 50; phase B: the side storage of N > 50).
+// The virtual address of element 0 of a world grid: the GameState member while N == 50; P38B: its block in the side storage
+// world_resize mapped for N != 50 (every grid scaled by the same factor inside its cluster: no per-grid lookup).
 template <class M, size_t K> uint32_t grid_va(Ctx &c, M (GameState::*m)[K]) {
   static_assert(detail::is_world_grid<K>(), "grid_va names a per-tile or per-vertex grid of the GameState");
-  return c.mem.va_of(&(c.gs().*m)[0]);
+  if (c.world_n == kWorldOriginal) return c.mem.va_of(&(c.gs().*m)[0]);
+  return detail::side_va(c, static_cast<uint32_t>(reinterpret_cast<const uint8_t *>(&(c.gs().*m)[0]) - c.bytes()));
 }
 template <class M, size_t K> Ptr<M> grid_arr(Ctx &c, M (GameState::*m)[K]) { return Ptr<M>(c.mem, grid_va(c, m)); }
 // Entries of a grid at the current N: N * N, (N + 1)^2 for the vertex grid, 8 * N * N for the corner cache.
@@ -74,8 +84,28 @@ template <class M, size_t K> M &grid_ref(Ctx &c, M (GameState::*m)[K], int32_t i
   return c.mem.ref<M>(grid_va(c, m) + static_cast<uint32_t>(i) * static_cast<uint32_t>(sizeof(M)), true);
 }
 // The dword count of the original's `rep stosd` over a whole tile grid of `elem_bytes` per entry (0x271 for a byte grid, 0x4e2 for
-// g_tileFlags at N = 50). Phase B: N * N * elem_bytes not a multiple of 4 (N odd) leaves a tail the caller must clear.
+// g_tileFlags at N = 50), and the bytes left after them when N * N * elem_bytes is not a multiple of 4 (N odd; 0 at 50 and 152):
+// grid_fill writes the dwords then the tail's bytes from the pattern's low end.
 inline int32_t grid_dwords(const Ctx &c, int32_t elem_bytes) { return world_tiles(c) * elem_bytes / 4; }
+inline int32_t grid_tail(const Ctx &c, int32_t elem_bytes) { return world_tiles(c) * elem_bytes % 4; }
+inline void grid_fill_tail(Ctx &c, uint32_t grid, int32_t elem_bytes, uint32_t pattern) {
+  const uint32_t at = grid + static_cast<uint32_t>(grid_dwords(c, elem_bytes)) * 4u;
+  for (int32_t i = 0; i < grid_tail(c, elem_bytes); ++i) c.mem.store<uint8_t>(at + static_cast<uint32_t>(i), static_cast<uint8_t>(pattern >> (8 * i)));
+}
+
+// ---- P38B: the world size changes (world.cpp)
+// world_resize: N = 50 drops the side storage (the GameState grids again); another N (>= 50, (N - 2) % 3 == 0 for equal lots,
+// <= 256) maps zeroed side blocks for every grid, the path ring and the walker posts, and tells an attached TerrainApi
+// (TerrainApi::world_resized: the Terrain object and its vertex arrays at N). The grids' contents are not carried over: the
+// caller starts a new course. Returns false for an N it does not take.
+bool world_resize(Ctx &c, int32_t n);
+bool world_size_ok(int32_t n);
+// pathStep's ring: g_pathQueueX / Y (1,024 entries, mask 0x3ff) at 50, a side ring of the next power of two >= N * N above
+uint32_t world_ring_va(Ctx &c, int axis);
+uint32_t world_ring_mask(const Ctx &c);
+// walker posts: Walker::post_x / post_y (int8) while N <= 127, an int16 side table above (-1 = no post, like the byte 0xff)
+int32_t walker_post(Ctx &c, int32_t walker, int axis);
+void set_walker_post(Ctx &c, int32_t walker, int axis, int32_t v);
 // A tile grid as Grid<M> (cell(x, y) = x * N + y) and the vertex grid (x * (N + 1) + y).
 template <class M, size_t K> Grid<M> tile_grid(Ctx &c, M (GameState::*m)[K]) {
   static_assert(K == kGridTiles, "tile_grid names a per-tile grid");

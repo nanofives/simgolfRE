@@ -70,6 +70,9 @@ class TerrainApi {
     (void)self;
     return 0;
   }
+  // P38B (world.h world_resize): the world is now N x N; an implementation that holds the Terrain object re-makes it at N (the
+  // object's tiles, its width / height and the vertex / normal arrays), maps it and stores its address in gTerrain. Port-only.
+  virtual void world_resized(int32_t n) { (void)n; }
 };
 
 // The TerrainApi of a context (not owned); MissingResource when none is attached.

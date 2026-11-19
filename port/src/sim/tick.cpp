@@ -46,6 +46,7 @@
 #include "portsim/state_hash.h"
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
 #include "tick_hook.h"
+#include "portsim/sim/terrain_gen.h"  // P38B: generate_flat_course (tick_menu.inc)
 #include "golfer_wait.h"  // P36B
 #include "landoffer.h"    // P38H (tick_frame.inc, the land popup)
 
@@ -1416,6 +1417,21 @@ class HeadlessTerrain : public NullTerrain {
     ctx_.mem.store<int32_t>(va + 0x14, world_n(ctx_));
     ctx_.mem.store<int32_t>(va + 0x18, world_n(ctx_));
     return va;
+  }
+  // P38B: a zeroed stand-in object of the new size with width / height N at a free address; gTerrain follows
+  void world_resized(int32_t n) override {
+    std::lock_guard<std::mutex> g(mu());
+    Blocks &b = blocks()[&ctx_];
+    if (b.terrain_va != 0) ctx_.mem.unmap(b.terrain_va);
+    b.terrain_va = 0;
+    const uint32_t size = obj_size(ctx_);
+    b.terrain.assign(size, 0);
+    for (uint32_t base = 0x70000000u; base < 0xE0000000u && b.terrain_va == 0; base += 0x00100000u)
+      if (ctx_.mem.map(base, b.terrain.data(), size, false)) b.terrain_va = base;
+    if (b.terrain_va == 0) throw MissingResource{"headless Terrain: no free range for the resized object"};
+    ctx_.mem.store<int32_t>(b.terrain_va + 0x14, n);
+    ctx_.mem.store<int32_t>(b.terrain_va + 0x18, n);
+    ctx_.gs().gTerrain = b.terrain_va;
   }
   uint32_t operator_new(uint32_t n) override {
     std::lock_guard<std::mutex> g(mu());

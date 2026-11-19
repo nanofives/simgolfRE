@@ -27,6 +27,8 @@ namespace portsim {
 // outside 0..4, unless n >= 8 with the flag clear), and NoReturn when a search loop has no candidate left (the original
 // spins forever there). spawnWalker (child 3.3) is called through the registry.
 int32_t generate_random_course(Ctx &ctx, int32_t n);
+// P38B (port-only): a flat course at the current N for the app's --world-size (terrain_gen.cpp has the description)
+int32_t generate_flat_course(Ctx &ctx, int32_t n);
 
 }  // namespace portsim
 

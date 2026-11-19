@@ -348,7 +348,7 @@ void FramePreamble(u32 F, int retile) {
     FD(0x230) = (GS(f_strpool_4c6980) + 96);                         // ML+0xed2
     FD(0x234) = (GS(f_strpool_4c6980) + 88);                         // ML+0xedd
     if (!(lab & 2))                                 // ML+0xde9 test al,2; ML+0xee8 jne ML+0xef8
-        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0;   // ML+0xeea..ML+0xef6
+        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0; grid_fill_tail(ctx, GV(g_tileScreenX), 2, 0);   // ML+0xeea..ML+0xef6
 
     // ML+0xef8..ML+0xf8b : refresh the terrain render; when the date is set and [g_ui_542df8] != 0 also re-apply the
     // course type, refresh again and play the <text> sound
@@ -378,7 +378,7 @@ void FramePreamble(u32 F, int retile) {
         G32(GS(g_ui_567b00)) == G32(GS(g_zoomScale)) &&       // ML+0xfac/ML+0xfb1/ML+0xfb9
         G32(GS(g_lastCameraRot)) == G32(GS(g_cameraRot));         // ML+0xfbb/ML+0xfc1/ML+0xfc8
     if (!unchanged) {                               // ML+0xfca
-        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0;    // ML+0xfca..ML+0xfd6
+        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0; grid_fill_tail(ctx, GV(g_tileScreenX), 2, 0);    // ML+0xfca..ML+0xfd6
         for (int i = 0; i < 0x98; i++) G32(GS(g_ballTrailX) + 4 * i) = -1;    // ML+0xfd8..ML+0xfe5
     }
     // ML+0xfe7
@@ -7946,6 +7946,7 @@ a41ca20:  // key 0x58: reset tile/level tables, rebuild
     {
         for (int i = 0; i < grid_dwords(ctx, 1); i++)  // ML+0xd470 rep stosd ecx=0x271 (N * N / 4)
             G32(GV(g_tileType) + 4 * i) = 0x04040404;
+        grid_fill_tail(ctx, GV(g_tileType), 1, 0x04040404u);   // P38B: odd N
     }
     edx = GV(g_tileFlags);                                  // ML+0xd47f mov edx,g_tileFlags
     esi = GV(g_cornerLevel);                                  // ML+0xd484 mov esi,g_cornerLevel

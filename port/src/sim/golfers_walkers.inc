@@ -41,7 +41,13 @@ int32_t update_walkers(Ctx &ctx) {
     const auto W_seq = w.field(&Walker::anim_seq);
     const auto W_target = w.field(&Walker::target_golfer);
     const auto W_services = w.field(&Walker::services);
-    const auto W_postx = w.field(&Walker::post_x), W_posty = w.field(&Walker::post_y);
+    // P38B: the walker's post through world.h (the int8 fields while N <= 127, an int16 side table above)
+    struct Post {
+      Ctx &c;
+      int32_t i, axis;
+      int32_t get() const { return walker_post(c, i, axis); }
+    };
+    const Post W_postx{ctx, cur, 0}, W_posty{ctx, cur, 1};
     const auto G_ = [&](int32_t g) { return golfer(ctx, g); };
 
     int8_t mode = W_kind.get();
@@ -132,7 +138,7 @@ int32_t update_walkers(Ctx &ctx) {
         int32_t best_idx = -1;
         tx = x;
         ty = y;
-        if (static_cast<uint8_t>(W_postx.get()) != 0xff) {
+        if (W_postx.get() != -1) {  // the byte 0xff: no post
           tx = add32(shl32(W_postx.get(), 10), 0x200);
           ty = add32(shl32(W_posty.get(), 10), 0x200);
         }

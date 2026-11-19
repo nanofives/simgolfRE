@@ -839,6 +839,26 @@ uint32_t LiveTerrain::get_instance() {
   return call("getInstance", 0, {});
 }
 
+// P38B: a new object of terrain_object_size(N) bytes at a free address, the old one's header carried over (terrain_regrow), then
+// the old mapping dropped; gTerrain follows. Before getInstance ran nothing is held: getInstance sizes the object by N itself.
+void LiveTerrain::world_resized(int32_t n) {
+  (void)n;
+  if (!dll_.constructed || dll_.terrain == 0) return;
+  const uint32_t size = terrain_object_size(ctx_);
+  std::vector<uint8_t> fresh(size, kNewFill);
+  uint32_t va = 0;
+  uint32_t base = (ctx_.mem.data_base() + static_cast<uint32_t>(sizeof(GameState)) + (96u << 20)) & ~0xFFFFu;
+  for (int tries = 0; tries < 256 && va == 0; ++tries, base += (4u << 20))
+    if (ctx_.mem.map(base, fresh.data(), size, false)) va = base;
+  if (va == 0) throw MissingResource{"LiveTerrain: no free range for the resized Terrain object"};
+  const uint32_t old = dll_.terrain;
+  terrain_regrow(ctx_, g_, old, va);
+  ctx_.mem.unmap(old);
+  object_.swap(fresh);
+  dll_.terrain = va;
+  ctx_.gs().gTerrain = va;
+}
+
 uint32_t LiveTerrain::pass_collar_info(uint32_t self, const int32_t *table, int32_t n) {
   return call("passCollarInfo", self, {0u, static_cast<uint32_t>(n)}, table, n);
 }

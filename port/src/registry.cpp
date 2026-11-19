@@ -30,13 +30,29 @@ bool Memory::map(uint32_t base, uint8_t *host, uint32_t size, bool readonly) {
   return true;
 }
 
+bool Memory::unmap(uint32_t base) {
+  for (size_t i = 0; i < maps_.size(); ++i)
+    if (maps_[i].base == base) {
+      maps_.erase(maps_.begin() + static_cast<std::ptrdiff_t>(i));
+      return true;
+    }
+  return false;
+}
+
 uint8_t *Memory::at(uint32_t va, uint32_t len, bool write) const {
   uint32_t rel = va - data_base_;
   if (rel < state_size_ && len <= state_size_ - rel) return state_ + rel;
-  for (const Mapping &m : maps_) {
+  if (last_ < maps_.size()) {  // P38B: the previous hit first (a run of grid reads in one side block)
+    const Mapping &m = maps_[last_];
+    rel = va - m.base;
+    if (rel < m.size && len <= m.size - rel && !(write && m.readonly)) return m.host + rel;
+  }
+  for (size_t i = 0; i < maps_.size(); ++i) {
+    const Mapping &m = maps_[i];
     rel = va - m.base;
     if (rel < m.size && len <= m.size - rel) {
       if (write && m.readonly) break;
+      last_ = i;
       return m.host + rel;
     }
   }

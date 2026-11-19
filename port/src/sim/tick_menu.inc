@@ -361,6 +361,11 @@ int Session(u32 F, int sel) {
     int flags = G32(GS(g_flags));                    // ML+0x545
     G32(GS(g_panelListMode)) = 5;                             // ML+0x54a
     G32((GS(g_rootInput) + 52)) = -1;                            // ML+0x559
+    // P38B: the challenge / championship and the load paths play the original's 50 x 50 world; only a new sandbox course takes
+    // the app's --world-size (ctx.world_request, play profile)
+    const int32_t want_n = (flags & 0x4000000) == 0 && G32(GS(g_difficulty)) != 6 && ctx.world_request != 0 ? ctx.world_request
+                                                                                                          : portsim::kWorldOriginal;
+    if (want_n != WN && (want_n == portsim::kWorldOriginal)) portsim::world_resize(ctx, want_n);
     if (flags & 0x4000000) {                        // ML+0x554 test eax,4000000; ML+0x563 je (the championship flag)
         if (cc("startNewCourse") == 0) {                  // ML+0x565 startNewCourse(); ML+0x56c jne skips this
             G32(GS(g_flags)) &= 0xFBFFFFFF;          // ML+0x56e clear the championship flag
@@ -382,7 +387,11 @@ int Session(u32 F, int sel) {
             return sMenu;
         GU8(GS(g_courseType)) = GU8((GS(g_courseTable) + 32) + (r + (menu_neg() == 3 ? 1 : 0)) * 46); // ML+0x5f5..ML+0x604 byte[g_courseTable+0x20 + result*46] (edx=r*23, *2)
         cc("loadWorldAssets");                             // ML+0x609 loadWorldAssets()
-        cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result)
+        if (want_n != WN) portsim::world_resize(ctx, want_n);   // P38B: the new sandbox course's world (after the course menu)
+        if (WN != portsim::kWorldOriginal)
+            portsim::generate_flat_course(ctx, G32(GS(g_courseIndex)));   // P38B: N > 50 starts flat (phase C: the generator)
+        else
+            cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result)
         cc("rebuildHeightfield");                             // ML+0x61d rebuildHeightfield()
         int f2 = G32(GS(g_flags));                   // ML+0x622
         G32(GS(g_buildingUnlockLevel)) = menu_neg() == 4 ? 7 : 6;  // ML+0x627

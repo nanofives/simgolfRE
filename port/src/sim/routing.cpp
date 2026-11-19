@@ -634,6 +634,7 @@ void hole_jump_camera(Ctx &ctx, uint32_t rec, int32_t hole) {
   {
     const uint32_t cache = grid_va(ctx, &GameState::g_tileScreenX);
     for (uint32_t i = 0; i < u32(grid_dwords(ctx, 2)); ++i) ctx.mem.store<uint32_t>(cache + 4u * i, 0);  // 0x4e2 at 50
+    grid_fill_tail(ctx, cache, 2, 0);  // P38B: odd N
   }
   gs.g_msgState53df54 = 0;
   if (ctx.view && call_peer(ctx, "tileToScreen", {m.load<uint32_t>(rec + 0x18), m.load<uint32_t>(rec + 0x1c), kPortViewHoleOutXVa,

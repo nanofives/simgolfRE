@@ -291,6 +291,7 @@ class LiveTerrain : public TerrainApi {
   uint32_t render_strip(int32_t x, int32_t y, int32_t dx, int32_t dy, int32_t rot, int32_t zoom) override;
   uint32_t operator_new(uint32_t size) override;
   uint32_t get_instance() override;
+  void world_resized(int32_t n) override;   // P38B: the object and the arrays re-made at N (terrain_regrow)
   uint32_t reset_terrain(uint32_t self) override;
 
   struct Snapshot {

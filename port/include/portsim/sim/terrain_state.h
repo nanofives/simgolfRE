@@ -119,6 +119,11 @@ constexpr int32_t kTerrainTextureTypes = 0x25, kTerrainTextureVariations = 0x19,
 // Terrain::Terrain(width, height)'s state part over a mapped block (the GL part, relight, is terrain_gl_construct): header fields,
 // Tile::reset of every tile, type counts 0, the texture table zeroed, g_collarInfo NULL, course type 0, and the type names.
 void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t width, int32_t height);
+// P38B (world.h world_resize, port-only): the object at `fresh` (terrain_object_size(ctx) bytes, mapped) takes over from `old`:
+// the header (GL context, zoom, textures loaded, the texture types) is copied, width / height become N, the N * N tiles are
+// constructed and reset and the draw list starts empty; the vertex / normal arrays are sized (3 N)^2. The textures, the collar
+// table and the course type in `g` are kept (the course's next refreshTerrain rebuilds the arrays).
+void terrain_regrow(Ctx &ctx, TerrainGlobals &g, uint32_t old, uint32_t fresh);
 // What the GL setup leaves in the object (relight's type counts, initSystem's flip flag, resize's window size, setZoomLevel's
 // zoom, the textures-loaded flag) and in the globals (texture table, course type).
 void terrain_apply_gl_state(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, const TerrainGlState &st);

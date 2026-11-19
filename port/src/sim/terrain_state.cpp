@@ -468,6 +468,35 @@ void terrain_pass_collar_info(TerrainGlobals &g, const int32_t *table, int32_t n
   g.collar.assign(table, table + (n > 0 ? n : 0));
 }
 
+void terrain_regrow(Ctx &ctx, TerrainGlobals &g, uint32_t old, uint32_t fresh) {
+  if (old != 0) rep_movs(ctx.mem, fresh, old, kTerrainTilesOffset);   // the header
+  const int32_t n = world_n(ctx);
+  const auto h = hdr_p(ctx, fresh);
+  for (int32_t i = 0; i < terrain_max_tiles(ctx); ++i) {   // Tile::Tile's members (terrain_construct)
+    const TileP t = tile_p(ctx, fresh + kTerrainTilesOffset + static_cast<uint32_t>(i) * static_cast<uint32_t>(sizeof(TerrainTile)));
+    t.field(&TerrainTile::face_count).set(0);
+    t.field(&TerrainTile::connected).set(0);
+    t.field(&TerrainTile::has_path).set(0);
+    t.field(&TerrainTile::draw_path).set(0);
+    for (int32_t k = 0; k < 4; ++k) t.field(&TerrainTile::path_b3).at(k).set(0);
+    const auto on = t.field(&TerrainTile::wall_on);
+    on.at(0).set(0);
+    on.at(2).set(0);
+    on.at(6).set(0);
+    on.at(4).set(0);
+  }
+  h.field(&TerrainObjectHeader::width).set(n);
+  h.field(&TerrainObjectHeader::height).set(n);
+  for (int32_t x = 0; x < n; ++x)
+    for (int32_t y = 0; y < n; ++y)
+      tile_reset(ctx, fresh + kTerrainTilesOffset + static_cast<uint32_t>(x + y * n) * static_cast<uint32_t>(sizeof(TerrainTile)), x, y);
+  VPtr<uint8_t>(ctx.mem, fresh + terrain_draw_list_offset(ctx)).set(0xcc);
+  VPtr<uint32_t>(ctx.mem, fresh + terrain_draw_list_offset(ctx) + 4).set(kListHeadToken);
+  VPtr<uint32_t>(ctx.mem, fresh + terrain_draw_list_offset(ctx) + 8).set(0u);
+  g.vertices.assign(terrain_vertex_count(ctx) * 3, 0.0f);
+  g.normals.assign(terrain_vertex_count(ctx) * 3, 0.0f);
+}
+
 void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t width, int32_t height) {
   const auto h = hdr_p(ctx, terrain);
   // the member constructors first: the vector constructor of the 0x9c4 tiles (N * N: terrain_max_tiles) runs Tile::Tile, whose members Faces (count 0),

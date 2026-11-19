@@ -14,6 +14,7 @@
 #include "commands_internal.h"
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"  // P38B: loads return to the 50 x 50 world
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/course.h"
@@ -260,6 +261,7 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   f.read(ctx, text, 0x64);
   if (championship != 0 && mode != 7) f.read(ctx, text, 0x64);
   if (header_only != 0 && mode != 3) return f.close(ctx);
+  if (world_n(ctx) != kWorldOriginal) world_resize(ctx, kWorldOriginal);  // P38B: a .sve holds the 50 x 50 world
   serialize_course(ctx, f, mode == 8 ? 0 : 1);
   f.close(ctx);
   course_undo_reset(ctx);  // P11D: the loaded course's tiles are not the journal's (mainLoop.courseUndo = 0 only)
@@ -298,6 +300,7 @@ int32_t load_course(Ctx &ctx, int32_t mode) {
   }
   f.read(ctx, text, 0x64);
   if (mode == 3 && neg != 1) return f.close(ctx);
+  if (world_n(ctx) != kWorldOriginal) world_resize(ctx, kWorldOriginal);  // P38B: a course file holds the 50 x 50 world
   deserialize_course(ctx, f, 1);
   course_undo_reset(ctx);  // P11D (mainLoop.courseUndo = 0 only)
   // eight trailing bytes are read over the frame's path slot and the position asked (_tell): no state

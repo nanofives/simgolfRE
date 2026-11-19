@@ -502,7 +502,9 @@ int32_t load_interface_art(Ctx &ctx, int32_t full) {
   gs.g_holesPlusOne = 1;
   fill(va(&GameState::g_holePoints), 0x72, 0xFFFFFFFFu);
   fill(grid_va(ctx, &GameState::g_tileFlags), u32(grid_dwords(ctx, 2)), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_tileFlags), 2, 0);  // P38B: odd N
   fill(grid_va(ctx, &GameState::g_ballStopCount), u32(grid_dwords(ctx, 1)), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_ballStopCount), 1, 0);
   const uint32_t corners = grid_va(ctx, &GameState::g_cornerLevel);
   // the vertex grid: (N + 1)^2 / 4 dwords (0x28a at 50) then the remaining (N + 1)^2 % 4 bytes (one at 50)
   const uint32_t corner_dwords = u32(world_verts(ctx) / 4);

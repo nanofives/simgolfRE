@@ -98,6 +98,7 @@ void set_land_offer_credits(Ctx &ctx, int32_t n) {
 }
 
 namespace {
+int32_t buy_lot_tiles(Ctx &ctx, int32_t sel);  // P38B (below)
 
 using cm::call_peer;
 using cm::cat;
@@ -440,20 +441,31 @@ struct BuyLand {
       const int32_t yr = add32(static_cast<int16_t>(gs.g_year) % 100, mode() == 8 ? 1 : 0);
       const uint32_t fin = state_va(ctx, &GameState::g_financeYears) + 0xe + u32(mul32(yr, 20));
       m.store<int16_t>(fin, static_cast<int16_t>(m.load<int16_t>(fin) - static_cast<int16_t>(price)));
-      const int32_t L = world_lot(ctx);
-      const int32_t r0 = add32(mul32(sel % 3, L), 1), c0 = add32(mul32(sel / 3, L), 1);
-      const uint32_t tiles = grid_va(ctx, &GameState::g_tileType), types = grid_va(ctx, &GameState::g_tileTypeSaved);
-      if (mode() != 3)
-        for (int32_t c2 = 0; c2 < L; ++c2)
-          for (int32_t k = 0; k < L; ++k) {
-            const uint32_t idx = u32(add32(add32(mul32(add32(r0, k), world_n(ctx)), c2), c0));
-            if (m.load<int8_t>(tiles + idx) == 0x14) m.store<int8_t>(tiles + idx, m.load<int8_t>(types + idx));
-          }
+      if (mode() != 3) buy_lot_tiles(ctx, sel);
       call_peer(ctx, "logTick", {mode() == 5 ? 0x141u : 0x140u, u32(sel)});
       return 1;
     }
   }
 };
+
+// the purchase's tiles: lot `sel` (rows (sel % 3) * L + 1 .., columns (sel / 3) * L + 1 .., L = world_lot) turns each for-sale
+// tile (type 0x14) into the type g_tileTypeSaved holds for it (P38B: a function of its own, "buyLotTiles" for the tests)
+int32_t buy_lot_tiles(Ctx &ctx, int32_t sel) {
+  const Memory &m = ctx.mem;
+  const int32_t L = world_lot(ctx);
+  const int32_t r0 = add32(mul32(sel % 3, L), 1), c0 = add32(mul32(sel / 3, L), 1);
+  const uint32_t tiles = grid_va(ctx, &GameState::g_tileType), types = grid_va(ctx, &GameState::g_tileTypeSaved);
+  int32_t n = 0;
+  for (int32_t c2 = 0; c2 < L; ++c2)
+    for (int32_t k = 0; k < L; ++k) {
+      const uint32_t idx = u32(add32(add32(mul32(add32(r0, k), world_n(ctx)), c2), c0));
+      if (m.load<int8_t>(tiles + idx) == 0x14) {
+        m.store<int8_t>(tiles + idx, m.load<int8_t>(types + idx));
+        ++n;
+      }
+    }
+  return n;
+}
 
 // syncTiles (c3ey.cpp SyncTiles_re), the frame's first call after a purchase (mainLoop's land popup): per column x = N - 1 .. 0 the
 // input pump (TerrainApi::pump_input, as rebuildTerrainGrid), then per y = N - 1 .. 0 the Terrain tile (x, y) (the exe's inline
@@ -491,6 +503,8 @@ int32_t sync_tiles(Ctx &ctx) {
 }
 
 const FuncDef kFuncs[] = {
+    {"buyLotTiles", "default", "int", 1, 0, [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(buy_lot_tiles(c, static_cast<int32_t>(a[0]))); },
+     &g_negctl_sync_tiles},  // P38B: port-only (the tests' far-lot purchase)
     {"syncTiles", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(sync_tiles(c)); },
      &g_negctl_sync_tiles},
     {"showBuyLandScreen", "default", "int", 0, 0,

@@ -288,7 +288,8 @@ int32_t spawn_walker(Ctx &ctx, int32_t kind) {
   w.field(&Walker::kind).set(static_cast<int8_t>(kind));
   w.field(&Walker::anim_seq).set(0xb);
   w.field(&Walker::wait).set(static_cast<int16_t>(random_range(rng(ctx), 0x20)));
-  w.field(&Walker::post_x).set(-1);
+  if (ctx.world_n > 127) set_walker_post(ctx, idx, 1, 0);  // P38B: the side table follows the record's zero fill
+  set_walker_post(ctx, idx, 0, -1);
   return idx;
 }
 

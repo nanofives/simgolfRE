@@ -43,6 +43,8 @@ class Memory {
   bool set_data_base(uint32_t base);
   bool map(uint32_t base, uint8_t *host, uint32_t size, bool readonly);
   void unmap_all() { maps_.clear(); }
+  // P38B: drop the mapping that starts at `base` (true when there was one)
+  bool unmap(uint32_t base);
 
   // host pointer to [va, va + len), or throws Fault
   uint8_t *at(uint32_t va, uint32_t len, bool write = false) const;
@@ -65,6 +67,7 @@ class Memory {
   uint32_t state_size_;
   uint32_t data_base_ = 0x20000000u;
   std::vector<Mapping> maps_;
+  mutable size_t last_ = 0;  // P38B: the mapping the previous non-state access hit (tried first; the side blocks)
 };
 
 class ExeConstants;  // portsim/execonst.h
@@ -98,8 +101,19 @@ class Ctx {
   std::shared_ptr<void> lowio;
   // P8B: the view block's host memory (bridge.h view_map; empty until mapped)
   std::shared_ptr<void> view;
-  // P38A: the world's tiles a side (portsim/sim/world.h; the original's 50, nothing sets another value yet)
+  // P38A: the world's tiles a side (portsim/sim/world.h; the original's 50)
   int32_t world_n = 50;
+  // P38B: the side storage of N != 50 (world.h world_resize): grid g's element 0 sits at clusters[k].va + (offset of g in the
+  // GameState - clusters[k].lo) * world_scale for the cluster holding g; `world_side` owns the host blocks, walker posts and the
+  // path ring (world.cpp WorldSide)
+  struct WorldCluster {
+    uint32_t lo = 0, hi = 0, va = 0;
+  };
+  uint32_t world_scale = 0;
+  int32_t world_nclusters = 0;
+  WorldCluster world_clusters[4];
+  std::shared_ptr<void> world_side;
+  int32_t world_request = 0;  // P38B: the app's --world-size for the next new sandbox course (0 = 50)
 
  private:
   std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it

@@ -2092,3 +2092,15 @@ controls 2 / 2 RED (tile_index with N read as 51: 184 / 205 segments fail; the t
 files and oracles that ran pass (failures identical on the base: emptied log/ data of 2026-11-18, test_commands' memory cap).
 Open for phase B: odd N tails in whole-grid clears, HeadlessTerrain's 16 MB arena under 23 MB at 200, int8 walker posts and the
 undo journal's uint8 x / y, pathStep's 1,024-entry ring.
+
+## P38B: the first world larger than 50 (2026-11-19; notes log/roadmap/P38/P38B_notes.md)
+`--world-size N` (play profile only, (N - 2) % 3 == 0) starts a new sandbox course at N in side storage (grid addresses computed,
+no per-access lookup; Memory::at tries the last mapping first), the Terrain object and vertex arrays rebuilt at N (live and
+headless), the path ring N^2, walker posts widened above 127, odd-N clear tails. A flat course: grass, the clubhouse at the
+centre, the owned square in the same proportion as at 50, the rest for sale in 3 x 3 lots of (N - 2) / 3. Loads, challenges and
+championships return to 50. world.h costs no frame time (P38A's 73 % paint reading was machine load: alternating runs moved
+together; sim segment time 0.975 / 0.989 of fd1fd6c5). Evidence: segments x64 and Win32 205 / 205; test_p38b_world 4 / 4 (a far
+lot bought, a hole at (150, 150), a golfer walking there; control RED); 1080 drive at 152 clean; corner screenshots.
+At 152: tick rate holds at ~10.5 / s, sim per tick 2.2-4.2x (the per-tile frame pass over 23,104 tiles: phase G), paint 76 / 36 /s
+while scrolling. Not yet right at 152: the F5 map's diamonds overflow (F), the play camera follows the owned land (F), the
+buy-land screen not opened (E), saving writes 50 x 50 grids (D), 101 untested.

@@ -115,9 +115,8 @@ int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t
       (type + i32(at)).set(static_cast<int8_t>((k == 3 && mode != 2) ? 7 : 1));
     }
   } else if (kind == 0xF) {
-    const Ptr<Walker> w0 = state_arr(ctx, &GameState::g_walkers);
-    w0.field(&Walker::post_x).set(static_cast<int8_t>(x + 1));
-    w0.field(&Walker::post_y).set(static_cast<int8_t>(y + 1));
+    set_walker_post(ctx, 0, 0, x + 1);   // P38B: through world.h (stored as int8 while N <= 127)
+    set_walker_post(ctx, 0, 1, y + 1);
   }
   if (flags < 0) return 0;
   const int32_t base = add32(y, mul32(world_n(ctx), x));

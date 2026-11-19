@@ -75,6 +75,9 @@ def _sig(dll):
         ("sg_func_info_get", C.c_int, [I32, C.POINTER(SgFuncInfo)]), ("sg_func_find", I32, [C.c_char_p]),
         ("sg_call", C.c_int, [P, C.c_char_p, C.POINTER(U32), I32, C.POINTER(SgRet)]),
         ("sg_set_fpcw", C.c_int, [U32]),
+        # P38B: the world size
+        ("sg_world_resize", C.c_int, [P, I32]), ("sg_world_n", I32, [P]), ("sg_grid_va", U32, [P, C.c_char_p]),
+        ("sg_mem_read", C.c_int, [P, U32, P, U32]), ("sg_mem_write", C.c_int, [P, U32, P, U32]),
         ("sg_negctl_set", C.c_int, [C.c_char_p, I32]), ("sg_negctl_get", I32, [C.c_char_p]),
         ("sg_negctl_reset", None, []),
         ("sg_object_count", I32, [C.c_char_p]), ("sg_object_name", C.c_char_p, [C.c_char_p, I32]),
@@ -306,6 +309,30 @@ class State:
         buf = C.create_string_buffer(max(1, n))
         got = int(self.lib.dll.sg_files_read(self.ctx, name.encode(), 0, buf, n))
         return None if got < 0 else buf.raw[:got]
+
+    # ---- P38B: the world size (portsim/sim/world.h)
+    def world_resize(self, n: int):
+        r = self.lib.dll.sg_world_resize(self.ctx, n)
+        if r != SG_OK:
+            raise SgError(r, f"world_resize {n}")
+
+    def world_n(self) -> int:
+        return int(self.lib.dll.sg_world_n(self.ctx))
+
+    def grid_va(self, grid: str) -> int:
+        return int(self.lib.dll.sg_grid_va(self.ctx, grid.encode()))
+
+    def mem_read(self, va: int, n: int) -> bytes:
+        buf = C.create_string_buffer(max(1, n))
+        r = self.lib.dll.sg_mem_read(self.ctx, va & 0xFFFFFFFF, buf, n)
+        if r != SG_OK:
+            raise SgError(r, f"mem_read {va:#x}")
+        return buf.raw[:n]
+
+    def mem_write(self, va: int, data: bytes):
+        r = self.lib.dll.sg_mem_write(self.ctx, va & 0xFFFFFFFF, data, len(data))
+        if r != SG_OK:
+            raise SgError(r, f"mem_write {va:#x}")
 
     # ---- calls and hashes
     def call(self, name: str, args: list[int]) -> SgRet:

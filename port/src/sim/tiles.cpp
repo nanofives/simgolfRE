@@ -2,7 +2,12 @@
 // notes, disassembly-level transcriptions in those notes, vector corpus); no original address or code.
 #include "portsim/sim/tiles.h"
 
+#include <algorithm>
+#include <memory>
+#include <vector>
+
 #include "portsim/ptr.h"
+#include "portsim/sim/terrain_api.h"  // P38B: world_resize tells the Terrain
 #include "portsim/sim/util.h"
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
@@ -191,5 +196,136 @@ const FuncDef kFuncs[] = {
 }  // namespace
 
 extern const ModuleDef kModule_tiles = {"tiles", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+
+// ================================================================================================ P38B: the world size
+// The world size's side storage (P38B, 2026-11-19; plan re/roadmap/P38_LARGE_MAPS.md phase B; portsim/sim/world.h).
+//
+// The GameState's grids hold the original's 50 x 50 world (their offsets are pinned). For N != 50 world_resize maps side blocks:
+// the grids sorted by GameState offset are grouped into clusters (a gap above kClusterGap starts a new one), and each cluster is
+// ONE zeroed host block at a free virtual address in which grid g's element 0 sits at (offset(g) - cluster lo) * scale + pad.
+// scale = ceil(entries at N / entries at 50) + 1 over every grid, so a grid's N-sized block ends before the next grid's
+// starts, with at least one 50-sized grid of zero bytes between them (the original's unchecked neighbour reads land there).
+// grid_va is then arithmetic: no lookup per access. The path ring and the walker posts are side tables of their own.
+
+namespace {
+constexpr uint32_t kClusterGap = 0x40000;   // grids further apart than this go to separate clusters
+constexpr uint32_t kSideBase = 0x60000000u;  // the first address tried for the side blocks (64 KB steps after it)
+constexpr int32_t kWalkers = static_cast<int32_t>(sizeof(GameState::g_walkers) / sizeof(Walker));
+
+struct GridInfo {
+  uint32_t off, entries50, elem;  // offset in the GameState, entries at 50, bytes per entry
+};
+
+std::vector<GridInfo> grids() {
+  GameState *g = nullptr;  // offsets only
+  const auto off = [&](const void *p) { return static_cast<uint32_t>(reinterpret_cast<const uint8_t *>(p) - reinterpret_cast<const uint8_t *>(g)); };
+  std::vector<GridInfo> v;
+#define SG_G(m) v.push_back({off(&g->m[0]), static_cast<uint32_t>(sizeof(g->m) / sizeof(g->m[0])), static_cast<uint32_t>(sizeof(g->m[0]))})
+  SG_G(g_cornerCache); SG_G(g_tilePathCost); SG_G(g_tileFlags); SG_G(g_ballStopCount); SG_G(g_tileTypeSaved);
+  SG_G(g_tileLevel); SG_G(g_tileScreenX); SG_G(g_tileScreenY); SG_G(g_tileWallMask); SG_G(g_tileVariant);
+  SG_G(g_tileMoodDown); SG_G(g_tileType); SG_G(tile_anim_frame); SG_G(g_tileBuildCode); SG_G(g_pathGrid);
+  SG_G(g_tileRefund); SG_G(g_cornerLevel); SG_G(g_tileMoodUp); SG_G(g_tileShadeA); SG_G(g_tileShadeB);
+#undef SG_G
+  std::sort(v.begin(), v.end(), [](const GridInfo &a, const GridInfo &b) { return a.off < b.off; });
+  return v;
+}
+
+struct WorldSide {
+  Memory *mem = nullptr;
+  std::vector<std::vector<uint8_t>> blocks;  // one per cluster, then the ring
+  std::vector<uint32_t> bases;
+  uint32_t ring_va = 0, ring_entries = 0;
+  std::vector<int16_t> posts;  // 2 per walker (x, y) when N > 127
+  // no destructor unmapping: the Ctx's Memory is destroyed before its world_side (world_resize unmaps explicitly)
+};
+
+WorldSide *side(const Ctx &c) { return static_cast<WorldSide *>(c.world_side.get()); }
+
+// a free address for `size` bytes at or after `from` (Memory::map refuses overlaps)
+uint32_t map_free(Memory &m, uint8_t *host, uint32_t size, uint32_t from) {
+  for (uint64_t base = from; base + size < 0xF0000000ull; base += 0x10000u)
+    if (m.map(static_cast<uint32_t>(base), host, size, false)) return static_cast<uint32_t>(base);
+  throw MissingResource{"world_resize: no free address range for the side storage"};
+}
+}  // namespace
+
+bool world_size_ok(int32_t n) { return n == kWorldOriginal || (n > kWorldOriginal && n <= 256 && (n - 2) % 3 == 0); }
+
+bool world_resize(Ctx &c, int32_t n) {
+  if (!world_size_ok(n)) return false;
+  if (WorldSide *old = side(c))
+    for (uint32_t b : old->bases) c.mem.unmap(b);
+  c.world_side.reset();
+  c.world_nclusters = 0;
+  c.world_scale = 0;
+  c.world_n = n;
+  if (n != kWorldOriginal) {
+    const std::vector<GridInfo> gs = grids();
+    uint32_t scale = 1;
+    for (const GridInfo &g : gs) {
+      const uint32_t need = g.entries50 == kGridVerts ? static_cast<uint32_t>(world_verts(c))
+                            : g.entries50 == 8 * kGridTiles ? 8u * static_cast<uint32_t>(world_tiles(c))
+                                                           : static_cast<uint32_t>(world_tiles(c));
+      scale = std::max(scale, (need + g.entries50 - 1) / g.entries50 + 1);
+    }
+    auto s = std::make_shared<WorldSide>();
+    s->mem = &c.mem;
+    const uint32_t pad = 2u * static_cast<uint32_t>(n + 1) * 8u;  // zero bytes before a cluster's first grid
+    uint32_t from = kSideBase;
+    for (size_t i = 0; i < gs.size();) {
+      size_t j = i + 1;
+      while (j < gs.size() && gs[j].off - (gs[j - 1].off + gs[j - 1].entries50 * gs[j - 1].elem) < kClusterGap) ++j;
+      const uint32_t lo = gs[i].off, hi = gs[j - 1].off + gs[j - 1].entries50 * gs[j - 1].elem;
+      const uint32_t size = (hi - lo) * scale + 2 * pad;
+      s->blocks.emplace_back(size, 0);
+      const uint32_t va = map_free(c.mem, s->blocks.back().data(), size, from);
+      s->bases.push_back(va);
+      from = va + size + 0x10000u;
+      if (c.world_nclusters >= 4) throw MissingResource{"world_resize: more than 4 grid clusters"};
+      c.world_clusters[c.world_nclusters++] = Ctx::WorldCluster{lo, hi, va + pad};
+      i = j;
+    }
+    c.world_scale = scale;
+    // pathStep's ring: the next power of two >= N * N entries per axis
+    uint32_t r = 1;
+    while (r < static_cast<uint32_t>(world_tiles(c))) r <<= 1;
+    s->ring_entries = r;
+    s->blocks.emplace_back(static_cast<size_t>(r) * 2u * 2u, 0);
+    s->ring_va = map_free(c.mem, s->blocks.back().data(), r * 4u, from);
+    s->bases.push_back(s->ring_va);
+    if (n > 127) s->posts.assign(static_cast<size_t>(kWalkers) * 2u, -1);
+    c.world_side = s;
+  }
+  if (has_terrain_api(c)) terrain_api(c).world_resized(n);
+  return true;
+}
+
+uint32_t world_ring_va(Ctx &c, int axis) {
+  if (c.world_n == kWorldOriginal || !side(c))
+    return axis == 0 ? state_va(c, &GameState::g_pathQueueX) : state_va(c, &GameState::g_pathQueueY);
+  return side(c)->ring_va + (axis == 0 ? 0u : side(c)->ring_entries * 2u);
+}
+uint32_t world_ring_mask(const Ctx &c) {
+  if (c.world_n == kWorldOriginal || !side(c)) return 0x3FF;
+  return side(c)->ring_entries - 1;
+}
+
+int32_t walker_post(Ctx &c, int32_t walker, int axis) {
+  WorldSide *s = side(c);
+  if (c.world_n <= 127 || !s || s->posts.empty()) {
+    const Ptr<Walker> w = state_arr(c, &GameState::g_walkers) + walker;
+    return axis == 0 ? w.field(&Walker::post_x).get() : w.field(&Walker::post_y).get();
+  }
+  return s->posts[static_cast<size_t>(walker) * 2u + static_cast<size_t>(axis)];
+}
+void set_walker_post(Ctx &c, int32_t walker, int axis, int32_t v) {
+  WorldSide *s = side(c);
+  if (c.world_n <= 127 || !s || s->posts.empty()) {
+    const Ptr<Walker> w = state_arr(c, &GameState::g_walkers) + walker;
+    (axis == 0 ? w.field(&Walker::post_x) : w.field(&Walker::post_y)).set(static_cast<int8_t>(v));
+    return;
+  }
+  s->posts[static_cast<size_t>(walker) * 2u + static_cast<size_t>(axis)] = static_cast<int16_t>(v);
+}
 
 }  // namespace portsim

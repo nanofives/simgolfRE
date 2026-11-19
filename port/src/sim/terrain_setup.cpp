@@ -66,6 +66,7 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   fill_dwords(ctx, va(&GameState::g_objectTypeLevel), 0x14, 0);
   fill_dwords(ctx, va(&GameState::g_activeObjectLevel), 0x14, 0);
   fill_dwords(ctx, grid_va(ctx, &GameState::tile_anim_frame), grid_dwords(ctx, 1), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::tile_anim_frame), 1, 0);  // P38B: odd N
   fill_dwords(ctx, va(&GameState::g_golfers), 0x2700, 0);
   fill_dwords(ctx, va(&GameState::g_holes), 0xA28, 0);
   fill_dwords(ctx, va(&GameState::g_walkers), 0x4C0, 0);
@@ -75,15 +76,19 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   fill_dwords(ctx, va(&GameState::g_scenicDedications), 0xC8, 0xFFFFFFFFu);
   fill_dwords(ctx, va(&GameState::g_skyActors), 0x10, 0xFFFFFFFFu);
   fill_dwords(ctx, grid_va(ctx, &GameState::g_tileFlags), grid_dwords(ctx, 2), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_tileFlags), 2, 0);  // P38B: odd N
   fill_dwords(ctx, grid_va(ctx, &GameState::g_tileVariant), grid_dwords(ctx, 1), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_tileVariant), 1, 0);  // P38B: odd N
   fill_dwords(ctx, va(&GameState::g_golferTypeState), 0x39C, 0);
   fill_dwords(ctx, va(&GameState::g_ballTrailX), 0x98, 0xFFFFFFFFu);
   fill_dwords(ctx, grid_va(ctx, &GameState::g_tileBuildCode), grid_dwords(ctx, 1), 0xFFFFFFFFu);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_tileBuildCode), 1, 0xFFFFFFFFu);  // P38B: odd N
   course_undo_reset(ctx);  // P11D: a new course, no edit to undo (mainLoop.courseUndo = 0 only)
   fill_dwords(ctx, va(&GameState::g_bestRounds), 0xA, 0);
   fill_dwords(ctx, va(&GameState::g_holePoints), 0x72, 0xFFFFFFFFu);
   ctx.mem.store<uint16_t>(va(&GameState::g_skillMaskBlock) + 8, 0);
   fill_dwords(ctx, grid_va(ctx, &GameState::g_ballStopCount), grid_dwords(ctx, 1), 0);
+  grid_fill_tail(ctx, grid_va(ctx, &GameState::g_ballStopCount), 1, 0);  // P38B: odd N
   call_peer(ctx, "clearBuffers", {});
   fill_dwords(ctx, va(&GameState::g_eventHistory), 0xFA, 0);
   for (int32_t i = 0; i < 152; ++i) g.g_golfers[i].partner = -1;

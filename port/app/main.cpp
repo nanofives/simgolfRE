@@ -139,6 +139,9 @@
 //   P37A: --hole-advice on|off (default on; SG_APP_P37=off: off) the Hole Stats screen gets the hole advisor panel under its art:
 //   the magazine awards' progress, the score band, the skills and hole type, fun and complaints, variety, money (holeadvice.h,
 //   gfx.h gfx_set_hole_advice; drawing only; re/roadmap/P37_HOLE_ADVISOR.md)
+//   P38B: --world-size N (play profile only; default 50; N with (N - 2) % 3 == 0, 50 .. 254) a NEW sandbox course starts on an
+//   N x N world (a flat course until phase C: terrain_gen.h generate_flat_course); loads, challenges and championships stay 50
+//   (world.h world_resize; re/roadmap/P38_LARGE_MAPS.md phase B)
 //   P35D fix 2: --edge-backdrop on|off (default on; SG_APP_P35=off: off; the world layer) past the land's edge the course view shows
 //   a dark blue-grey backdrop, RGB555 (5, 6, 8), instead of black: the world layer's root is filled with it before its terrain
 //   passes, so the slid pictures, the last paint and the ground cache carry it too; screens without terrain keep their black
@@ -424,6 +427,7 @@
 #include "portsim/state_hash.h"
 #include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
 #include "portsim/sim/terrain_live.h"  // P35D: terrain_world_set_reach
+#include "portsim/sim/world.h"  // P38B: --world-size
 #include "portsim/sim/live.h"
 #include "portsim/sim/shots.h"  // P32D item 7: shot_margin_set
 #include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (the camera slide's clock)
@@ -679,6 +683,7 @@ struct Options {
   bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
   bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
+  int world_size = 50;             // P38B: --world-size N (play profile only)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1442,6 +1447,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9
       if (ok && o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2
       if (ok && o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A
+      if (ok && o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B
       if (ok && o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
@@ -1740,6 +1746,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9: the grading page's row tips (gfx.h; drawing only)
   if (o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2: why a golfer stands (gfx.h; drawing only)
   if (o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A: the hole advisor panel (gfx.h; drawing only)
+  if (o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B: the next new sandbox course's N
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
@@ -1866,6 +1873,12 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         const int k = portsim::defect_find(sw);
         if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
       }
+    // development (P38B's corner shots): SG_P38B_CAMFULL=1 puts mainLoop.cameraBoundByZoom back to the original's 1 (the camera
+    // clamped to 0 .. N - 1 per axis, not to the land): the for-sale corners of a large world can be looked at
+    if (std::getenv("SG_P38B_CAMFULL") && std::atoi(std::getenv("SG_P38B_CAMFULL")) == 1) {
+      const int k = portsim::defect_find("mainLoop.cameraBoundByZoom");
+      if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+    }
     // development (P35C's A / B): SG_P35_GRID=0 puts mainLoop.gridEdgeCorners back to the original's 1 for this run
     if (std::getenv("SG_P35_GRID") && std::atoi(std::getenv("SG_P35_GRID")) == 0) {
       const int k = portsim::defect_find("mainLoop.gridEdgeCorners");
@@ -3925,6 +3938,14 @@ bool parse(int argc, char **argv, Options &o) {
     if (a == "--wait-reasons") {  // P36B part 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.wait_reasons = v == "on";
+      continue;
+    }
+    if (a == "--world-size") {  // P38B (before the chain too)
+      if (!val(v)) return false;
+      char *end = nullptr;
+      const long n = std::strtol(v.c_str(), &end, 10);
+      if (end == v.c_str() || *end != 0 || !portsim::world_size_ok(static_cast<int32_t>(n))) return false;
+      o.world_size = static_cast<int>(n);
       continue;
     }
     if (a == "--hole-advice") {  // P37A (before the chain too)

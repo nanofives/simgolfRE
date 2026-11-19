@@ -87,6 +87,14 @@ SG_API int sg_call(sg_ctx *ctx, const char *name, const uint32_t *args, int32_t 
 /* x87 control word for the calling thread: Win32 sets it; x64 (SSE2 doubles) accepts only 0x027f-equivalent
  * precision/rounding (53-bit, nearest) and returns SG_E_UNSUPPORTED otherwise */
 SG_API int sg_set_fpcw(uint32_t cw);
+/* P38B: the world size (portsim/sim/world.h): world_resize (50, or N > 50 with (N - 2) % 3 == 0: the side storage; SG_E_ARG for
+   another N), the current N, a grid's element-0 address by member name (0 = not a grid), and reads / writes of the context's
+   address space by virtual address (SG_E_FAULT outside every mapping) */
+SG_API int sg_world_resize(sg_ctx *ctx, int32_t n);
+SG_API int32_t sg_world_n(sg_ctx *ctx);
+SG_API uint32_t sg_grid_va(sg_ctx *ctx, const char *grid);
+SG_API int sg_mem_read(sg_ctx *ctx, uint32_t va, void *buf, uint32_t len);
+SG_API int sg_mem_write(sg_ctx *ctx, uint32_t va, const void *buf, uint32_t len);
 
 /* ---- negative controls: deliberately wrong bodies, selected at run time (never a fixed-address page) ---- */
 SG_API int sg_negctl_set(const char *name, int32_t mode); /* mode 0 = correct body; returns previous mode */

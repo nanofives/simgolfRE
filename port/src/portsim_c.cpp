@@ -19,6 +19,7 @@
 #include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/terrain_live.h"
+#include "portsim/sim/world.h"  // P38B: sg_world_*
 #include "portsim/sim/terrain_state.h"
 #include "portsim/sim/live.h"
 #include "portsim/sim/tick.h"
@@ -191,6 +192,48 @@ int sg_call(sg_ctx *ctx, const char *name, const uint32_t *args, int32_t nargs, 
   out->st0 = r.st0;
   out->has_st0 = r.has_st0 ? 1 : 0;
   return SG_OK;
+}
+
+int sg_world_resize(sg_ctx *ctx, int32_t n) {
+  if (!ctx || !portsim::world_size_ok(n)) return SG_E_ARG;
+  try {
+    return portsim::world_resize(ctx->ctx, n) ? SG_OK : SG_E_ARG;
+  } catch (const portsim::Fault &) {
+    return SG_E_FAULT;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+}
+int32_t sg_world_n(sg_ctx *ctx) { return ctx ? portsim::world_n(ctx->ctx) : 0; }
+uint32_t sg_grid_va(sg_ctx *ctx, const char *grid) {
+  if (!ctx || !grid) return 0;
+  const std::string g(grid);
+  portsim::Ctx &c = ctx->ctx;
+#define SG_GRID(m)   if (g == #m) return portsim::grid_va(c, &portsim::GameState::m);
+  SG_GRID(g_cornerCache) SG_GRID(g_tilePathCost) SG_GRID(g_tileFlags) SG_GRID(g_ballStopCount) SG_GRID(g_tileTypeSaved)
+  SG_GRID(g_tileLevel) SG_GRID(g_tileScreenX) SG_GRID(g_tileScreenY) SG_GRID(g_tileWallMask) SG_GRID(g_tileVariant)
+  SG_GRID(g_tileMoodDown) SG_GRID(g_tileType) SG_GRID(tile_anim_frame) SG_GRID(g_tileBuildCode) SG_GRID(g_pathGrid)
+  SG_GRID(g_tileRefund) SG_GRID(g_cornerLevel) SG_GRID(g_tileMoodUp) SG_GRID(g_tileShadeA) SG_GRID(g_tileShadeB)
+#undef SG_GRID
+  return 0;
+}
+int sg_mem_read(sg_ctx *ctx, uint32_t va, void *buf, uint32_t len) {
+  if (!ctx || (!buf && len)) return SG_E_ARG;
+  try {
+    if (len) std::memcpy(buf, ctx->ctx.mem.at(va, len), len);
+    return SG_OK;
+  } catch (const portsim::Fault &) {
+    return SG_E_FAULT;
+  }
+}
+int sg_mem_write(sg_ctx *ctx, uint32_t va, const void *buf, uint32_t len) {
+  if (!ctx || (!buf && len)) return SG_E_ARG;
+  try {
+    if (len) std::memcpy(ctx->ctx.mem.at(va, len, true), buf, len);
+    return SG_OK;
+  } catch (const portsim::Fault &) {
+    return SG_E_FAULT;
+  }
 }
 
 int sg_set_fpcw(uint32_t cw) {

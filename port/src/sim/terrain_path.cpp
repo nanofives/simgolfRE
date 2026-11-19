@@ -59,7 +59,9 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
   const int32_t dist = distance(ex, ey);
   const int32_t ang = angle_fixed(ex, ey);
   const int32_t a = sar32(add32(sar32(ang, 28), 1) ^ -7, 1) & 7;
-  const Ptr<int16_t> qx = state_arr(ctx, &GameState::g_pathQueueX), qy = state_arr(ctx, &GameState::g_pathQueueY);
+  // the ring: g_pathQueueX / Y (1,024 entries, mask 0x3ff) at 50; P38B: a side ring of the next power of two >= N * N above
+  const Ptr<int16_t> qx(ctx.mem, world_ring_va(ctx, 0)), qy(ctx.mem, world_ring_va(ctx, 1));
+  const int32_t ring_mask = static_cast<int32_t>(world_ring_mask(ctx));
   qx.set(static_cast<int16_t>(sx));
   qy.set(static_cast<int16_t>(sy));
   int32_t tail = 1;
@@ -71,7 +73,7 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
   const Ptr<TileTypeAttr> attrs = state_arr(ctx, &GameState::g_tileTypeAttrs);
   do {
     const int32_t x = qx[head], y = qy[head];
-    head = (head + 1) & 0x3FF;
+    head = (head + 1) & ring_mask;
     const int32_t flat = add32(y, mul32(x, N));
     const int32_t cur = (grid_arr(ctx, &GameState::g_pathGrid) + flat).get();
     if (!(cur > limit)) {
@@ -109,7 +111,7 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
         grid[flat2] = static_cast<uint8_t>(total);
         (qx + tail).set(static_cast<int16_t>(nx));
         (qy + tail).set(static_cast<int16_t>(ny));
-        tail = (tail + 1) & 0x3FF;
+        tail = (tail + 1) & ring_mask;
         if (nx == tx && ny == ty) limit = total;
       }
     }
