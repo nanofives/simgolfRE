@@ -2020,3 +2020,15 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   P17B_drive.py (REC point 1: rebuilt from three sed views of 8 Nov plus the later changes replayed, 75 later views agree) and
   a P15Z_segs.sh patched by hand (the placed text was an old version). Open: the panel's line spacing (fix 3), 5 test_gfx_hud
   failures P36B found on main (one golden fails on the published 2f1844a2 too), the options to cut waits.
+- P36B fix 3 (4ac931c8): with a wait line the golfer panel's four lines under the name move up and the wait line sits at 0x70
+  (pitch 13); without one every y is the original's. P36A fix 2 (664c622a): the hole jump also opens the hole's stats (the key's
+  own request, made after the camera move with the per-tile screen cache emptied, since the key only opens them for a green in
+  view) and takes a double click on a hole number of the small map (MapDraw::label_point, nearest number). Published 664c622a
+  (GitHub port-2026-11-19-664c622a). P36B's bisect note: test_gfx_hud's view golden (pinned 01d84188, 28 Oct) fails since at
+  least c7bfbd2f (16 Nov), an accepted view-panel change moved it; 4 more failures are a missing framegate picture. Open.
+- Recovery, worker REC points 2-4: recover2.py also replays shell changes (sed -i, appends, cp / mv, inline python parsed, cat
+  outputs as snapshots, the Bash tool's backslash halving, the Read result's extra line): on a control set of 1,187 untracked
+  files outside the deleted range replay 1 gave 44 % equal, replay 2 87 %. About 1,430 placed files replaced by the newer
+  replay (<name>.pre_rec kept), 441 more recovered; P15Z_segs.sh, P19Z_merge_check.sh, P17Z_smoke.sh brought to their true last
+  versions; lost.tsv: 2,051 paths with no text in any transcript (1,177 .log, 462 .txt, 76 .tsv, 67 .out, 30 .png; 126 scripts
+  or notes, among them P22A_drive.py, P11B_drive.py). stale.tsv lists 812 files with later commands that could not be replayed.
