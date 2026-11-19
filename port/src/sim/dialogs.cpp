@@ -467,6 +467,10 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
   d.stretch(GS(g_sprites5a53c8) + 0x4fc, GS(g_sprites58b680) + 0x4fc, 0xac, -2);
   thought_bubble(ctx, g, -1, 0xac, -2, true);
   target(surf, GS(g_font519928));
+  // P36B fix 3 (gfx.h gfx_golfer_wait_line_shown): with the wait line the four lines under the name move up (status 0x3e -> 0x3c,
+  // traits 0x4b -> 0x49, opinion 0x5b -> 0x56, likes 0x69 -> 0x63) and the wait line goes at 0x70, so the five lines keep two
+  // units between their glyph boxes and three above the scorecard's frame (y 0x7f); without it every y is the original's
+  const bool wl = gfx_golfer_wait_line_shown(ctx, g);
   // name line
   const int32_t type = m.load<int16_t>(R + 0xb6);
   clear();
@@ -485,7 +489,7 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
   if (st & 0x40) cpy(ctx, tb, GS(f_strpool_4c84e8) + 0x1d0);
   cat(ctx, tb, GS(f_strpool_4d3968) + 0xa4);
   cat_itoa(ctx, i32(call_peer(ctx, "golferAge", {u32(g)}).eax));
-  centred(tb, 0x1a4, 0x3e, 0x80000210u);
+  centred(tb, 0x1a4, wl ? 0x3c : 0x3e, 0x80000210u);
   // traits: bits 0..4 of the type's signed byte +0x20, joined by a comma, the last by "and"
   clear();
   {
@@ -500,12 +504,12 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
       cat(ctx, tb, m.load<uint32_t>(GS(f_ptrtab_4c2858) + 0xc + 4 * u32(i)));
     }
   }
-  centred(tb, 0x1a4, 0x4b, 0x80000210u);
+  centred(tb, 0x1a4, wl ? 0x49 : 0x4b, 0x80000210u);
   // opinion
   cpy(ctx, tb, GS(f_strpool_4c4e54));
   call_peer(ctx, "appendOpinion", {u32(m.load<int16_t>(R + 0xa4)), 0});
   cat(ctx, tb, GS(f_strpool_4c4e54));
-  d.centred2(tb, 0x1a4, 0x5b, 0x80004210u);
+  d.centred2(tb, 0x1a4, wl ? 0x56 : 0x5b, 0x80004210u);
   // likes (bits 0..2 of byte +0x19) and the kind byte +0xba
   clear();
   {
@@ -518,8 +522,8 @@ void draw_golfer_info_panel(Ctx &ctx, int32_t g, int32_t mode) {
   }
   if (m.load<uint8_t>(R + 0xba) == 1) cat(ctx, tb, GS(f_strpool_4c5340));
   if (m.load<uint8_t>(R + 0xba) == 2) cat(ctx, tb, GS(f_strpool_4d3968) + 0xa0);
-  centred(tb, 0x1a4, 0x69, 0x80000210u);
-  gfx_golfer_wait_line(ctx, g, 0x1a4, 0x73);   // P36B part 2 (gfx.h gfx_set_wait_reasons): why the golfer stands
+  centred(tb, 0x1a4, wl ? 0x63 : 0x69, 0x80000210u);
+  gfx_golfer_wait_line(ctx, g, 0x1a4, 0x70);   // P36B part 2 (gfx.h gfx_set_wait_reasons): why the golfer stands
   target(widget, GS(g_fontRef_519fd8));
   // the meters: only thoughtBalance is a call (the rest is drawing): a label and two fillWindowRect bands each, the
   // second v wide from the right, red over green when v > 0x28

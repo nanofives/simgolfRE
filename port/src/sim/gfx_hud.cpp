@@ -2981,6 +2981,12 @@ void gfx_speed_button_centre(int32_t &x, int32_t &y) {
   y = static_cast<int32_t>(kSpeedY);
 }
 
+// P36B fix 3 (gfx.h gfx_golfer_wait_line_shown): whether gfx_golfer_wait_line draws a line for golfer k now
+bool gfx_golfer_wait_line_shown(Ctx &ctx, int32_t k) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->wait_reasons && !wait_line_text(ctx, k).empty();
+}
 // P36B part 2 (gfx.h gfx_golfer_wait_line): the golfer info panel's line saying why golfer k stands, centred at (x, y) in the
 // panel's current font (drawGolferInfoPanel selects it), drawn only with the option on and a backend attached
 // the panel's beige text box between the portrait and the meters is x 0x126 .. 0x21d around the line's centre 0x1a4

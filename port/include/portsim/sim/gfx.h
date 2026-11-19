@@ -98,6 +98,9 @@ bool gfx_criteria_tips(Ctx &ctx);
 // back). Off: nothing.
 void gfx_set_wait_reasons(Ctx &ctx, bool on);
 void gfx_golfer_wait_line(Ctx &ctx, int32_t golfer, int32_t x, int32_t y);
+// P36B fix 3: true when gfx_golfer_wait_line would draw a line for the golfer now (drawGolferInfoPanel then moves the four lines
+// under the name up to make room; drawing only)
+bool gfx_golfer_wait_line_shown(Ctx &ctx, int32_t golfer);
 // P32A item 9 (Mariano's play-test 14: "when the camera gets moved when it's about to take a picture there should be a visual
 // indicator", his answer: the banner, the camera still jumps; log/roadmap/P32/P32A_notes.md), set by the app's host (--photo-banner on,
 // the default; SG_APP_P32=off: off). post_event names a bulletin board record in f_w_4e3db8 word 0 with its photo place in word 1;
