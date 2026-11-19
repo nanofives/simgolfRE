@@ -197,6 +197,10 @@ int32_t view_take_wheel(Ctx &ctx);  // the pending notches (0: none, or no view 
 // click. Written at the delivery of the batch holding the click (app option --hole-jump). Read only by showRoutingMapScreen: a
 // double click on a row of its hole list (mode -1) leaves the map with the camera on that hole. No host writes it otherwise.
 constexpr uint32_t kPortViewDoubleVa = kPortViewVa + 0x94u;
+// P36A fix 2: words +0x98 / +0x9c (sim code only, nothing reads them): tileToScreen's two out cells for the double click's hole
+// stats test (showRoutingMapScreen; the hole keys pass mainLoop frame slots there)
+constexpr uint32_t kPortViewHoleOutXVa = kPortViewVa + 0x98u;
+constexpr uint32_t kPortViewHoleOutYVa = kPortViewVa + 0x9cu;
 bool view_click_double(Ctx &ctx);
 // P32C FIX 3: one notch (+1 / -1, 0 none) of the pending ones; the rest stay in the word for the loop's next pass (a list whose
 // end is known only after its next redraw: showRoutingMapScreen's walker list)

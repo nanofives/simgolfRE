@@ -286,6 +286,22 @@ struct MapDraw {
   uint32_t sheet_cell(int32_t table, int32_t col, int32_t row) const {
     return cm::call_peer(ctx, "cellAt", {u32(table), u32(col), u32(row)}).eax;
   }
+  // P36A fix 2: the point hole_map draws the hole number at (drawCenteredText2's x, y; outside mode 0): the waypoint (+0x10 / +0x14,
+  // else +8 / +0xc of the waypoint record, tiles << 10) projected, y - 4; with no waypoint the middle of the projected tee and green,
+  // y - 4. The same arithmetic as hole_map below, which this does not change.
+  void label_point(uint32_t rec, uint32_t way, int32_t &x, int32_t &y) const {
+    int32_t tx, ty, gx_, gy_;
+    map_to_screen(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0xc), tx, ty);
+    map_to_screen(m.load<int32_t>(rec + 0x18), m.load<int32_t>(rec + 0x1c), gx_, gy_);
+    if (m.load<int32_t>(way + 0x10) != -1 || m.load<int32_t>(way + 8) != -1) {
+      const uint32_t at = m.load<int32_t>(way + 0x10) != -1 ? 0x10u : 8u;
+      map_to_screen(sar32(m.load<int32_t>(way + at), 10), sar32(m.load<int32_t>(way + at + 4), 10), x, y);
+      y = sub32(y, 4);
+    } else {
+      x = add32(gx_, tx) / 2;
+      y = sub32(add32(gy_, ty) / 2, 4);
+    }
+  }
   void hole_map(int32_t mode, int32_t h, uint32_t rec, uint32_t way) const {
     const int nc = SG_NEGCTL(g_negctl_routing_map);
     int32_t tx, ty;
@@ -546,10 +562,36 @@ int32_t hole_list_row(int32_t x, int32_t y) {
   if (x >= 0x239 - 0x27 && x < 0x239 - 0x27 + 0xee) return r + 10;
   return 0;
 }
+// P36A fix 2: the hole whose number on the small map (MapDraw::label_point, the modes that draw numbers: all but 0) lies under
+// (x, y), 0 for none: a box kLabelDx either side of the number's x and from kLabelUp above to kLabelDown below its y; where two
+// boxes overlap the number nearer to the point wins (the lower hole on a tie)
+constexpr int32_t kLabelDx = 9, kLabelUp = 4, kLabelDown = 14;
+int32_t map_label_hole(Ctx &ctx, const Screen &s, int32_t x, int32_t y) {
+  if (s.mode() == 0) return 0;
+  const MapDraw d(ctx);
+  int32_t best = 0, best_d = 0;
+  for (int32_t h = 1; h <= 18; ++h) {
+    if (s.m.load<int8_t>(s.hole(h)) == 0) continue;
+    int32_t lx, ly;
+    d.label_point(s.hole(h), s.way(h), lx, ly);
+    const int32_t dx = x - lx, dy = y - (ly + 5);
+    if (dx < -kLabelDx || dx > kLabelDx || y < ly - kLabelUp || y > ly + kLabelDown) continue;
+    const int32_t dist = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
+    if (best == 0 || dist < best_d) best = h, best_d = dist;
+  }
+  return best;
+}
 // the camera on a hole as the original's own go-to-hole does (mainLoop's hole keys '1'..'9' and Shift+'1'..'9'): the tile pair
 // halfway between the tee (hole record +8 / +0xc) and the green (+0x18 / +0x1c), each sum halved toward zero; then the
 // camera's legal range (camera_range: 0..0x31 with mainLoop.cameraBoundByZoom at 1). The zoom and the rotation stay as they are.
-void hole_jump_camera(Ctx &ctx, uint32_t rec) {
+// P36A fix 2 (Mariano: the double click opens the hole's HOLE STATS as the key does): then the key's own request, as the key makes
+// it: g_msgState53df54 = 0, and -hole when tileToScreen of the green returns nonzero; the next frame's panel pass (P6_Panels)
+// opens showHoleStatsScreen for a negative request. The key tests the green in the picture the player sees, before its move (a
+// green off screen: the camera moves and no popup, the key's second press opens it); here the test runs at the camera after the
+// move, where the player sees the hole when the map closes, so one double click is the key pressed on the hole in view.
+// tileToScreen's two out cells (frame slots in the original) are view block words +0x98 / +0x9c (kPortViewHoleOutXVa / Y),
+// which nothing reads (the double click needs the block).
+void hole_jump_camera(Ctx &ctx, uint32_t rec, int32_t hole) {
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   const int32_t x = add32(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0x18)) / 2;
@@ -557,6 +599,17 @@ void hole_jump_camera(Ctx &ctx, uint32_t rec) {
   const CameraRange r = camera_range(ctx);
   gs.gCameraTileX = x < r.lo[0] ? r.lo[0] : x > r.hi[0] ? r.hi[0] : x;
   gs.gCameraTileY = y < r.lo[1] ? r.lo[1] : y > r.hi[1] ? r.hi[1] : y;
+  // tileToScreen answers from the per-tile screen cache g_tileScreenX / Y, which still holds the picture of the old camera (the
+  // key's test therefore asks "is the green in the picture now"); the cache is emptied as the next frame head empties it for a
+  // moved camera (mainLoop ML+0xfca: the 0x4e2 dwords from g_tileScreenX), so the green is judged at the new camera
+  {
+    const uint32_t cache = state_va(ctx, &GameState::g_tileScreenX);
+    for (uint32_t i = 0; i < 0x4e2u; ++i) ctx.mem.store<uint32_t>(cache + 4u * i, 0);
+  }
+  gs.g_msgState53df54 = 0;
+  if (ctx.view && call_peer(ctx, "tileToScreen", {m.load<uint32_t>(rec + 0x18), m.load<uint32_t>(rec + 0x1c), kPortViewHoleOutXVa,
+                                                   kPortViewHoleOutYVa}).eax != 0)
+    gs.g_msgState53df54 = -hole;
 }
 
 int32_t show_routing_map_screen(Ctx &ctx) {
@@ -602,6 +655,21 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         clicked = click != 0;
       }
       int32_t cy = gs.g_rootInput[kClickY];
+      // P36A (app option --hole-jump, view block word +0x94): the second click of a double click on a listed hole's row (mode -1,
+      // above the button row) or, fix 2, on a hole number of the small map (no button under the cursor), before the button row's
+      // test, which takes every click on the map as a redraw (the first click of the pair still does that)
+      if (click == 1 && clicked && state == -1 && view_click_double(ctx)) {
+        int32_t h = s.mode() == -1 && cy < 0x101 ? hole_list_row(gs.g_rootInput[kClickX], cy) : 0;
+        if (h == 0) h = map_label_hole(ctx, s, gs.g_rootInput[kClickX], cy);
+        if (h > 0 && s.m.load<int8_t>(s.hole(h)) != 0) {
+          // the click is the map's: the frame body's click point (mainLoop's button word test) must not take it as a click on
+          // the course under the cursor once the map is gone
+          gs.g_rootInput[kButton] = 0;
+          jump = h;
+          quit = true;
+          break;
+        }
+      }
       // P27B fix 1 (showRoutingMapScreen.modeTopStripLeaves = 0): a press while mode button 0 or 2 is lit is that button's press
       const bool lit_mode = !SG_DEFECT(g_defect_routing_top_strip) && (state == 0 || state == 2);
       if (clicked && (cy > 0x118 || lit_mode)) {   // the button row: the mode buttons set the mode, quit ends, the rest redraws
@@ -632,18 +700,6 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         quit = true;
         break;
       }
-      // P36A (app option --hole-jump, view block word +0x94): the second click of a double click on a listed hole's row
-      if (click == 1 && clicked && s.mode() == -1 && view_click_double(ctx)) {
-        const int32_t h = hole_list_row(gs.g_rootInput[kClickX], cy);
-        if (h > 0 && s.m.load<int8_t>(s.hole(h)) != 0) {
-          // the click is the map's: the frame body's click point (mainLoop's button word test) must not take it as a click on
-          // the course under the cursor once the map is gone
-          gs.g_rootInput[kButton] = 0;
-          jump = h;
-          quit = true;
-          break;
-        }
-      }
       if (click == 1) {   // a left click selects the hole under it
         int32_t v = clamp(add32(sub32(cy, 0x68) / 17, 1), click, 0x13);
         if (gs.g_rootInput[kClickX] >= (s.mutant == 6 ? 0x180 : 0x190)) v = add32(v, 9);
@@ -664,7 +720,7 @@ int32_t show_routing_map_screen(Ctx &ctx) {
     if (quit) break;
   }
   const int32_t ret = s.leave();
-  if (jump > 0) hole_jump_camera(ctx, s.hole(jump));
+  if (jump > 0) hole_jump_camera(ctx, s.hole(jump), jump);
   return ret;
 }
 
