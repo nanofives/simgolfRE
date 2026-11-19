@@ -2002,3 +2002,14 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   midpoint of tee and green, the rule of the original's hole keys 1..9, clamped to camera_range. Equal to key '5' / '9' on his
   save. Published 2f1844a2 (GitHub port-2026-11-18-2f1844a2). Open with Mariano: also open the hole's stats popup as the keys
   do; double click on the small map's hole numbers too.
+- Incident 2026-11-18 22:56-23:00: worker P36A ran scripts/lan_release/sync_build_tree.py on its merge tree to bring it to main.
+  The script deleted every file under the tree that the archive lacks and walked the tree's junctions: all of extracted/ and
+  everything under log/ that sorts before log/roadmap/P22/P22C_work/m65 (13,646 tracked files, restored from git by exact path;
+  every untracked note and tool of log/roadmap P1..P21, FAST, G29 and log/c3, p1..p38: log/ is gitignored except log/diff, no
+  backup). original/, port/, re/, the saves and the releases were not touched. Fix 0a11bbff: the script never walks or deletes
+  through a junction, lists only the archived paths, refuses a mass removal. Recovery (log/roadmap/P36/recover/): the Write /
+  Edit / whole-file Read results of 1,904 transcripts of the three accounts replayed; 3,063 missing files placed back
+  (placed.tsv; on files that still exist the method gives 1,452 equal and 817 older or different texts); P12_mirror.py from a
+  command's output; worker REC rebuilds P17B_drive.py (the fast check's smoke driver, missing: releases wait for it), checks the
+  routine scripts, the stale files and extracted/. Run logs, pictures and tsv outputs of those rounds are lost.
+  Rule in log/roadmap/WORKER_BRIEF.md and auto-memory merge-trees-junctions-deleting-tools.
