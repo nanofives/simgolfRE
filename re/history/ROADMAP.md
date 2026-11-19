@@ -2064,3 +2064,6 @@ find something to spend money on", "a better panel to figure out what to improve
   random courses at every difficulty; control RED; read-only); test_static, test_holestats, test_lang_pack pass on the P37 build;
   driven English and Spanish on Jur2031.sve (log/roadmap/P37/runs/a2, b5, c1, c2). Spanish entries in lang/simgolf_es.txt.
   Placeholders are {1}..{5} (the pack's checker takes % as a printf conversion).
+- Shipped 2026-11-19: fast check on cd7cf8d8 (x64 0 errors, test_static 7 / 7, SEGCMP 205 / 205 differing 0, SMOKE OK, paint
+  92-95 % of 120 Hz), LAN publish (2 of 5,673 files sent) and GitHub release port-2026-11-19-cd7cf8d8. P37A + P37B DONE.
+  Next in the plan: P37C problem spots on the map, P37D the price of each fix, P37E challenges.
