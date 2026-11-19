@@ -49,6 +49,7 @@
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
 #include "commands_internal.h"
+#include "landoffer.h"
 
 namespace portsim {
 
@@ -57,7 +58,43 @@ namespace portsim {
 //   3 the purchase leaves the tiles for sale alone                       4 no Random::range draw per tile for sale
 //   5 logTick gets 0x141                                                  6 the worth of a lot is sum * 20 / 99
 //   7 a right click buys like a left click                                8 the finance record of the year + 1 loses the price
+//   9 (P38H) with lotLabelLeftover = 0, the label goes to the for-sale tile FARTHEST from the centre
+//  10 (P38H) the land credits are read from the next course's record (land_offer_credits)
 int g_negctl_buy_land = 0;
+
+// P38H play switches (re/port/play_profile.tsv; 1 = the original):
+//   mainLoop.landOfferOnce            landoffer.h: one approval = one popup = at most one purchase; 0: two credits kept in the
+//                                     course record, the routing map's Buy land button while they remain
+//   showBuyLandScreen.lotLabelLeftover the lot's number is drawn on the map where the scan met the lot's centre tile (i = j = 8)
+//                                     for sale, and otherwise at the position left from the previous lot (its text box: a stray
+//                                     digit beside the previous lot's ball; on the first pass lot 0 reads the pair uninitialised,
+//                                     the port starts it at 0); 0: at the map position of the lot's for-sale tile nearest its
+//                                     centre (the first of the scan order among equals); a lot with no tile for sale draws none,
+//                                     as in the original. Drawing only.
+int g_defect_land_offer_once = 1;
+int g_defect_lot_label_leftover = 1;
+
+namespace {
+constexpr uint32_t kCourseRecSize = 0x2e, kCourseRecCredits = 0x21;   // CourseRecord stride; the byte no code addresses
+constexpr int32_t kCourseRecords = 17;
+}  // namespace
+
+bool land_offer_credits_on(Ctx &ctx) {
+  if (SG_DEFECT(g_defect_land_offer_once)) return false;
+  const int32_t c = ctx.gs().g_courseIndex;
+  return c >= 0 && c < kCourseRecords;
+}
+int32_t land_offer_credits(Ctx &ctx) {
+  if (!land_offer_credits_on(ctx)) return 0;
+  const int32_t c = ctx.gs().g_courseIndex + (SG_NEGCTL(g_negctl_buy_land) == 10 ? 1 : 0);   // control 10: the next record
+  const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + kCourseRecSize * u32(c);
+  return ctx.mem.load<uint8_t>(rec + kCourseRecCredits);
+}
+void set_land_offer_credits(Ctx &ctx, int32_t n) {
+  if (!land_offer_credits_on(ctx)) return;
+  const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + kCourseRecSize * u32(ctx.gs().g_courseIndex);
+  ctx.mem.store<uint8_t>(rec + kCourseRecCredits, static_cast<uint8_t>(n < 0 ? 0 : n > 255 ? 255 : n));
+}
 
 namespace {
 
@@ -254,6 +291,9 @@ struct BuyLand {
       int32_t sum = 5, count = 0;
       const int32_t row0 = r * 16 + 1, col0 = q * 16 + 1;
       for (int32_t t = 0; t < 23; ++t) F[10 + t] = 0;
+      // P38H showBuyLandScreen.lotLabelLeftover = 0: the for-sale tile nearest the centre (squared distance to i = j = 8)
+      const bool nearest = !SG_DEFECT(g_defect_lot_label_leftover);
+      int32_t best_d = -1;
       for (int32_t j = 0; j < 16; ++j)
         for (int32_t i = 0; i < 16; ++i) {
           const int32_t row = i + row0, col = j + col0;
@@ -267,7 +307,15 @@ struct BuyLand {
           }
           int32_t mx = 0, my = 0;
           map_to_screen(row, col, mx, my);
-          if (i == 8 && j == 8) {
+          if (nearest) {
+            const int32_t d = (i - 8) * (i - 8) + (j - 8) * (j - 8);
+            const bool take = mode() == 9 ? d > best_d : (best_d < 0 || d < best_d);
+            if (take) {
+              best_d = d;
+              label_x = mx;
+              label_y = my;
+            }
+          } else if (i == 8 && j == 8) {
             label_x = mx;
             label_y = my;
           }
@@ -452,8 +500,21 @@ const FuncDef kFuncs[] = {
      },
      &g_negctl_buy_land},
 };
+// P38H: the module's play switches (re/port/play_profile.tsv)
+const DefectDef kDefects[] = {
+    {"mainLoop.landOfferOnce", "P38H",
+     "I.M.Picky's approval allows one purchase in the popup that follows it and is gone after it (No, Done or a purchase); "
+     "fixed: the approval tops the course's credits (course record +0x21) up to 2, No keeps them, the routing map shows a Buy "
+     "land button while they remain, and each purchase takes one",
+     &g_defect_land_offer_once},
+    {"showBuyLandScreen.lotLabelLeftover", "P38H",
+     "a lot whose centre tile is not for sale has its number drawn at the previous lot's text box (a stray digit beside the "
+     "previous lot's ball); fixed: at the lot's for-sale tile nearest its centre on the map (drawing only)",
+     &g_defect_lot_label_leftover},
+};
 }  // namespace
 
-extern const ModuleDef kModule_buyland = {"buyland", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), nullptr, 0};
+extern const ModuleDef kModule_buyland = {"buyland", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                          sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

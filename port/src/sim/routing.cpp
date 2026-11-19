@@ -16,6 +16,7 @@
 // gfx_drop (struct MapDraw below, in the order of c3et.cpp ShowRoutingMap_re). A drawn text the original builds in the
 // text buffer is built there, drawn and the buffer's bytes put back, so the GameState after a pass with a backend equals
 // the one without (the segment and boot gates run without one and with one).
+#include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -29,8 +30,10 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/lang.h"
 #include "commands_internal.h"
 #include "gfx_reports.h"
+#include "landoffer.h"   // P38H
 
 namespace portsim {
 
@@ -90,6 +93,16 @@ int32_t route_hit(int32_t mode, int32_t x, int32_t y, int32_t count) {
     if (x < 0x319 && y >= 0xcd && y < 0xf2) return 10;
   }
   return -1;
+}
+
+// P38H (landoffer.h): the Buy land button, shown while the course has land credits (mainLoop.landOfferOnce = 0), in the lavender
+// corner left of the title (nothing of the original's screen is drawn or clicked there): the lot ball at (kLandBallX, kLandBallY)
+// (0x3b x 0x3d) and the label from kLandTextX, kLandTextW wide; the box covers both
+constexpr int32_t kLandButton = 11;
+constexpr int32_t kLandBallX = 0x12, kLandBallY = 8, kLandTextX = 0x52, kLandTextY = 0x10, kLandTextW = 0x6a;
+constexpr int32_t kLandX0 = 0x10, kLandX1 = 0xbe, kLandY0 = 6, kLandY1 = 0x47;
+bool land_button_hit(Ctx &ctx, int32_t x, int32_t y) {
+  return x >= kLandX0 && x < kLandX1 && y >= kLandY0 && y < kLandY1 && land_offer_credits(ctx) > 0;
 }
 
 // ------------------------------------------------------------------------------------------------ the drawing (S2.4)
@@ -373,7 +386,22 @@ struct MapDraw {
       if (mode == 0 && state == 9) gx("p32c.tip", {1, 0x307 + 9, 0x40 - 2});
       if (mode == 0 && state == 10) gx("p32c.tip", {2, 0x307 + 9, 0xcd - 2});
     }
+    land_button(state == kLandButton);
     gx("Window::refreshFull", {win, 0});
+  }
+  // P38H (mainLoop.landOfferOnce = 0, landoffer.h): the Buy land button while the course has credits, in the lavender corner left
+  // of the title: the buy-land screen's own lot ball cell showing the credits (loadInfoScreenArt's buy_land_buttons: the
+  // highlighted ball n at g_spriteRef_8224c8 + 0x318 + 0x2c (n - 1)) and the label beside it in the course name's font, wrapped
+  // to the box (drawTextLinesAt), black, the labels' dark blue while hovered. Drawing only.
+  void land_button(bool hover) const {
+    const int32_t n = land_offer_credits(ctx);
+    if (n <= 0) return;
+    image(0x318 + 0x2Cu * static_cast<uint32_t>((n > 9 ? 9 : n) - 1), kLandBallX, kLandBallY);
+    font(state_va(ctx, &GameState::g_fontRef_821f28));   // the course name's font (legend)
+    gx("Widget_setQuad", {root, hover ? 0x80000136u : kBlack, 0xffffffffu, 2, 2});
+    char b[64];
+    std::snprintf(b, sizeof b, "Buy land (%d)", static_cast<int>(n));   // filled first: the pack's line is a %d pattern
+    with_text(lang::tr(b), [&](uint32_t s) { gx("drawTextLinesAt", {root, s, u32(kLandTextX), u32(kLandTextY), u32(kLandTextW)}); });
   }
 };
 
@@ -633,7 +661,7 @@ int32_t show_routing_map_screen(Ctx &ctx) {
       int32_t px = 0, py = 0;
       if (!src || !src->cursor(px, py)) throw NeedInput{{"showRoutingMapScreen"}};
       const int32_t prev = state;
-      state = route_hit(s.mode(), px, py, count);
+      state = land_button_hit(ctx, px, py) ? kLandButton : route_hit(s.mode(), px, py, count);   // P38H
       if (prev != state) {   // the hovered button changed: redraw first
         redraw = true;
         break;
@@ -655,6 +683,14 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         clicked = click != 0;
       }
       int32_t cy = gs.g_rootInput[kClickY];
+      // P38H (landoffer.h): a left click on the Buy land button closes the map and asks mainLoop's frame for the buy-land screen
+      // (the click is the map's: cleared as the hole jump's below)
+      if (state == kLandButton && clicked && click == 1) {
+        gs.g_eventFlags567a1c |= kLandOfferBuyNow;
+        gs.g_rootInput[kButton] = 0;
+        quit = true;
+        break;
+      }
       // P36A (app option --hole-jump, view block word +0x94): the second click of a double click on a listed hole's row (mode -1,
       // above the button row) or, fix 2, on a hole number of the small map (no button under the cursor), before the button row's
       // test, which takes every click on the map as a redraw (the first click of the pair still does that)

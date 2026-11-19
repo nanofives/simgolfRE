@@ -46,6 +46,7 @@
 #include "portsim/state_hash.h"
 #include "tick_hook.h"
 #include "golfer_wait.h"  // P36B
+#include "landoffer.h"    // P38H (tick_frame.inc, the land popup)
 
 namespace portsim {
 extern int g_defect_corner_level_clamp;  // terrain_course.cpp (D21)

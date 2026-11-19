@@ -2067,3 +2067,15 @@ find something to spend money on", "a better panel to figure out what to improve
 - Shipped 2026-11-19: fast check on cd7cf8d8 (x64 0 errors, test_static 7 / 7, SEGCMP 205 / 205 differing 0, SMOKE OK, paint
   92-95 % of 120 Hz), LAN publish (2 of 5,673 files sent) and GitHub release port-2026-11-19-cd7cf8d8. P37A + P37B DONE.
   Next in the plan: P37C problem spots on the map, P37D the price of each fix, P37E challenges.
+
+## P38H: I.M.Picky's land offer stays open (2026-11-19; worker P38H, notes log/roadmap/P38/P38H_notes.md)
+Mariano: "cuando picky juegue y le guste mi terreno y me quiera ofrecer, quiero que quede disponible para comprar 2 terrenos y
+poder comprarlos después". Facts: the offer is bit 0 of g_eventFlags567a1c (patronEvent, Picky leaving with mood > 2), one popup,
+at most one purchase, cleared on every path, not saved; showBuyLandScreen has mainLoop as its only caller (U-0168 answered).
+His picks: an approval tops the course's credits up to 2 (play switch mainLoop.landOfferOnce, 0 in play); "No" keeps them; a
+"Buy land (n)" button (the buy-land lot ball with the count) in the F5 course map opens TRACTS FOR SALE; the credits live in byte
++0x21 of the course record in the .sve (whole-image scan: only table clears / save / load touch it). Buy-land screen: the missing
+"Price:" line was a port-only fault (drawRight's 0x80000000 width), fixed; the lot numbers the original leaves beside the next
+ball when a lot's centre tile is not for sale go to the lot's for-sale tile nearest its centre (showBuyLandScreen.
+lotLabelLeftover, 0 in play). Evidence: segments x64 205 / 205 differing 0, test_p38h_land_offer 7, test_buyland, test_routing,
+test_profiles, smoke 1080 OK; driven EN 1080 / ES 2560 dpi 120 on Jur2031 and a Christmas Pines save.

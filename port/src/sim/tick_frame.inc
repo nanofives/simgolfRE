@@ -8792,6 +8792,11 @@ a41e22b:
 a41e290:
     cc("emptyFunc_4a0890");                                    // ML+0xecd0 emptyFunc_4a0890
     tc("Window::refreshFull", GS(g_rootWindow), ebp);                   // ML+0xecdb refreshFull (push ebp)
+    // P38H (mainLoop.landOfferOnce = 0, landoffer.h): an approval (bit 0) tops the course's credits up to 2; the routing map's Buy
+    // land button (bit 1) opens the buy-land screen without the popup while credits remain
+    if (land_offer_credits_on(ctx) && (G8(GS(g_eventFlags567a1c)) & 1)) set_land_offer_credits(ctx, kLandOfferCredits);
+    if (land_offer_credits_on(ctx) && (G32(GS(g_eventFlags567a1c)) & kLandOfferBuyNow) && land_offer_credits(ctx) > 0)
+      goto P38H_Buy;
     if (!(G8(GS(g_eventFlags567a1c)) & 1)) goto a41e366;           // ML+0xece0 test byte,1; je
     cc("playSound", 0x38, 0x64, ebp, ebp, ebp);         // ML+0xecf4 playSound
     cc("waitTicks", 0x5A, ebp);                         // ML+0xecfc waitTicks (push ebp; push 0x5a)
@@ -8800,8 +8805,10 @@ a41e290:
     StrCat(kBuf, (GS(f_strpool_4c5d20) + 40));                          // ML+0xed35..ML+0xed63 (push 0x1c2)
     eax = cc("showPopup", 0x1C2, 0xA0, ebx, ebx, ebp);  // ML+0xed65 showPopup
     if (eax != 0) goto a41e363;                        // ML+0xed6d test eax; jne
+P38H_Buy:
     eax = cc("showBuyLandScreen");                              // ML+0xed71 showBuyLandScreen
     if (eax != 0) G32(GS(g_landPurchaseCount))++;                   // ML+0xed76 test; je; inc [g_landPurchaseCount]
+    if (eax != 0 && land_offer_credits_on(ctx)) set_land_offer_credits(ctx, land_offer_credits(ctx) - 1);   // P38H: one credit
     cc("syncTiles");                                    // ML+0xed80 syncTiles
     cc("markTileKind11");                                    // ML+0xed85 markTileKind11
     cc("rebuildTileCoverage");                                    // ML+0xed8a rebuildTileCoverage

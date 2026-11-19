@@ -1030,6 +1030,8 @@ const ProfileMember kPlayProfile[] = {
     {"narrateShot.skillTop100", 0},          // P36C (play-test 18 item 3): the pro's skills rise past 100 % up to 200 % on 10+ holes
     {"narrateShot.missLowersTopSkill", 0},   // P36C: a skill of the pro at its course's cap is not lowered by a missed shot
     {"skillPointDialog.top100", 0},          // P36C: skill points go past 100 % (to 200 %) once all ten skills are at 100 %
+    {"mainLoop.landOfferOnce", 0},             // P38H: I.M.Picky's approval = 2 land credits, bought later from the routing map
+    {"showBuyLandScreen.lotLabelLeftover", 0}, // P38H: the lot number at the lot's for-sale tile nearest its centre on the map
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

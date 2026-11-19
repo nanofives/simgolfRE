@@ -170,6 +170,11 @@ void b_draw_right(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     return;
   }
   int32_t x = add32(static_cast<int32_t>(a[2]), sub32(static_cast<int32_t>(a[4]), run));
+  // P38H (Mariano 2026-11-19, no price under the tracts in the app): the screen passes w = 0x80000000, so x is the pen + 2^31. The original's
+  // TextOutA draws it at the pen (U-1291, measured on cov_r_s2_screens buy_land); the GDI provider did the same, every other
+  // provider drew it off screen. Every provider now gets the pen with bits 28..31 taken from bit 27 (the same value for any
+  // pen within +-2^27, the screen's x + 2^31 becomes x), so the price line shows with the app's text path too.
+  x = static_cast<int32_t>(static_cast<uint32_t>(x) << 4) >> 4;
   if (mode() == 3) x = sub32(x, 1);
   gfxp::draw_text_run(g, ctx, self, s, text, x, static_cast<int32_t>(a[3]), "drawRight");
 }
