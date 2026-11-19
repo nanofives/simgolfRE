@@ -1995,3 +1995,10 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   narrateShot.missLowersTopSkill (a skill at its cap is not lowered), skillPointDialog.top100 ('+' past 100 % once the ten
   skills of the dialog are at 100 %; the two skills nothing raises are not counted). No table is indexed by a level; saves
   unchanged. Not measured: how long the climb to 200 % takes (skills between 100 and 200 % still drop on a missed shot).
+- Item 1, "when i double click on a hole on the "RECORRIDO" it should take me straight to the hole" (P36A fix 1, 2f1844a2, class
+  b, app option --hole-jump; log/roadmap/P36/P36A_notes.md). "RECORRIDO" is the routing map (F5); its hole list had select and
+  swap only. The window has no CS_DBLCLKS, so the host detects the double click (the system's time and distance) and writes a
+  view block word as a recorded write; routing.cpp then clears the button word, leaves the map and sets the camera to the
+  midpoint of tee and green, the rule of the original's hole keys 1..9, clamped to camera_range. Equal to key '5' / '9' on his
+  save. Published 2f1844a2 (GitHub port-2026-11-18-2f1844a2). Open with Mariano: also open the hole's stats popup as the keys
+  do; double click on the small map's hole numbers too.
