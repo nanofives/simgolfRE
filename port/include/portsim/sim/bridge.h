@@ -190,6 +190,14 @@ void course_redo_end(Ctx &ctx);
 // 1 .. 3 rows, per notch). No host writes it otherwise, and nothing else reads it.
 constexpr uint32_t kPortViewWheelVa = kPortViewVa + 0x90u;
 int32_t view_take_wheel(Ctx &ctx);  // the pending notches (0: none, or no view block); clears the word
+// P36A (Mariano's play-test 18 item 1: "when i double click on a hole on the RECORRIDO it should take me straight to the hole";
+// log/roadmap/P36/P36A_notes.md). Word +0x94 (host, a recorded harness write like +4): 1 while the last left click the host
+// delivered was the second click of a double click (the window's own timing: GetDoubleClickTime and SM_CXDOUBLECLK /
+// SM_CYDOUBLECLK; the app's window class has no CS_DBLCLKS, so no WM_LBUTTONDBLCLK reaches the game), 0 for every other left
+// click. Written at the delivery of the batch holding the click (app option --hole-jump). Read only by showRoutingMapScreen: a
+// double click on a row of its hole list (mode -1) leaves the map with the camera on that hole. No host writes it otherwise.
+constexpr uint32_t kPortViewDoubleVa = kPortViewVa + 0x94u;
+bool view_click_double(Ctx &ctx);
 // P32C FIX 3: one notch (+1 / -1, 0 none) of the pending ones; the rest stay in the word for the loop's next pass (a list whose
 // end is known only after its next redraw: showRoutingMapScreen's walker list)
 int32_t view_take_wheel_one(Ctx &ctx);

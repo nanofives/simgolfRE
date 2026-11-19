@@ -137,6 +137,10 @@
 //   a dark blue-grey backdrop, RGB555 (5, 6, 8), instead of black: the world layer's root is filled with it before its terrain
 //   passes, so the slid pictures, the last paint and the ground cache carry it too; screens without terrain keep their black
 //   (terrain_live.h terrain_world_set_backdrop; drawing only; Mariano's pick B, log/roadmap/P35/P35D_notes.md)
+//   P36A: --hole-jump on|off (default on; SG_APP_P36=off: off) a double click on a hole's row of the routing map's hole list (F5 /
+//   R, the Spanish pack's "RECORRIDO DEL CAMPO") closes the map with the camera on that hole, halfway between its tee and its green
+//   as the hole keys 1..9 / Shift+1..9 put it, inside the camera's legal range; a single click still selects the hole (host.h
+//   HostOptions::hole_jump, bridge.h kPortViewDoubleVa; log/roadmap/P36/P36A_notes.md)
 //   P32B item 2: --edge-rows on|off (default on; SG_APP_P32=off: off) the HUD layers' smooth taps above row 0 / below row 599 of the
 //   800-space frame read that edge row: with a scale that is not a whole number the window's last row sampled between row 599 and
 //   the frame's outside (no layer pixel) and the course scrolled through the panel's bottom edge (present.h set_edge_rows; drawing)
@@ -666,6 +670,7 @@ struct Options {
   bool sharp_notes = true;         // P35G item 11: --sharp-notes on|off (SG_APP_P35=off: off)
   bool world_reach = true;         // P35D: --world-reach on|off (SG_APP_P35=off: off)
   bool edge_backdrop = true;       // P35D fix 2: --edge-backdrop on|off (SG_APP_P35=off: off)
+  bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1855,6 +1860,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     ho.arrow_clock = h >= 0 && *portsim::defect_at(h, nullptr)->flag == 0;
   }
   ho.list_wheel = o.list_wheel;  // P32C item 6: the wheel scrolls the Membership Roster
+  ho.hole_jump = o.hole_jump;    // P36A: a double click on the routing map's hole list goes to the hole
   ho.speed_button = o.speed_button;  // P33A item 1: the speed button
   ho.game_speed = o.game_speed;
   ArrowGlide glide;  // P26A: --arrow-glide on with the frame-head arrow step (the `play` profile)
@@ -3893,6 +3899,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.slide_cache = v == "on";
       continue;
     }
+    if (a == "--hole-jump") {  // P36A (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hole_jump = v == "on";
+      continue;
+    }
     if (a == "--edge-backdrop") {  // P35D fix 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.edge_backdrop = v == "on";
@@ -4478,6 +4489,8 @@ int main(int argc, char **argv) {
       o.world_reach = false;  // P35D
       o.edge_backdrop = false;  // P35D fix 2
     }
+  if (const char *ep = std::getenv("SG_APP_P36"))  // P36: the eighteenth play-test's app changes off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.hole_jump = false;  // P36A
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

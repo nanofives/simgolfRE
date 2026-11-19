@@ -83,6 +83,7 @@ int32_t view_width(Ctx &ctx) {
   return w < 800 ? 800 : w;
 }
 bool view_click_vacated(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPortViewVacatedVa) != 0; }  // P9E fix 3
+bool view_click_double(Ctx &ctx) { return ctx.view && ctx.mem.load<int32_t>(kPortViewDoubleVa) != 0; }  // P36A
 bool view_take_arrow(Ctx &ctx, int32_t &code, uint32_t &t, int32_t &ups) {  // P21B
   code = 0;
   t = 0;
@@ -830,6 +831,13 @@ void a_view_width(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(view_width(c));
 }
 
+// Test-only (P36A): maps the view block when the context has none and stores the double-click word (arg 0), as a live host's
+// delivery of a left click does under --hole-jump; returns view_click_double afterwards
+void a_view_double(Ctx &c, const uint32_t *a, Ret &r) {
+  if (view_map(c)) c.mem.store<int32_t>(kPortViewDoubleVa, S(a, 0));
+  r.set_i32(view_click_double(c) ? 1 : 0);
+}
+
 int g_negctl_none = 0;
 const FuncDef kFuncs[] = {
     {"worldToScreen", "default", "int", 5, 0, a_world_to_screen, &g_negctl_world_to_screen},
@@ -838,6 +846,7 @@ const FuncDef kFuncs[] = {
     {"pointsPopup", "default", "void", 4, 0, a_points_popup, &g_negctl_points_popup},
     {"bridge.playSoundAtScripted", "default", "int", 5, 0x027F, a_play_sound_at_scripted, &g_negctl_none},
     {"bridge.viewWidth", "default", "int", 1, 0, a_view_width, &g_negctl_none},
+    {"bridge.viewDouble", "default", "int", 1, 0, a_view_double, &g_negctl_none},
 };
 }  // namespace
 

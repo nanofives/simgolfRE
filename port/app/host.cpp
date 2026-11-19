@@ -501,6 +501,24 @@ void LiveSession::on_input(const InputEvent &e) {
       queue_seq_.push_back(e.seq);
     }
     if (e.vacated && !e.commands.empty()) vacated_seq_.push_back(e.seq);  // P9E fix 3
+    if (opt_.hole_jump && (e.msg == 0x201 || e.msg == 0x203)) {  // P36A: WM_LBUTTONDOWN (or a WM_LBUTTONDBLCLK, which is one too)
+      const uint32_t now = timeGetTime();
+      const int32_t x = static_cast<int16_t>(e.lp_raw & 0xffff), y = static_cast<int16_t>(e.lp_raw >> 16);
+      const int32_t bx = GetSystemMetrics(SM_CXDOUBLECLK) / 2, by = GetSystemMetrics(SM_CYDOUBLECLK) / 2;
+      const bool dbl = dbl_have_down_ && now - dbl_last_down_ms_ <= GetDoubleClickTime() && std::abs(x - dbl_last_x_) <= bx &&
+                       std::abs(y - dbl_last_y_) <= by;
+      dbl_pending_up_ = dbl;
+      dbl_have_down_ = !dbl;  // a third press starts a new pair, as Windows counts them
+      dbl_last_down_ms_ = now;
+      dbl_last_x_ = x;
+      dbl_last_y_ = y;
+    } else if (opt_.hole_jump && e.msg == 0x202) {  // WM_LBUTTONUP: the click (onPress1) of that press
+      if (dbl_pending_up_ && !e.commands.empty()) {
+        double_seq_.push_back(e.seq);
+        ++double_clicks_;
+      }
+      dbl_pending_up_ = false;
+    }
     if (opt_.list_wheel && e.msg == 0x20a) {  // P32C item 6: WM_MOUSEWHEEL, the delta in the high word (WHEEL_DELTA 120 a notch)
       wheel_acc_ += static_cast<int16_t>(e.wp >> 16);
       const int32_t n = wheel_acc_ / 120;
@@ -2615,6 +2633,23 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump 
                            vacated_seq_.end());
       }
     }
+    // P36A: the view block's double-click word follows the batch's last left click (a recorded write, before the batch is applied)
+    if (opt_.hole_jump) {
+      int32_t v = -1;
+      for (size_t k = 0; k < n; ++k)
+        if (queue_[k].handler == 1)
+          v = std::find(double_seq_.begin(), double_seq_.end(), queue_seq_[k]) != double_seq_.end() ? 1 : 0;
+      if (v >= 0 && portsim::view_map(ctx) && ctx.mem.load<int32_t>(portsim::kPortViewDoubleVa) != v) {
+        ctx.mem.store<int32_t>(portsim::kPortViewDoubleVa, v);
+        if (writes) writes->wrote(portsim::kPortViewDoubleVa, static_cast<uint32_t>(v));
+        ++double_writes_;
+      }
+      if (n > 0) {
+        const uint32_t last = queue_seq_[n - 1];
+        double_seq_.erase(std::remove_if(double_seq_.begin(), double_seq_.end(), [&](uint32_t s) { return s <= last; }),
+                          double_seq_.end());
+      }
+    }
     queue_.erase(queue_.begin(), queue_.begin() + static_cast<std::ptrdiff_t>(n));
     // S7.4: the dispatch log (which input messages this dispatch carries, and the pump call that took it)
     const uint32_t di = static_cast<uint32_t>(dispatch_rows_.size());
@@ -2921,6 +2956,8 @@ std::string LiveSession::summary_json(const Result &r) const {
        std::to_string(vacated_writes_) + "}";  // P9E fix 3
   s += ",\"p32c\":{\"list_wheel\":" + std::to_string(opt_.list_wheel ? 1 : 0) + ",\"wheel_notches\":" +
        std::to_string(wheel_notches_) + ",\"wheel_writes\":" + std::to_string(wheel_writes_) + "}";  // P32C item 6
+  s += ",\"p36a\":{\"hole_jump\":" + std::to_string(opt_.hole_jump ? 1 : 0) + ",\"double_clicks\":" +
+       std::to_string(double_clicks_) + ",\"double_writes\":" + std::to_string(double_writes_) + "}";  // P36A
   s += ",\"p10c\":{\"title_bands\":" + std::to_string(opt_.title_bands ? 1 : 0) + ",\"title_reposts\":" +
        std::to_string(title_reposts_) + "}";  // P10C fix 1
   s += ",\"memory\":" + memory.json();

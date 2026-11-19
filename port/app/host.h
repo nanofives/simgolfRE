@@ -206,6 +206,11 @@ struct HostOptions {
   // P32C item 6 (--list-wheel on): WM_MOUSEWHEEL notches (120 per notch, the remainder kept) go to view block word +0x90 (bridge.h
   // kPortViewWheelVa) as a recorded write inside the next modal Blocking pump; showMembershipRoster takes them as arrow presses
   bool list_wheel = false;
+  // P36A (--hole-jump on): a left button-down within the window's double-click time and box (GetDoubleClickTime, SM_CXDOUBLECLK /
+  // SM_CYDOUBLECLK) of the previous one makes its button-up the second click of a double click; at the delivery of each left click
+  // (onPress1) view block word +0x94 (bridge.h kPortViewDoubleVa) is set to 1 for that one, else 0, as a recorded harness write
+  // when it changes (showRoutingMapScreen's hole list reads it)
+  bool hole_jump = false;
   // P9E fix 4: presents carry the tool previews drawn at the cursor apart from the world picture (WorldImage::cur_*), and every
   // cursor answer is handed to the remap (PanelRemap::set_cursor_answer) for the presenter's offset
   bool cursor_previews = false;
@@ -618,6 +623,11 @@ class LiveSession : public portsim::LiveHost {
   std::deque<uint32_t> queue_seq_;      // the event of each queued command (parallel to queue_)
   std::vector<uint32_t> vacated_seq_;  // P9E fix 3: the queued events marked vacated (InputEvent::vacated)
   uint64_t vacated_writes_ = 0;        // P9E fix 3: view block word +4 writes
+  std::vector<uint32_t> double_seq_;   // P36A: the queued left button-ups that end a double click
+  uint32_t dbl_last_down_ms_ = 0;      // P36A: the previous left button-down (message time) and its client point
+  int32_t dbl_last_x_ = 0, dbl_last_y_ = 0;
+  bool dbl_have_down_ = false, dbl_pending_up_ = false;
+  uint64_t double_clicks_ = 0, double_writes_ = 0;  // P36A
   struct DispatchRow {
     uint32_t index, frame, body, body_call, kind, calls, cursor_reads, may, must, ncmds, first_seq, last_seq;
   };

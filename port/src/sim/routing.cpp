@@ -535,11 +535,36 @@ struct Screen {
   }
 };
 
+// P36A (Mariano's play-test 18 item 1; log/roadmap/P36/P36A_notes.md): the hole whose row of the hole list (mode -1) holds (x, y),
+// 0 for none. A row is the box hole_row's highlight fills: 0xee x 0x11 from (col - 0x27, row y - 3), col 0x47 for holes 1..9
+// and 0x239 for 10..18, row y 0x68 + 17 (row).
+int32_t hole_list_row(int32_t x, int32_t y) {
+  const int32_t top = 0x68 - 3;
+  if (y < top || y >= top + 9 * 17) return 0;
+  const int32_t r = (y - top) / 17;
+  if (x >= 0x47 - 0x27 && x < 0x47 - 0x27 + 0xee) return r + 1;
+  if (x >= 0x239 - 0x27 && x < 0x239 - 0x27 + 0xee) return r + 10;
+  return 0;
+}
+// the camera on a hole as the original's own go-to-hole does (mainLoop's hole keys '1'..'9' and Shift+'1'..'9'): the tile pair
+// halfway between the tee (hole record +8 / +0xc) and the green (+0x18 / +0x1c), each sum halved toward zero; then the
+// camera's legal range (camera_range: 0..0x31 with mainLoop.cameraBoundByZoom at 1). The zoom and the rotation stay as they are.
+void hole_jump_camera(Ctx &ctx, uint32_t rec) {
+  GameState &gs = ctx.gs();
+  const Memory &m = ctx.mem;
+  const int32_t x = add32(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0x18)) / 2;
+  const int32_t y = add32(m.load<int32_t>(rec + 0xc), m.load<int32_t>(rec + 0x1c)) / 2;
+  const CameraRange r = camera_range(ctx);
+  gs.gCameraTileX = x < r.lo[0] ? r.lo[0] : x > r.hi[0] ? r.hi[0] : x;
+  gs.gCameraTileY = y < r.lo[1] ? r.lo[1] : y > r.hi[1] ? r.hi[1] : y;
+}
+
 int32_t show_routing_map_screen(Ctx &ctx) {
   Screen s(ctx);
   GameState &gs = s.gs;
   InputSource *src = input_source(ctx);
   int32_t scroll = 0, selected = 1, state = -1;
+  int32_t jump = 0;   // P36A: the hole a double click asked for (0 none)
   // the listed walkers: flag byte set, a negative state byte other than the one the list skips
   int32_t count = 0;
   for (int32_t i = 0; i < 64; ++i) {
@@ -607,6 +632,18 @@ int32_t show_routing_map_screen(Ctx &ctx) {
         quit = true;
         break;
       }
+      // P36A (app option --hole-jump, view block word +0x94): the second click of a double click on a listed hole's row
+      if (click == 1 && clicked && s.mode() == -1 && view_click_double(ctx)) {
+        const int32_t h = hole_list_row(gs.g_rootInput[kClickX], cy);
+        if (h > 0 && s.m.load<int8_t>(s.hole(h)) != 0) {
+          // the click is the map's: the frame body's click point (mainLoop's button word test) must not take it as a click on
+          // the course under the cursor once the map is gone
+          gs.g_rootInput[kButton] = 0;
+          jump = h;
+          quit = true;
+          break;
+        }
+      }
       if (click == 1) {   // a left click selects the hole under it
         int32_t v = clamp(add32(sub32(cy, 0x68) / 17, 1), click, 0x13);
         if (gs.g_rootInput[kClickX] >= (s.mutant == 6 ? 0x180 : 0x190)) v = add32(v, 9);
@@ -626,7 +663,9 @@ int32_t show_routing_map_screen(Ctx &ctx) {
     }
     if (quit) break;
   }
-  return s.leave();
+  const int32_t ret = s.leave();
+  if (jump > 0) hole_jump_camera(ctx, s.hole(jump));
+  return ret;
 }
 
 // showShortcutsScreen: the keyboard-shortcuts help page and its one-button modal loop. The page (two backgrounds, the shortcut
