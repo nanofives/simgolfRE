@@ -136,6 +136,9 @@
 //   P36B part 2: --wait-reasons on|off (default on; SG_APP_P36=off: off) the golfer info panel shows one line saying why the golfer
 //   stands ("Waiting for <name> to tee off", "Waiting for your shot"), from the reasons updateGolfers tags (golfer_wait.h), and the
 //   golfers list's name tip adds it (gfx.h gfx_set_wait_reasons; drawing only; log/roadmap/P36/P36B_notes.md)
+//   P37A: --hole-advice on|off (default on; SG_APP_P37=off: off) the Hole Stats screen gets the hole advisor panel under its art:
+//   the magazine awards' progress, the score band, the skills and hole type, fun and complaints, variety, money (holeadvice.h,
+//   gfx.h gfx_set_hole_advice; drawing only; re/roadmap/P37_HOLE_ADVISOR.md)
 //   P35D fix 2: --edge-backdrop on|off (default on; SG_APP_P35=off: off; the world layer) past the land's edge the course view shows
 //   a dark blue-grey backdrop, RGB555 (5, 6, 8), instead of black: the world layer's root is filled with it before its terrain
 //   passes, so the slid pictures, the last paint and the ground cache carry it too; screens without terrain keep their black
@@ -675,6 +678,7 @@ struct Options {
   bool edge_backdrop = true;       // P35D fix 2: --edge-backdrop on|off (SG_APP_P35=off: off)
   bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
+  bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
   bool shot_spread = true;         // P32D item 7: --shot-spread on|off (SG_APP_P32=off: off)
@@ -1435,6 +1439,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C
       if (ok && o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9
       if (ok && o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2
+      if (ok && o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A
       if (ok && o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
@@ -1732,6 +1737,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.explain_tips) portsim::gfx_set_explain_tips(*ctx, true);  // P32C: the unexplained marks' tips (gfx.h; drawing only)
   if (o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9: the grading page's row tips (gfx.h; drawing only)
   if (o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2: why a golfer stands (gfx.h; drawing only)
+  if (o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A: the hole advisor panel (gfx.h; drawing only)
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
@@ -2494,6 +2500,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   s += ",\"p35g\":{\"criteria_tips\":" + std::to_string(o.criteria_tips ? 1 : 0) + ",\"sharp_notes\":" +
        std::to_string(o.sharp_notes ? 1 : 0) + "}";  // P35G items 9 and 11
   s += ",\"p36b\":{\"wait_reasons\":" + std::to_string(o.wait_reasons ? 1 : 0) + "}";  // P36B part 2
+  s += ",\"p37a\":{\"hole_advice\":" + std::to_string(o.hole_advice ? 1 : 0) + "}";  // P37A
   s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
@@ -3918,6 +3925,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.wait_reasons = v == "on";
       continue;
     }
+    if (a == "--hole-advice") {  // P37A (before the chain too)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.hole_advice = v == "on";
+      continue;
+    }
     if (a == "--edge-backdrop") {  // P35D fix 2 (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.edge_backdrop = v == "on";
@@ -4505,6 +4517,8 @@ int main(int argc, char **argv) {
     }
   if (const char *ep = std::getenv("SG_APP_P36"))  // P36: the eighteenth play-test's app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.hole_jump = o.wait_reasons = false;  // P36A, P36B part 2
+  if (const char *ep = std::getenv("SG_APP_P37"))  // P37: the hole advisor off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.hole_advice = false;  // P37A
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

@@ -2355,6 +2355,15 @@ bool gfx_criteria_tips(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   return g != nullptr && g->criteria_tips;
 }
+// P37A (gfx.h gfx_set_hole_advice)
+void gfx_set_hole_advice(Ctx &ctx, bool on) {
+  if (Gfx *g = gfx(ctx)) g->hole_advice = on;
+}
+bool gfx_hole_advice(Ctx &ctx) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
+  Gfx *g = gfx(ctx);
+  return g != nullptr && g->hole_advice;
+}
 bool gfx_explain_tips(Ctx &ctx) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);

@@ -341,6 +341,8 @@ struct HoleStats {
       d.gx("p32c.untip", {});
       if (hover != 0) d.gx("p32c.tip", {0, 0x23e + 0x16, u32(sub32(button_y, 2))});
     }
+    // P37A (gfx.h gfx_set_hole_advice): the hole advisor panel under the foot cell and the close button (drawing only)
+    if (gfx_hole_advice(ctx)) d.gx("p37.advice", {u32(hole), u32(add32(button_y, 0x34))});
     d.gx("Window::refreshFull", {d.window(), 0});
     return rounds;
   }

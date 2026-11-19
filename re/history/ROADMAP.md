@@ -2047,3 +2047,20 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   hit me" thought 0.04 -> 0.07 per finish. Published 11c13dae (GitHub port-2026-11-19-11c13dae). P36B DONE.
 Round P36 closed 2026-11-19: 3 items published. Not run on this round: Win32, the full 4K check. Open from it: test_gfx_hud's
 view golden (stale since at least 16 Nov), a backup for log/.
+
+## P37: hole advisor (2026-11-19; plan re/roadmap/P37_HOLE_ADVISOR.md, variables re/analysis/course/HOLE_RATING.md)
+Mariano's end-game request: "improve over the existing course, find ways to do better designs and do challenges around that,
+find something to spend money on", "a better panel to figure out what to improve on existing holes".
+- Survey (two read-only agents): the magazine "rating" +0x1f4 is the hole's cumulative greens fee (each finishing golfer's mood);
+  Best 100 needs takings > 200 and skill > 200, Top 18 > 400 and > 300, neither with the too-hard / too-easy bits (the band at
+  difficulty d: average above par + (6 - d) / 3 or below par - (3 - d) / 6 after 10 plays); at d <= 1 the fun term x 6 / (2 + d)
+  stands in for skill; the notice mask (hole type) from the three skill deltas; the sameness counter +0x1fc; every cost table.
+- P37A: --hole-advice on|off (SG_APP_P37=off: off): a panel under the Hole Stats screen (awards progress, band with a warning
+  within 0.25, skills and the next type, fun and the top complaints in the game's own words with a fix each, variety, money as
+  showCourseReport computes net). holeadvice.cpp analyze_hole is read-only; buildGolferComment runs on a copy of the GameState.
+- P37B: the same option draws the course overview under the Course Report's hole page (F1): awards won, hole types announced,
+  course fun / skill, one row per hole ordered by progress to its next award with the one thing to do.
+- Evidence: test_p37_hole_advice.py 7 / 7 (analyze_hole predicts the port's rateCourseHoles bits, sameness and totals on 160
+  random courses at every difficulty; control RED; read-only); test_static, test_holestats, test_lang_pack pass on the P37 build;
+  driven English and Spanish on Jur2031.sve (log/roadmap/P37/runs/a2, b5, c1, c2). Spanish entries in lang/simgolf_es.txt.
+  Placeholders are {1}..{5} (the pack's checker takes % as a printf conversion).

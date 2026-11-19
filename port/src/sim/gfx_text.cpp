@@ -1650,6 +1650,105 @@ void modal_tip_box(Gfx &g, Ctx &ctx, const std::string &text, int32_t x_left, in
   std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
 }
 
+// P37A (gfx_text.h advice_panel)
+void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uint32_t>> &lines, int32_t x0, int32_t y0, int32_t w,
+                  int32_t max_h, const std::vector<int32_t> &tabs, int32_t flow_from, int32_t columns) {
+  if (lines.empty()) return;
+  // P37B: lines from flow_from on flow into `columns` side-by-side columns (tab stops relative to each column's start); the
+  // lines before it span the box
+  const int32_t nl = static_cast<int32_t>(lines.size());
+  if (flow_from < 0 || flow_from > nl || columns < 1) {
+    flow_from = nl;
+    columns = 1;
+  }
+  const int32_t per_col = (nl - flow_from + columns - 1) / columns;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  if (r.w < 800 || r.h < 600) return;
+  uint32_t keep_fonts[4];
+  std::memcpy(keep_fonts, g.fonts, sizeof keep_fonts);
+  const uint32_t root = g.root_va(ctx), f = state_va(ctx, &GameState::g_fontRef_519fd8);
+  call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+  TextMetrics *tm = text_metrics(ctx);
+  int32_t asc = 8;
+  auto width = [&](const std::string &s) {
+    int32_t m5 = 5 * static_cast<int32_t>(s.size());
+    if (tm)
+      with_saved_state(ctx, [&]() {
+        const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+        put_str(ctx, buf, s);
+        int32_t a = 0, m = 0;
+        if (tm->glyph_ascent(ctx, f, a)) asc = a;
+        if (tm->glyph_width(ctx, f, buf, static_cast<int32_t>(s.size()), m)) m5 = m;
+      });
+    return m5;
+  };
+  width("Hg");   // the ascent
+  const int32_t row = asc + asc / 3 + 2;
+  int32_t rows = flow_from + per_col;
+  if (6 + row * rows > max_h) rows = (max_h - 6) / row;
+  if (rows <= 0) {
+    std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
+    return;
+  }
+  x0 = std::max(0, std::min(x0, 800 - 16));
+  w = std::max(16, std::min(w, 800 - x0));
+  y0 = std::max(0, std::min(y0, 600 - 6 - row));
+  const int32_t h = std::min(600 - y0, 6 + row * rows);
+  // the box: RGB555 (2, 2, 3) inside a one-pixel gold (31, 20, 0) rule
+  for (int32_t y = y0; y < y0 + h; ++y)
+    for (int32_t x = x0; x < x0 + w; ++x) {
+      const bool edge = y == y0 || y == y0 + h - 1 || x == x0 || x == x0 + w - 1;
+      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+      o = edge ? static_cast<uint16_t>((31 << 10) | (20 << 5)) : static_cast<uint16_t>((2 << 10) | (2 << 5) | 3);
+      hud_mark(&o);
+    }
+  const int32_t col_w = (w - 10) / columns;
+  for (int32_t k = 0; k < nl; ++k) {
+    // the line's place: a full-width row, or row flow_from + i % per_col of column i / per_col
+    int32_t slot = k, base = 0, avail = w - 10;
+    if (k >= flow_from) {
+      const int32_t i = k - flow_from;
+      slot = flow_from + i % per_col;
+      base = (i / per_col) * col_w;
+      avail = col_w - 6;
+    }
+    if (slot >= rows) continue;
+    // P37B: a line with '\t' is cells at the tab stops (x offsets from the column's text start); each cell is cut to its column
+    const std::string &line = lines[static_cast<size_t>(k)].first;
+    std::vector<std::string> cells;
+    if (tabs.empty() || line.find('\t') == std::string::npos) {
+      cells.push_back(line);
+    } else {
+      size_t i = 0;
+      for (;;) {
+        const size_t j = line.find('\t', i);
+        cells.push_back(line.substr(i, j == std::string::npos ? std::string::npos : j - i));
+        if (j == std::string::npos) break;
+        i = j + 1;
+      }
+    }
+    for (size_t c = 0; c < cells.size(); ++c) {
+      const int32_t cx = cells.size() == 1 ? 0 : (c < tabs.size() ? tabs[c] : tabs.back());
+      const int32_t limit = (cells.size() == 1 || c + 1 >= tabs.size() ? avail : tabs[c + 1] - 6) - cx;
+      std::string s = cells[c];
+      int32_t tw = width(s);
+      while (tw > limit && s.size() > 1) {   // cut to the column (the box for an untabbed line)
+        s.pop_back();
+        tw = width(s);
+      }
+      if (s.empty()) continue;
+      with_saved_state(ctx, [&]() {
+        const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+        put_str(ctx, buf, s);
+        call(g, ctx, "drawCenteredText",
+             {buf, u(x0 + 5 + base + cx + tw / 2), u(y0 + 3 + row * slot), lines[static_cast<size_t>(k)].second});
+      });
+    }
+  }
+  std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
+}
+
 void view_panel_tip(Gfx &g, Ctx &ctx, int32_t hover, int32_t x, int32_t y, const std::string &why) {
   std::string text;
   if (hover == -4) text = pool(ctx, GSO(f_strpool_4c80d0, 0x1f8));

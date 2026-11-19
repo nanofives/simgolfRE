@@ -722,6 +722,8 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     }
   }
   if (mode == 2) return 0;
+  // P37B (gfx.h gfx_set_hole_advice): the course overview under the hole page (drawing only)
+  if (mode == 0 && gfx_hole_advice(ctx)) gx2(ctx, "p37.course", {0x1b8});
   if (ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
   report_loop(ctx, false, "showCourseReport", &ok, &crit_tips);
   if (crit_tips.row >= 0) gx2(ctx, "p35g.untip", {});   // P35G item 9: no tip left in the root after the page

@@ -58,6 +58,7 @@
 #include "portsim/sim/gfx_text.h"
 #include "portsim/sim/lang.h"  // P26B item 3: lang::tr
 #include "golfer_wait.h"  // P36B part 2
+#include "holeadvice.h"   // P37A
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/util.h"
@@ -2382,6 +2383,25 @@ void b_modal_tip(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 void b_modal_untip(Gfx &g, Ctx &, const uint32_t *, int) { gfxt::modal_untip(g); }
 
+// P37A (gfx.h gfx_set_hole_advice): "p37.advice" (hole, y_top) from showHoleStatsScreen after each page build: the advisor's
+// lines (holeadvice.h) in a panel from y_top to the screen's foot. Drawing only.
+void b_hole_advice(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
+  if (!g.hole_advice || n < 2) return;
+  std::vector<std::pair<std::string, uint32_t>> v;
+  for (const AdviceLine &l : hole_advice_lines(ctx, static_cast<int32_t>(a[0]))) v.emplace_back(l.text, l.colour);
+  const int32_t y0 = static_cast<int32_t>(a[1]);
+  gfxt::advice_panel(g, ctx, v, 0x70, y0, 0x220, 598 - y0);
+}
+// P37B: "p37.course" (y_top) from showCourseReport's hole page: the course overview (holeadvice.h course_overview_lines) under
+// the report, its summary lines across and the holes in two columns. Drawing only.
+void b_course_advice(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
+  if (!g.hole_advice || n < 1) return;
+  std::vector<std::pair<std::string, uint32_t>> v;
+  for (const AdviceLine &l : course_overview_lines(ctx)) v.emplace_back(l.text, l.colour);
+  const int32_t y0 = static_cast<int32_t>(a[0]);
+  gfxt::advice_panel(g, ctx, v, 0x10, y0, 0x300, 598 - y0, {0, 0x38, 0xa8}, kCourseOverviewHeaderRows, 2);
+}
+
 // P35G item 9 (gfx.h gfx_set_criteria_tips; log/roadmap/P35/P35G_notes.md has the grading code behind every sentence): the
 // grading page's hovered criteria row: what raises its stars, then the page's target. "p35g.tip" (row 0..9 in the page's order,
 // class (the Selection Criteria word, 0 Municipal .. 3 Championship), the ideal yards, the minimum yards, the holes of each kind
@@ -2961,6 +2981,8 @@ const GfxBodyDef kBodies[] = {
     {"photo.banner", b_photo_banner},  // P32A item 9
     {"p32c.tip", b_modal_tip},         // P32C FIX 3
     {"p32c.untip", b_modal_untip},     // P32C FIX 3
+    {"p37.advice", b_hole_advice},     // P37A
+    {"p37.course", b_course_advice},   // P37B
     {"p35g.tip", b_criteria_tip},      // P35G item 9
     {"p35g.untip", b_criteria_untip},  // P35G item 9
     {"drawEmployeeDetailPanel.draw", b_detail_panel},

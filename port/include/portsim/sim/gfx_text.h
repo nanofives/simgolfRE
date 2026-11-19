@@ -12,6 +12,8 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace portsim {
 
@@ -61,6 +63,11 @@ void modal_untip(Gfx &g);
 // the box's left column x_left and its bottom row y_bottom - 1, kept inside the 800 x 600 root; the same tip slot, so modal_untip
 // takes it away
 void modal_tip_box(Gfx &g, Ctx &ctx, const std::string &text, int32_t x_left, int32_t y_bottom, int32_t max_w);
+// P37A (gfx.h gfx_set_hole_advice): a panel of coloured lines (text, drawCenteredText colour word) in the palette tip's small
+// font, left-aligned in a dark box with a gold rule, top-left (x0, y0), w wide; a line wider than the box is cut, rows past max_h
+// are dropped. Drawing only.
+void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uint32_t>> &lines, int32_t x0, int32_t y0, int32_t w,
+                  int32_t max_h, const std::vector<int32_t> &tabs = {}, int32_t flow_from = -1, int32_t columns = 1);
 void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // drawAmenitiesPanel's dwell tip of item L and its mode-4 hovered building row r, at the cursor (a, b)
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);

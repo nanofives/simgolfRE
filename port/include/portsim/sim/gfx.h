@@ -83,6 +83,12 @@ void gfx_set_meter_tips(Ctx &ctx, bool on);
 // Drawing only: the GameState is never written. Off (the default): nothing.
 void gfx_set_explain_tips(Ctx &ctx, bool on);
 bool gfx_explain_tips(Ctx &ctx);
+// P37A (re/roadmap/P37_HOLE_ADVISOR.md; Mariano 2026-11-19: "a better panel to figure out what to improve on existing holes"),
+// set by the app's host (--hole-advice on, the default; off under SG_APP_P37=off): the Hole Stats screen gets the hole advisor
+// panel under its art (holeadvice.h hole_advice_lines). English in port code, other languages through the pack. Drawing only.
+// Off: nothing.
+void gfx_set_hole_advice(Ctx &ctx, bool on);
+bool gfx_hole_advice(Ctx &ctx);
 // P35G item 9 (Mariano's play-test 17: "when hovering i want a text box saying what i should do to increase each of these";
 // log/roadmap/P35/P35G_notes.md), set by the app's host (--criteria-tips on, the default; SG_APP_P35=off: off). On the
 // association's grading page (showCourseReport mode 1, the one-button loop) a hovered selection criteria row shows a tip box
