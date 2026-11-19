@@ -1975,3 +1975,23 @@ Published 066012e5 (GitHub port-2026-11-18-066012e5): items 1 (world reach) and 
   without a world layer, the CPU presenter's uncovered pixels. Published e94aaa72 (GitHub port-2026-11-18-e94aaa72). P35D DONE.
 Round P35 closed 2026-11-18: 11 items published. Not run on this round: Win32, the full 4K check, GPU verify with the new
 options on.
+
+## P36: Mariano's eighteenth play-test feedback (2026-11-18 evening)
+Three items on the releases of 18 Nov. Brief log/roadmap/P36/BRIEF.md. Workers P36A (double click on a hole of the hole list),
+P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8 (GitHub port-2026-11-18-83900fc8).
+- Item 2, "a lot of times i see people waiting for no apparent reason" (P36B; log/roadmap/P36/P36B_notes.md). Report: every wait
+  rule of updateGolfers with addresses, and golfer-ticks per hole x reason on his Jurassic Springs save (speed 4, 14,848 ticks,
+  155 hole finishes): standing 45.5 % of a hole's time, of it partner turn-taking 57 %, reactions 10 %, the random pre-shot gate
+  9 %, the group ahead 8 %. Unattended, his own golfer holding a handed-over tee shot jams the hole: the walking in-the-way
+  test had no exception for his pair (10 golfers on hole 6). Fix 1 (cfcf0584, class b, play switch
+  updateGolfers.playerPairBlocksWalkers): at 0 a golfer for which P20A2_PlayerHolds is true stops nobody. Same run before /
+  after: hole finishes per 1,000 ticks 5.5 -> 8.8, hole 6 finishes 2 -> 10, standing 68 % -> 52 %. Open: the panel line with
+  the wait reason (part 2) and the options to cut the other waits (part 3, a question).
+- Item 3, "when 100% i get the prompt that i need to have a 18 hole course to keep improving, i should be able to go past 100"
+  (P36C fix 1, 83900fc8, class b; log/roadmap/P36/P36C_notes.md). The prompt is narrateShot's skill reward for the pro's skills
+  (caps 60 / 80 / 100 % by hole count; every class refuses a raise at level 10, so the "expand to Championship" line is false on
+  10-17 holes; a missed shot lowers a skill by a level, which makes the line repeat). His picks: play switches
+  narrateShot.skillTop100 (10+ holes: up to 200 %, level 20, a "most this skill can improve" line at the top),
+  narrateShot.missLowersTopSkill (a skill at its cap is not lowered), skillPointDialog.top100 ('+' past 100 % once the ten
+  skills of the dialog are at 100 %; the two skills nothing raises are not counted). No table is indexed by a level; saves
+  unchanged. Not measured: how long the climb to 200 % takes (skills between 100 and 200 % still drop on a missed shot).
