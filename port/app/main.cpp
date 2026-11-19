@@ -1012,6 +1012,9 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.edgeScrollTileAtZoom8", 0},  // P31B item 3 (G33): the zoom 8 edge scroll at zoom 4's screen speed (the edge glide)
     {"showGolferPairSelect.anyClickLeaves", 0},  // P32E fix 2 (play-test 14 item 11): only the check button (or a key) leaves the pair select
     {"showGolferPairSelect.noButtonHover", 0},   // P32E fix 3: the pair select check / book buttons light under the cursor (book: its tip)
+    {"narrateShot.skillTop100", 0},          // P36C (play-test 18 item 3): the pro's skills rise past 100 % up to 200 % on 10+ holes
+    {"narrateShot.missLowersTopSkill", 0},   // P36C: a skill of the pro at its course's cap is not lowered by a missed shot
+    {"skillPointDialog.top100", 0},          // P36C: skill points go past 100 % (to 200 %) once all ten skills are at 100 %
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

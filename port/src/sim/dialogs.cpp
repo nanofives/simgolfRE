@@ -77,6 +77,12 @@ int g_defect_pair_any_click_leaves = 1;
 // 0 = under the cursor the check button is drawn lit with the art the original loads for it and never draws (cell 4 of the
 // PairButtons cuts), and the book (no action) is lightened with its tip (gfx_text.cpp showGolferPairSelect.bookHover).
 int g_defect_pair_no_button_hover = 1;
+// P36C (play-test 18 item 3, class b): skillPointDialog.top100. 1 = the original: the + arrow raises a skill only below 10
+// (100 %). 0 = once every one of the ten rows the dialog shows (the pro's skills 0..9 of g_playerSkills) is at 10 or more, +
+// raises a row up to kSkillPointsTopPast (200 %, narrateShot.skillTop100's top). Skills 10 and 11 (Positive Attitude, Mental
+// Toughness) have no row here and nothing raises them, so they are not counted (log/roadmap/P36/P36C_notes.md).
+int g_defect_skill_points_top_100 = 1;
+const int8_t kSkillPointsTopPast = 20;
 
 using cm::call_peer;
 using cm::cat;
@@ -353,7 +359,13 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
       const int32_t r = hover % 10;
       const int8_t v = m.load<int8_t>(skills + u32(r));
       if (hover < 10) {
-        if (used < points && v < 10) {
+        int8_t lim = 10;
+        if (!SG_DEFECT(g_defect_skill_points_top_100)) {  // P36C: past 100 % once all ten rows are at 100 %
+          bool all = true;
+          for (uint32_t i = 0; i < 10; ++i) all = all && m.load<int8_t>(skills + i) >= 10;
+          if (all) lim = kSkillPointsTopPast;
+        }
+        if (used < points && v < lim) {
           ++used;
           --left;
           m.store<int8_t>(skills + u32(r), static_cast<int8_t>(v + 1));
@@ -1563,6 +1575,10 @@ const FuncDef kFuncs[] = {
      &g_negctl_pair_select},
 };
 const DefectDef kDefects[] = {
+    {"skillPointDialog.top100", "P36C",
+     "the + arrow raises a skill of the pro only below 100 %; fixed: once all ten skills of the dialog are at 100 % or more, + "
+     "raises them up to 200 % (the top narrateShot.skillTop100 gives shots)",
+     &g_defect_skill_points_top_100},
     {"showBulletinBoard.photoLastPostOnly", "P19D",
      "one pending photo slot that every postEvent overwrites: of the records posted before the next board call (openHole's first dogleg right / "
      "dogleg left / par 5 hole) only the last gets its photo file",

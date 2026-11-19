@@ -92,6 +92,19 @@ int g_defect_trial_edge_type = 1;
 //                                       on each side (W the view block's width), and a corner whose screen x is the hidden mark
 //                                       -1 is off screen as before
 int g_defect_narrate_wide_fit = 1;
+//   narrateShot.skillTop100             P36C (play-test 18 item 3, log/roadmap/P36/P36C_notes.md): a shot raises one of the
+//                                       pro's skills only below level 10 (100 %) on every course, and on 10 to 17 holes the
+//                                       class cap is 10 too, so reaching 100 % prints "expand your course to a Championship
+//                                       course" although 18 holes give no more; fixed: on 10 or more holes the pro's own
+//                                       skills (not the partner's table) rise up to kSkillTopPast (200 %), the line at 100 %
+//                                       is gone and reaching the top says it is the maximum; 5 / 9 holes keep 60 / 80 %
+//   narrateShot.missLowersTopSkill      P36C: a missed shot lowers one of the pro's skills above 3 by a level, also one at the
+//                                       cap of the course's class, which then climbs back and prints the cap line again;
+//                                       fixed: a skill of the pro at the cap that applies (60 / 80 % on 5 / 9 holes, the top
+//                                       on 10 or more) is not lowered (the shot's own sentence stays, without the loss)
+int g_defect_skill_top_100 = 1;
+int g_defect_miss_lowers_top = 1;
+const int32_t kSkillTopPast = 20;
 
 // ------------------------------------------------------------------------------------------------ foreign callees
 class Foreign {
@@ -1759,6 +1772,12 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
       const int32_t bucket = bucket_value(sub32(s.g_holesPlusOne, 1));
       int32_t cap = add32(mul32(bucket, 2), SG_NEGCTL(g_negctl_narrate_shot) == 1 ? 5 : 6);
       if (bucket == 3) cap = 0x63;
+      // P36C narrateShot.skillTop100: the pro's own table on 10 or more holes rises to kSkillTopPast; `top` is the level a
+      // raise must stay below (the original's 10 for every class), `held` the level a missed shot leaves alone
+      const bool past = table == 0 && bucket >= 2 && !SG_DEFECT(g_defect_skill_top_100);
+      const int32_t top = past ? kSkillTopPast : 0xa;
+      if (past) cap = top;
+      const int32_t held = table == 0 && !SG_DEFECT(g_defect_miss_lowers_top) ? (cap < top ? cap : top) : 0x80;
       const uint32_t lv = state_va(ctx, &GameState::g_playerSkills) + table;
       for (uint32_t k = 0; k < 12; ++k)
         if (!(static_cast<int8_t>(m.load<uint8_t>(lv + k)) < cap)) W.w(kSkillMask, W.w(kSkillMask) & ~i32(1u << k));
@@ -1845,13 +1864,15 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
             if (!SG_DEFECT(g_defect_mask_not_restored)) W.w(kSkillMask, savedMask);
             return i32((table & 0xffffff00u) | zx8(u32(cur)));
           }
-          m.store<uint8_t>(lvk, static_cast<uint8_t>(cur - 1));
-          cat(state_va(ctx, &GameState::f_strpool_4c3f70));
-          name(who);
-          cat(poolB + (f_typeBit7Clear(ctx, {who}) != 0 ? 0x44u : 0x30u));
-          cat(skillName);
-          cat(poolB + 0x28);
-        } else if (static_cast<int8_t>(m.load<uint8_t>(lvk)) < 0xa) {
+          if (cur < held) {  // P36C narrateShot.missLowersTopSkill: a skill at its cap keeps its level and no loss is told
+            m.store<uint8_t>(lvk, static_cast<uint8_t>(cur - 1));
+            cat(state_va(ctx, &GameState::f_strpool_4c3f70));
+            name(who);
+            cat(poolB + (f_typeBit7Clear(ctx, {who}) != 0 ? 0x44u : 0x30u));
+            cat(skillName);
+            cat(poolB + 0x28);
+          }
+        } else if (static_cast<int8_t>(m.load<uint8_t>(lvk)) < top) {
           cat(state_va(ctx, &GameState::f_strpool_4c3f70));
           name(who);
           const int32_t cur = static_cast<int8_t>(m.load<uint8_t>(lvk));
@@ -1874,7 +1895,14 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
             cat(poolB + 0x8);
             catNum(nv);
             cat(poolB);
-            if (static_cast<int8_t>(m.load<uint8_t>(lvk)) == cap) {
+            if (past && nv == cap) {  // P36C: the top of a 10+ hole course (port text; the pack has the Spanish)
+              const char *mx = "This is the most this skill can improve. ";
+              uint32_t e = text + vstrlen(m, text);
+              for (const char *c = mx;; ++c, ++e) {
+                m.store<uint8_t>(e, static_cast<uint8_t>(*c));
+                if (*c == 0) break;
+              }
+            } else if (static_cast<int8_t>(m.load<uint8_t>(lvk)) == cap) {
               cat(poolC + 0x24);
               cat(m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2a18) + 4u + u32(mul32(4, bucket))));
               cat(poolC + 0x18);
@@ -2184,6 +2212,15 @@ const DefectDef kDefects[] = {
      "side column of the wide view gets no narration and no SimFoto; fixed: the test runs over the wide view's window (view block "
      "width W: (W - 800) / 2 more on each side), a corner at the hidden mark x -1 still off screen",
      &g_defect_narrate_wide_fit},
+    {"narrateShot.skillTop100", "P36C",
+     "a shot raises a skill of the pro only below 100 % on every course, and on 10 to 17 holes reaching 100 % prints 'expand your "
+     "course to a Championship course' although 18 holes give no more; fixed: on 10 or more holes the pro's skills rise up to "
+     "200 %, no line at 100 %, and reaching 200 % says it is the most the skill can improve (5 / 9 holes keep 60 / 80 %)",
+     &g_defect_skill_top_100},
+    {"narrateShot.missLowersTopSkill", "P36C",
+     "a missed shot lowers a skill of the pro also when it is at the cap of the course's class, so it climbs back and the cap "
+     "line prints again; fixed: a skill of the pro at the cap that applies is not lowered",
+     &g_defect_miss_lowers_top},
 };
 }  // namespace
 
