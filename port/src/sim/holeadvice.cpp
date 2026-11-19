@@ -391,9 +391,11 @@ std::vector<AdviceLine> course_overview_lines(Ctx &ctx) {
   if (open == 0) return out;
   const GameState &gs = ctx.gs();
   const int32_t d = G<int32_t>(ctx, GS(g_difficulty));
-  out.push_back({fmt("Course advisor  ({1}): {2} holes, Best 100 won on {3}, Top 18 on {4}", lang::tr(kDifficulty[d & 3]),
-                     std::to_string(open), std::to_string(won1), std::to_string(won2)),
-                 kHead});
+  out.push_back({fmt("Course advisor  ({1})", lang::tr(kDifficulty[d & 3])), kHead});
+  out.push_back({fmt("{1} holes, Best 100 won on {2}, Top 18 on {3}; course fun {4}, skill {5}", std::to_string(open),
+                     std::to_string(won1), std::to_string(won2), std::to_string(G<int32_t>(ctx, GS(g_funRating))),
+                     cents(G<int32_t>(ctx, GS(g_skillRatingX100)))),
+                 kWhite});
   {
     const uint32_t mask = G<uint32_t>(ctx, GS(g_holeNoticeMask));
     std::string found;
@@ -407,9 +409,6 @@ std::vector<AdviceLine> course_overview_lines(Ctx &ctx) {
                    n == 7 ? kGood : kWhite});
   }
   (void)gs;
-  out.push_back({fmt("Course fun {1}, skill {2}", std::to_string(G<int32_t>(ctx, GS(g_funRating))),
-                     cents(G<int32_t>(ctx, GS(g_skillRatingX100)))),
-                 kWhite});
   std::stable_sort(rows.begin(), rows.end(), [](const Row &x, const Row &y) {
     const int kx = x.progress == 1000 ? 2 : x.blocked ? 1 : 0, ky = y.progress == 1000 ? 2 : y.blocked ? 1 : 0;
     if (kx != ky) return kx < ky;

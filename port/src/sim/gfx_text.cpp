@@ -1650,29 +1650,92 @@ void modal_tip_box(Gfx &g, Ctx &ctx, const std::string &text, int32_t x_left, in
   std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
 }
 
-// P37A (gfx_text.h advice_panel)
+// P37A (gfx_text.h advice_panel), restyled after Mariano's "lo podés hacer con la estética del juego?" (2026-11-19): the panel
+// copies the Hole Stats screen's look, measured from its pixels at 1920x1080 (log/roadmap/P37/runs/d1): a lavender (148, 148,
+// 198) frame with a one-pixel dark (46, 54, 87) outline, a light (171, 171, 211) rim and rounded corners, a darkened drop
+// shadow, the title in a pale pill as the screen's "Comments" label, and the lines on the cream (255, 247, 231) box with a
+// (117, 117, 158) edge, in the screen's own font (g_fontRef_821ee8, the comments' font); when the lines do not fit in max_h in
+// that font the palette tip's smaller font (g_fontRef_519fd8) is used. lines[0] is the title. Drawing only.
+namespace {
+constexpr uint16_t rgb(int r, int g, int b) { return static_cast<uint16_t>(((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)); }
+constexpr uint16_t kLav = rgb(148, 148, 198), kLavRim = rgb(171, 171, 211), kOutline = rgb(46, 54, 87), kCream = rgb(255, 247, 231),
+                   kCreamEdge = rgb(117, 117, 158), kCreamBevel = rgb(191, 187, 196), kPill = rgb(214, 214, 239);
+struct Px {
+  Surface16 &r;
+  void set(int32_t x, int32_t y, uint16_t c) {
+    if (x < 0 || y < 0 || x >= r.w || y >= r.h) return;
+    uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+    o = c;
+    hud_mark(&o);
+  }
+  void darken(int32_t x, int32_t y) {
+    if (x < 0 || y < 0 || x >= r.w || y >= r.h) return;
+    uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
+    o = static_cast<uint16_t>((o >> 1) & 0x3def);
+    hud_mark(&o);
+  }
+  // inside a rectangle with corners rounded by rad (a quarter circle cut)
+  static bool inside(int32_t x, int32_t y, int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t rad) {
+    if (x < x0 || x >= x1 || y < y0 || y >= y1) return false;
+    const int32_t cx = x < x0 + rad ? x0 + rad : x >= x1 - rad ? x1 - rad - 1 : x;
+    const int32_t cy = y < y0 + rad ? y0 + rad : y >= y1 - rad ? y1 - rad - 1 : y;
+    const int32_t dx = x - cx, dy = y - cy;
+    return dx * dx + dy * dy <= rad * rad;
+  }
+  // a rounded box: fill, a one-pixel outline, an optional rim just inside the outline's top and left
+  void box(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t rad, uint16_t fill, uint16_t outline, uint16_t rim, bool has_rim) {
+    for (int32_t y = y0; y < y1; ++y)
+      for (int32_t x = x0; x < x1; ++x) {
+        if (!inside(x, y, x0, y0, x1, y1, rad)) continue;
+        const bool edge = !inside(x - 1, y, x0, y0, x1, y1, rad) || !inside(x + 1, y, x0, y0, x1, y1, rad) ||
+                          !inside(x, y - 1, x0, y0, x1, y1, rad) || !inside(x, y + 1, x0, y0, x1, y1, rad);
+        const bool rim_px = has_rim && !edge && (!inside(x - 2, y, x0, y0, x1, y1, rad) || !inside(x, y - 2, x0, y0, x1, y1, rad));
+        set(x, y, edge ? outline : rim_px ? rim : fill);
+      }
+  }
+  void shadow(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t rad, int32_t d) {
+    for (int32_t y = y0 + d; y < y1 + d; ++y)
+      for (int32_t x = x0 + d; x < x1 + d; ++x)
+        if (inside(x, y, x0 + d, y0 + d, x1 + d, y1 + d, rad) && !inside(x, y, x0, y0, x1, y1, rad)) darken(x, y);
+  }
+};
+// the colour a line asks for (holeadvice.cpp's words for the dark box) as the cream box shows it: the comments' green and red,
+// black for plain lines, a dark orange for warnings, a slate for hints
+uint32_t on_cream(uint32_t c) {
+  switch (c) {
+    case 0x80007fffu: return 0x80000000u;   // plain
+    case 0x800013e4u: return 0x80001284u;   // good: the comments' praise green
+    case 0x80007d08u: return 0x80007d08u;   // bad: the comments' complaint red
+    case 0x80007fe0u: return 0x80006180u;   // warning
+    case 0x800056b5u: return 0x8000294eu;   // hint
+    default: return c;
+  }
+}
+}  // namespace
+
 void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uint32_t>> &lines, int32_t x0, int32_t y0, int32_t w,
                   int32_t max_h, const std::vector<int32_t> &tabs, int32_t flow_from, int32_t columns) {
-  if (lines.empty()) return;
-  // P37B: lines from flow_from on flow into `columns` side-by-side columns (tab stops relative to each column's start); the
-  // lines before it span the box
+  if (lines.size() < 2) return;
+  g.ensure_root(ctx);
+  Surface16 &r = g.root;
+  if (r.w < 800 || r.h < 600) return;
+  // P37B: body lines from flow_from on flow into `columns` side-by-side columns (tab stops relative to each column's start); the
+  // lines before it span the box. lines[0] is the title, in the pill.
   const int32_t nl = static_cast<int32_t>(lines.size());
-  if (flow_from < 0 || flow_from > nl || columns < 1) {
+  if (flow_from < 1 || flow_from > nl || columns < 1) {
     flow_from = nl;
     columns = 1;
   }
   const int32_t per_col = (nl - flow_from + columns - 1) / columns;
-  g.ensure_root(ctx);
-  Surface16 &r = g.root;
-  if (r.w < 800 || r.h < 600) return;
+  const int32_t body_rows = (flow_from - 1) + per_col;
   uint32_t keep_fonts[4];
   std::memcpy(keep_fonts, g.fonts, sizeof keep_fonts);
-  const uint32_t root = g.root_va(ctx), f = state_va(ctx, &GameState::g_fontRef_519fd8);
-  call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+  const uint32_t root = g.root_va(ctx);
   TextMetrics *tm = text_metrics(ctx);
+  uint32_t f = 0;
   int32_t asc = 8;
   auto width = [&](const std::string &s) {
-    int32_t m5 = 5 * static_cast<int32_t>(s.size());
+    int32_t m5 = 6 * static_cast<int32_t>(s.size());
     if (tm)
       with_saved_state(ctx, [&]() {
         const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
@@ -1683,38 +1746,70 @@ void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uin
       });
     return m5;
   };
-  width("Hg");   // the ascent
-  const int32_t row = asc + asc / 3 + 2;
-  int32_t rows = flow_from + per_col;
-  if (6 + row * rows > max_h) rows = (max_h - 6) / row;
-  if (rows <= 0) {
-    std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
-    return;
-  }
-  x0 = std::max(0, std::min(x0, 800 - 16));
-  w = std::max(16, std::min(w, 800 - x0));
-  y0 = std::max(0, std::min(y0, 600 - 6 - row));
-  const int32_t h = std::min(600 - y0, 6 + row * rows);
-  // the box: RGB555 (2, 2, 3) inside a one-pixel gold (31, 20, 0) rule
-  for (int32_t y = y0; y < y0 + h; ++y)
-    for (int32_t x = x0; x < x0 + w; ++x) {
-      const bool edge = y == y0 || y == y0 + h - 1 || x == x0 || x == x0 + w - 1;
-      uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
-      o = edge ? static_cast<uint16_t>((31 << 10) | (20 << 5)) : static_cast<uint16_t>((2 << 10) | (2 << 5) | 3);
-      hud_mark(&o);
+  // the screen's font when the box holds every line and the longest fits its column, else the small one
+  const uint32_t font_big = state_va(ctx, &GameState::g_fontRef_821ee8), font_small = state_va(ctx, &GameState::g_fontRef_519fd8);
+  // the title in the screen's font (as its "Comments" label), measured first
+  f = font_big;
+  call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+  const std::string title = lines[0].first;
+  const int32_t title_w = width(title), pill_h = asc + asc / 4 + 4;
+  const int32_t pad = 8, top = pill_h / 2 + 4;   // frame to cream box; the pill's centre above the cream box
+  auto layout = [&](uint32_t font, int32_t &row, int32_t &need_h, bool &fits) {
+    f = font;
+    call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+    width("Hg");
+    row = asc + asc / 4 + 2;
+    need_h = top + pill_h / 2 + 3 + row * body_rows + 6 + pad;
+    fits = need_h <= max_h;
+    const int32_t col_w = (w - 2 * pad - 10) / columns;
+    for (int32_t k = 1; fits && k < nl; ++k) {
+      const std::string &l = lines[static_cast<size_t>(k)].first;
+      if (l.find('\t') != std::string::npos) continue;   // tabbed cells are cut to their columns
+      if (width(l) > (k >= flow_from ? col_w : w - 2 * pad - 10) + 12) fits = false;
     }
-  const int32_t col_w = (w - 10) / columns;
-  for (int32_t k = 0; k < nl; ++k) {
-    // the line's place: a full-width row, or row flow_from + i % per_col of column i / per_col
-    int32_t slot = k, base = 0, avail = w - 10;
+  };
+  int32_t row = 0, need_h = 0;
+  bool fits = false;
+  layout(font_big, row, need_h, fits);
+  if (!fits) layout(font_small, row, need_h, fits);
+  x0 = std::max(2, std::min(x0, 800 - 40));
+  w = std::max(40, std::min(w, 800 - 4 - x0));
+  const int32_t h = std::min(need_h, max_h);
+  y0 = std::max(2, std::min(y0, 600 - 4 - h));
+  // the frame, its shadow, the cream box and the title pill
+  Px p{r};
+  p.shadow(x0, y0, x0 + w, y0 + h, 10, 4);
+  p.box(x0, y0, x0 + w, y0 + h, 10, kLav, kOutline, kLavRim, true);
+  const int32_t pill_x = x0 + pad + 6, pill_y = y0 + top - pill_h / 2;
+  const int32_t cream_y0 = y0 + top, cream_y1 = y0 + h - pad;
+  p.box(x0 + pad, cream_y0, x0 + w - pad, cream_y1, 4, kCream, kCreamEdge, kCreamBevel, true);
+  p.box(pill_x, pill_y, pill_x + title_w + 24, pill_y + pill_h, pill_h / 2, kPill, kOutline, kPill, false);
+  auto text = [&](const std::string &s, int32_t x, int32_t y, uint32_t colour) {
+    with_saved_state(ctx, [&]() {
+      const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+      put_str(ctx, buf, s);
+      call(g, ctx, "drawCenteredText", {buf, u(x), u(y), colour});
+    });
+  };
+  const uint32_t body_font = f;
+  call(g, ctx, "setDrawTarget", {root, font_big, 0, 0, 0});
+  text(title, pill_x + 12 + title_w / 2, pill_y + 2, 0x80000136u);   // the labels' dark blue (0, 74, 181)
+  f = body_font;
+  call(g, ctx, "setDrawTarget", {root, f, 0, 0, 0});
+  // the body
+  const int32_t tx0 = x0 + pad + 6, ty0 = pill_y + pill_h + 3, inner_w = w - 2 * pad - 12;
+  const int32_t rows = std::max(0, (cream_y1 - 3 - ty0) / row);
+  const int32_t col_w = inner_w / columns;
+  for (int32_t k = 1; k < nl; ++k) {
+    int32_t slot = k - 1, base = 0, avail = inner_w;
     if (k >= flow_from) {
       const int32_t i = k - flow_from;
-      slot = flow_from + i % per_col;
+      slot = (flow_from - 1) + i % per_col;
       base = (i / per_col) * col_w;
       avail = col_w - 6;
     }
     if (slot >= rows) continue;
-    // P37B: a line with '\t' is cells at the tab stops (x offsets from the column's text start); each cell is cut to its column
+    // a line with '\t' is cells at the tab stops (scaled to the font: the stops are given for the small font's 5-pixel average)
     const std::string &line = lines[static_cast<size_t>(k)].first;
     std::vector<std::string> cells;
     if (tabs.empty() || line.find('\t') == std::string::npos) {
@@ -1728,22 +1823,20 @@ void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uin
         i = j + 1;
       }
     }
+    const int32_t scale100 = (avail * 100) / std::max(1, (tabs.empty() ? avail : (w - 10) / columns - 6));
     for (size_t c = 0; c < cells.size(); ++c) {
-      const int32_t cx = cells.size() == 1 ? 0 : (c < tabs.size() ? tabs[c] : tabs.back());
-      const int32_t limit = (cells.size() == 1 || c + 1 >= tabs.size() ? avail : tabs[c + 1] - 6) - cx;
+      const int32_t stop = cells.size() == 1 ? 0 : (c < tabs.size() ? tabs[c] : tabs.back());
+      const int32_t next = (cells.size() == 1 || c + 1 >= tabs.size()) ? -1 : tabs[c + 1];
+      const int32_t cx = (stop * scale100) / 100;
+      const int32_t limit = (next < 0 ? avail : (next * scale100) / 100 - 6) - cx;
       std::string s = cells[c];
-      int32_t tw = width(s);
-      while (tw > limit && s.size() > 1) {   // cut to the column (the box for an untabbed line)
+      int32_t sw = width(s);
+      while (sw > limit && s.size() > 1) {   // cut to the column
         s.pop_back();
-        tw = width(s);
+        sw = width(s);
       }
       if (s.empty()) continue;
-      with_saved_state(ctx, [&]() {
-        const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
-        put_str(ctx, buf, s);
-        call(g, ctx, "drawCenteredText",
-             {buf, u(x0 + 5 + base + cx + tw / 2), u(y0 + 3 + row * slot), lines[static_cast<size_t>(k)].second});
-      });
+      text(s, tx0 + base + cx + sw / 2, ty0 + row * slot, on_cream(lines[static_cast<size_t>(k)].second));
     }
   }
   std::memcpy(g.fonts, keep_fonts, sizeof keep_fonts);
