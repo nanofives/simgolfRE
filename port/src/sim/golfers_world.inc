@@ -107,10 +107,10 @@ void update_vip_residents(Ctx &ctx) {
 uint32_t place_habitat(Ctx &ctx, int32_t x, int32_t y, int32_t type) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_place_habitat);
-  const int32_t cell = add32(mul32(x, 50), y);
-  const Ptr<uint8_t> hi = state_arr(ctx, &GameState::g_tileFlags).as<uint8_t>().byte(1) + mul32(cell, 2);
+  const int32_t cell = tile_index(ctx, x, y);
+  const Ptr<uint8_t> hi = grid_arr(ctx, &GameState::g_tileFlags).as<uint8_t>().byte(1) + mul32(cell, 2);
   hi.set(static_cast<uint8_t>(hi.get() & (mode == 1 ? 0xdf : 0xde)));
-  (state_arr(ctx, &GameState::g_tileType) + cell).set(static_cast<int8_t>(type));
+  (grid_arr(ctx, &GameState::g_tileType) + cell).set(static_cast<int8_t>(type));
   const int32_t x2 = x + i32(random_range(rng(ctx), 3) & 0xffffu) - 1;
   const int32_t y2 = y + i32(random_range(rng(ctx), 3) & 0xffffu) - 1;
   uint32_t r = random_range(rng(ctx), 8);
@@ -120,7 +120,7 @@ uint32_t place_habitat(Ctx &ctx, int32_t x, int32_t y, int32_t type) {
   if ((slots + i32(r)).field(&HabitatSlot::kind).get() != 0xff) return r;
   if ((gs.g_preferences & 0x20u) == 0) return r;
   uint32_t k = random_range(rng(ctx), 9) & 0xffffu;
-  const int8_t tile = state_arr(ctx, &GameState::g_tileType)[add32(mul32(x2, 50), y2)];
+  const int8_t tile = grid_arr(ctx, &GameState::g_tileType)[tile_index(ctx, x2, y2)];
   const Ptr<F_Animal> recs = state_arr(ctx, &GameState::f_tab_animals_4c1998);
   int32_t tries = 1;
   for (;;) {

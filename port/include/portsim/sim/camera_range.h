@@ -30,7 +30,7 @@ extern int32_t g_camera_bound_margins[4];  // left, top, right, bottom (800-spac
 constexpr int32_t kCameraBoundExtraPct = 30;
 extern int32_t g_camera_bound_extra_pct;
 struct CameraRange {
-  int32_t lo[2] = {0, 0}, hi[2] = {0x31, 0x31};  // [0] gCameraTileX, [1] gCameraTileY
+  int32_t lo[2] = {0, 0}, hi[2] = {0x31, 0x31};  // [0] gCameraTileX, [1] gCameraTileY (camera_range sets hi to N - 1)
 };
 // the legal range now (at switch 1, or before a land exists: 0..0x31 on both axes)
 CameraRange camera_range(Ctx &ctx);

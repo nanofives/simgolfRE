@@ -8,6 +8,7 @@
 
 #include "events_internal.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"
 #include "portsim/sim/events.h"
 #include "portsim/sim/text.h"
 #include "portsim/sim/tiles.h"
@@ -95,6 +96,10 @@ void backend_call(Ctx &ctx, const char *name, std::initializer_list<uint32_t> ar
 using portsim::ev::G;
 using portsim::ev::fld;
 #define GS(sym) portsim::state_va(ctx, &portsim::GameState::sym)
+// P38A: a world grid's base (portsim/sim/world.h) and the world size: WN = N (the original's 50 / 0x32), WV = N + 1 (51)
+#define GV(sym) portsim::grid_va(ctx, &portsim::GameState::sym)
+#define WN portsim::world_n(ctx)
+#define WV portsim::world_v(ctx)
 #define Rec(g) portsim::ev::rec_va(ctx, (g))
 #define Rnd(n) portsim::ev::rng_range(ctx, (n))
 #define TypeFlags(t) portsim::ev::G<unsigned char>(ctx, GS(g_golferTypes) + 32 + static_cast<unsigned>(t) * 0x230u)

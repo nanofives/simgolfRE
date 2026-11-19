@@ -89,9 +89,9 @@ void buildSceneSprites(int kind, int variant, int x, int y, int x2, int y2, int 
     VP<unsigned char> rec = vp<unsigned char>(GS(g_placed_objects) + 16 * obj);
     const int ox = *vp<short>(rec + 2);
     const int oy = *vp<short>(rec + 4);
-    const int tile = oy + 50 * ox;                                    // ebp (buildSceneSprites+0xe9..buildSceneSprites+0x10d)
-    VP<unsigned short> bits = vp<unsigned short>(GS(g_tileFlags) + 2 * tile);
-    VP<unsigned char> tbyte = vp<unsigned char>(GS(tile_anim_frame) + tile);
+    const int tile = oy + WN * ox;                                    // ebp (buildSceneSprites+0xe9..buildSceneSprites+0x10d)
+    VP<unsigned short> bits = vp<unsigned short>(GV(g_tileFlags) + 2 * tile);
+    VP<unsigned char> tbyte = vp<unsigned char>(GV(tile_anim_frame) + tile);
     int lift = 0;                                                     // [esp+0x10]
     if (!BR(0, (*bits & 0x4000) == 0)) {
         const unsigned b = *tbyte;
@@ -357,8 +357,8 @@ void buildSceneSprites(int kind, int variant, int x, int y, int x2, int y2, int 
                                 Enq(px, py, py, 0x28, 0x28, G<int>(GS(g_sceneCount838204)), 4, 0x1a);   // buildSceneSprites+0x168e
                             }
                         }
-                        // buildSceneSprites+0x1696: the tile-type map g_tileType (50 bytes per row) under this cell
-                        if (BR(0, G<unsigned char>(GS(g_tileType) + 50 * gx + j + oy) == 1)) {
+                        // buildSceneSprites+0x1696: the tile-type map g_tileType (N bytes per row, 50 in the original) under this cell
+                        if (BR(0, G<unsigned char>(GV(g_tileType) + WN * gx + j + oy) == 1)) {
                             c = Cell(0x1bd, Add(Add(i, j), Date()) % G<int>((GS(g_sheetCols) + 1780)), 0);
                             Enq(px, py, py, 0x28, 0x28, c, 3, 0x1a);  // buildSceneSprites+0x178a
                         } else if (!BR(0, 2 * j - 2 != i)) {

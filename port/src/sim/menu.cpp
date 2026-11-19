@@ -20,6 +20,7 @@
 #include "portsim/sim/flic.h"
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -500,11 +501,13 @@ int32_t load_interface_art(Ctx &ctx, int32_t full) {
   fill(ranking, 0x3C, 0);
   gs.g_holesPlusOne = 1;
   fill(va(&GameState::g_holePoints), 0x72, 0xFFFFFFFFu);
-  fill(va(&GameState::g_tileFlags), 0x4E2, 0);
-  fill(va(&GameState::g_ballStopCount), 0x271, 0);
-  const uint32_t corners = va(&GameState::g_cornerLevel);
-  fill(corners, 0x28A, 0);
-  m.store<uint8_t>(corners + 0x28A * 4, 0);
+  fill(grid_va(ctx, &GameState::g_tileFlags), u32(grid_dwords(ctx, 2)), 0);
+  fill(grid_va(ctx, &GameState::g_ballStopCount), u32(grid_dwords(ctx, 1)), 0);
+  const uint32_t corners = grid_va(ctx, &GameState::g_cornerLevel);
+  // the vertex grid: (N + 1)^2 / 4 dwords (0x28a at 50) then the remaining (N + 1)^2 % 4 bytes (one at 50)
+  const uint32_t corner_dwords = u32(world_verts(ctx) / 4);
+  fill(corners, corner_dwords, 0);
+  for (uint32_t i = 0; i < u32(world_verts(ctx) % 4); ++i) m.store<uint8_t>(corners + corner_dwords * 4 + i, 0);
   for (int32_t i = 0; i < 8; ++i) gs.g_themeSlots59bfc4[i] = i;
   for (PlacedObject &o : gs.g_placed_objects) o.type = -1;
   gs.g_challengeLevel = 0;

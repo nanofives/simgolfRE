@@ -142,8 +142,8 @@ struct World : TkBase {
             const int d = a.dir();
             const int tx = sar32(shl32(DirX(d), 10) / 3 + a.x(), 10);
             const int ty = sar32(shl32(DirY(d), 10) / 3 + a.y(), 10);
-            const uint32_t cell = static_cast<uint32_t>(add32(mul32(0x32, tx), ty));
-            if (cc("tileBlocked", tx, ty) != 0 || G8(GS(g_tileType) + cell) == 0x11 || G8(GS(g_tileType) + cell) == 0x16) {
+            const uint32_t cell = static_cast<uint32_t>(add32(mul32(WN, tx), ty));
+            if (cc("tileBlocked", tx, ty) != 0 || G8(GV(g_tileType) + cell) == 0x11 || G8(GV(g_tileType) + cell) == 0x16) {
               a.dir() = static_cast<int8_t>((a.dir() + 1) & 7);
               if ((Range(100) & 0xFFFF) == 0) a.kind() = -1;
             }
@@ -209,7 +209,7 @@ struct World : TkBase {
           if (SG_NEGCTL(g_negctl_draw_world_objects) == 1) continue;  // no spawn roll for kind 0
           if ((Range(100) & 0xFFFF) == 0 && Date() > 0x2000) {
             X = 0;
-            Y = shl32(Range(50) & 0xFFFF, 10);
+            Y = shl32(Range(WN) & 0xFFFF, 10);
             V = 0x28;
           }
           continue;
@@ -227,7 +227,7 @@ struct World : TkBase {
         }
         if (FlagsByte() & 4) continue;
         X += shl32(cc("clamp", V.get(), 0, 0x28), 6) / 200;
-        if (X > 0xCC00) X = -1;
+        if (X > world_units(ctx) + 0x400) X = -1;
         const int tx = sar32(X, 10), ty = sar32(Y, 10);
         const int date = Date();
         if ((date & 3) == 0) {
@@ -249,13 +249,13 @@ struct World : TkBase {
               break;
             case 2:
             case 3: {
-              const uint32_t cell = static_cast<uint32_t>(ty + 0x32 * tx);
-              const int8_t c1 = G8(GS(g_tileType) + cell);
+              const uint32_t cell = static_cast<uint32_t>(ty + WN * tx);
+              const int8_t c1 = G8(GV(g_tileType) + cell);
               const uint8_t t1 = GU8(GS(g_tileTypeAttrs) + 0x26 + static_cast<uint32_t>(0x30 * c1));
               bool rise = t1 == 0x0D;
               int8_t c2 = 0;
               if (!rise) {
-                c2 = G8(GS(g_tileType) + 0x32 + cell);
+                c2 = G8(GV(g_tileType) + u32(WN) + cell);
                 rise = GU8(GS(g_tileTypeAttrs) + 0x26 + static_cast<uint32_t>(0x30 * c2)) == 0x0D || c1 == 0x16 || c2 == 0x16 ||
                        c1 == 0x15 || c2 == 0x15 || t1 == 0x11 || G8(GS(g_tileTypeAttrs) + 0x22 + static_cast<uint32_t>(0x30 * c1)) <= 0;
               }
@@ -268,12 +268,12 @@ struct World : TkBase {
             }
           }
         }
-        if (Y > 0xCC00) X = -1;
+        if (Y > world_units(ctx) + 0x400) X = -1;
       } else if (kind == 1) {
         if (X == -1) {
           if ((Range(100) & 0xFFFF) == 0) {
-            const int r = Range(50) & 0xFFFF;
-            if (GU8(GS(g_tileTypeAttrs) + 0x26 + static_cast<uint32_t>(0x30 * G8(GS(g_tileType) + static_cast<uint32_t>(0x32 * r)))) == 0x11) {
+            const int r = Range(WN) & 0xFFFF;
+            if (GU8(GS(g_tileTypeAttrs) + 0x26 + static_cast<uint32_t>(0x30 * G8(GV(g_tileType) + static_cast<uint32_t>(WN * r)))) == 0x11) {
               X = shl32(r, 10) + 0x200;
               Y = 0x200;
               D = 4;
@@ -320,7 +320,7 @@ struct World : TkBase {
         if (X == -1) {
           if ((Range(100) & 0xFFFF) == 0 && Date() > 0x2000) {
             X = 0;
-            Y = shl32(Range(50) & 0xFFFF, 10);
+            Y = shl32(Range(WN) & 0xFFFF, 10);
             V = 0x50;
           }
           continue;
@@ -339,16 +339,16 @@ struct World : TkBase {
         }
         if (FlagsByte() & 4) continue;
         X += mul32(cc("clamp", V.get(), 0, 0x28), 0x40) / 0x80;
-        if (X > 0xCC00) X = -1;
-        if (Y > 0xCC00) X = -1;
+        if (X > world_units(ctx) + 0x400) X = -1;
+        if (Y > world_units(ctx) + 0x400) X = -1;
       } else if (kind == 3) {
         if (X == -1) {
           if ((Range(100) & 0xFFFF) == 0) {
             switch (Range(4) & 0xFFFF) {
-              case 0: X = 0;      Y = shl32(Range(50) & 0xFFFF, 10); D = 2; break;
-              case 1: Y = 0;      X = shl32(Range(50) & 0xFFFF, 10); D = 4; break;
-              case 2: X = 0xC800; Y = shl32(Range(50) & 0xFFFF, 10); D = 6; break;
-              case 3: Y = 0xC800; X = shl32(Range(50) & 0xFFFF, 10); D = 0; break;
+              case 0: X = 0;      Y = shl32(Range(WN) & 0xFFFF, 10); D = 2; break;
+              case 1: Y = 0;      X = shl32(Range(WN) & 0xFFFF, 10); D = 4; break;
+              case 2: X = world_units(ctx); Y = shl32(Range(WN) & 0xFFFF, 10); D = 6; break;
+              case 3: Y = world_units(ctx); X = shl32(Range(WN) & 0xFFFF, 10); D = 0; break;
             }
           }
           continue;
@@ -372,8 +372,8 @@ struct World : TkBase {
         if (FlagsByte() & 4) continue;
         X += shl32(DirX(D), 7);
         Y += shl32(DirY(D), 7);
-        if (X > 0xCC00 || X < 0) X = -1;
-        if (Y > 0xCC00 || Y < 0) X = -1;
+        if (X > world_units(ctx) + 0x400 || X < 0) X = -1;
+        if (Y > world_units(ctx) + 0x400 || Y < 0) X = -1;
       }
     }
     GU32(GS(g_flags)) &= ~1u;

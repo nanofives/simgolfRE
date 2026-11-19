@@ -12,6 +12,7 @@
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -71,11 +72,11 @@ void points_popup(Ctx &ctx, int32_t pts, int32_t x, int32_t y, int32_t who) {
 
 int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t flags) {
   const Ptr<int32_t> extra = state_arr(ctx, &GameState::g_objectTypeLevel);
-  const Ptr<uint8_t> level = state_arr(ctx, &GameState::g_cornerLevel);
-  const Ptr<int8_t> type = state_arr(ctx, &GameState::g_tileType);
-  const Ptr<int8_t> cost = state_arr(ctx, &GameState::g_tilePathCost);
-  const Ptr<uint16_t> word = state_arr(ctx, &GameState::g_tileFlags);
-  const Ptr<uint8_t> var = state_arr(ctx, &GameState::g_tileVariant);
+  const Ptr<uint8_t> level = grid_arr(ctx, &GameState::g_cornerLevel);
+  const Ptr<int8_t> type = grid_arr(ctx, &GameState::g_tileType);
+  const Ptr<int8_t> cost = grid_arr(ctx, &GameState::g_tilePathCost);
+  const Ptr<uint16_t> word = grid_arr(ctx, &GameState::g_tileFlags);
+  const Ptr<uint8_t> var = grid_arr(ctx, &GameState::g_tileVariant);
   const int mode = SG_NEGCTL(g_negctl_stamp);
   int32_t side = item_size(ctx, kind);
   if (flags == -2) side = side + 1;
@@ -85,8 +86,8 @@ int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t
   for (int32_t c = 0; c < side; ++c) {
     for (int32_t r = 0; r < side; ++r) {
       if (r < side - 1 || c != 0 || mode == 1)
-        (level + add32(mul32(add32(c, x), kCornerW), add32(y, r))).set((level + add32(mul32(x, kCornerW), y)).get());
-      const int32_t idx = add32(add32(y, r), mul32(add32(c, x), 50));
+        (level + add32(mul32(add32(c, x), world_v(ctx)), add32(y, r))).set((level + add32(mul32(x, world_v(ctx)), y)).get());
+      const int32_t idx = add32(add32(y, r), mul32(add32(c, x), world_n(ctx)));
       (type + idx).set(static_cast<int8_t>((kind != 5 ? 1 : 0) + 0x15));
       (cost + idx).set(static_cast<int8_t>(cost22));
       if (kind == 6) {
@@ -110,7 +111,7 @@ int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t
       const uint32_t a = random_range(seed, u32(n)) & 0xFFFFu;
       const uint32_t b = random_range(seed, u32(n)) & 0xFFFFu;
       // the marks grid is g_tileType shifted by one row and one column
-      const uint32_t at = a + 50u * (b + u32(x)) + u32(y) + 51u;
+      const uint32_t at = a + u32(world_n(ctx)) * (b + u32(x)) + u32(y) + u32(world_v(ctx));
       (type + i32(at)).set(static_cast<int8_t>((k == 3 && mode != 2) ? 7 : 1));
     }
   } else if (kind == 0xF) {
@@ -119,7 +120,7 @@ int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t
     w0.field(&Walker::post_y).set(static_cast<int8_t>(y + 1));
   }
   if (flags < 0) return 0;
-  const int32_t base = add32(y, mul32(50, x));
+  const int32_t base = add32(y, mul32(world_n(ctx), x));
   (word + base).set(static_cast<uint16_t>((word + base).get() | static_cast<uint16_t>(kind + 1)));
   const Ptr<PlacedObject> recs = state_arr(ctx, &GameState::g_placed_objects);
   int32_t slot = 0;
@@ -142,9 +143,9 @@ int32_t stamp_course_tiles(Ctx &ctx, int32_t x, int32_t y, int32_t kind, int32_t
       static_cast<uint8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_ui_5a34e4) + 0xC) & 3));
   const int32_t n = add32(extra[kind], item_size(ctx, kind));
   for (int32_t row = 0; row < n; ++row) {
-    for (int32_t col = 0; col < n; ++col) (var + add32(add32(base, row * 50), col)).set(static_cast<uint8_t>(slot));
+    for (int32_t col = 0; col < n; ++col) (var + add32(add32(base, row * world_n(ctx)), col)).set(static_cast<uint8_t>(slot));
     for (int32_t col = 0; col < n; ++col) {
-      const Ptr<uint16_t> p = word + add32(add32(base, row * 50), col);
+      const Ptr<uint16_t> p = word + add32(add32(base, row * world_n(ctx)), col);
       p.set(static_cast<uint16_t>((p.get() & 0xFEFF) | 0x0400));
     }
   }
@@ -173,22 +174,22 @@ uint32_t clear_object_footprint(Ctx &ctx, int32_t index) {
   rec.field(&PlacedObject::type).set(-1);
   if (type == 0xF) g.g_flags |= 0x800u;
   int32_t side = item_size(ctx, type);
-  const int32_t cell0 = add32(y, mul32(x, 50));
-  const Ptr<uint16_t> word = state_arr(ctx, &GameState::g_tileFlags);
+  const int32_t cell0 = add32(y, mul32(x, world_n(ctx)));
+  const Ptr<uint16_t> word = grid_arr(ctx, &GameState::g_tileFlags);
   (word + cell0).set(static_cast<uint16_t>((word + cell0).get() & 0xFDE0));
   if (type >= 6 && type != 7) side = add32(side, sub32((state_arr(ctx, &GameState::g_objectTypeLevel) + type).get(), 1));
   if (side > 0) {
     const uint8_t ct = static_cast<uint8_t>(g.g_courseType);
     const int8_t fill = (type == 0xC && (ct == 0 || ct == 2)) ? 0x11 : static_cast<int8_t>((g.g_courseIndex >= 0xC ? 1 : 0) + 4);
-    int32_t row_base = mul32(x, 50);
+    int32_t row_base = mul32(x, world_n(ctx));
     for (int32_t r = 0; r < side; ++r) {
       for (int32_t c = 0; c < side; ++c) {
         const int32_t cell = add32(add32(row_base, y), c);
         (word + cell).set(static_cast<uint16_t>((word + cell).get() & 0xFBDF));
-        (state_arr(ctx, &GameState::g_tileType) + cell).set(fill);
-        (state_arr(ctx, &GameState::g_tileVariant) + cell).set(0);
+        (grid_arr(ctx, &GameState::g_tileType) + cell).set(fill);
+        (grid_arr(ctx, &GameState::g_tileVariant) + cell).set(0);
       }
-      row_base = add32(row_base, 50);
+      row_base = add32(row_base, world_n(ctx));
     }
   }
   return rebuild_heightfield(ctx);
@@ -233,10 +234,10 @@ int32_t step_course_edit_queue(Ctx &ctx) {
   const Ptr<int32_t> qcol = state_arr(ctx, &GameState::g_editQueueY) + i;
   const Ptr<int32_t> qmode = state_arr(ctx, &GameState::g_editQueueMode) + i;
   const int32_t col = qcol.get(), row = qrow.get(), mode = qmode.get();
-  const int32_t idx = add32(col, mul32(50, row));
-  const Ptr<uint16_t> tw = state_arr(ctx, &GameState::g_tileFlags) + idx;
+  const int32_t idx = add32(col, mul32(world_n(ctx), row));
+  const Ptr<uint16_t> tw = grid_arr(ctx, &GameState::g_tileFlags) + idx;
   const Ptr<uint8_t> twh = tw.as<uint8_t>().byte(1);
-  const Ptr<uint8_t> anim = state_arr(ctx, &GameState::tile_anim_frame) + idx;
+  const Ptr<uint8_t> anim = grid_arr(ctx, &GameState::tile_anim_frame) + idx;
   const Ptr<HoleRecord> holes = state_arr(ctx, &GameState::g_holes);
   if (mode & 0x80) {
     tw.set(static_cast<uint16_t>(tw.get() ^ static_cast<uint16_t>(mode & 0xFF7F)));
@@ -253,7 +254,7 @@ int32_t step_course_edit_queue(Ctx &ctx) {
     }
     g.f_w_4c2848[3] = -1;
   } else {
-    const Ptr<uint8_t> lv = state_arr(ctx, &GameState::g_cornerLevel) + add32(mul32(51, row), col);
+    const Ptr<uint8_t> lv = grid_arr(ctx, &GameState::g_cornerLevel) + add32(mul32(world_v(ctx), row), col);
     if (SG_DEFECT(g_defect_corner_level_clamp)) {
       if (mode == 0x7F) lv.set(static_cast<uint8_t>(lv.get() + 1));
       if (mode == 0x7E) lv.set(static_cast<uint8_t>(lv.get() - 1));
@@ -295,7 +296,7 @@ int32_t step_course_edit_queue(Ctx &ctx) {
         if (!SG_DEFECT(g_defect_phantom_story) && g2 >= 0) b.field(&Golfer::story_id).set(-1);  // P32F
         H = g.g_holesPlusOne;
       }
-      (state_arr(ctx, &GameState::g_tileType) + idx).set(static_cast<int8_t>(qmode.get()));
+      (grid_arr(ctx, &GameState::g_tileType) + idx).set(static_cast<int8_t>(qmode.get()));
       const int32_t m3 = qmode.get();
       if ((state_arr(ctx, &GameState::g_tileTypeAttrs) + m3).field(&TileTypeAttr::collar).get() == 0xD) {
         twh.set(static_cast<uint8_t>(twh.get() | 0x40));
@@ -383,13 +384,13 @@ int32_t demolish_object(Ctx &ctx, int32_t x, int32_t y) {
   GameState &g = ctx.gs();
   const int32_t blocked = tile_blocked(ctx, x, y);
   if (blocked != 0) return blocked;
-  const int32_t idx = add32(mul32(x, 50), y);
-  const Ptr<uint16_t> w = state_arr(ctx, &GameState::g_tileFlags) + idx;
+  const int32_t idx = add32(mul32(x, world_n(ctx)), y);
+  const Ptr<uint16_t> w = grid_arr(ctx, &GameState::g_tileFlags) + idx;
   const Ptr<uint8_t> wh = w.as<uint8_t>().byte(1);
   wh.set(static_cast<uint8_t>(wh.get() & 0xFE));
   const Ptr<HoleRecord> holes = state_arr(ctx, &GameState::g_holes);
-  const Ptr<uint8_t> code = state_arr(ctx, &GameState::g_tileBuildCode) + idx;
-  const Ptr<int8_t> type = state_arr(ctx, &GameState::g_tileType) + idx;
+  const Ptr<uint8_t> code = grid_arr(ctx, &GameState::g_tileBuildCode) + idx;
+  const Ptr<int8_t> type = grid_arr(ctx, &GameState::g_tileType) + idx;
   uint32_t eax_hi = 0;  // the upper half of eax at the flag-word exits
   uint32_t eax = 0;
   const auto clear_hole = [&](int32_t hole, bool tee) {
@@ -440,14 +441,14 @@ int32_t demolish_object(Ctx &ctx, int32_t x, int32_t y) {
       }
       call_peer(ctx, "placeHabitat", {u32(x), u32(y), u32(static_cast<int32_t>(static_cast<int8_t>(s)))});
     }
-    const int32_t refund = (state_arr(ctx, &GameState::g_tileRefund) + idx).get();
+    const int32_t refund = (grid_arr(ctx, &GameState::g_tileRefund) + idx).get();
     g.g_cash_div100 = add32(g.g_cash_div100, refund);
     points_popup(ctx, refund, add32(shl32(x, 10), 0x200), add32(shl32(y, 10), 0x200), -1);
     const int32_t year_slot = g.g_year % 100;
     code.set(0xFF);
     const Ptr<int16_t> fy = (state_arr(ctx, &GameState::g_financeYears) + year_slot).field(&FinanceYear::build_course);
     if (SG_NEGCTL(g_negctl_demolish) != 1)
-      fy.set(static_cast<int16_t>(fy.get() + static_cast<int16_t>((state_arr(ctx, &GameState::g_tileRefund) + idx).get())));
+      fy.set(static_cast<int16_t>(fy.get() + static_cast<int16_t>((grid_arr(ctx, &GameState::g_tileRefund) + idx).get())));
     goto rebuild;
   }
 none:
@@ -547,13 +548,13 @@ int32_t build_tournament_prep(Ctx &ctx) {
         if (rnd2()) x = add32(x, state_arr(ctx, &GameState::f_tab_dirDx_4c2878)[dir]);
         if (rnd2()) y = add32(y, state_arr(ctx, &GameState::f_tab_dirDy_4c2898)[dir]);
         if (step <= 1) continue;
-        const int32_t idx = add32(mul32(x, 50), y);
-        const int8_t t = (state_arr(ctx, &GameState::g_tileType) + idx).get();
+        const int32_t idx = add32(mul32(x, world_n(ctx)), y);
+        const int8_t t = (grid_arr(ctx, &GameState::g_tileType) + idx).get();
         const uint8_t cls = static_cast<uint8_t>((state_arr(ctx, &GameState::g_tileTypeAttrs) + t).field(&TileTypeAttr::collar).get());
         if (cls != 4 && cls != 0xD) continue;
         if (t == 0x16) continue;
         if (tile_blocked(ctx, x, y) != 0) continue;
-        if ((state_arr(ctx, &GameState::g_tileFlags) + idx).as<int16_t>().get() != 0) continue;
+        if ((grid_arr(ctx, &GameState::g_tileFlags) + idx).as<int16_t>().get() != 0) continue;
         const int32_t obj = stamp_course_tiles(ctx, x, y, pass != 0 ? 0x12 : 0x11, 0);
         const Ptr<PlacedObject> o = state_arr(ctx, &GameState::g_placed_objects) + obj;
         o.field(&PlacedObject::flags).set(static_cast<uint8_t>(o.field(&PlacedObject::flags).get() | 0x40));

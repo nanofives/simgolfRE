@@ -10,6 +10,7 @@
 
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"
 #include "portsim/registry.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/tick.h"
@@ -322,6 +323,14 @@ struct TkBase {
 }  // namespace portsim
 
 #define GS(sym) portsim::state_va(ctx, &portsim::GameState::sym)
+// P38A: a world grid's base (portsim/sim/world.h) and the world size: WN = N (the original's 50 / 0x32), WV = N + 1 (51)
+#define GV(sym) portsim::grid_va(ctx, &portsim::GameState::sym)
+#if defined(SG_P38A_NEGCTL_WN51)  // negative control build only (P38A notes): the tick hooks read N as N + 1
+#define WN (portsim::world_n(ctx) + 1)
+#else
+#define WN portsim::world_n(ctx)
+#endif
+#define WV portsim::world_v(ctx)
 #define G32(a) G<int>(static_cast<uint32_t>(a))
 #define GU32(a) G<uint32_t>(static_cast<uint32_t>(a))
 #define G16(a) G<int16_t>(static_cast<uint32_t>(a))

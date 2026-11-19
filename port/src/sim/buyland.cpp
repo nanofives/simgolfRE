@@ -3,8 +3,8 @@
 // (shim/src/re/c3fr.cpp ShowBuyLand_re) as reading reference; the emulator oracle (port/test/test_buyland.py, SG_EMU_ORACLE=1)
 // judges it against the original. Functions of the original are cited by name, never by address.
 //
-// THE SCREEN. Nine lots, a 3 x 3 grid of 16 x 16 tile blocks of the 50 x 50 map g_tileType: lot n covers the rows
-// (n % 3) * 16 + 1 .. + 16 and the columns (n / 3) * 16 + 1 .. + 16. A tile whose type byte is 0x14 is for sale; buying the lot
+// THE SCREEN. Nine lots, a 3 x 3 grid of L x L tile blocks of the N x N map g_tileType (L = world_lot = 16, N = 50 in
+// the original): lot n covers the rows (n % 3) * L + 1 .. + L and the columns (n / 3) * L + 1 .. + L. A tile whose type byte is 0x14 is for sale; buying the lot
 // turns each such tile into the type g_tileTypeSaved holds for it. Every redraw pass scans every lot:
 //   * per tile for sale: its count, the count of its g_tileTypeSaved type (a per-type array of 23 counters in the original's
 //     frame, indexed with the SIGNED type byte, so a negative type counts into the frame words below the array: the lot's
@@ -48,6 +48,7 @@
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 #include "commands_internal.h"
 #include "landoffer.h"
 
@@ -282,22 +283,24 @@ struct BuyLand {
     gx("drawCenteredText", {tb, 0x2d0, 0x108, 0x80000000u});
     gx("Widget_setQuad", {root, 0x80000000u, 0xffffffffu, 2, 2});
 
-    const uint32_t tiles = state_va(ctx, &GameState::g_tileType), types = state_va(ctx, &GameState::g_tileTypeSaved);
+    const uint32_t tiles = grid_va(ctx, &GameState::g_tileType), types = grid_va(ctx, &GameState::g_tileTypeSaved);
     const int32_t shift = gs.g_landPurchaseCount & 31;
     for (int32_t lot = 0; lot < 9; ++lot) {
       const uint32_t img = refs + 0x318 + 0x2cu * u32(lot);
       const int32_t q = lot / 3, r = lot % 3;
       F[0] = r;
       int32_t sum = 5, count = 0;
-      const int32_t row0 = r * 16 + 1, col0 = q * 16 + 1;
+      const int32_t L = world_lot(ctx);
+      const int32_t row0 = r * L + 1, col0 = q * L + 1;
       for (int32_t t = 0; t < 23; ++t) F[10 + t] = 0;
-      // P38H showBuyLandScreen.lotLabelLeftover = 0: the for-sale tile nearest the centre (squared distance to i = j = 8)
+      // P38H showBuyLandScreen.lotLabelLeftover = 0: the for-sale tile nearest the centre (squared distance to i = j = L / 2 = 8)
+      const int32_t mid = L / 2;   // P38A: the lot's centre tile (8 of 16)
       const bool nearest = !SG_DEFECT(g_defect_lot_label_leftover);
       int32_t best_d = -1;
-      for (int32_t j = 0; j < 16; ++j)
-        for (int32_t i = 0; i < 16; ++i) {
+      for (int32_t j = 0; j < L; ++j)
+        for (int32_t i = 0; i < L; ++i) {
           const int32_t row = i + row0, col = j + col0;
-          const uint32_t idx = u32(row * 50 + col);
+          const uint32_t idx = u32(row * world_n(ctx) + col);
           if (m.load<int8_t>(tiles + idx) != 0x14) continue;
           ++count;
           ++frame(10 + m.load<int8_t>(types + idx));
@@ -308,14 +311,14 @@ struct BuyLand {
           int32_t mx = 0, my = 0;
           map_to_screen(row, col, mx, my);
           if (nearest) {
-            const int32_t d = (i - 8) * (i - 8) + (j - 8) * (j - 8);
+            const int32_t d = (i - mid) * (i - mid) + (j - mid) * (j - mid);
             const bool take = mode() == 9 ? d > best_d : (best_d < 0 || d < best_d);
             if (take) {
               best_d = d;
               label_x = mx;
               label_y = my;
             }
-          } else if (i == 8 && j == 8) {
+          } else if (i == mid && j == mid) {
             label_x = mx;
             label_y = my;
           }
@@ -437,12 +440,13 @@ struct BuyLand {
       const int32_t yr = add32(static_cast<int16_t>(gs.g_year) % 100, mode() == 8 ? 1 : 0);
       const uint32_t fin = state_va(ctx, &GameState::g_financeYears) + 0xe + u32(mul32(yr, 20));
       m.store<int16_t>(fin, static_cast<int16_t>(m.load<int16_t>(fin) - static_cast<int16_t>(price)));
-      const int32_t r0 = add32(mul32(sel % 3, 16), 1), c0 = add32(mul32(sel / 3, 16), 1);
-      const uint32_t tiles = state_va(ctx, &GameState::g_tileType), types = state_va(ctx, &GameState::g_tileTypeSaved);
+      const int32_t L = world_lot(ctx);
+      const int32_t r0 = add32(mul32(sel % 3, L), 1), c0 = add32(mul32(sel / 3, L), 1);
+      const uint32_t tiles = grid_va(ctx, &GameState::g_tileType), types = grid_va(ctx, &GameState::g_tileTypeSaved);
       if (mode() != 3)
-        for (int32_t c2 = 0; c2 < 16; ++c2)
-          for (int32_t k = 0; k < 16; ++k) {
-            const uint32_t idx = u32(add32(add32(mul32(add32(r0, k), 50), c2), c0));
+        for (int32_t c2 = 0; c2 < L; ++c2)
+          for (int32_t k = 0; k < L; ++k) {
+            const uint32_t idx = u32(add32(add32(mul32(add32(r0, k), world_n(ctx)), c2), c0));
             if (m.load<int8_t>(tiles + idx) == 0x14) m.store<int8_t>(tiles + idx, m.load<int8_t>(types + idx));
           }
       call_peer(ctx, "logTick", {mode() == 5 ? 0x141u : 0x140u, u32(sel)});
@@ -451,9 +455,9 @@ struct BuyLand {
   }
 };
 
-// syncTiles (c3ey.cpp SyncTiles_re), the frame's first call after a purchase (mainLoop's land popup): per column x = 49 .. 0 the
-// input pump (TerrainApi::pump_input, as rebuildTerrainGrid), then per y = 49 .. 0 the Terrain tile (x, y) (the exe's inline
-// Terrain::tileAt: no NULL test, the 50 x 50 grid always holds it) gets Terrain::setType(tile, tileType, tileByte) when its type
+// syncTiles (c3ey.cpp SyncTiles_re), the frame's first call after a purchase (mainLoop's land popup): per column x = N - 1 .. 0 the
+// input pump (TerrainApi::pump_input, as rebuildTerrainGrid), then per y = N - 1 .. 0 the Terrain tile (x, y) (the exe's inline
+// Terrain::tileAt: no NULL test, the N x N grid always holds it) gets Terrain::setType(tile, tileType, tileByte) when its type
 // field +0x24 differs from tileType(x, y) or, failing that, Terrain::getVariation(tile) differs from tileByte(x, y); finally
 // the byte g_terrain820f2a[0] = 1, which makes the next updateTerrainRender repaint from scratch (terrain_dll.cpp: that path
 // leaves bit 1 of g_tileWallMask[0] alone, the incremental one sets it). Returns the last call's eax (setType's, or tileByte's).
@@ -464,9 +468,9 @@ int32_t sync_tiles(Ctx &ctx) {
   const Memory &m = ctx.mem;
   const uint32_t t = ctx.gs().gTerrain;
   int32_t r = 0;
-  for (int32_t x = 49; x >= 0; --x) {
+  for (int32_t x = world_last(ctx); x >= 0; --x) {
     api.pump_input();
-    for (int32_t y = 49; y >= 0; --y) {
+    for (int32_t y = world_last(ctx); y >= 0; --y) {
       const int32_t w = m.load<int32_t>(t + 0x14);
       const uint32_t tile =
           (x >= w || y >= m.load<int32_t>(t + 0x18)) ? 0u : t + 0x3a4 + u32(add32(x, mul32(y, w))) * 0x248u;

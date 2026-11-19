@@ -111,16 +111,17 @@ bool P20A2_PlayerHolds(int k) {
 // green in the original (the L14 != 1 test of the hand-over condition), so a ball on any green, this hole's or another hole's, gets the
 // automatic putt towards this hole's cup. With the switch at 0 only the ball on the cup's own green keeps that.
 bool P22B_OnHoleGreen(int h, int bx, int by) {
-    if (bx < 0 || bx > 49 || by < 0 || by > 49) return false;
+    const int N = WN, last = world_last(ctx);   // 50 and 49 in the original
+    if (bx < 0 || bx > last || by < 0 || by > last) return false;
     const int cx = HD(h, (GS(g_holes) + 24)), cy = HD(h, (GS(g_holes) + 28));
-    if (cx < 0 || cx > 49 || cy < 0 || cy > 49) return true;   // no cup tile to compare with: the original's behaviour
-    unsigned char seen[50 * 50] = {};
-    int stack[50 * 50 * 2];
+    if (cx < 0 || cx > last || cy < 0 || cy > last) return true;   // no cup tile to compare with: the original's behaviour
+    std::vector<unsigned char> seen(static_cast<size_t>(N) * N, 0);
+    std::vector<int> stack(static_cast<size_t>(N) * N * 2);
     int n = 0;
-    auto isGreen = [&](int x, int y) { return G<signed char>(GS(g_tileType) + y + x * 50) == 1; };
+    auto isGreen = [&](int x, int y) { return G<signed char>(GV(g_tileType) + y + x * N) == 1; };
     auto push = [&](int x, int y) {
-        if (x < 0 || x > 49 || y < 0 || y > 49 || seen[x * 50 + y] || !isGreen(x, y)) return;
-        seen[x * 50 + y] = 1;
+        if (x < 0 || x > last || y < 0 || y > last || seen[x * N + y] || !isGreen(x, y)) return;
+        seen[x * N + y] = 1;
         stack[n++] = x;
         stack[n++] = y;
     };
@@ -268,19 +269,19 @@ int updateGolfers() {
                 int dir = (GB(i, (GS(g_golfers) + 26)) + r - 2) & 7;                                // updateGolfers+0x38e / updateGolfers+0x3a2..updateGolfers+0x3a6
                 int tx = (GD(i, GS(g_golfers)) >> 10) + Dx8(dir);                            // updateGolfers+0x394..updateGolfers+0x3b7
                 int ty = (GD(i, (GS(g_golfers) + 4)) >> 10) + Dy8(dir);                            // updateGolfers+0x3b9..updateGolfers+0x3c5
-                t = ty + tx * 50;                                                       // updateGolfers+0x3c2..updateGolfers+0x3ca
-                if (G<unsigned char>(GS(g_tileType) + t) == 0x16) {                         // updateGolfers+0x3cd
+                t = ty + tx * WN;                                                       // updateGolfers+0x3c2..updateGolfers+0x3ca
+                if (G<unsigned char>(GV(g_tileType) + t) == 0x16) {                         // updateGolfers+0x3cd
                     int o = kObjectAt(tx, ty) << 4;                                     // updateGolfers+0x3d6..updateGolfers+0x3dd
                     short ot = G<short>(GS(g_placed_objects) + o);                                // updateGolfers+0x3e3
                     int code = -1;
                     if (ot == 2) code = 0xb;                                            // updateGolfers+0x3ea..updateGolfers+0x3ee
                     else if (ot == 4) code = (G<int>((GS(g_placed_objects) + 8) + o) < 0x10) ? 0xb : 0x14;   // updateGolfers+0x3f0..updateGolfers+0x403
-                    if (code >= 0) kEmitThought(i, code, tx + ty * 50);                 // updateGolfers+0x405..updateGolfers+0x424
+                    if (code >= 0) kEmitThought(i, code, tx + ty * WN);                 // updateGolfers+0x405..updateGolfers+0x424
                 }
-                if (G<unsigned short>(GS(g_tileFlags) + 2 * t) & 0x1000) {                   // updateGolfers+0x42c..updateGolfers+0x43d
-                    if (kThoughtFlag(i) == 2 || (G<unsigned short>(GS(g_tileFlags) + 2 * t) & 0x800)) {   // updateGolfers+0x43f..updateGolfers+0x461
-                        int code = (G<unsigned short>(GS(g_tileFlags) + 2 * t) & 0x800) ? 0x14 : 0xb;   // updateGolfers+0x463..updateGolfers+0x485
-                        kEmitThought(i, code, tx + ty * 50);                            // updateGolfers+0x488..updateGolfers+0x48b
+                if (G<unsigned short>(GV(g_tileFlags) + 2 * t) & 0x1000) {                   // updateGolfers+0x42c..updateGolfers+0x43d
+                    if (kThoughtFlag(i) == 2 || (G<unsigned short>(GV(g_tileFlags) + 2 * t) & 0x800)) {   // updateGolfers+0x43f..updateGolfers+0x461
+                        int code = (G<unsigned short>(GV(g_tileFlags) + 2 * t) & 0x800) ? 0x14 : 0xb;   // updateGolfers+0x463..updateGolfers+0x485
+                        kEmitThought(i, code, tx + ty * WN);                            // updateGolfers+0x488..updateGolfers+0x48b
                     }
                 }
             }
@@ -293,7 +294,7 @@ int updateGolfers() {
         L18 = GD(i, (GS(g_golfers) + 212)) >> 10;                                                    // updateGolfers+0x4c7 / updateGolfers+0x4d0 / updateGolfers+0x4d5
         L20 = GD(i, (GS(g_golfers) + 216)) >> 10;                                                    // updateGolfers+0x4c1 / updateGolfers+0x4cd / updateGolfers+0x4d9
         if (kTileBlocked(L18, L20)) L14 = 0x14;                                         // updateGolfers+0x4dd..updateGolfers+0x4e9
-        else L14 = G<signed char>(GS(g_tileType) + L20 + L18 * 50);                         // updateGolfers+0x4f3..updateGolfers+0x501
+        else L14 = G<signed char>(GV(g_tileType) + L20 + L18 * WN);                         // updateGolfers+0x4f3..updateGolfers+0x501
         L48 = GD(i, GS(g_golfers)) >> 10;                                                    // updateGolfers+0x50f / updateGolfers+0x520 / updateGolfers+0x535
         L4c = GD(i, (GS(g_golfers) + 4)) >> 10;                                                    // updateGolfers+0x515 / updateGolfers+0x52d / updateGolfers+0x53c
         {
@@ -304,10 +305,10 @@ int updateGolfers() {
                         kEmitThought(i, 0x3f, 0x14);                                    // updateGolfers+0x590..updateGolfers+0x599
                 }
                 esi = 0;                                                                // updateGolfers+0x5a4
-                unsigned char w = G<unsigned char>((GS(g_tileTypeAttrs) + 39) + 0x30 * G<signed char>(GS(g_tileType) + L4c + L48 * 50));   // updateGolfers+0x5a1..updateGolfers+0x5b7
+                unsigned char w = G<unsigned char>((GS(g_tileTypeAttrs) + 39) + 0x30 * G<signed char>(GV(g_tileType) + L4c + L48 * WN));   // updateGolfers+0x5a1..updateGolfers+0x5b7
                 if (w == 7 || w == 8 || w == 0xe) esi = 1;                              // updateGolfers+0x5bd..updateGolfers+0x5c9
                 for (k = 0; k < 8; k++) {                                               // updateGolfers+0x5ce..updateGolfers+0x611
-                    w = G<unsigned char>((GS(g_tileTypeAttrs) + 39) + 0x30 * G<signed char>(GS(g_tileType) + (Dy8(k) + L4c) + (Dx8(k) + L48) * 50));   // updateGolfers+0x5d0..updateGolfers+0x5f4
+                    w = G<unsigned char>((GS(g_tileTypeAttrs) + 39) + 0x30 * G<signed char>(GV(g_tileType) + (Dy8(k) + L4c) + (Dx8(k) + L48) * WN));   // updateGolfers+0x5d0..updateGolfers+0x5f4
                     if (w == 7 || w == 8 || w == 0xe) esi = 1;                          // updateGolfers+0x5fa..updateGolfers+0x606
                 }
                 if ((G<unsigned char>(GS(g_courseType)) == 3 && (Rand(2) & 0xffff) != 0) || esi) {   // updateGolfers+0x613..updateGolfers+0x62f
@@ -327,8 +328,8 @@ int updateGolfers() {
                 }
             }
         }
-        L3c = L4c + L48 * 50;                                                           // updateGolfers+0x6f5..updateGolfers+0x700
-        L2c = G<signed char>(GS(g_tileType) + L3c);                                         // updateGolfers+0x704..updateGolfers+0x70b
+        L3c = L4c + L48 * WN;                                                           // updateGolfers+0x6f5..updateGolfers+0x700
+        L2c = G<signed char>(GV(g_tileType) + L3c);                                         // updateGolfers+0x704..updateGolfers+0x70b
         if (GD(i, (GS(g_golfers) + 228)) == 0) FLAGS(i) &= ~0x40000u;                                // updateGolfers+0x70f..updateGolfers+0x719
         if (GW(i, (GS(g_golfers) + 158)) < 0) {                                                      // updateGolfers+0x723..updateGolfers+0x72d
             if (G<unsigned char>(GS(g_date)) & 1) GW(i, (GS(g_golfers) + 158))++;                     // updateGolfers+0x72f..updateGolfers+0x739
@@ -846,9 +847,9 @@ int updateGolfers() {
                     kEmitThought(i, 0x29, 0x14);                                        // updateGolfers+0x20e8..updateGolfers+0x210f
                     int ox = G<short>((GS(g_placed_objects) + 2) + o), oy = G<short>((GS(g_placed_objects) + 4) + o);   // updateGolfers+0x2114 / updateGolfers+0x211b
                     GB(i, (GS(g_golfers) + 132)) += 3;                                               // updateGolfers+0x2122..updateGolfers+0x2134
-                    t = oy + ox * 50;                                                   // updateGolfers+0x2128..updateGolfers+0x213a
-                    G<unsigned char>((GS(g_tileFlags) + 1) + 2 * t) |= 0x40;                       // updateGolfers+0x213d
-                    G<unsigned char>(GS(tile_anim_frame) + t) = 0;                               // updateGolfers+0x2145
+                    t = oy + ox * WN;                                                   // updateGolfers+0x2128..updateGolfers+0x213a
+                    G<unsigned char>((GV(g_tileFlags) + 1) + 2 * t) |= 0x40;                       // updateGolfers+0x213d
+                    G<unsigned char>(GV(tile_anim_frame) + t) = 0;                               // updateGolfers+0x2145
                 }
                 if (G<short>(GS(g_placed_objects) + o) == 6) {                                    // updateGolfers+0x214c..updateGolfers+0x2154
                     r = Rand(9);                                                        // updateGolfers+0x215a..updateGolfers+0x2161
@@ -952,8 +953,8 @@ int updateGolfers() {
             GW(i, (GS(g_golfers) + 20)) = 0;                                                        // updateGolfers+0x260b
         } else if (GW(i, (GS(g_golfers) + 20)) <= 0) {                                              // updateGolfers+0x28ec..updateGolfers+0x28f4
             // a new step: the direction from pathStep, the step length to the next tile edge
-            if (G<unsigned char>(GS(g_tileType) + L3c) == 0x11) {                           // updateGolfers+0x28fa..updateGolfers+0x2905
-                unsigned short tf = G<unsigned short>(GS(g_tileFlags) + 2 * L3c);            // updateGolfers+0x2907
+            if (G<unsigned char>(GV(g_tileType) + L3c) == 0x11) {                           // updateGolfers+0x28fa..updateGolfers+0x2905
+                unsigned short tf = G<unsigned short>(GV(g_tileFlags) + 2 * L3c);            // updateGolfers+0x2907
                 if ((tf & 0x20) && (tf & 0x100) && (GB(i, (GS(g_golfers) + 133)) & 0x7f) != 7) {     // updateGolfers+0x290f..updateGolfers+0x292c
                     int bit = tf & 7;                                                   // updateGolfers+0x292e / updateGolfers+0x2933
                     kEmitThought(i, 7, 0);                                              // updateGolfers+0x2931..updateGolfers+0x293c
@@ -983,7 +984,7 @@ int updateGolfers() {
             if (G<int>(GS(g_difficulty)) == 0 || GC(i, (GS(g_golfers) + 34)) > 1 || GB(i, (GS(g_golfers) + 33)) == 0x13 ||
                 TypeAttr(L14, (GS(g_tileTypeAttrs) + 34)) > 0 ||
                 (GB(i, (GS(g_golfers) + 34)) != 0 && (FLAGS(i) & 0x800)) ||
-                (G<unsigned char>(GS(g_tileFlags) + 2 * L3c) & 0x20)) {                      // updateGolfers+0x2a96..updateGolfers+0x2af8
+                (G<unsigned char>(GV(g_tileFlags) + 2 * L3c) & 0x20)) {                      // updateGolfers+0x2a96..updateGolfers+0x2af8
                 FLAGS(i) &= ~0x40000000u;                                               // updateGolfers+0x2b4f..updateGolfers+0x2b5e
             } else if (L2c == 0x16 || TypeAttr(L2c, (GS(g_tileTypeAttrs) + 34)) <= 1) {                   // updateGolfers+0x2afa..updateGolfers+0x2b10
                 FLAGS(i) &= ~0x40000000u;                                               // updateGolfers+0x2b53..updateGolfers+0x2b5e
@@ -1116,12 +1117,12 @@ int updateGolfers() {
         if (i == G<int>(GS(g_playerGolfer)) || GW(i, (GS(g_golfers) + 162)) == G<int>(GS(g_playerGolfer)) || (FLAGS(i) & 0x4000) ||
             (GameFlags() & 0x200000))                                                   // updateGolfers+0x2e80..updateGolfers+0x2eac
             L38++;                                                                      // updateGolfers+0x2eae
-        if ((G<unsigned char>(GS(g_tileFlags) + 2 * L3c) & 0x20) || (L50 & 0x8000)) {        // updateGolfers+0x2eb2..updateGolfers+0x2ec7
+        if ((G<unsigned char>(GV(g_tileFlags) + 2 * L3c) & 0x20) || (L50 & 0x8000)) {        // updateGolfers+0x2eb2..updateGolfers+0x2ec7
             int dd = GC(i, (GS(g_golfers) + 26));                                                   // updateGolfers+0x2ecd
             int ddx = Dx8(dd);                                                          // updateGolfers+0x2edb
             L44 = Dy8(dd);                                                              // updateGolfers+0x2ee1..updateGolfers+0x2ee7
-            if ((G<unsigned char>(GS(g_tileFlags) + 2 * (L44 + (ddx + L48) * 50 + L4c)) & 0x20) ||   // updateGolfers+0x2eeb..updateGolfers+0x2f05
-                (G<unsigned char>(GS(g_tileFlags) + 2 * ((L48 - ddx) * 50 - L44 + L4c)) & 0x20)) {   // updateGolfers+0x2f07..updateGolfers+0x2f21
+            if ((G<unsigned char>(GV(g_tileFlags) + 2 * (L44 + (ddx + L48) * WN + L4c)) & 0x20) ||   // updateGolfers+0x2eeb..updateGolfers+0x2f05
+                (G<unsigned char>(GV(g_tileFlags) + 2 * ((L48 - ddx) * WN - L44 + L4c)) & 0x20)) {   // updateGolfers+0x2f07..updateGolfers+0x2f21
                 u = FLAGS(i);                                                           // updateGolfers+0x2f23
                 L38 = 6;                                                                // updateGolfers+0x2f29
                 if (u & 0x10000) {                                                      // updateGolfers+0x2f31..updateGolfers+0x2f36
@@ -1156,16 +1157,16 @@ int updateGolfers() {
             GD(i, GS(g_golfers)) += Dx8(GC(i, (GS(g_golfers) + 26))) * stp;                              // updateGolfers+0x30f9..updateGolfers+0x3112
             GD(i, (GS(g_golfers) + 4)) += Dy8(GC(i, (GS(g_golfers) + 26))) * stp;                              // updateGolfers+0x3118..updateGolfers+0x3131
             if (!SG_DEFECT(g_defect_golfer_walk_offgrid)) {  // P6A updateGolfers.walkOffGrid: the step stays on the grid
-                { const int v = GD(i, GS(g_golfers)); GD(i, GS(g_golfers)) = v < 0 ? 0 : v > 0xc7ff ? 0xc7ff : v; }
-                { const int v = GD(i, (GS(g_golfers) + 4)); GD(i, (GS(g_golfers) + 4)) = v < 0 ? 0 : v > 0xc7ff ? 0xc7ff : v; }
+                { const int v = GD(i, GS(g_golfers)); GD(i, GS(g_golfers)) = v < 0 ? 0 : v > world_units(ctx) - 1 ? world_units(ctx) - 1 : v; }
+                { const int v = GD(i, (GS(g_golfers) + 4)); GD(i, (GS(g_golfers) + 4)) = v < 0 ? 0 : v > world_units(ctx) - 1 ? world_units(ctx) - 1 : v; }
             }
             GW(i, (GS(g_golfers) + 20)) = static_cast<short>(GW(i, (GS(g_golfers) + 20)) - stp);                // updateGolfers+0x313b
         }
-        if (G<unsigned char>(GS(g_tileType) + L3c) != 0x11 && kTypeAtPos(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4))) == 0x11)   // updateGolfers+0x3137..updateGolfers+0x3164
+        if (G<unsigned char>(GV(g_tileType) + L3c) != 0x11 && kTypeAtPos(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4))) == 0x11)   // updateGolfers+0x3137..updateGolfers+0x3164
             GW(i, (GS(g_golfers) + 20)) = 0;                                                        // updateGolfers+0x3166
         if ((Date() + 11 * i) % 24 == 0 && GB(i, (GS(g_golfers) + 33)) != 0x13) {                   // updateGolfers+0x316f..updateGolfers+0x3198
             int oldq = GW(i, (GS(g_golfers) + 170)) / 40;                                            // updateGolfers+0x319e..updateGolfers+0x31c3
-            int add = (G<unsigned char>(GS(g_tileFlags) + 2 * L3c) & 0x20) ? 1 : G<signed char>((GS(g_tileTypeAttrs) + 37) + L6c);   // updateGolfers+0x31ba..updateGolfers+0x31d2
+            int add = (G<unsigned char>(GV(g_tileFlags) + 2 * L3c) & 0x20) ? 1 : G<signed char>((GS(g_tileTypeAttrs) + 37) + L6c);   // updateGolfers+0x31ba..updateGolfers+0x31d2
             GW(i, (GS(g_golfers) + 170)) = static_cast<short>(GW(i, (GS(g_golfers) + 170)) + add);                // updateGolfers+0x31d9
             short nv = static_cast<short>(GC(i, (GS(g_golfers) + 33)) / 6 + GW(i, (GS(g_golfers) + 170)));       // updateGolfers+0x31e0..updateGolfers+0x31fc
             GW(i, (GS(g_golfers) + 170)) = nv;                                                       // updateGolfers+0x3203
@@ -1265,7 +1266,7 @@ int updateGolfers() {
         if (L14 == 1) {                                                                 // updateGolfers+0x361b / updateGolfers+0x362e..updateGolfers+0x3637
             G<int>((GS(g_golferStats) + 12) + 0xb8 * (GC(i, (GS(g_golfers) + 186)) + 4 * (GB(i, (GS(g_golfers) + 25)) & 7)))++;   // updateGolfers+0x3639..updateGolfers+0x3663
             HW(GC(i, (GS(g_golfers) + 33)), (GS(g_holes) + 354))++;                                            // updateGolfers+0x3665..updateGolfers+0x3673
-            if ((G<unsigned char>(GS(g_tileFlags) + 2 * (L20 + L18 * 50)) & 0x80) == 0) {    // updateGolfers+0x3682..updateGolfers+0x369b
+            if ((G<unsigned char>(GV(g_tileFlags) + 2 * (L20 + L18 * WN)) & 0x80) == 0) {    // updateGolfers+0x3682..updateGolfers+0x369b
                 GW(i, (GS(g_golfers) + 158)) = static_cast<short>(0xffe7);                           // updateGolfers+0x369d
                 gwt.hold(kGwGreenRead);
                 GB(i, (GS(g_golfers) + 30)) = 0;                                                    // updateGolfers+0x36a6
@@ -1418,13 +1419,13 @@ int updateGolfers() {
             L3c = (bx >> 6) & 0xf;                                                      // updateGolfers+0x3d9f..updateGolfers+0x3db2
             const int fy = (by >> 6) & 0xf;                                             // updateGolfers+0x3da1..updateGolfers+0x3dac
             L1c = 0;                                                                    // updateGolfers+0x3db6
-            const unsigned tb = static_cast<unsigned>(L20 + L18 * 50);                  // updateGolfers+0x3dc0..updateGolfers+0x3dc8
+            const unsigned tb = static_cast<unsigned>(L20 + L18 * WN);                  // updateGolfers+0x3dc0..updateGolfers+0x3dc8
             // P28A updateGolfers.edgeNeighbourType: at 0 a neighbour outside the grid has type 0x14 (L14's own tileBlocked answer)
             const bool nfx = !SG_DEFECT(g_defect_golfer_edge_type);
-            if (L3c <= 1 && (nfx && p28_off(L18 - 1, L20) ? 0x14 : G<signed char>((GS(g_courseTable) + 734) + tb)) != L14) L1c = 8;            // updateGolfers+0x3daf..updateGolfers+0x3ddc
-            if (fy <= 1 && (nfx && p28_off(L18, L20 - 1) ? 0x14 : G<signed char>((GS(g_courseTable) + 783) + tb)) != L14) L1c |= 1;            // updateGolfers+0x3de8..updateGolfers+0x3e09
-            if (L3c >= 0xe && (nfx && p28_off(L18 + 1, L20) ? 0x14 : G<signed char>((GS(g_tileType) + 50) + tb)) != L14) L1c |= 2;         // updateGolfers+0x3e12..updateGolfers+0x3e33
-            if (fy >= 0xe && (nfx && p28_off(L18, L20 + 1) ? 0x14 : G<signed char>((GS(g_tileType) + 1) + tb)) != L14) L1c |= 4;          // updateGolfers+0x3e38..updateGolfers+0x3e59
+            if (L3c <= 1 && (nfx && p28_off(ctx, L18 - 1, L20) ? 0x14 : G<signed char>((GV(g_tileType) - WN) + tb)) != L14) L1c = 8;            // updateGolfers+0x3daf..updateGolfers+0x3ddc
+            if (fy <= 1 && (nfx && p28_off(ctx, L18, L20 - 1) ? 0x14 : G<signed char>((GV(g_tileType) - 1) + tb)) != L14) L1c |= 1;            // updateGolfers+0x3de8..updateGolfers+0x3e09
+            if (L3c >= 0xe && (nfx && p28_off(ctx, L18 + 1, L20) ? 0x14 : G<signed char>((GV(g_tileType) + WN) + tb)) != L14) L1c |= 2;         // updateGolfers+0x3e12..updateGolfers+0x3e33
+            if (fy >= 0xe && (nfx && p28_off(ctx, L18, L20 + 1) ? 0x14 : G<signed char>((GV(g_tileType) + 1) + tb)) != L14) L1c |= 4;          // updateGolfers+0x3e38..updateGolfers+0x3e59
             L38 = ((GD(i, (GS(g_golfers) + 224)) >> 28) + 1) >> 1 & 7;                               // updateGolfers+0x3e5e..updateGolfers+0x3e76
             if (GD(i, (GS(g_golfers) + 220)) > 1) {                                                  // updateGolfers+0x3e64 / updateGolfers+0x3e73..updateGolfers+0x3e7a
                 // in the air
@@ -1452,7 +1453,7 @@ int updateGolfers() {
                 int fr = kClamp(G<signed char>(pa) - kSlopeMix(bx, by, L38), 0, 99);    // updateGolfers+0x4028..updateGolfers+0x404d
                 int s2 = kSlopeMix(GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), (L38 + 2) & 7);    // updateGolfers+0x4052..updateGolfers+0x406d
                 if (fr < 2 && L1c != 0) fr = 2;                                         // updateGolfers+0x4075..updateGolfers+0x4082
-                if (G<unsigned char>(GS(g_tileType) + (GD(i, (GS(g_golfers) + 196)) >> 10) * 50 + (GD(i, (GS(g_golfers) + 200)) >> 10)) == 1) {   // updateGolfers+0x4087..updateGolfers+0x40a7
+                if (G<unsigned char>(GV(g_tileType) + (GD(i, (GS(g_golfers) + 196)) >> 10) * WN + (GD(i, (GS(g_golfers) + 200)) >> 10)) == 1) {   // updateGolfers+0x4087..updateGolfers+0x40a7
                     fr = G<signed char>(pa);                                            // updateGolfers+0x40a9
                     s2 = 0;                                                             // updateGolfers+0x40ac
                 }
@@ -1465,8 +1466,8 @@ int updateGolfers() {
                     int sp = GD(i, (GS(g_golfers) + 228));                                           // updateGolfers+0x410e
                     GD(i, (GS(g_golfers) + 228)) = (0x40 - (sp >> 5)) / 2 + sp;                      // updateGolfers+0x4114..updateGolfers+0x4127
                 }
-                const unsigned tb2 = static_cast<unsigned>(L18 * 50);                   // updateGolfers+0x412d..updateGolfers+0x413b
-                if (G<unsigned char>(GS(g_tileType) + tb2 + L20) == 1) {                    // updateGolfers+0x413d..updateGolfers+0x4145
+                const unsigned tb2 = static_cast<unsigned>(L18 * WN);                   // updateGolfers+0x412d..updateGolfers+0x413b
+                if (G<unsigned char>(GV(g_tileType) + tb2 + L20) == 1) {                    // updateGolfers+0x413d..updateGolfers+0x4145
                     GD(i, (GS(g_golfers) + 224)) += GD(i, (GS(g_golfers) + 236)) / 2;                             // updateGolfers+0x4147..updateGolfers+0x4161
                     if ((G<unsigned char>(GS(g_date)) & 7) == 0 && (Rand(8) & 0xffff) == 0)   // updateGolfers+0x415a..updateGolfers+0x4178
                         GD(i, (GS(g_golfers) + 236)) = -GD(i, (GS(g_golfers) + 236));                             // updateGolfers+0x417a..updateGolfers+0x4182
@@ -1479,19 +1480,19 @@ int updateGolfers() {
                         if (8 - fy <= 2 && fy - 8 <= 2) L28 = 1;                        // updateGolfers+0x41c0..updateGolfers+0x41d1
                         // P28A updateGolfers.edgeNeighbourType: at 0 a neighbour outside the grid has type 0x14, never the green 0xa
                         const bool gfx = !SG_DEFECT(g_defect_golfer_edge_type);
-                        if (fy < 8 && !(gfx && p28_off(L18, L20 - 1)) && G<unsigned char>((GS(g_courseTable) + 783) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41d9..updateGolfers+0x41e8
-                        if (fy > 8 && !(gfx && p28_off(L18, L20 + 1)) && G<unsigned char>((GS(g_tileType) + 1) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41f0..updateGolfers+0x41ff
+                        if (fy < 8 && !(gfx && p28_off(ctx, L18, L20 - 1)) && G<unsigned char>((GV(g_tileType) - 1) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41d9..updateGolfers+0x41e8
+                        if (fy > 8 && !(gfx && p28_off(ctx, L18, L20 + 1)) && G<unsigned char>((GV(g_tileType) + 1) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x41f0..updateGolfers+0x41ff
                     }
                     if (8 - fy <= 2 && fy - 8 <= 2) {                                   // updateGolfers+0x4207..updateGolfers+0x4216
                         const bool gfx = !SG_DEFECT(g_defect_golfer_edge_type);   // P28A, as above
-                        if (L3c < 8 && !(gfx && p28_off(L18 - 1, L20)) && G<unsigned char>((GS(g_courseTable) + 734) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x4218..updateGolfers+0x4227
-                        if (L3c > 8 && !(gfx && p28_off(L18 + 1, L20)) && G<unsigned char>((GS(g_tileType) + 50) + tb2 + L20) == 0xa) { L28 = 1; halve = true; }   // updateGolfers+0x422f..updateGolfers+0x4246
+                        if (L3c < 8 && !(gfx && p28_off(ctx, L18 - 1, L20)) && G<unsigned char>((GV(g_tileType) - WN) + tb2 + L20) == 0xa) L28 = 1;   // updateGolfers+0x4218..updateGolfers+0x4227
+                        if (L3c > 8 && !(gfx && p28_off(ctx, L18 + 1, L20)) && G<unsigned char>((GV(g_tileType) + WN) + tb2 + L20) == 0xa) { L28 = 1; halve = true; }   // updateGolfers+0x422f..updateGolfers+0x4246
                     }
                     if (L28 != 0) halve = true;                                         // updateGolfers+0x4248..updateGolfers+0x424e
                 }
                 if (halve) GD(i, (GS(g_golfers) + 228)) /= 2;                                        // updateGolfers+0x4250..updateGolfers+0x425b
                 // into the cup (updateGolfers+0x4261..updateGolfers+0x4384)
-                if (!kTileBlocked(L18, L20) && (G<unsigned char>(GS(g_tileFlags) + 2 * (tb2 + L20)) & 0x80) &&
+                if (!kTileBlocked(L18, L20) && (G<unsigned char>(GV(g_tileFlags) + 2 * (tb2 + L20)) & 0x80) &&
                     GD(i, (GS(g_golfers) + 228)) < 0x140) {                                          // updateGolfers+0x4261..updateGolfers+0x4292
                     d = kDistance(GD(i, (GS(g_golfers) + 212)) - (L18 << 10) - 0x200, GD(i, (GS(g_golfers) + 216)) - (L20 << 10) - 0x200);   // updateGolfers+0x4298..updateGolfers+0x42bd
                     int q = 0x400 / ((GB(i, (GS(g_golfers) + 28)) != 0xd ? 2 : 0) + 1);             // updateGolfers+0x42c2..updateGolfers+0x42de
@@ -1511,12 +1512,12 @@ int updateGolfers() {
                 // walls: bounce off a tile edge (updateGolfers+0x438d..updateGolfers+0x442a)
                 const unsigned tw = tb2 + L20;                                          // esi + edi
                 if (L18 != (GD(i, (GS(g_golfers) + 212)) >> 10) &&
-                    (((L74 <= 0) ? 0x40 : 4) & G<signed char>(GS(g_tileWallMask) + tw))) {      // updateGolfers+0x438d..updateGolfers+0x43b8
+                    (((L74 <= 0) ? 0x40 : 4) & G<signed char>(GV(g_tileWallMask) + tw))) {      // updateGolfers+0x438d..updateGolfers+0x43b8
                     kPlaySoundAt(6, GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), 0);               // updateGolfers+0x43ba..updateGolfers+0x43c6
                     GD(i, (GS(g_golfers) + 224)) = -GD(i, (GS(g_golfers) + 224));                                 // updateGolfers+0x43cb..updateGolfers+0x43d6
                 }
                 if (L20 != (GD(i, (GS(g_golfers) + 216)) >> 10) &&
-                    (((L70 <= 0) ? 0x10 : 1) & G<signed char>(GS(g_tileWallMask) + tw))) {     // updateGolfers+0x43dc..updateGolfers+0x4407
+                    (((L70 <= 0) ? 0x10 : 1) & G<signed char>(GV(g_tileWallMask) + tw))) {     // updateGolfers+0x43dc..updateGolfers+0x4407
                     kPlaySoundAt(6, GD(i, (GS(g_golfers) + 212)), GD(i, (GS(g_golfers) + 216)), 0);               // updateGolfers+0x4409..updateGolfers+0x4415
                     GD(i, (GS(g_golfers) + 224)) = static_cast<int>(0x80000000u - static_cast<unsigned>(GD(i, (GS(g_golfers) + 224))));   // updateGolfers+0x441a..updateGolfers+0x442a
                 }
@@ -1534,7 +1535,7 @@ int updateGolfers() {
             if (v < 0x80) GD(i, (GS(g_golfers) + 232)) = 0;                                          // updateGolfers+0x44d2..updateGolfers+0x44df
             GD(i, (GS(g_golfers) + 220)) = 0;                                                        // updateGolfers+0x44ec
             if (L14 == 1 && GD(i, (GS(g_golfers) + 232)) < -0xc0 &&
-                (G<unsigned char>(GS(g_tileVariant) + L20 + L18 * 50) & 0x80)) {               // updateGolfers+0x44e9..updateGolfers+0x451a
+                (G<unsigned char>(GV(g_tileVariant) + L20 + L18 * WN) & 0x80)) {               // updateGolfers+0x44e9..updateGolfers+0x451a
                 r = Rand(2);                                                            // updateGolfers+0x451c..updateGolfers+0x4523
                 GD(i, (GS(g_golfers) + 224)) += ((r & 0xffff) ? 0x15555554 : 0) + static_cast<int>(0xf5555556);   // updateGolfers+0x4528..updateGolfers+0x453f
             }
@@ -1617,8 +1618,8 @@ int updateGolfers() {
         FLAGS(i) = u;                                                                   // updateGolfers+0x49cb
         L18 = GD(i, (GS(g_golfers) + 212)) >> 10;                                                    // updateGolfers+0x49d1 / updateGolfers+0x49dd / updateGolfers+0x49e6
         L20 = GD(i, (GS(g_golfers) + 216)) >> 10;                                                    // updateGolfers+0x49d7 / updateGolfers+0x49e0 / updateGolfers+0x49ea
-        L74 = L18 * 50 + L20;                                                           // updateGolfers+0x49e3..updateGolfers+0x49f6
-        L14 = G<signed char>(GS(g_tileType) + L74);                                         // updateGolfers+0x49fa..updateGolfers+0x4a04
+        L74 = L18 * WN + L20;                                                           // updateGolfers+0x49e3..updateGolfers+0x49f6
+        L14 = G<signed char>(GV(g_tileType) + L74);                                         // updateGolfers+0x49fa..updateGolfers+0x4a04
         edi = L14;
         if (edi != 2) FLAGS(i) = u & ~0x4000000u;                                       // updateGolfers+0x4a01..updateGolfers+0x4a10
         if (GB(i, (GS(g_golfers) + 34)) == 0) {                                                     // updateGolfers+0x4a16..updateGolfers+0x4a1e
@@ -1649,8 +1650,8 @@ int updateGolfers() {
                 G<int>((GS(g_golferStats) + 8) + 0xb8 * static_cast<unsigned>(GC(i, (GS(g_golfers) + 186)) + 4 * (GB(i, (GS(g_golfers) + 25)) & 7)))++;   // updateGolfers+0x4b6a..updateGolfers+0x4b9b
             }
         }
-        if (!kTileBlocked(L18, L20) && G<unsigned char>(GS(g_ballStopCount) + L74) < 0xff)       // updateGolfers+0x4b9d..updateGolfers+0x4bbc
-            G<unsigned char>(GS(g_ballStopCount) + L74)++;                                       // updateGolfers+0x4bbe..updateGolfers+0x4bc0
+        if (!kTileBlocked(L18, L20) && G<unsigned char>(GV(g_ballStopCount) + L74) < 0xff)       // updateGolfers+0x4b9d..updateGolfers+0x4bbc
+            G<unsigned char>(GV(g_ballStopCount) + L74)++;                                       // updateGolfers+0x4bbe..updateGolfers+0x4bc0
         L48 = GB(i, (GS(g_golfers) + 112));                                                          // updateGolfers+0x4bc7..updateGolfers+0x4bd5
         L4c = (GS(g_tileTypeAttrs) + 34) + 0x30 * edi;                                                  // updateGolfers+0x4bc7..updateGolfers+0x4be7
         if (G<signed char>(L4c) <= 0 && !kTileBlocked(L18, L20)) {                      // updateGolfers+0x4bd9..updateGolfers+0x4c01
@@ -1670,7 +1671,7 @@ int updateGolfers() {
         }
         // updateGolfers+0x4cc4: rough, hazards, out of bounds
         if (GC(i, (GS(g_golfers) + 27)) < G<int>(GS(g_difficulty)) + 3 && (GB(i, (GS(g_golfers) + 16)) & 2) == 0 &&
-            (G<unsigned short>(GS(g_tileFlags) + 2 * L74) & 0x100) == 0) {                   // updateGolfers+0x4cc4..updateGolfers+0x4cf5
+            (G<unsigned short>(GV(g_tileFlags) + 2 * L74) & 0x100) == 0) {                   // updateGolfers+0x4cc4..updateGolfers+0x4cf5
             GB(i, (GS(g_golfers) + 29)) = 0xd;                                                      // updateGolfers+0x4cfb
             GW(i, (GS(g_golfers) + 158)) = -99;                                                      // updateGolfers+0x4d02
             gwt.hold(kGwReactBad);
@@ -1678,9 +1679,9 @@ int updateGolfers() {
             kEmitThought(i, 2, edi);                                                    // updateGolfers+0x4cf7 / updateGolfers+0x4d13..updateGolfers+0x4d1f
         }
         {
-            int pt = G<signed char>(GS(g_tileType) + (GD(i, (GS(g_golfers) + 196)) >> 10) * 50 + (GD(i, (GS(g_golfers) + 200)) >> 10));   // updateGolfers+0x4d27..updateGolfers+0x4d3f
+            int pt = G<signed char>(GV(g_tileType) + (GD(i, (GS(g_golfers) + 196)) >> 10) * WN + (GD(i, (GS(g_golfers) + 200)) >> 10));   // updateGolfers+0x4d27..updateGolfers+0x4d3f
             signed char pa2 = TypeAttr(pt, (GS(g_tileTypeAttrs) + 34));                                   // updateGolfers+0x4d47..updateGolfers+0x4d4d
-            if (pa2 > 0 && G<signed char>(L4c) >= pa2 && (G<unsigned short>(GS(g_tileFlags) + 2 * L74) & 0x100) == 0) {   // updateGolfers+0x4d53..updateGolfers+0x4d70
+            if (pa2 > 0 && G<signed char>(L4c) >= pa2 && (G<unsigned short>(GV(g_tileFlags) + 2 * L74) & 0x100) == 0) {   // updateGolfers+0x4d53..updateGolfers+0x4d70
                 if (GB(i, (GS(g_golfers) + 29)) != 0xd) {                                           // updateGolfers+0x4d72..updateGolfers+0x4d79
                     GB(i, (GS(g_golfers) + 29)) = 0xd;                                              // updateGolfers+0x4d7b
                     GB(i, (GS(g_golfers) + 26)) = static_cast<unsigned char>((GB(i, (GS(g_golfers) + 26)) - 2) & 7);   // updateGolfers+0x4d82..updateGolfers+0x4d8e

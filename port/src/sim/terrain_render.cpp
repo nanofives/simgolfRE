@@ -19,6 +19,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_render.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -60,6 +61,10 @@ constexpr uint32_t kTextureVariations = 0x19, kTextureSlots = 9;   // textures[t
 class Renderer {
  public:
   Renderer(Ctx &c, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain) : c_(c), gl_(gl), g_(g), terrain_(terrain) {}
+  // P38A: the grid's side N (the DLL's 50 / 49 / 25 = N, N - 1, N / 2) and the translation that puts tile t's corner at the origin:
+  // (N / 2 - t) * 100, the DLL's float(25 - t) * 100 (equal at 50: both exact)
+  int32_t n() const { return world_n(c_); }
+  float centre_shift(int32_t t) const { return static_cast<float>(world_n(c_)) * 0.5f - static_cast<float>(t); }
 
   // Terrain::render(pTile, angle)
   bool render(uint32_t ptile, float angle) {
@@ -70,12 +75,13 @@ class Renderer {
     gl_.push_matrix();
     gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);
     gl_.rotatef(45.0f + angle, 0.0f, 1.0f, 0.0f);
-    if (ptile != 0) gl_.translatef(static_cast<float>(25 - tile_x(ptile)) * 100.0f, 0.0f, static_cast<float>(25 - tile_y(ptile)) * 100.0f);
+    if (ptile != 0) gl_.translatef(centre_shift(tile_x(ptile)) * 100.0f, 0.0f, centre_shift(tile_y(ptile)) * 100.0f);
     set_view_angle(angle);
 
     if (ptile == 0) {
-      for (int32_t yn = 10; yn < 40; ++yn)
-        for (int32_t xn = 40; xn > 10; --xn) tile_render(tile_at(xn, yn));
+      const int32_t c0 = n() / 2;   // the 30 x 30 window around the centre: 10 .. 40 at 50
+      for (int32_t yn = c0 - 15; yn < c0 + 15; ++yn)
+        for (int32_t xn = c0 + 15; xn > c0 - 15; --xn) tile_render(tile_at(xn, yn));
     } else {
       const int32_t px = tile_x(ptile), py = tile_y(ptile);
       // P35D: a world-layer pass walks g_world_reach more tiles each way (shifted by the zoom field like the 16), before the map clamps
@@ -84,9 +90,9 @@ class Renderer {
       left += g_world_reach << zoom;
       right += g_world_reach << zoom;
       if (py < up) up = py;
-      if (50 - py < down) down = 50 - py;
+      if (n() - py < down) down = n() - py;
       if (px < left) left = px;
-      if (50 - px < right) right = 50 - px;
+      if (n() - px < right) right = n() - px;
       uint32_t t;
       if (angle == 0.0f) {
         for (int32_t y0 = py - up; y0 < py + down; ++y0) {
@@ -170,7 +176,7 @@ class Renderer {
     gl_.push_matrix();
     gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);
     gl_.rotatef(45.0f + angle, 0.0f, 1.0f, 0.0f);
-    gl_.translatef(static_cast<float>(25 - tile_x(pivot)) * 100.0f, 0.0f, static_cast<float>(25 - tile_y(pivot)) * 100.0f);
+    gl_.translatef(centre_shift(tile_x(pivot)) * 100.0f, 0.0f, centre_shift(tile_y(pivot)) * 100.0f);
     set_view_angle(angle);
     const int32_t x = tile_x(ptile), y = tile_y(ptile);
     auto open = [&](int32_t nx, int32_t ny) {   // tileAt(...) == NULL || tileAt(...)->isHidden()
@@ -238,7 +244,7 @@ class Renderer {
         for (int32_t i = tile_x(pivot) - left + late; i < tile_x(pivot) + right; ++i)
           for (int32_t y = tile_y(pivot) - back, x = i; y < tile_y(pivot) + front; ++x, ++y) {
             const uint32_t t = tile_at(x, y);
-            if (y > 49 || x > 49) break;
+            if (y > n() - 1 || x > n() - 1) break;
             if (x >= 0 && y >= 0) visit(t);
           }
         break;
@@ -248,8 +254,8 @@ class Renderer {
         for (int32_t j = tile_y(pivot) - back + late; j < tile_y(pivot) + front; ++j)
           for (int32_t x = tile_x(pivot) + far_x, y = j; x > tile_x(pivot) - near_x; --x, ++y) {
             const uint32_t t = tile_at(x, y);
-            if (x < 0 || y > 49) break;
-            if (y >= 0 && x <= 49) visit(t);
+            if (x < 0 || y > n() - 1) break;
+            if (y >= 0 && x <= n() - 1) visit(t);
           }
         break;
       }
@@ -258,7 +264,7 @@ class Renderer {
         for (int32_t j = tile_y(pivot) - back + late; j < tile_y(pivot) + front; ++j)
           for (int32_t x = tile_x(pivot) - far_x, y = j; x < tile_x(pivot) + near_x; ++x, ++y) {
             const uint32_t t = tile_at(x, y);
-            if (y > 49 || x > 49) break;
+            if (y > n() - 1 || x > n() - 1) break;
             if (x >= 0 && y >= 0) visit(t);
           }
         break;
@@ -268,8 +274,8 @@ class Renderer {
         for (int32_t j = tile_y(pivot) + back + late; j < tile_y(pivot) + front; ++j)
           for (int32_t x = tile_x(pivot) - far_x, y = j; x < tile_x(pivot) + near_x; ++x, --y) {
             const uint32_t t = tile_at(x, y);
-            if (y < 0 || x > 49) break;
-            if (x >= 0 && y <= 49) visit(t);
+            if (y < 0 || x > n() - 1) break;
+            if (x >= 0 && y <= n() - 1) visit(t);
           }
         break;
       }
@@ -280,7 +286,7 @@ class Renderer {
 
   // Terrain::pathUpdateRender(pivot, angle): the tiles with a path in the window of 15 << zoom tiles around `pivot`, queued like
   // the other passes. It does not call setViewAngle: the view quadrant is the one the previous pass left. Original quirks kept:
-  // the left edge is clipped to x + 1 (not x) and the right edge to 49 - x; pivot is read after the GL calls even when NULL.
+  // the left edge is clipped to x + 1 (not x) and the right edge to N - 1 - x (49 - x); pivot is read after the GL calls even when NULL.
   void path_update_render(uint32_t pivot, float angle) {
     const int32_t zoom = i32(terrain_ + kTerZoom);
     int32_t top, bottom, left, right;
@@ -288,9 +294,9 @@ class Renderer {
     begin_pass(pivot, angle, pivot != 0);
     const int32_t px = tile_x(pivot), py = tile_y(pivot);
     if (py < top) top = py;
-    if (50 - py < bottom) bottom = 50 - py;
+    if (n() - py < bottom) bottom = n() - py;
     if (px < left) left = g_negctl_terrain_render == 12 ? px : px + 1;
-    if (49 - px < right) right = 49 - px;
+    if (n() - 1 - px < right) right = n() - 1 - px;
     for (int32_t y = py - top; y < py + bottom; ++y)
       for (int32_t x = px + right; x > px - left; --x) {
         const uint32_t t = tile_at(x, y);
@@ -362,7 +368,7 @@ class Renderer {
     gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);
     gl_.rotatef(45.0f + angle, 0.0f, 1.0f, 0.0f);
     if (translate)
-      gl_.translatef(static_cast<float>(25 - tile_x(pivot)) * 100.0f, 0.0f, static_cast<float>(25 - tile_y(pivot)) * 100.0f);
+      gl_.translatef(centre_shift(tile_x(pivot)) * 100.0f, 0.0f, centre_shift(tile_y(pivot)) * 100.0f);
   }
 
   // the list drawn front to back as queued (Tile::render each), cleared, the matrix popped, glFlush

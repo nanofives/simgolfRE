@@ -14,6 +14,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -231,7 +232,7 @@ UndoEntry undo_base(Ctx &ctx, int32_t x, int32_t y, uint8_t kind) {
   e.x = static_cast<uint8_t>(x);
   e.y = static_cast<uint8_t>(y);
   e.kind = kind;
-  e.type_new = gs.g_tileType[x * 50 + y];
+  e.type_new = grid_ref(ctx, &GameState::g_tileType, tile_index(ctx, x, y));
   e.tool = gs.f_w_4c2848[0];
   e.tool3 = gs.f_w_4c2848[3];
   e.variant = gs.unk_0056a514;
@@ -244,7 +245,7 @@ void undo_append(Ctx &ctx, UndoEntry e) {
   if (!redo) set_undo_word(ctx, 4, 0);  // a new edit ends the redo list (a redo's own edits keep it)
 }
 void undo_note(Ctx &ctx, int32_t x, int32_t y, uint8_t kind, int32_t oc, int32_t orf, int32_t nc, int32_t nrf) {
-  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+  if (x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx)) return;
   UndoEntry e = undo_base(ctx, x, y, kind);
   e.code_old = static_cast<uint8_t>(oc);
   e.code_new = static_cast<uint8_t>(nc);
@@ -253,16 +254,14 @@ void undo_note(Ctx &ctx, int32_t x, int32_t y, uint8_t kind, int32_t oc, int32_t
   undo_append(ctx, e);
 }
 bool tile_free_of_objects(Ctx &ctx, int32_t x, int32_t y) {
-  const GameState &gs = ctx.gs();
-  if (gs.g_tileFlags[x * 50 + y] & ((1u << 10) | (1u << 15))) return false;
+  if (grid_ref(ctx, &GameState::g_tileFlags, tile_index(ctx, x, y)) & ((1u << 10) | (1u << 15))) return false;
   return call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax == 0;
 }
 // the tile still holds what the entry's edit left there: same code, refund and type, no placed object (demolishObject would
 // ask to demolish the object instead), not the refusal bit 0x8000, not blocked
 bool undo_entry_live(Ctx &ctx, const UndoEntry &e) {
-  const GameState &gs = ctx.gs();
-  const int32_t i = e.x * 50 + e.y;
-  if (gs.g_tileBuildCode[i] != e.code_new || gs.g_tileRefund[i] != e.refund_new || gs.g_tileType[i] != e.type_new) return false;
+  const int32_t i = tile_index(ctx, e.x, e.y);
+  if (grid_ref(ctx, &GameState::g_tileBuildCode, i) != e.code_new || grid_ref(ctx, &GameState::g_tileRefund, i) != e.refund_new || grid_ref(ctx, &GameState::g_tileType, i) != e.type_new) return false;
   return tile_free_of_objects(ctx, e.x, e.y);
 }
 // the object the entry placed is still its record: same type at the same tile
@@ -318,11 +317,10 @@ void course_undo(Ctx &ctx) {
       continue;
     }
     call_peer(ctx, "demolishObject", {u32(e.x), u32(e.y), 0});
-    GameState &gs = ctx.gs();
-    const int32_t i = e.x * 50 + e.y;
-    gs.g_tileBuildCode[i] = e.code_old;
-    gs.g_tileRefund[i] = e.refund_old;
-    e.type_new = gs.g_tileType[i];  // the redo list keeps the type the undo left
+    const int32_t i = tile_index(ctx, e.x, e.y);
+    grid_ref(ctx, &GameState::g_tileBuildCode, i) = e.code_old;
+    grid_ref(ctx, &GameState::g_tileRefund, i) = e.refund_old;
+    e.type_new = grid_ref(ctx, &GameState::g_tileType, i);  // the redo list keeps the type the undo left
     undo_push(ctx, kUndoRedo, 4, e);
   }
   if (refused) play_sound(ctx, 0x18, 100, 0, 0, 0);
@@ -335,15 +333,14 @@ void course_undo_note(Ctx &ctx, int32_t x, int32_t y, int32_t old_code, int32_t 
 }
 void course_undo_unrecorded(Ctx &ctx, int32_t x, int32_t y) {
   if (!undo_on(ctx)) return;
-  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
-  const int32_t i = x * 50 + y;
-  const GameState &gs = ctx.gs();
-  undo_note(ctx, x, y, kTileUnrecorded, gs.g_tileBuildCode[i], gs.g_tileRefund[i], gs.g_tileBuildCode[i], gs.g_tileRefund[i]);
+  if (x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx)) return;
+  const int32_t i = tile_index(ctx, x, y);
+  undo_note(ctx, x, y, kTileUnrecorded, grid_ref(ctx, &GameState::g_tileBuildCode, i), grid_ref(ctx, &GameState::g_tileRefund, i), grid_ref(ctx, &GameState::g_tileBuildCode, i), grid_ref(ctx, &GameState::g_tileRefund, i));
 }
 void course_undo_object(Ctx &ctx, int32_t x, int32_t y, int32_t rec, int32_t price, int32_t ledger, bool free_unlock,
                         bool undoable) {
   if (!undo_on(ctx)) return;
-  if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
+  if (x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx)) return;
   UndoEntry e = undo_base(ctx, x, y, undoable && rec > 0 && rec < 256 ? kObject : kObjectRefused);
   e.code_new = static_cast<uint8_t>(rec);
   e.refund_old = free_unlock ? 1 : 0;
@@ -390,11 +387,10 @@ bool course_redo_take(Ctx &ctx, std::vector<CourseRedoItem> &out, uint32_t &pres
     if (e.press != press) break;
     --n;
     set_undo_word(ctx, 4, n);
-    const GameState &gs = ctx.gs();
-    const int32_t i = e.x * 50 + e.y;
+    const int32_t i = tile_index(ctx, e.x, e.y);
     bool live = true;
     if (e.kind == kTileEdit)
-      live = gs.g_tileBuildCode[i] == e.code_old && gs.g_tileRefund[i] == e.refund_old && gs.g_tileType[i] == e.type_new &&
+      live = grid_ref(ctx, &GameState::g_tileBuildCode, i) == e.code_old && grid_ref(ctx, &GameState::g_tileRefund, i) == e.refund_old && grid_ref(ctx, &GameState::g_tileType, i) == e.type_new &&
              tile_free_of_objects(ctx, e.x, e.y);
     if (!live) {
       refused = true;
@@ -439,6 +435,7 @@ void corner_offset2(int32_t rot, int32_t Z, int32_t u, int32_t v, int32_t cx, in
 }  // namespace
 CameraRange camera_range(Ctx &ctx) {
   CameraRange r;
+  r.hi[0] = r.hi[1] = world_last(ctx);  // P38A: 0..N - 1 (0x31) on both axes before a land exists or at switch 1
   if (SG_DEFECT(g_defect_camera_bound_zoom)) return r;
   const GameState &g = ctx.gs();
   const int32_t Z = g.g_zoomScale, rot = g.g_cameraRot;
@@ -446,11 +443,11 @@ CameraRange camera_range(Ctx &ctx) {
   // have no case in worldToScreen
   if (Z <= 0 || Z > 8 || (rot != 0 && rot != 2 && rot != 4 && rot != 6) || g.g_screenWidth != 800 || g.g_screenHeight != 600)
     return r;
-  int32_t x0 = 50, x1 = -1, y0 = 50, y1 = -1;  // the land: the tiles whose type is not 0x14
-  const Ptr<int8_t> type = state_arr(ctx, &GameState::g_tileType);
-  for (int32_t x = 0; x < 50; ++x)
-    for (int32_t y = 0; y < 50; ++y)
-      if ((type + (x * 50 + y)).get() != 0x14) {
+  int32_t x0 = world_n(ctx), x1 = -1, y0 = world_n(ctx), y1 = -1;  // the land: the tiles whose type is not 0x14
+  const Ptr<int8_t> type = grid_arr(ctx, &GameState::g_tileType);
+  for (int32_t x = 0; x < world_n(ctx); ++x)
+    for (int32_t y = 0; y < world_n(ctx); ++y)
+      if ((type + tile_index(ctx, x, y)).get() != 0x14) {
         x0 = x < x0 ? x : x0;
         x1 = x > x1 ? x : x1;
         y0 = y < y0 ? y : y0;
@@ -636,8 +633,8 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
   if (sy < neg32(half) || sy >= add32(half, gs.g_screenHeight)) return 0;
 
   const int32_t tx = sar32(wx, 10), ty = sar32(wy, 10);
-  const int32_t cell = add32(mul32(tx, 50), ty);
-  const int8_t type = state_arr(ctx, &GameState::g_tileType)[cell];
+  const int32_t cell = tile_index(ctx, tx, ty);
+  const int8_t type = grid_arr(ctx, &GameState::g_tileType)[cell];
   const uint32_t f = (state_arr(ctx, &GameState::g_tileTypeAttrs) + type).field(&TileTypeAttr::flags).get();
   const int32_t S = gs.f_w_4c2e00[0];
   if (!(f & 8)) {
@@ -646,7 +643,7 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
       sy = add32(sy, neg32(mul32(mul32(sub32(mn, 3), S), gs.g_zoomScale) / 4));
       eys -= static_cast<double>(mul32(mul32(sub32(mn, 3), S), gs.g_zoomScale)) / 4;
     } else if (f & 4) {
-      const int32_t h = state_arr(ctx, &GameState::g_tileLevel)[cell] - (mode == 3 ? 0 : 3);
+      const int32_t h = grid_arr(ctx, &GameState::g_tileLevel)[cell] - (mode == 3 ? 0 : 3);
       sy = sub32(sy, mul32(mul32(h, S), gs.g_zoomScale) / 4);
       eys -= static_cast<double>(mul32(mul32(h, S), gs.g_zoomScale)) / 4;
     } else {

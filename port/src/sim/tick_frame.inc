@@ -229,12 +229,12 @@ void P21_ArrowStep(int code) {
 // key-up; with no key-down, P19A's held arrow; then the camera steps. View block word +20 tells H1 that this frame has stepped.
 // When H1 stepped in the last frame (word +28) that step is in this frame's picture already: the key-down goes to rootWin_onKey
 // but is left for this frame's H1 to take, and no held step is taken (one step per picture, as in the original).
-// P26A: the arrow glide's camera step (view_take_glide, tiles), each axis clamped 0..0x31 as the key switch's cases clamp it
+// P26A: the arrow glide's camera step (view_take_glide, tiles), each axis clamped 0..N - 1 (0x31) as the key switch's cases clamp it
 // (ML+0xe971..ML+0xea73)
-// P31A: the bounds a camera clamp passes: as the original passes them (lo `orig`, hi 0x31) at mainLoop.cameraBoundByZoom = 1,
+// P31A: the bounds a camera clamp passes: as the original passes them (lo `orig`, hi N - 1 = 0x31) at mainLoop.cameraBoundByZoom = 1,
 // the camera's legal range (bridge.h camera_range: the land, the zoom, the rotation and the view width) at 0
 int32_t CamLo(int axis, int32_t orig) { return SG_DEFECT(g_defect_camera_bound_zoom) ? orig : camera_range(ctx).lo[axis]; }
-int32_t CamHi(int axis) { return SG_DEFECT(g_defect_camera_bound_zoom) ? 0x31 : camera_range(ctx).hi[axis]; }
+int32_t CamHi(int axis) { return SG_DEFECT(g_defect_camera_bound_zoom) ? world_last(ctx) : camera_range(ctx).hi[axis]; }
 void P26_GlideStep(int32_t dx, int32_t dy) {
     G32(GS(gCameraTileX)) = cc("clamp", G32(GS(gCameraTileX)) + dx, CamLo(0, 0), CamHi(0));  // P31A: the range
     G32(GS(gCameraTileY)) = cc("clamp", G32(GS(gCameraTileY)) + dy, CamLo(1, 0), CamHi(1));
@@ -321,8 +321,8 @@ void FramePreamble(u32 F, int retile) {
     SV_dateStory(F, count);                         // ML+0x88e..ML+0xdd4 (every early exit lands here, at ML+0xdd9)
 
     // ML+0xdd9..ML+0xef6 : fill the 24-entry label-pointer table in the frame, and (unless bit 1 of [g_tileWallMask])
-    // clear the 0x4e2-dword array at g_tileScreenX
-    u8 lab = GU8(GS(g_tileWallMask));                       // ML+0xdd9
+    // clear the 0x4e2-dword array at g_tileScreenX (N * N words: grid_dwords)
+    u8 lab = GU8(GV(g_tileWallMask));                       // ML+0xdd9
     FD(0x238) = (GS(f_strpool_4c6980) + 280);                         // ML+0xdde
     FD(0x23C) = (GS(f_strpool_4c6980) + 272);                         // ML+0xdeb
     FD(0x240) = (GS(f_strpool_4c6980) + 260);                         // ML+0xdf6
@@ -348,7 +348,7 @@ void FramePreamble(u32 F, int retile) {
     FD(0x230) = (GS(f_strpool_4c6980) + 96);                         // ML+0xed2
     FD(0x234) = (GS(f_strpool_4c6980) + 88);                         // ML+0xedd
     if (!(lab & 2))                                 // ML+0xde9 test al,2; ML+0xee8 jne ML+0xef8
-        for (int i = 0; i < 0x4E2; i++) G32(GS(g_tileScreenX) + 4 * i) = 0;   // ML+0xeea..ML+0xef6
+        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0;   // ML+0xeea..ML+0xef6
 
     // ML+0xef8..ML+0xf8b : refresh the terrain render; when the date is set and [g_ui_542df8] != 0 also re-apply the
     // course type, refresh again and play the <text> sound
@@ -378,7 +378,7 @@ void FramePreamble(u32 F, int retile) {
         G32(GS(g_ui_567b00)) == G32(GS(g_zoomScale)) &&       // ML+0xfac/ML+0xfb1/ML+0xfb9
         G32(GS(g_lastCameraRot)) == G32(GS(g_cameraRot));         // ML+0xfbb/ML+0xfc1/ML+0xfc8
     if (!unchanged) {                               // ML+0xfca
-        for (int i = 0; i < 0x4E2; i++) G32(GS(g_tileScreenX) + 4 * i) = 0;    // ML+0xfca..ML+0xfd6
+        for (int i = 0; i < grid_dwords(ctx, 2); i++) G32(GV(g_tileScreenX) + 4 * i) = 0;    // ML+0xfca..ML+0xfd6
         for (int i = 0; i < 0x98; i++) G32(GS(g_ballTrailX) + 4 * i) = -1;    // ML+0xfd8..ML+0xfe5
     }
     // ML+0xfe7
@@ -401,7 +401,7 @@ void FramePreamble(u32 F, int retile) {
     // ML+0x1044 falls through to Ph_00410604 (P1)
 }
 
-// c3fy part P1: mainLoop ML+0x0, range ML+0x1044..ML+0x2d8e (the first per-tile loop over the 50 x 50 grid).
+// c3fy part P1: mainLoop ML+0x0, range ML+0x1044..ML+0x2d8e (the first per-tile loop over the N x N grid).
 // Hand transcription of log/c3/alt/c3fy_norm.asm. Every [F+X] access of the original is a frame access at the same
 // offset and width. Registers are C locals named after the register they hold in the original.
 // Entry: ebx = 0 (ML+0x103a) is the outer counter, [F+0x30] = 0 (ML+0x1040), [F+0x40] written at ML+0x103c.
@@ -410,18 +410,18 @@ void FramePreamble(u32 F, int retile) {
 
 // The two 8-dword tables indexed by a direction (0..7): f_tab_dirDx_4c2878 holds the offset the code adds to ebp (the first
 // tileToScreen argument), f_tab_dirDy_4c2898 the offset it adds to ebx (the second one). A neighbour's tile index is
-// t98(d) + (t78(d) + ebp) * 50 + ebx (lea chains such as ML+0x149e..ML+0x14b7).
+// t98(d) + (t78(d) + ebp) * N + ebx (N = 50: lea chains such as ML+0x149e..ML+0x14b7).
 int P1_t78(int d) { return G32(GS(f_tab_dirDx_4c2878) + 4 * d); }
 int P1_t98(int d) { return G32(GS(f_tab_dirDy_4c2898) + 4 * d); }
-int P1_nb(int d, int ebp, int ebx) { return P1_t98(d) + (P1_t78(d) + ebp) * 50 + ebx; }
+int P1_nb(int d, int ebp, int ebx) { return P1_t98(d) + (P1_t78(d) + ebp) * WN + ebx; }
 // P28A: the switches' outside tests. ML_T: mainLoop.edgeNeighbourType at 0 and tile (x, y) outside the grid (type 0x14 there);
 // ML_F: mainLoop.edgeNeighbourNoFlags at 0 and tile (x, y) outside the grid (no flags there). Both false at 1.
-bool ML_T(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_type) && p28_off(x, y); }
-bool ML_F(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_no_flags) && p28_off(x, y); }
+bool ML_T(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_type) && p28_off(ctx, x, y); }
+bool ML_F(int x, int y) { return !SG_DEFECT(g_defect_ml_edge_no_flags) && p28_off(ctx, x, y); }
 bool P1_offT(int d, int ebp, int ebx) { return ML_T(P1_t78(d) + ebp, P1_t98(d) + ebx); }
 bool P1_offF(int d, int ebp, int ebx) { return ML_F(P1_t78(d) + ebp, P1_t98(d) + ebx); }
 // P28A fix 2: g_tileWallMask of neighbour d; under mainLoop.edgeNeighbourNoFlags at 0 an outside cell's mask is 0 (no read)
-int P1_wm(int d, int ebp, int ebx) { return P1_offF(d, ebp, ebx) ? 0 : G8(GS(g_tileWallMask) + P1_nb(d, ebp, ebx)); }
+int P1_wm(int d, int ebp, int ebx) { return P1_offF(d, ebp, ebx) ? 0 : G8(GV(g_tileWallMask) + P1_nb(d, ebp, ebx)); }
 
 // ---- ML+0x108e..ML+0x11fe: grid overlay (flag 2 of g_flags, g_ui_542f20 != 3): two edges of the cell as
 // rectangles on the Widget g_rootWindow+0x274, and with flag 0x20 the cell's g_tileLevel byte as a number.
@@ -439,7 +439,7 @@ void P1_grid(u32 F, int ebp, int ebx) {
     cc("worldToScreen", edi, (ebx << 10) + 0x3ff, FA(0x144), FA(0x134), pm);            // ML+0x114a worldToScreen
     tc("Widget_fillRect", (GS(g_rootWindow) + 628), FD(0x13c), FD(0x11c), FD(0x144), FD(0x134), (int)0x80000000);   // ML+0x117c Widget_fillRect
     if ((GU8(GS(g_flags)) & 0x20) == 0) return;                                     // ML+0x1188
-    int v = G8(GS(g_tileLevel) + FD(0x14));                                             // ML+0x118e
+    int v = G8(GV(g_tileLevel) + FD(0x14));                                             // ML+0x118e
     if (v == 0) return;                                                            // ML+0x1196
     GU8(kBuf) = 0;                                                                 // ML+0x11a3
     int r = Itoa(v, GS(g_textBuf), 10);                                               // ML+0x11aa __itoa
@@ -459,7 +459,7 @@ void P1_t11_4109fb(u32 F, int ebp, int ebx) {
     eax = cc("clamp", r, 0, 0xa);                                               // ML+0x148d clamp
     ecx = G32(GS(g_cameraRot)) & 7;                                                     // ML+0x1492
     if (FD(0x90) & P1_wm(ecx, ebp, ebx)) esi = 2;                                       // ML+0x14c8 (P28A: 0 outside)
-    if (FD(0x84) & G8(GS(g_tileWallMask) + FD(0x14))) esi = 4;                             // ML+0x14e1
+    if (FD(0x84) & G8(GV(g_tileWallMask) + FD(0x14))) esi = 4;                             // ML+0x14e1
     if (eax > edi) {                                                               // ML+0x14ea
         int edx = FD(0x44) - FD(0x40);
         ecx = G8(GS(g_courseType)) * 8 - edi + eax;
@@ -469,7 +469,7 @@ void P1_t11_4109fb(u32 F, int ebp, int ebx) {
     }
     // ML+0x1545
     ecx = (G32(GS(g_cameraRot)) + 3) & 7;
-    if (FD(0xb4) & G8(GS(g_tileWallMask) + FD(0x14))) return;                              // ML+0x1564 -> ML+0x161e
+    if (FD(0xb4) & G8(GV(g_tileWallMask) + FD(0x14))) return;                              // ML+0x1564 -> ML+0x161e
     if ((FD(0x84) & P1_wm(ecx, ebp, ebx)) == 0) return;                                 // ML+0x1594 (P28A: 0 outside)
     ecx = G32(GS(g_cameraRot));                                                         // ML+0x159a
     eax = (ecx + 2) & 7;
@@ -483,7 +483,7 @@ void P1_t11_4109fb(u32 F, int ebp, int ebx) {
 
 // ---- ML+0x161e..ML+0x1811: type-0x11 tile, side sprites from the records at g_pendingCourseInfo+0xdc and g_surfaces587ea8+0xdc.
 void P1_t11_410bde(u32 F, int ebp, int ebx) {
-    int eax = G8(GS(g_tileWallMask) + FD(0x14));                                           // ML+0x1629
+    int eax = G8(GV(g_tileWallMask) + FD(0x14));                                           // ML+0x1629
     if ((FD(0x84) & eax) == 0) return;                                             // ML+0x1632 -> ML+0x1814
     if (FD(0x90) & eax) return;                                                    // ML+0x1641 -> ML+0x1814
     int esi = 0;                                                                   // ML+0x164c
@@ -495,7 +495,7 @@ void P1_t11_410bde(u32 F, int ebp, int ebx) {
     eax = cc("clamp", r, 0, 0xa);                                               // ML+0x1693 clamp
     ecx = (G32(GS(g_cameraRot)) - 2) & 7;                                               // ML+0x1698
     if (FD(0x84) & P1_wm(ecx, ebp, ebx)) esi = 5;                                       // ML+0x16d1 (P28A: 0 outside)
-    if (FD(0x90) & G8(GS(g_tileWallMask) + FD(0x14))) eax = 0;                             // ML+0x16ec
+    if (FD(0x90) & G8(GV(g_tileWallMask) + FD(0x14))) eax = 0;                             // ML+0x16ec
     if (esi != 0 && eax > edi) {                                                   // ML+0x16f2, ML+0x16f6
         ecx = G8(GS(g_courseType)) * 8 - edi + eax;
         int rec = (ecx * 7 + esi) * 11;                                            // ML+0x170a..ML+0x1718
@@ -518,7 +518,7 @@ void P1_t11_410bde(u32 F, int ebp, int ebx) {
 // ---- ML+0x1814..ML+0x18e1: type-0x11 tile, side sprite from the records at g_image587ae8+0x12c (clamped height > 3).
 void P1_t11_410dd4(u32 F, int ebp, int ebx) {
     int ecx = (G32(GS(g_cameraRot)) - 1) & 7;                                           // ML+0x181d
-    int eax = G8(GS(g_tileWallMask) + FD(0x14));                                           // ML+0x1820
+    int eax = G8(GV(g_tileWallMask) + FD(0x14));                                           // ML+0x1820
     if ((eax & FD(0xcc)) == 0) return;                                             // ML+0x1833 -> ML+0x18e4
     if ((P1_wm(ecx, ebp, ebx) & FD(0xb4)) == 0) return;                                 // ML+0x1863 (P28A: 0 outside)
     ecx = G32(GS(g_cameraRot));                                                         // ML+0x1865
@@ -537,7 +537,7 @@ void P1_t11_410dd4(u32 F, int ebp, int ebx) {
 void P1_t11_410ea4(u32 F, int ebp, int ebx, u32* pEsi, u32* pEdi) {
     int eax = G32(GS(g_cameraRot)) & 7;                                                 // ML+0x18e9
     int idx = P1_nb(eax, ebp, ebx);                                                // ML+0x1905
-    if (!P1_offT(eax, ebp, ebx) && (FD(0xb4) & G8(GS(g_tileWallMask) + idx)) != 0 && G8(GS(g_tileType) + idx) == 0x11) {   // ML+0x1918, ML+0x1921 (P28A)
+    if (!P1_offT(eax, ebp, ebx) && (FD(0xb4) & G8(GV(g_tileWallMask) + idx)) != 0 && G8(GV(g_tileType) + idx) == 0x11) {   // ML+0x1918, ML+0x1921 (P28A)
         int c = cc("cellAt", 0x237, (G32(GS(g_date)) + ebp * 7) % G32((GS(g_sheetCols) + 2268)), 3);   // ML+0x1943 cellAt
         G32(GS(unk_005a9cc8)) = c;                                                       // ML+0x194f
         cc("addSprite", FD(0x50) - G32(GS(g_tileStep4c2840)) / 2, FD(0x40) / 3 + FD(0x44), FD(0x44), 0x3c, 0x3c, c, 4, 0xb2);   // ML+0x1982 addSprite
@@ -546,8 +546,8 @@ void P1_t11_410ea4(u32 F, int ebp, int ebx, u32* pEsi, u32* pEdi) {
     eax = (G32(GS(g_cameraRot)) + 2) & 7;
     u32 esi = GS(f_tab_dirDx_4c2878) + eax * 4;                                                // ML+0x1996
     u32 edi = GS(f_tab_dirDy_4c2898) + eax * 4;                                                // ML+0x199d
-    idx = ebx + (G32(esi) + ebp) * 50 + G32(edi);                                  // ML+0x19a4..ML+0x19b3
-    if (!ML_T(G32(esi) + ebp, G32(edi) + ebx) && (FD(0xcc) & G8(GS(g_tileWallMask) + idx)) != 0 && G8(GS(g_tileType) + idx) == 0x11) {   // ML+0x19c6, ML+0x19cf (P28A)
+    idx = ebx + (G32(esi) + ebp) * WN + G32(edi);                                  // ML+0x19a4..ML+0x19b3
+    if (!ML_T(G32(esi) + ebp, G32(edi) + ebx) && (FD(0xcc) & G8(GV(g_tileWallMask) + idx)) != 0 && G8(GV(g_tileType) + idx) == 0x11) {   // ML+0x19c6, ML+0x19cf (P28A)
         const P35B_FallScope fall(ctx, ebp, ebx, G32(esi) + ebp, G32(edi) + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
         int c = cc("cellAt", 0x237, (G32(GS(g_date)) + ebp * 7) % G32((GS(g_sheetCols) + 2268)), 2);   // ML+0x19f1 cellAt
         G32(GS(unk_005a9cc8)) = c;                                                       // ML+0x19fd
@@ -561,7 +561,7 @@ void P1_t11_410ea4(u32 F, int ebp, int ebx, u32* pEsi, u32* pEdi) {
 // difference, scaled by f_w_4c2e00 * zoom / 8) picks cells 0x237 + 0x23b (step <= 3) or 0x238 + 0x23c (step > 3),
 // variant 0, drawn at + half the g_tileStep4c2840 width.
 void P1_t11_410ff8(u32 F, int ebp, int ebx, u32 esi, u32 edi) {
-    if ((FD(0x90) & G8(GS(g_tileWallMask) + FD(0x14))) == 0) return;                       // ML+0x1a4c -> ML+0x1cc2
+    if ((FD(0x90) & G8(GV(g_tileWallMask) + FD(0x14))) == 0) return;                       // ML+0x1a4c -> ML+0x1cc2
     int eax = cc("cornerHeights", ebp, ebx, (G32(GS(g_cameraRot)) + 1) & 7, 0);             // ML+0x1a61 cornerHeights
     int edx = (G32(GS(g_cameraRot)) - 1) & 7;                                           // ML+0x1a66
     int ecx = G32(esi);                                                            // ML+0x1a6f
@@ -572,7 +572,7 @@ void P1_t11_410ff8(u32 F, int ebp, int ebx, u32 esi, u32 edi) {
     eax = (edx + 2) & 7;
     ecx = P1_t78(eax) + ebp;                                                       // ML+0x1ab5
     eax = P1_t98(eax);                                                             // ML+0x1aae
-    if (ML_T(ecx, eax + ebx) || G8(GS(g_tileType) + eax + ecx * 50 + ebx) != 0x11) return;   // ML+0x1ac8 -> ML+0x1cc2 (P28A)
+    if (ML_T(ecx, eax + ebx) || G8(GV(g_tileType) + eax + ecx * WN + ebx) != 0x11) return;   // ML+0x1ac8 -> ML+0x1cc2 (P28A)
     const P35B_FallScope fall(ctx, ebp, ebx, ecx, eax + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
     edx = (G32(GS(g_cameraRot)) - 3) & 7;                                               // ML+0x1ace
     eax = cc("cornerHeights", ecx, eax + ebx, edx, 0);                                 // ML+0x1ae1 cornerHeights
@@ -606,11 +606,11 @@ void P1_t11_410ff8(u32 F, int ebp, int ebx, u32 esi, u32 edi) {
 
 // ---- ML+0x1cc2..ML+0x1f22: the same for the [F+0x84] side, variant 1, drawn at - half the g_tileStep4c2840 width.
 void P1_t11_411282(u32 F, int ebp, int ebx) {
-    if ((FD(0x84) & G8(GS(g_tileWallMask) + FD(0x14))) == 0) return;                       // ML+0x1cd6 -> ML+0x1f25
+    if ((FD(0x84) & G8(GV(g_tileWallMask) + FD(0x14))) == 0) return;                       // ML+0x1cd6 -> ML+0x1f25
     int eax = G32(GS(g_cameraRot)) & 7;                                                 // ML+0x1ce1
     u32 esi = GS(f_tab_dirDx_4c2878) + eax * 4;                                                // ML+0x1ce4
     u32 edi = GS(f_tab_dirDy_4c2898) + eax * 4;                                                // ML+0x1ceb
-    if (ML_T(G32(esi) + ebp, G32(edi) + ebx) || G8(GS(g_tileType) + ebx + (G32(esi) + ebp) * 50 + G32(edi)) != 0x11) return;   // ML+0x1d09 -> ML+0x1f25 (P28A)
+    if (ML_T(G32(esi) + ebp, G32(edi) + ebx) || G8(GV(g_tileType) + ebx + (G32(esi) + ebp) * WN + G32(edi)) != 0x11) return;   // ML+0x1d09 -> ML+0x1f25 (P28A)
     const P35B_FallScope fall(ctx, ebp, ebx, G32(esi) + ebp, G32(edi) + ebx);   // P35B mainLoop.fallOverNearerGround (tick.cpp; render-only)
     eax = cc("cornerHeights", ebp, ebx, (G32(GS(g_cameraRot)) + 1) & 7, 0);                 // ML+0x1d1e cornerHeights
     int edx = (G32(GS(g_cameraRot)) + 3) & 7;                                           // ML+0x1d23
@@ -666,7 +666,7 @@ void P1_type11(u32 F, int ebp, int ebx, int esi) {
         break;
     }
     // ML+0x138f
-    int edx = G8(GS(g_tileWallMask) + esi);
+    int edx = G8(GV(g_tileWallMask) + esi);
     int eax = FD(0x90);                                                            // ML+0x1396
     FW(0x198) = 1; FW(0x19a) = 0x13; FW(0x19c) = 0x2c; FW(0x19e) = 0x52;           // ML+0x139d..ML+0x13e5
     FW(0x1a0) = 0x71; FW(0x1a2) = 0x8e; FW(0x1a4) = 0xa1; FW(0x1a6) = 0xae;
@@ -704,11 +704,11 @@ void P1_type11Deco(u32 F, int ebp, int ebx, int edi) {
         }
     }
     // ML+0x2044
-    if (G8(GS(g_tileType) + edi) != 0x11) return;                                      // ML+0x204b -> ML+0x2272
+    if (G8(GV(g_tileType) + edi) != 0x11) return;                                      // ML+0x204b -> ML+0x2272
     // P28A mainLoop.edgeNeighbourType: at 0 an outside neighbour is type 0x14 (never 0x11); the variant read sits behind y - 1
-    if (!ML_T(ebp, ebx - 1) && G8((GS(g_courseTable) + 783) + edi) == 0x11 && GU8((GS(g_shotStartDate) + 607) + edi) != 0                 // ML+0x2058, ML+0x2066 (jbe)
-        && (ML_T(ebp, ebx + 1) || G8((GS(g_tileType) + 1) + edi) != 0x11) && !ML_T(ebp + 1, ebx) && G8((GS(g_tileType) + 50) + edi) == 0x11            // ML+0x2073, ML+0x2080
-        && !ML_T(ebp - 1, ebx) && G8((GS(g_courseTable) + 734) + edi) == 0x11 && (ebx + ebp) % 3 != 0) {                 // ML+0x208d, ML+0x20a0
+    if (!ML_T(ebp, ebx - 1) && G8((GV(g_tileType) - 1) + edi) == 0x11 && GU8((GV(g_tileVariant) - 1) + edi) != 0                 // ML+0x2058, ML+0x2066 (jbe)
+        && (ML_T(ebp, ebx + 1) || G8((GV(g_tileType) + 1) + edi) != 0x11) && !ML_T(ebp + 1, ebx) && G8((GV(g_tileType) + WN) + edi) == 0x11            // ML+0x2073, ML+0x2080
+        && !ML_T(ebp - 1, ebx) && G8((GV(g_tileType) - WN) + edi) == 0x11 && (ebx + ebp) % 3 != 0) {                 // ML+0x208d, ML+0x20a0
         int ecx = (ebp + ebx * 2) % 3 + 0x233;                                     // ML+0x20a2..ML+0x20b0
         u8 al = GU8(GS(g_courseType));                                                   // ML+0x20a9
         int k;
@@ -719,11 +719,11 @@ void P1_type11Deco(u32 F, int ebp, int ebx, int edi) {
         cc("addSprite", FD(0x50), FD(0x44), FD(0x44), 0x3c, 0x3c, c, 4, 0xb2);      // ML+0x2119 addSprite
     }
     // ML+0x2121
-    if (G8(GS(g_tileType) + edi) != 0x11) return;                                      // ML+0x2128
+    if (G8(GV(g_tileType) + edi) != 0x11) return;                                      // ML+0x2128
     eax = FD(0x14);                                                                // ML+0x212e
-    if (ML_T(ebp + 1, ebx) || G8((GS(g_tileType) + 50) + eax) != 0x11) return;                // ML+0x2139 (P28A: 0x14 outside)
-    if (ML_T(ebp, ebx + 1) || G8((GS(g_tileType) + 1) + eax) != 0x11) return;                 // ML+0x2148
-    if (ML_T(ebp + 1, ebx + 1) || G8((GS(g_tileType) + 51) + eax) != 0x11) return;            // ML+0x2157
+    if (ML_T(ebp + 1, ebx) || G8((GV(g_tileType) + WN) + eax) != 0x11) return;                // ML+0x2139 (P28A: 0x14 outside)
+    if (ML_T(ebp, ebx + 1) || G8((GV(g_tileType) + 1) + eax) != 0x11) return;                 // ML+0x2148
+    if (ML_T(ebp + 1, ebx + 1) || G8((GV(g_tileType) + WV) + eax) != 0x11) return;            // ML+0x2157
     int esi = ebp + 1;                                                             // ML+0x2161
     edi = ebx + 1;                                                                 // ML+0x2166
     FD(0xc) = esi;                                                                 // ML+0x2169
@@ -733,7 +733,7 @@ void P1_type11Deco(u32 F, int ebp, int ebx, int edi) {
     if (FD(0x18) != eax) return;                                                   // ML+0x218c
     // ML+0x2192
     esi = -1;
-    u8 cl = GU8(GS(g_tileVariant) + FD(0x14));                                            // ML+0x2199
+    u8 cl = GU8(GV(g_tileVariant) + FD(0x14));                                            // ML+0x2199
     if (cl <= 1) {                                                                 // ML+0x21a2 ja
         if ((((ebp - ebx) * 3) & 7) == 0) esi = (ebx + ebp) % 3 + 0x22e;           // ML+0x21ad (test al, 7), ML+0x21bc
         // ML+0x21c2: cmp cl, 1 / ja is never taken here (cl <= 1 tested at ML+0x219f)
@@ -765,7 +765,7 @@ void P1_scan(u32 F, int ebp, int ebx, int* pEax, u8* pDl) {
             FD(0xc) = FD(0xc) >> 1;                                                // ML+0x2295..ML+0x229b
             eax = edx & 7;
             esi >>= 1;                                                             // ML+0x22a4
-            int t = G8(GS(g_tileType) + P1_nb(eax, ebp, ebx));                         // ML+0x22c4
+            int t = G8(GV(g_tileType) + P1_nb(eax, ebp, ebx));                         // ML+0x22c4
             edi |= (int)(1u << (t & 31));                                          // ML+0x22cc shl eax, cl; ML+0x22d4
             if (G8((GS(g_tileTypeAttrs) + 38) + t * 48) != FD(0x20)) esi |= 4;                     // ML+0x22dd, ML+0x22e1
             edx++;                                                                 // ML+0x22ea
@@ -775,20 +775,20 @@ void P1_scan(u32 F, int ebp, int ebx, int* pEax, u8* pDl) {
         FD(0x10) = eax;                                                            // ML+0x22fc
     } while (eax < 8);                                                             // ML+0x2300
     // ML+0x2306
-    u8 dl = GU8(GS(g_tileType) + FD(0x14));                                            // ML+0x230e
+    u8 dl = GU8(GV(g_tileType) + FD(0x14));                                            // ML+0x230e
     esi = FD(0xc);                                                                 // ML+0x230a
     int ecx = 0;                                                                   // ML+0x2314
     do {                                                                           // ML+0x2316
         eax = G32(GS(f_tab_dirDx_4c2878) + ecx) + ebp;
         edi = G32(GS(f_tab_dirDy_4c2898) + ecx);
         esi >>= 1;                                                                 // ML+0x2324
-        eax = edi + eax * 50;                                                      // ML+0x2326..ML+0x232c
-        if (GU8(GS(g_tileType) + eax + ebx) == dl) esi |= 8;                           // ML+0x2336
+        eax = edi + eax * WN;                                                      // ML+0x2326..ML+0x232c
+        if (GU8(GV(g_tileType) + eax + ebx) == dl) esi |= 8;                           // ML+0x2336
         ecx += 8;
     } while (ecx < 0x20);                                                          // ML+0x2341
     if (dl != 1) {                                                                 // ML+0x2346
         eax = FD(0x14);                                                            // ML+0x2348
-        GU8(GS(g_tileFlags) + eax * 2) &= 0x7f;                                         // ML+0x234c
+        GU8(GV(g_tileFlags) + eax * 2) &= 0x7f;                                         // ML+0x234c
     }
     (void)esi;
     (void)edi;
@@ -805,7 +805,7 @@ void P1_flag20Rest(u32 F, int ebp, int ebx) {
     do {                                                                           // ML+0x2740
         int eax = (G32(GS(g_cameraRot)) + esi * 2) & 7;
         int idx = P1_nb(eax, ebp, ebx);                                            // ML+0x2764
-        if (!P1_offF(eax, ebp, ebx) && (GU8(GS(g_tileFlags) + idx * 2) & 0x20) != 0 && G8(GS(g_tileType) + idx) != 0x11) {   // ML+0x276f, ML+0x2778 (P28A: no flags outside)
+        if (!P1_offF(eax, ebp, ebx) && (GU8(GV(g_tileFlags) + idx * 2) & 0x20) != 0 && G8(GV(g_tileType) + idx) != 0x11) {   // ML+0x276f, ML+0x2778 (P28A: no flags outside)
             int c = cc("cellAt", 0x1ff, 0, (-1 - esi) & 3);                      // ML+0x278a cellAt
             int ecx = (G32(edi) - 1) * FD(0x40);                                   // ML+0x278f..ML+0x2798
             G32(GS(unk_005a9cc8)) = c;                                                   // ML+0x279f
@@ -839,7 +839,7 @@ void P1_flag20(u32 F, int ebp, int ebx) {
         int eax = (edx + edi) & 7;
         esi <<= 1;                                                                 // ML+0x23ac
         int idx = P1_nb(eax, ebp, ebx);                                            // ML+0x23c7
-        if (!P1_offF(eax, ebp, ebx) && (GU8(GS(g_tileFlags) + idx * 2) & 0x20)) esi |= 1;   // ML+0x23d1 (P28A: no flags outside)
+        if (!P1_offF(eax, ebp, ebx) && (GU8(GV(g_tileFlags) + idx * 2) & 0x20)) esi |= 1;   // ML+0x23d1 (P28A: no flags outside)
         edx -= 2;
     } while (edx >= 0);                                                            // ML+0x23d9 jns
     FW(0x1be) = 0x200; FW(0x1c4) = 0x200; FW(0x1ca) = 0x200; FW(0x1d0) = 0x200;   // ML+0x23e5..ML+0x23fd
@@ -868,9 +868,9 @@ void P1_flag20(u32 F, int ebp, int ebx) {
         int ecx = P1_t78(eax) + ebp;
         eax = P1_t98(eax) + ebx;
         edi >>= 1;                                                                 // ML+0x2537
-        eax = eax + ecx * 50;                                                      // ML+0x2539..ML+0x253f
-        if (GU8(GS(g_tileFlags) + eax * 2) & 0x20) {                                    // ML+0x254a
-            int t = G8(GS(g_tileType) + eax);                                          // ML+0x254c
+        eax = eax + ecx * WN;                                                      // ML+0x2539..ML+0x253f
+        if (GU8(GV(g_tileFlags) + eax * 2) & 0x20) {                                    // ML+0x254a
+            int t = G8(GV(g_tileType) + eax);                                          // ML+0x254c
             esi |= 8;                                                              // ML+0x2553
             if (G8((GS(g_tileTypeAttrs) + 38) + t * 48) == 0x11) FD(0x10) = 0;                     // ML+0x2563, ML+0x2565
             else edi |= 8;                                                         // ML+0x256f
@@ -934,14 +934,14 @@ void P1_flag20(u32 F, int ebp, int ebx) {
 // 0x208 + (g_tileVariant byte mod 7), offset by the direction tables times the zoom; with no allowed direction the
 // tile's flag 0x200 is cleared.
 void P1_flag200(u32 F, int ebp, int ebx) {
-    if ((GU16(GS(g_tileFlags) + FD(0x14) * 2) & 0x200) == 0) return;                    // ML+0x286c -> ML+0x295c
+    if ((GU16(GV(g_tileFlags) + FD(0x14) * 2) & 0x200) == 0) return;                    // ML+0x286c -> ML+0x295c
     int esi = 0;                                                                   // ML+0x2872
     int edi = 0;                                                                   // ML+0x2874
     FD(0xc) = edi;                                                                 // ML+0x2876
     do {                                                                           // ML+0x287a
         if (cc("canStep", ebp, ebx, edi) != 0) {                                  // ML+0x287d canStep, ML+0x2887
             esi = (FD(0xc) - G32(GS(g_cameraRot)) + 3) & 7;                             // ML+0x288d..ML+0x28af
-            int rem = (int)GU8(GS(g_tileVariant) + FD(0x14)) % 7;                         // ML+0x28a1..ML+0x28ad (edi)
+            int rem = (int)GU8(GV(g_tileVariant) + FD(0x14)) % 7;                         // ML+0x28a1..ML+0x28ad (edi)
             int edx = (-2 - esi / 2) & 3;                                          // ML+0x28b2..ML+0x28c8
             int c = cc("cellAt", rem + 0x208, 0, edx);                           // ML+0x28cf cellAt
             int ecx = G32(GS(f_tab_dirDy_4c2898) + esi * 4) * G32(GS(g_zoomScale));                 // ML+0x28d4, ML+0x28e1
@@ -957,7 +957,7 @@ void P1_flag200(u32 F, int ebp, int ebx) {
         edi += 2;                                                                  // ML+0x293c
         FD(0xc) = edi;                                                             // ML+0x2942
     } while (edi < 8);                                                             // ML+0x2946
-    if (esi == 0) GU8((GS(g_tileFlags) + 1) + FD(0x14) * 2) &= 0xfd;                          // ML+0x294e, ML+0x2954
+    if (esi == 0) GU8((GV(g_tileFlags) + 1) + FD(0x14) * 2) &= 0xfd;                          // ML+0x294e, ML+0x2954
 }
 
 // ---- ML+0x297a..ML+0x2aeb: tile with flag 0x80: with mode [g_panelListMode] == 3 and the selected record
@@ -974,19 +974,19 @@ void P1_flag80(u32 F, int edi, int eax) {
         }
     }
     // ML+0x29e3
-    u16 cx = GU16(GS(g_tileFlags) + edi * 2);
+    u16 cx = GU16(GV(g_tileFlags) + edi * 2);
     eax = 0;                                                                       // ML+0x29eb
     int esi = G8(GS(g_courseType));                                                      // ML+0x29ed
     int ebx = esi + 0x189;                                                         // ML+0x29fc
     if ((cx & 0x4800) == 0x4000) {                                                 // ML+0x2a02, ML+0x2a07
         int edx = FD(0x14);                                                        // ML+0x2a09
-        edi = GU8(GS(tile_anim_frame) + edx);                                               // ML+0x2a0f, ML+0x2a15
+        edi = GU8(GV(tile_anim_frame) + edx);                                               // ML+0x2a0f, ML+0x2a15
         ebx = esi + 0x185;                                                         // ML+0x2a17
         esi = G32(GS(g_sheetCols) + ebx * 4);                                           // ML+0x2a1d
         if (edi >= esi) {                                                          // ML+0x2a26 jl
             cx = (u16)(cx & 0xBFFF);                                               // ML+0x2a2c and ch, 0xbf
             edi = esi - 1;                                                         // ML+0x2a2f
-            GU16(GS(g_tileFlags) + edx * 2) = cx;                                       // ML+0x2a32
+            GU16(GV(g_tileFlags) + edx * 2) = cx;                                       // ML+0x2a32
         }
     } else {
         // ML+0x2a3c
@@ -1011,41 +1011,41 @@ void P1_flag80(u32 F, int edi, int eax) {
 // enqueued sprite from the records at g_sprites58a538; with a zero byte, clears the tile's g_tileVariant byte.
 // eax = [F+0xc], edi = [F+0x14].
 void P1_hole(u32 F, int eax, int edi) {
-    if (GU8(GS(g_tileType) + edi) != 0) return;                                        // ML+0x2af6 -> ML+0x2d72
+    if (GU8(GV(g_tileType) + edi) != 0) return;                                        // ML+0x2af6 -> ML+0x2d72
     if (eax == 0) return;                                                          // ML+0x2afe
     int esi = ((eax << 6) + eax) << 3;                                             // ML+0x2b04..ML+0x2b0b (eax * 0x208)
     FD(0x18) = esi;                                                                // ML+0x2b0e
     u8 dl = GU8(GS(g_holes) + esi);                                                 // ML+0x2b12
     if (dl == 0) {                                                                 // ML+0x2b1a
-        GU8(GS(g_tileVariant) + edi) = 0;                                                 // ML+0x2d6b
+        GU8(GV(g_tileVariant) + edi) = 0;                                                 // ML+0x2d6b
         return;
     }
     int ecx = G8((GS(g_holes) + 1) + esi);                                                // ML+0x2b20
-    FD(0x2c) = (int)GU8(GS(g_tileVariant) + edi);                                         // ML+0x2b2b, ML+0x2b31
+    FD(0x2c) = (int)GU8(GV(g_tileVariant) + edi);                                         // ML+0x2b2b, ML+0x2b31
     u8 al = (u8)((u8)(GU8(GS(g_cameraRot)) - (u8)ecx - 2) & 7);                         // ML+0x2b35..ML+0x2b3e
     al = (u8)(al * 3);                                                             // ML+0x2b40 imul bl (bl = 3 at ML+0x2b29)
     int ebx = G32((GS(g_holes) + 512) + esi);                                               // ML+0x2b42
     al = (u8)(al + 1);                                                             // ML+0x2b48
-    GU8(GS(g_tileVariant) + edi) = al;                                                    // ML+0x2b4d
+    GU8(GV(g_tileVariant) + edi) = al;                                                    // ML+0x2b4d
     if (ebx & 0x20) {                                                              // ML+0x2b4a, ML+0x2b53
         al = (u8)(al + 1);
-        GU8(GS(g_tileVariant) + edi) = al;                                                // ML+0x2b57
+        GU8(GV(g_tileVariant) + edi) = al;                                                // ML+0x2b57
     }
-    if (ebx & 0x40) GU8(GS(g_tileVariant) + edi) = (u8)(GU8(GS(g_tileVariant) + edi) + 2);       // ML+0x2b60, ML+0x2b62
-    if ((int)GU8(GS(g_tileVariant) + edi) != FD(0x2c)) GU8(GS(g_tileWallMask)) &= 0xfd;           // ML+0x2b77, ML+0x2b79 (absolute g_tileWallMask, no tile index)
+    if (ebx & 0x40) GU8(GV(g_tileVariant) + edi) = (u8)(GU8(GV(g_tileVariant) + edi) + 2);       // ML+0x2b60, ML+0x2b62
+    if ((int)GU8(GV(g_tileVariant) + edi) != FD(0x2c)) GU8(GV(g_tileWallMask)) &= 0xfd;           // ML+0x2b77, ML+0x2b79 (absolute g_tileWallMask, no tile index)
     // ML+0x2b80
     ebx = ((ecx - G32(GS(g_cameraRot))) + 1) & 7;                                       // ML+0x2b80..ML+0x2b90
     int a = cc("clamp", (int)(s8)dl - 3, 0, 2);                                 // ML+0x2b99 clamp
     int edi2 = G32((GS(g_sheetCols) + 1588) + a * 4) - 1;                                        // ML+0x2ba2, ML+0x2bb9
     a += 0x18d;                                                                    // ML+0x2ba9
-    u16 si = GU16(GS(g_tileFlags) + FD(0x14) * 2);                                      // ML+0x2bb1
+    u16 si = GU16(GV(g_tileFlags) + FD(0x14) * 2);                                      // ML+0x2bb1
     int ecx2 = edi2;                                                               // ML+0x2bbc
     if ((si & 0x4800) == 0x4000) {                                                 // ML+0x2bbe, ML+0x2bc9
-        ecx2 = GU8(GS(tile_anim_frame) + FD(0x14));                                         // ML+0x2bd1
+        ecx2 = GU8(GV(tile_anim_frame) + FD(0x14));                                         // ML+0x2bd1
         if (ecx2 >= G32(GS(g_sheetCols) + a * 4)) {                                     // ML+0x2be0 jl
             si = (u16)(si & 0xBFFF);                                               // ML+0x2be6
             ecx2 = edi2;                                                           // ML+0x2bec
-            GU16(GS(g_tileFlags) + FD(0x14) * 2) = si;                                  // ML+0x2bee
+            GU16(GV(g_tileFlags) + FD(0x14) * 2) = si;                                  // ML+0x2bee
         }
     }
     // ML+0x2bf6
@@ -1097,19 +1097,19 @@ void P1_hole(u32 F, int eax, int edi) {
 
 // ---- ML+0x1046..ML+0x2d6b: one tile (ebp, ebx) of the per-tile loop; returning = ML+0x2d72.
 void P1_tile(u32 F, int ebp, int ebx) {
-    FD(0x14) = ebx + ebp * 50;                                                     // ML+0x1046..ML+0x105c
+    FD(0x14) = ebx + ebp * WN;                                                     // ML+0x1046..ML+0x105c
     if (cc("tileToScreen", ebp, ebx, FA(0x50), FA(0x44)) == 0) return;                 // ML+0x1060 tileToScreen, ML+0x106a
     FD(0x28) = FD(0x50) - G32(GS(g_tileStep4c2840));                                         // ML+0x1070..ML+0x1080
     FD(0x2c) = FD(0x44) - FD(0x40);                                                // ML+0x1084..ML+0x108a
     P1_grid(F, ebp, ebx);                                                          // ML+0x108e
     // ML+0x1201: tile type 0x14 draws nothing
     int esi = FD(0x14);
-    int t = G8(GS(g_tileType) + esi);                                                  // ML+0x1205
+    int t = G8(GV(g_tileType) + esi);                                                  // ML+0x1205
     if (t == 0x14) return;                                                         // ML+0x120d
     FD(0x20) = G8((GS(g_tileTypeAttrs) + 38) + t * 0x30);                                          // ML+0x1213..ML+0x1234
     tc("setDrawTarget", Root(), GS(g_fontRef_519fd8), 0, 0, 0);                                   // ML+0x1238 setDrawTarget
     if ((GU8(GS(g_flags)) & 0x20) != 0) {                                           // ML+0x1244
-        int v = G8(GS(g_tileWallMask) + esi);                                              // ML+0x1246
+        int v = G8(GV(g_tileWallMask) + esi);                                              // ML+0x1246
         if (v != 0) {                                                              // ML+0x124e
             GU8(kBuf) = 0;                                                         // ML+0x125b
             int r = Itoa(v, GS(g_textBuf), 10);                                       // ML+0x1262 __itoa
@@ -1118,23 +1118,23 @@ void P1_tile(u32 F, int ebp, int ebx) {
             esi = FD(0x14);                                                        // ML+0x12ad
         }
     }
-    if (G8(GS(g_tileType) + esi) == 0x11) P1_type11(F, ebp, ebx, esi);                 // ML+0x12b4, ML+0x12bb
+    if (G8(GV(g_tileType) + esi) == 0x11) P1_type11(F, ebp, ebx, esi);                 // ML+0x12b4, ML+0x12bb
     // ML+0x1f25: type 0xb on course type 3 without flag 0x100: enqueued cell 0x12a
     int edi = FD(0x14);
-    if (G8(GS(g_tileType) + edi) == 0xb && G8(GS(g_courseType)) == 3                         // ML+0x1f30, ML+0x1f39
-        && (GU16(GS(g_tileFlags) + edi * 2) & 0x100) == 0) {                            // ML+0x1f3b..ML+0x1f4c
+    if (G8(GV(g_tileType) + edi) == 0xb && G8(GS(g_courseType)) == 3                         // ML+0x1f30, ML+0x1f39
+        && (GU16(GV(g_tileFlags) + edi * 2) & 0x100) == 0) {                            // ML+0x1f3b..ML+0x1f4c
         int c = cc("cellAt", 0x12a, 0, (G32(GS(g_cameraRot)) / 2 - ebx * 2 + ebp) & 3);   // ML+0x1f6a cellAt
         G32(GS(unk_005a9cc8)) = c;                                                       // ML+0x1f85
         int k = ((ebx + ebp) % 3 != 0) ? 3 : 4;                                    // ML+0x1f7f idiv, ML+0x1f8b..ML+0x1f8f
         cc("enqueueSprite", FD(0x50), FD(0x44), FD(0x44), 0x28, 0x26, c, k, 0xa3);      // ML+0x1f9f enqueueSprite
     }
-    if (G8(GS(g_tileType) + edi) == 0x11) P1_type11Deco(F, ebp, ebx, edi);             // ML+0x1fa7, ML+0x1fae
+    if (G8(GV(g_tileType) + edi) == 0x11) P1_type11Deco(F, ebp, ebx, edi);             // ML+0x1fa7, ML+0x1fae
     // ML+0x2272
     int eax;
     u8 dl;
     P1_scan(F, ebp, ebx, &eax, &dl);
     // ML+0x2354: [F+0xc] = flag word (upper half of eax kept: mov ax, word)
-    eax = (int)(((u32)eax & 0xFFFF0000u) | GU16(GS(g_tileFlags) + FD(0x14) * 2));      // ML+0x2354, ML+0x2358
+    eax = (int)(((u32)eax & 0xFFFF0000u) | GU16(GV(g_tileFlags) + FD(0x14) * 2));      // ML+0x2354, ML+0x2358
     FD(0xc) = eax;                                                                 // ML+0x2362
     if ((eax & 0x20) != 0) {                                                       // ML+0x2360 test al, 0x20; ML+0x2366
         int a48 = (int)(s8)dl * 48;                                                // ML+0x236c..ML+0x2372
@@ -1146,7 +1146,7 @@ void P1_tile(u32 F, int ebp, int ebx) {
     }
     // ML+0x295c
     edi = FD(0x14);
-    u16 cx = GU16(GS(g_tileFlags) + edi * 2);                                           // ML+0x2960
+    u16 cx = GU16(GV(g_tileFlags) + edi * 2);                                           // ML+0x2960
     eax = cx & 0x1f;                                                               // ML+0x2968, ML+0x296a
     FD(0xc) = eax;                                                                 // ML+0x2970
     if ((cx & 0x80) != 0) {                                                        // ML+0x296d test cl, 0x80; ML+0x2974
@@ -1167,10 +1167,10 @@ void Ph_00410604(u32 F) {
             P1_tile(F, ebp, ebx);                                                  // ML+0x1046
             ebx = FD(0x30);                                                        // ML+0x2d72
             ebp++;                                                                 // ML+0x2d76
-        } while (ebp < 0x32);                                                      // ML+0x2d7a
+        } while (ebp < WN);                                                        // ML+0x2d7a (0x32)
         ebx++;                                                                     // ML+0x2d80
         FD(0x30) = ebx;                                                            // ML+0x2d84
-    } while (ebx < 0x32);                                                          // ML+0x2d88
+    } while (ebx < WN);                                                            // ML+0x2d88 (0x32)
 }
 
 // c3fy part P2: mainLoop ML+0x0, range ML+0x2d8e..ML+0x3f7d (the second per-tile pass).
@@ -1201,17 +1201,17 @@ void P2_bars(u32 F, int idx) {
     if (!(GU8(GS(g_flags)) & 0x20)) return;   // ML+0x2dfd / ML+0x2e04
     {
         int q = G32(GS(g_tileStep4c2840)) / 4;          // ML+0x2e0a..ML+0x2e27 (cdq; and edx, 3; add; sar 2)
-        int h = GU8(GS(g_ballStopCount) + idx);        // ML+0x2e11
+        int h = GU8(GV(g_ballStopCount) + idx);        // ML+0x2e11
         tc("fillWindowRect", GS(g_rootWindow), q + FD(0x3c), FD(0x38) - h, q, h, (int)0x80000210);   // ML+0x2e3a fillWindowRect
     }
     {
         int q = G32(GS(g_tileStep4c2840)) / 4;          // ML+0x2e3f..ML+0x2e64
-        int h2 = GU8(GS(g_tileMoodUp) + idx) << 1;  // ML+0x2e46 / ML+0x2e5b
+        int h2 = GU8(GV(g_tileMoodUp) + idx) << 1;  // ML+0x2e46 / ML+0x2e5b
         tc("fillWindowRect", GS(g_rootWindow), FD(0x3c) - q, FD(0x38) - h2, q, h2, (int)0x800023E8);   // ML+0x2e71 fillWindowRect
     }
     {
         int q = G32(GS(g_tileStep4c2840)) / 4;          // ML+0x2e76..ML+0x2e94
-        int h2 = GU8(GS(g_tileMoodDown) + idx) << 1;  // ML+0x2e7d / ML+0x2e92
+        int h2 = GU8(GV(g_tileMoodDown) + idx) << 1;  // ML+0x2e7d / ML+0x2e92
         tc("fillWindowRect", GS(g_rootWindow), FD(0x3c), FD(0x38) - h2, q, h2, (int)0x80007D08);   // ML+0x2ea6 fillWindowRect
     }
 }
@@ -1222,7 +1222,7 @@ void P2_bars(u32 F, int idx) {
 // ([F+0x3c], [F+0x38] - 3) on one tile of every 8 in a date-dependent pattern.
 // Returns the value ecx holds at ML+0x308f (its upper 16 bits reach [F+0xc] at ML+0x3099; see the notes).
 u32 P2_label(u32 F, int a, int idx) {
-    u16 w = GU16(GS(g_tileFlags) + 2 * idx);       // ML+0x2eab
+    u16 w = GU16(GV(g_tileFlags) + 2 * idx);       // ML+0x2eab
     GU8(kBuf) = 0;                             // ML+0x2eb3
     u32 ecx = w & 0x2000;                      // ML+0x2eba
     if (ecx == 0) return ecx;                  // ML+0x2ec0 / ML+0x2ec3 -> ML+0x308f
@@ -1231,7 +1231,7 @@ u32 P2_label(u32 F, int a, int idx) {
     int root = Root();                         // ML+0x2edd
     tc("setDrawTarget", root, (int)tgt, 0, 0, 0);   // ML+0x2eea setDrawTarget
     ecx = (u32)root;                           // the original setDrawTarget (setDrawTarget..setDrawTarget+0x31) never writes ecx
-    int sel = G8(GS(g_tileType) + idx) - 0xc;      // ML+0x2eef / ML+0x2ef6
+    int sel = G8(GV(g_tileType) + idx) - 0xc;      // ML+0x2eef / ML+0x2ef6
     u32 cat = 0;                               // edi at ML+0x300a, the strcat source
     bool doCat = true;
     switch ((u32)sel) {                        // ML+0x2ef9 ja ML+0x3032; ML+0x2f02 jmp [table ML+0x120a8]
@@ -1283,26 +1283,26 @@ u32 P2_label(u32 F, int a, int idx) {
 // offsets selected by [g_cameraRot] (switch table ML+0x120c4). Every path through the bit-0x1000 block then clears bit
 // 0x100 of the tile word (ML+0x33dc).
 void P2_paths(u32 F, int idx, u32 ecx) {
-    u16 w = GU16(GS(g_tileFlags) + 2 * idx);       // ML+0x308f (mov cx, word)
+    u16 w = GU16(GV(g_tileFlags) + 2 * idx);       // ML+0x308f (mov cx, word)
     ecx = (ecx & 0xFFFF0000u) | w;
     FU(0xc) = ecx;                             // ML+0x3099
     if (!(w & 0x1000)) return;                 // ML+0x309d..ML+0x30a5 -> ML+0x33e4
     int ti = FD(0x14);                         // edx ML+0x30ab
-    int h = GU8(GS(g_tileVariant) + ti);              // ebx ML+0x30af / ML+0x30bc
+    int h = GU8(GV(g_tileVariant) + ti);              // ebx ML+0x30af / ML+0x30bc
     u32 c800 = ecx & 0x800;                    // ML+0x30b6
     int mask = 0;                              // ebp ML+0x30c2
     FU(0x18) = c800;                           // ML+0x30c6
     FD(0x2c) = h % 5 + 0x2d;                   // ML+0x30ca..ML+0x30d3
     if ((u16)c800 != 0) FD(0x2c) = 0xbb;       // ML+0x30d0 / ML+0x30d7 / ML+0x30d9
     for (int i = 0; i < 0x20; i += 8) {        // ML+0x30e1 edi = 0; ML+0x3161..ML+0x3167
-        int ni = (G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20)) * 50 + G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30);   // ML+0x30e3..ML+0x3104
+        int ni = (G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20)) * WN + G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30);   // ML+0x30e3..ML+0x3104
         mask >>= 1;                            // ML+0x30f5
         if (ML_F(G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20), G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30))) continue;   // P28A: no flags outside
-        if ((GU16(GS(g_tileFlags) + 2 * ni) & 0x1000) != 0x1000) continue;   // ML+0x3107..ML+0x311a
-        int nq = GU8(GS(g_tileVariant) + ni) / 5;     // ML+0x311c..ML+0x3139
+        if ((GU16(GV(g_tileFlags) + 2 * ni) & 0x1000) != 0x1000) continue;   // ML+0x3107..ML+0x311a
+        int nq = GU8(GV(g_tileVariant) + ni) / 5;     // ML+0x311c..ML+0x3139
         if (h / 5 != nq) continue;             // ML+0x313b..ML+0x3148
         int tj = FD(0x14);                     // ML+0x314a
-        if (GU8(GS(g_tileLevel) + tj) == GU8(GS(g_tileLevel) + ni)) mask |= 8;   // ML+0x314e..ML+0x315e
+        if (GU8(GV(g_tileLevel) + tj) == GU8(GV(g_tileLevel) + ni)) mask |= 8;   // ML+0x314e..ML+0x315e
     }
     int r = G32(GS(g_cameraRot)) / 2;               // ML+0x316d..ML+0x3175
     if (r > 0) {                               // ML+0x3177 / ML+0x3179
@@ -1325,9 +1325,9 @@ void P2_paths(u32 F, int idx, u32 ecx) {
     if (f10 != -1 && FW(0x18) == 0) {          // ML+0x31e6 / ML+0x31eb / ML+0x31ed / ML+0x31f3
         int tj = FD(0x14);                     // ebx ML+0x31f5
         frame = f10;                           // ML+0x31f9
-        if ((int)GU8(GS(tile_anim_frame) + tj) >= last) {   // ML+0x31fb..ML+0x3205
-            GU16(GS(g_tileFlags) + 2 * tj) = (u16)(FU(0xc) & 0xFFFFBFFFu);   // ML+0x3207..ML+0x3210
-            GU8(GS(tile_anim_frame) + tj) = 0xff;       // ML+0x3218
+        if ((int)GU8(GV(tile_anim_frame) + tj) >= last) {   // ML+0x31fb..ML+0x3205
+            GU16(GV(g_tileFlags) + 2 * tj) = (u16)(FU(0xc) & 0xFFFFBFFFu);   // ML+0x3207..ML+0x3210
+            GU8(GV(tile_anim_frame) + tj) = 0xff;       // ML+0x3218
         }
     }
     int cell = cc("cellAt", t, frame, rot);  // ML+0x3222 cellAt
@@ -1338,7 +1338,7 @@ void P2_paths(u32 F, int idx, u32 ecx) {
     int aa = FD(0x20);                         // esi ML+0x324c
     int tk = FD(0x14);                         // ebp at ML+0x33dc (read at ML+0x3274 or ML+0x33d8)
     if ((bb + aa * 2) % 5 == 0 && (u8)(mask & 9) == 9) {   // ML+0x3258..ML+0x326e
-        if (!ML_F(aa - 1, bb - 1) && (GU16((GS(g_sprites53c570) + 1306) + 2 * tk) & 0x1000) == 0x1000) {   // ML+0x3274..ML+0x3289 (tile idx - 51; P28A: no flags outside)
+        if (!ML_F(aa - 1, bb - 1) && (GU16((GV(g_tileFlags) - 2 * WV) + 2 * tk) & 0x1000) == 0x1000) {   // ML+0x3274..ML+0x3289 (tile idx - 51 = - (N + 1), the original's g_sprites53c570+1306; P28A: no flags outside)
             int hb1 = cc("heightBlend", aa - 1, bb - 1, 0);   // ML+0x3299 heightBlend
             int hb2 = cc("heightBlend", aa, bb, 0);           // ML+0x32a4 heightBlend
             if (hb2 == hb1) {                  // ML+0x32ac / ML+0x32ae
@@ -1349,7 +1349,7 @@ void P2_paths(u32 F, int idx, u32 ecx) {
                 int fr2, rot2;
                 int cnt = 0;
                 if (f != -1 && f < (cnt = G32(GS(g_sheetCols) + 4 * t2)) &&
-                    (GU16(GS(g_tileFlags) + 2 * tk) & 0x800) == 0) {   // ML+0x32d1..ML+0x32f1
+                    (GU16(GV(g_tileFlags) + 2 * tk) & 0x800) == 0) {   // ML+0x32d1..ML+0x32f1
                     rot2 = (G32(GS(g_cameraRot)) / 2 + bb) & 3;          // ML+0x32f3..ML+0x32ff
                     fr2 = FD(0x10) % cnt;                           // ML+0x3303..ML+0x3308
                 } else {                                            // ML+0x330c
@@ -1378,7 +1378,7 @@ void P2_paths(u32 F, int idx, u32 ecx) {
             }
         }
     }
-    GU8((GS(g_tileFlags) + 1) + 2 * tk) &= 0xfe;          // ML+0x33dc (clears bit 0x100 of the tile word)
+    GU8((GV(g_tileFlags) + 1) + 2 * tk) &= 0xfe;          // ML+0x33dc (clears bit 0x100 of the tile word)
 }
 
 // ML+0x33e4..ML+0x3b5c: when bit 0x100 of the tile word is set: draw target g_fontRef_519fd8, a scenery label
@@ -1389,7 +1389,7 @@ void P2_paths(u32 F, int idx, u32 ecx) {
 void P2_scenery(u32 F) {
     int ti = FD(0x14);                         // edi ML+0x33e4
     int aa = FD(0x20);                         // ebx ML+0x33e8
-    if (!(GU16(GS(g_tileFlags) + 2 * ti) & 0x100)) return;   // ML+0x33ec..ML+0x33fc -> ML+0x3b5c
+    if (!(GU16(GV(g_tileFlags) + 2 * ti) & 0x100)) return;   // ML+0x33ec..ML+0x33fc -> ML+0x3b5c
     tc("setDrawTarget", Root(), GS(g_fontRef_519fd8), 0, 0, 0);   // ML+0x3413 setDrawTarget
     if (!(GU8(GS(g_preferences)) & 1) && G32(GS(g_zoomScale)) > 2 && G32(GS(g_panelListMode)) != 3) {   // ML+0x3418..ML+0x3431
         int b0 = FD(0x30);                     // ML+0x3433
@@ -1398,7 +1398,7 @@ void P2_scenery(u32 F) {
             cc("drawCenteredText2", (int)kBuf, FD(0x3c), FD(0x38) + 5, (int)0x80007FFF);   // ML+0x3465 drawCenteredText2
     }
     int twob = FD(0x30) * 2;                   // ebp ML+0x3472 / ML+0x3477
-    s8 ty = G8(GS(g_tileType) + ti);               // cl ML+0x347a
+    s8 ty = G8(GV(g_tileType) + ti);               // cl ML+0x347a
     u8 ty8 = (u8)ty;
     int rot = ((G32(GS(g_cameraRot)) / 2) - twob + aa) & 3;   // esi ML+0x346d..ML+0x349d
     int cls = G8((GS(g_tileTypeAttrs) + 38) + 48 * (int)ty) - 4;        // ML+0x3484..ML+0x349a
@@ -1413,9 +1413,9 @@ void P2_scenery(u32 F) {
         break;
     case 13: {                                 // class 17: byte 4 -> ML+0x34fb
         int tj = FD(0x14);                     // ML+0x34fb
-        if (GU8(GS(g_tileFlags) + 2 * tj) & 0x20) break;   // ML+0x34ff / ML+0x3507
+        if (GU8(GV(g_tileFlags) + 2 * tj) & 0x20) break;   // ML+0x34ff / ML+0x3507
         if (ty8 == 0x12) break;                // ML+0x350d / ML+0x3510
-        u8 hh = GU8(GS(g_tileVariant) + tj);          // dl ML+0x3516
+        u8 hh = GU8(GV(g_tileVariant) + tj);          // dl ML+0x3516
         if (hh != 0 && ty8 == 0x11) {          // ML+0x3518 / ML+0x351e / ML+0x3520 / ML+0x3523
             int b0 = FD(0x30);                 // esi ML+0x3525
             int v = (G32(GS(g_date)) + b0 * 7) + aa * 3;   // eax ML+0x3529..ML+0x353d
@@ -1442,10 +1442,10 @@ void P2_scenery(u32 F) {
         c = P2_cell(0xfc, 0, rot);             // ML+0x35fe cellAt / ML+0x3607
         P2_add(F, 0x28, 0x28, c, 0x59);        // ML+0x361c addSprite
         int tj = FD(0x14);                     // edi ML+0x3621
-        u8 t2 = GU8(GS(g_tileType) + tj);          // al ML+0x3628
+        u8 t2 = GU8(GV(g_tileType) + tj);          // al ML+0x3628
         if (t2 == 0x10) {                      // ML+0x362e / ML+0x3630
-            int hh = GU8(GS(g_tileVariant) + tj);     // ecx ML+0x3638 / ML+0x363a
-            GU8((GS(g_tileFlags) + 1) + 2 * tj) &= 0xf7;  // ML+0x3640 (clears bit 0x800 of the tile word)
+            int hh = GU8(GV(g_tileVariant) + tj);     // ecx ML+0x3638 / ML+0x363a
+            GU8((GV(g_tileFlags) + 1) + 2 * tj) &= 0xf7;  // ML+0x3640 (clears bit 0x800 of the tile word)
             int m = hh % 8;                    // ML+0x3648..ML+0x3655
             int st = m + 0x12e;                // edi ML+0x3656
             int k = m + 0xb3;                  // esi ML+0x365c
@@ -1461,7 +1461,7 @@ void P2_scenery(u32 F) {
                 int lastf = G32(GS(g_sheetCols) + 4 * st) - 1;      // ML+0x36a8 / ML+0x36b6
                 int f2 = FD(0x10);             // ML+0x36af
                 G32(GS(unk_005a9cc8)) = c2;          // ML+0x36b9
-                if (f2 == lastf) GU8((GS(g_tileFlags) + 1) + 2 * FD(0x14)) &= 0xbf;   // ML+0x36b7 / ML+0x36be / ML+0x36c4
+                if (f2 == lastf) GU8((GV(g_tileFlags) + 1) + 2 * FD(0x14)) &= 0xbf;   // ML+0x36b7 / ML+0x36be / ML+0x36c4
                 if (FD(0x10) == 0) {           // ML+0x36cc..ML+0x36d2
                     cc("playSound", 0x93, 0x64, 0, 0, 0);   // ML+0x36e1 playSound
                     c2 = G32(GS(unk_005a9cc8));      // ML+0x36e6
@@ -1487,11 +1487,11 @@ void P2_scenery(u32 F) {
             c = P2_cell(0xfd, G32((GS(g_sheetCols) + 1012)) - 1, rot);   // ML+0x3798 cellAt / ML+0x37a1
             P2_enq(F, 0x64, 0x64, c, 0x5f);    // ML+0x37b6 enqueueSprite
         }
-        if (GU8(GS(g_tileType) + tj) == 0xf) {     // ML+0x37be / ML+0x37c5
+        if (GU8(GV(g_tileType) + tj) == 0xf) {     // ML+0x37be / ML+0x37c5
             c = P2_cell(0x173, 0, rot);        // ML+0x37cf cellAt / ML+0x37dc
             P2_enq(F, 0x8c, 0x8c, c, 0x6b);    // ML+0x37f3 enqueueSprite
         }
-        if (GU8(GS(g_tileType) + tj) == 0xe) {     // ML+0x37fb / ML+0x3802
+        if (GU8(GV(g_tileType) + tj) == 0xe) {     // ML+0x37fb / ML+0x3802
             c = P2_cell(0x12f, G32((GS(g_sheetCols) + 1212)) - 1, rot);  // ML+0x3816 cellAt / ML+0x3825
             P2_enq(F, 0x64, 0x64, c, 0xb4);    // ML+0x34ee enqueueSprite (tail ML+0x34e3)
         }
@@ -1577,17 +1577,17 @@ void P2_obj2(u32 F, int& ebx) {
     int m = 0;                                 // esi ML+0x3cc3
     cc("nearestHole", aa, bb);                    // ML+0x3cc5 nearestHole; its result % 4 (ML+0x3ccd..ML+0x3cd8) is overwritten at ML+0x3cdd
     int ti = FD(0x14);                         // edi ML+0x3cd9
-    FD(0x18) = (int)GU8(GS(g_tileVariant) + ti) % 4 + 0x2e;   // ML+0x3cdd..ML+0x3cf6
+    FD(0x18) = (int)GU8(GV(g_tileVariant) + ti) % 4 + 0x2e;   // ML+0x3cdd..ML+0x3cf6
     for (int i = 0; i < 0x20; i += 8) {        // ML+0x3cf4 ecx = 0; ML+0x3d47..ML+0x3d4d
-        int ni = (G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20)) * 50 + G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30);   // ML+0x3cfa..ML+0x3d1b
+        int ni = (G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20)) * WN + G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30);   // ML+0x3cfa..ML+0x3d1b
         m >>= 1;                               // ML+0x3d06
         if (ML_F(G32(GS(f_tab_dirDx_4c2878) + i) + FD(0x20), G32(GS(f_tab_dirDy_4c2898) + i) + FD(0x30))) continue;   // P28A: no flags outside
-        if ((GU16(GS(g_tileFlags) + 2 * ni) & 0x1000) != 0x1000) continue;   // ML+0x3d1d..ML+0x3d30 -> ML+0x3d47
-        if (GU8(GS(g_tileLevel) + ti) == GU8(GS(g_tileLevel) + ni)) m |= 8;     // ML+0x3d32..ML+0x3d40
+        if ((GU16(GV(g_tileFlags) + 2 * ni) & 0x1000) != 0x1000) continue;   // ML+0x3d1d..ML+0x3d30 -> ML+0x3d47
+        if (GU8(GV(g_tileLevel) + ti) == GU8(GV(g_tileLevel) + ni)) m |= 8;     // ML+0x3d32..ML+0x3d40
         ti = FD(0x14);                         // ML+0x3d43
     }
-    GU8((GS(g_tileFlags) + 1) + 2 * ti) &= 0xfe;          // ML+0x3d4f
-    FUW(0x2c) = GU16(GS(g_tileFlags) + 2 * ti);     // ML+0x3d57 / ML+0x3d5f
+    GU8((GV(g_tileFlags) + 1) + 2 * ti) &= 0xfe;          // ML+0x3d4f
+    FUW(0x2c) = GU16(GV(g_tileFlags) + 2 * ti);     // ML+0x3d57 / ML+0x3d5f
     int r = G32(GS(g_cameraRot)) / 2;               // ML+0x3d64..ML+0x3d6c
     if (r > 0) {                               // ML+0x3d6e / ML+0x3d70
         do {
@@ -1607,9 +1607,9 @@ void P2_obj2(u32 F, int& ebx) {
         if (f10 != -1) {                       // ML+0x3dcd / ML+0x3dd2
             int tj = FD(0x14);                 // ebx ML+0x3dd4
             fr = f10;                          // ML+0x3dd8
-            if ((int)GU8(GS(tile_anim_frame) + tj) >= last) {   // ML+0x3dda..ML+0x3de4
-                GU16(GS(g_tileFlags) + 2 * tj) = (u16)(FU(0x2c) & 0xFFFFBFFFu);   // ML+0x3de6..ML+0x3def
-                GU8(GS(tile_anim_frame) + tj) = 0xff;   // ML+0x3df7
+            if ((int)GU8(GV(tile_anim_frame) + tj) >= last) {   // ML+0x3dda..ML+0x3de4
+                GU16(GV(g_tileFlags) + 2 * tj) = (u16)(FU(0x2c) & 0xFFFFBFFFu);   // ML+0x3de6..ML+0x3def
+                GU8(GV(tile_anim_frame) + tj) = 0xff;   // ML+0x3df7
             }
             ebx = FD(0xc);                     // ML+0x3dfe
         }
@@ -1630,8 +1630,8 @@ void P2_obj2(u32 F, int& ebx) {
 // prefix f_strpool_4c6980+0x28 / f_strpool_4c6980+0x20 selected by [g_editQueueMode+0x400 + 4 * n] and the record name f_tab_buildItems_4c26b0 + 20 * (n - 1).
 void P2_objects(u32 F) {
     int ti = FD(0x14);                         // eax ML+0x3b5c
-    int n = GU8(GS(g_tileFlags) + 2 * ti) & 0x1f;   // ebp ML+0x3b60 / ML+0x3b6d / ML+0x3b72
-    u8 ty = GU8(GS(g_tileType) + ti);              // al ML+0x3b67
+    int n = GU8(GV(g_tileFlags) + 2 * ti) & 0x1f;   // ebp ML+0x3b60 / ML+0x3b6d / ML+0x3b72
+    u8 ty = GU8(GV(g_tileType) + ti);              // al ML+0x3b67
     if (ty != 0x15 && ty != 0x16) return;      // ML+0x3b70..ML+0x3b78 -> ML+0x3f3c
     if (n == 0) return;                        // ML+0x3b7e / ML+0x3b80 -> ML+0x3f3c
     int k = G32((GS(g_editQueueMode) + 1024) + 4 * n);           // esi ML+0x3b86
@@ -1659,7 +1659,7 @@ void P2_objects(u32 F) {
     if (n == 2) {                              // ML+0x3c0a / ML+0x3c0d -> ML+0x3cb9
         P2_obj2(F, ebx);
     } else {                                   // ML+0x3c13
-        int hb = GU8(GS(g_tileVariant) + FD(0x14));   // ML+0x3c13..ML+0x3c1d
+        int hb = GU8(GV(g_tileVariant) + FD(0x14));   // ML+0x3c13..ML+0x3c1d
         cc("buildSceneSprites", n, k, FD(0xe0), FD(0xe4), FD(0x3c), FD(0x38), hb);   // ML+0x3c3c buildSceneSprites
     }
     // ML+0x3e6c
@@ -1679,9 +1679,9 @@ void P2_objects(u32 F) {
 // (bridge.h object_sprite_reach, from the tile's centre) queues that object as P2_objects does; nothing else of the tile is drawn
 void P2_far_object(u32 F, int a, int b) {
     const int ti = FD(0x14);
-    const u8 ty = GU8(GS(g_tileType) + ti);
+    const u8 ty = GU8(GV(g_tileType) + ti);
     if (ty != 0x15 && ty != 0x16) return;
-    if ((GU8(GS(g_tileFlags) + 2 * ti) & 0x1f) == 0) return;
+    if ((GU8(GV(g_tileFlags) + 2 * ti) & 0x1f) == 0) return;
     cc("worldToScreen", (a << 10) + 0x200, (b << 10) + 0x200, FA(0x3c), FA(0x38), kSpriteReachProject);
     const int x = FD(0x3c), y = FD(0x38);
     const int E = wide_view_margin_t2s(ctx);
@@ -1694,10 +1694,10 @@ void P2_far_object(u32 F, int a, int b) {
 void P2_tile(u32 F, int& a, int& b) {
     if (cc("tileBlocked", a, b) != 0) return;     // ML+0x2d9c tileBlocked / ML+0x2da6 -> ML+0x3f61
     FD(0x10) = -1;                             // ML+0x2db0
-    int idx = b + a * 50;                      // ebx ML+0x2dac / ML+0x2db8 / ML+0x2dbb
+    int idx = b + a * WN;                      // ebx ML+0x2dac / ML+0x2db8 / ML+0x2dbb
     FD(0x14) = idx;                            // ML+0x2dbe
-    if (GU16(GS(g_tileFlags) + 2 * idx) & 0x4000)   // ML+0x2dc2..ML+0x2dd3
-        FD(0x10) = GU8(GS(tile_anim_frame) + idx);      // ML+0x2dd5..ML+0x2ddd
+    if (GU16(GV(g_tileFlags) + 2 * idx) & 0x4000)   // ML+0x2dc2..ML+0x2dd3
+        FD(0x10) = GU8(GV(tile_anim_frame) + idx);      // ML+0x2dd5..ML+0x2ddd
     if (cc("tileToScreen", a, b, FA(0x3c), FA(0x38)) == 0) {   // ML+0x2ded tileToScreen / ML+0x2df7 -> ML+0x3f61
         if (sprite_reach_fixed()) P2_far_object(F, a, b);     // P33C
         return;
@@ -1727,10 +1727,10 @@ void Ph_0041234e(u32 F) {
             P2_tile(F, a, b);                  // ML+0x2d9a..ML+0x3f5d
             ++a;                               // ML+0x3f61
             FD(0x20) = a;                      // ML+0x3f65
-        } while (a < 0x32);                    // ML+0x3f62 / ML+0x3f69 -> ML+0x2d9a
+        } while (a < WN);                      // ML+0x3f62 (0x32) / ML+0x3f69 -> ML+0x2d9a
         ++b;                                   // ML+0x3f6f
         FD(0x30) = b;                          // ML+0x3f73
-    } while (b < 0x32);                        // ML+0x3f70 / ML+0x3f77 -> ML+0x2d94
+    } while (b < WN);                          // ML+0x3f70 (0x32) / ML+0x3f77 -> ML+0x2d94
 }
 
 // c3fy phase P3: mainLoop ML+0x0, range ML+0x3f7d..ML+0x6287 (2464 instructions).
@@ -1890,7 +1890,7 @@ if ((esi) == (2)) goto La_4138e2; // ML+0x415f  je ML+0x4322
 La_413725:;
 edx = (int)(eax + eax*4); // ML+0x4165  lea edx, [eax + eax*4]
 edx = (int)(edx + edx*4); // ML+0x4168  lea edx, [edx + edx*4]
-edx = (int)(G8(ecx + edx*2 + GS(g_tileType))); // ML+0x416b  movsx edx, byte ptr [ecx + edx*2 + g_tileType]
+edx = (int)(G8(ecx + eax*WN + GV(g_tileType))); // ML+0x416b  movsx edx, byte ptr [ecx + edx*2 + g_tileType] // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50)
 edx = (int)(edx + edx*2); // ML+0x4173  lea edx, [edx + edx*2]
 edx = (edx) << (4); // ML+0x4176  shl edx, 4
 // ML+0x4179  cmp byte ptr [edx + g_tileTypeAttrs+0x22], 1
@@ -1991,7 +1991,7 @@ if (((edx)) != 0) goto La_4138a6; // ML+0x42c4  jne ML+0x42e6
 edx = (int)(eax + eax*4); // ML+0x42c6  lea edx, [eax + eax*4]
 edx = (int)(edx + edx*4); // ML+0x42c9  lea edx, [edx + edx*4]
 // ML+0x42cc  cmp byte ptr [ecx + edx*2 + g_tileType], 1
-if (((GU8(ecx + edx*2 + GS(g_tileType)))&0xff) != ((1)&0xff)) goto La_4138a6; // ML+0x42d4  jne ML+0x42e6
+if (((GU8(ecx + eax*WN + GV(g_tileType)))&0xff) != ((1)&0xff)) goto La_4138a6; // ML+0x42d4  jne ML+0x42e6 // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50)
 edx = (int)(G8((GS(g_golfers) + 39458))); // ML+0x42d6  movsx edx, byte ptr [g_golfers+0x9a22]
 edx = (edx) + (3); // ML+0x42dd  add edx, 3
 G32(GS(g_probeType1Strokes)) = edx; // ML+0x42e0  mov dword ptr [g_probeType1Strokes], edx
@@ -2282,7 +2282,7 @@ edx = ((int)(edx)) >> (0xa); // ML+0x469d  sar edx, 0xa
 esi = (int)(esi + esi*4); // ML+0x46a0  lea esi, [esi + esi*4]
 // ML+0x46a3  cmp byte ptr [edx + esi*2 + g_tileType], 2
 if (ML_T(eax, edx)) goto La_413d10; // P28A mainLoop.edgeNeighbourType: type 0x14 outside, not 2
-if (((GU8(edx + esi*2 + GS(g_tileType)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x46ab  jne ML+0x4750
+if (((GU8(edx + eax*WN + GV(g_tileType)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x46ab  jne ML+0x4750 // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50)
 esi = ebx; // ML+0x46b1  mov esi, ebx
 esi = (esi) & (0x800003ff); // ML+0x46b3  and esi, 800003ff
 if (((int)(esi)) >= 0) goto La_413c83; // ML+0x46b9  jns ML+0x46c3
@@ -2306,7 +2306,7 @@ ebp = (int)(eax + eax*4); // ML+0x46e4  lea ebp, [eax + eax*4]
 ebp = (int)(ebp + ebp*4); // ML+0x46e7  lea ebp, [ebp + ebp*4]
 // ML+0x46eb  cmp byte ptr [edx + ebp*2 + g_courseTable+0x2de], 2
 if (ML_T(eax - 1, edx)) goto La_413d10; // P28A
-if (((GU8(edx + ebp*2 + (GS(g_courseTable) + 734)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x46f3  jne ML+0x4750
+if (((GU8(edx + eax*WN + (GV(g_tileType) - WN)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x46f3  jne ML+0x4750 // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50); g_courseTable+0x2de = g_tileType - 50
 ebp = FD(0x34); // ML+0x46f5  mov ebp, dword ptr [F+0x34]
 La_413cb9:;
 // ML+0x46f9  cmp esi, 0x30
@@ -2315,7 +2315,7 @@ esi = (int)(eax + eax*4); // ML+0x46fe  lea esi, [eax + eax*4]
 esi = (int)(esi + esi*4); // ML+0x4701  lea esi, [esi + esi*4]
 // ML+0x4704  cmp byte ptr [edx + esi*2 + g_tileType+0x32], 2
 if (ML_T(eax + 1, edx)) goto La_413d10; // P28A
-if (((GU8(edx + esi*2 + (GS(g_tileType) + 50)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x470c  jne ML+0x4750
+if (((GU8(edx + eax*WN + (GV(g_tileType) + WN)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x470c  jne ML+0x4750 // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50)
 La_413cce:;
 // ML+0x470e  cmp ebp, 0x18
 if ((int)(ebp) >= (int)(0x18)) goto La_413ce3; // ML+0x4711  jge ML+0x4723
@@ -2323,7 +2323,7 @@ esi = (int)(eax + eax*4); // ML+0x4713  lea esi, [eax + eax*4]
 esi = (int)(esi + esi*4); // ML+0x4716  lea esi, [esi + esi*4]
 // ML+0x4719  cmp byte ptr [edx + esi*2 + g_courseTable+0x30f], 2
 if (ML_T(eax, edx - 1)) goto La_413d10; // P28A
-if (((GU8(edx + esi*2 + (GS(g_courseTable) + 783)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x4721  jne ML+0x4750
+if (((GU8(edx + eax*WN + (GV(g_tileType) - 1)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x4721  jne ML+0x4750 // P38A: row stride eax * N (the lea chain's eax * 25 * 2 at N = 50); g_courseTable+0x30f = g_tileType - 1
 La_413ce3:;
 // ML+0x4723  cmp ebp, 0x30
 if ((int)(ebp) < (int)(0x30)) goto La_413cf8; // ML+0x4726  jl ML+0x4738
@@ -2331,7 +2331,7 @@ eax = (int)(eax + eax*4); // ML+0x4728  lea eax, [eax + eax*4]
 eax = (int)(eax + eax*4); // ML+0x472b  lea eax, [eax + eax*4]
 // ML+0x472e  cmp byte ptr [edx + eax*2 + g_tileType+0x1], 2
 if (ML_T(eax / 25, edx + 1)) goto La_413d10; // P28A (eax holds row * 25 here)
-if (((GU8(edx + eax*2 + (GS(g_tileType) + 1)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x4736  jne ML+0x4750
+if (((GU8(edx + (eax / 25)*WN + (GV(g_tileType) + 1)))&0xff) != ((2)&0xff)) goto La_413d10; // ML+0x4736  jne ML+0x4750 // P38A: eax holds row * 25 (exact), the row stride is row * N
 La_413cf8:;
 edx = FD(0xc); // ML+0x4738  mov edx, dword ptr [F+0xc]
 eax = (int)(edx + edi*2); // ML+0x473c  lea eax, [edx + edi*2]
@@ -2393,16 +2393,16 @@ eax = (int)(edi + edi*4); // ML+0x47e7  lea eax, [edi + edi*4]
 ebx = (ebx) | (0xffffffff); // ML+0x47ea  or ebx, ffffffff
 FD(0x30) = ebx; // ML+0x47ed  mov dword ptr [F+0x30], ebx
 edx = (int)(eax + eax*4); // ML+0x47f1  lea edx, [eax + eax*4]
-ebp = (int)(esi + edx*2); // ML+0x47f4  lea ebp, [esi + edx*2]
+ebp = (int)(esi + edi*WN); // ML+0x47f4  lea ebp, [esi + edx*2] // P38A: edx = edi * 25, the tile index row * N + col
 FD(0x14) = ebp; // ML+0x47f7  mov dword ptr [F+0x14], ebp
-eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x47fb  mov ax, word ptr [ebp*2 + g_tileFlags]
+eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x47fb  mov ax, word ptr [ebp*2 + g_tileFlags]
 ecx = eax; // ML+0x4803  mov ecx, eax
 ecx = (ecx) & (0x4000); // ML+0x4805  and ecx, 0x4000
 // ML+0x480b  test cx, cx
 if (((((ecx & 0xffff))&0xffff)) == 0) goto La_413e0a; // ML+0x480e  je ML+0x484a
 ebx = (ebx) ^ (ebx); // ML+0x4810  xor ebx, ebx
 eax = (eax) & (0x800); // ML+0x4812  and eax, 0x800
-ebx = (ebx & ~0xffu) | ((GU8(ebp + GS(tile_anim_frame))) & 0xff); // ML+0x4817  mov bl, byte ptr [ebp + tile_anim_frame]
+ebx = (ebx & ~0xffu) | ((GU8(ebp + GV(tile_anim_frame))) & 0xff); // ML+0x4817  mov bl, byte ptr [ebp + tile_anim_frame]
 // ML+0x481d  test ax, ax
 FD(0x30) = ebx; // ML+0x4820  mov dword ptr [F+0x30], ebx
 if (((((eax & 0xffff))&0xffff)) == 0) goto La_413df7; // ML+0x4824  je ML+0x4837
@@ -2412,11 +2412,11 @@ eax = Rnd(stk[sp]); sp += 1; // ML+0x482d  call Random::range
 // ML+0x4832  test ax, ax
 if (((((eax & 0xffff))&0xffff)) != 0) goto La_413dfd; // ML+0x4835  jne ML+0x483d
 La_413df7:;
-G8(ebp + GS(tile_anim_frame)) = (GU8(ebp + GS(tile_anim_frame))) + 1; // ML+0x4837  inc byte ptr [ebp + tile_anim_frame]
+G8(ebp + GV(tile_anim_frame)) = (GU8(ebp + GV(tile_anim_frame))) + 1; // ML+0x4837  inc byte ptr [ebp + tile_anim_frame]
 La_413dfd:;
 // ML+0x483d  cmp ebx, 0x18
 if ((int)(ebx) <= (int)(0x18)) goto La_413e0a; // ML+0x4840  jle ML+0x484a
-G8(ebp*2 + (GS(g_tileFlags) + 1)) = (GU8(ebp*2 + (GS(g_tileFlags) + 1))) & (0xbf); // ML+0x4842  and byte ptr [ebp*2 + g_tileFlags+0x1], 0xbf
+G8(ebp*2 + (GV(g_tileFlags) + 1)) = (GU8(ebp*2 + (GV(g_tileFlags) + 1))) & (0xbf); // ML+0x4842  and byte ptr [ebp*2 + g_tileFlags+0x1], 0xbf
 La_413e0a:;
 edx = FA(0x6c); // ML+0x484a  lea edx, [F+0x6c]
 eax = FA(0x7c); // ML+0x484e  lea eax, [F+0x7c]
@@ -2430,23 +2430,23 @@ sp += 4; // ML+0x485e  add esp, 0x10  (caller stack cleanup)
 if (((eax)) != 0) goto La_413e56; // ML+0x4863  jne ML+0x4896
 // ML+0x4865  test ebx, ebx
 if (((int)(ebx)) <= 0) goto La_414931; // ML+0x4867  jle ML+0x5371
-eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x486d  mov ax, word ptr [ebp*2 + g_tileFlags]
+eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x486d  mov ax, word ptr [ebp*2 + g_tileFlags]
 ecx = eax; // ML+0x4875  mov ecx, eax
 ecx = (ecx) & (0x800); // ML+0x4877  and ecx, 0x800
 // ML+0x487d  test cx, cx
 if (((((ecx & 0xffff))&0xffff)) != 0) goto La_414931; // ML+0x4880  jne ML+0x5371
 eax = (eax & ~0xff00u) | ((((((eax>>8)&0xff)) & (0xbf)) & 0xff)<<8); // ML+0x4886  and ah, 0xbf
-G16(ebp*2 + GS(g_tileFlags)) = (eax & 0xffff); // ML+0x4889  mov word ptr [ebp*2 + g_tileFlags], ax
+G16(ebp*2 + GV(g_tileFlags)) = (eax & 0xffff); // ML+0x4889  mov word ptr [ebp*2 + g_tileFlags], ax
 goto La_414931; // ML+0x4891  jmp ML+0x5371
 La_413e56:;
 eax = FD(0x6c); // ML+0x4896  mov eax, dword ptr [F+0x6c]
 edx = FD(0x40); // ML+0x489a  mov edx, dword ptr [F+0x40]
 eax = (eax) - (edx); // ML+0x489e  sub eax, edx
 FD(0xc) = eax; // ML+0x48a0  mov dword ptr [F+0xc], eax
-eax = (eax & ~0xffu) | ((GU8(ebp + GS(g_tileType))) & 0xff); // ML+0x48a4  mov al, byte ptr [ebp + g_tileType]
+eax = (eax & ~0xffu) | ((GU8(ebp + GV(g_tileType))) & 0xff); // ML+0x48a4  mov al, byte ptr [ebp + g_tileType]
 // ML+0x48aa  cmp al, 0x14
 if ((((eax & 0xff))&0xff) == ((0x14)&0xff)) goto La_414931; // ML+0x48ac  je ML+0x5371
-ebx = (ebx & ~0xffu) | ((GU8(ebp*2 + GS(g_tileFlags))) & 0xff); // ML+0x48b2  mov bl, byte ptr [ebp*2 + g_tileFlags]
+ebx = (ebx & ~0xffu) | ((GU8(ebp*2 + GV(g_tileFlags))) & 0xff); // ML+0x48b2  mov bl, byte ptr [ebp*2 + g_tileFlags]
 ebx = (ebx) & (0x1f); // ML+0x48b9  and ebx, 0x1f
 // ML+0x48bc  cmp al, 0x15
 if ((((eax & 0xff))&0xff) == ((0x15)&0xff)) goto La_413e88; // ML+0x48be  je ML+0x48c8
@@ -2491,7 +2491,7 @@ stk[--sp] = (int)(ecx); // ML+0x4936  push ecx
 eax = (int)(edx + eax + 0x200); // ML+0x4937  lea eax, [edx + eax + 0x200]
 stk[--sp] = (int)(eax); // ML+0x493e  push eax
 eax = cc("worldToScreen", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4]); // worldToScreen  ML+0x493f
-ecx = (ecx & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x4944  mov cx, word ptr [ebp*2 + g_tileFlags]
+ecx = (ecx & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x4944  mov cx, word ptr [ebp*2 + g_tileFlags]
 sp += 5; // ML+0x494c  add esp, 0x14  (caller stack cleanup)
 ecx = (ecx) & (0x4000); // ML+0x494f  and ecx, 0x4000
 // ML+0x4955  test cx, cx
@@ -2514,7 +2514,7 @@ stk[--sp] = (int)(eax); // ML+0x497d  push eax
 eax = cc("drawHomeLayout", stk[sp+0], stk[sp+1], stk[sp+2]); // drawHomeLayout  ML+0x497e
 sp += 3; // ML+0x4983  add esp, 0xc  (caller stack cleanup)
 La_413f46:;
-eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x4986  mov ax, word ptr [ebp*2 + g_tileFlags]
+eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x4986  mov ax, word ptr [ebp*2 + g_tileFlags]
 ecx = eax; // ML+0x498e  mov ecx, eax
 ecx = (ecx) & (0x800); // ML+0x4990  and ecx, 0x800
 // ML+0x4996  test cx, cx
@@ -2522,9 +2522,9 @@ if (((((ecx & 0xffff))&0xffff)) == 0) goto La_414056; // ML+0x4999  je ML+0x4a96
 // ML+0x499f  test dword ptr [g_flags], 4000000
 if (((((G32(GS(g_flags))) & (0x4000000)))) == 0) goto La_413f76; // ML+0x49a9  je ML+0x49b6
 eax = (eax & ~0xff00u) | ((((((eax>>8)&0xff)) & (0xf7)) & 0xff)<<8); // ML+0x49ab  and ah, 0xf7
-G16(ebp*2 + GS(g_tileFlags)) = (eax & 0xffff); // ML+0x49ae  mov word ptr [ebp*2 + g_tileFlags], ax
+G16(ebp*2 + GV(g_tileFlags)) = (eax & 0xffff); // ML+0x49ae  mov word ptr [ebp*2 + g_tileFlags], ax
 La_413f76:;
-edx = (edx & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x49b6  mov dx, word ptr [ebp*2 + g_tileFlags]
+edx = (edx & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x49b6  mov dx, word ptr [ebp*2 + g_tileFlags]
 eax = 0x3e7; // ML+0x49be  mov eax, 0x3e7
 edx = (edx) & (0x4000); // ML+0x49c3  and edx, 0x4000
 // ML+0x49c9  test dx, dx
@@ -2543,7 +2543,7 @@ ecx = (ecx) - 1; // ML+0x49ea  dec ecx
 ecx = (ecx) | (0xfffffffc); // ML+0x49eb  or ecx, fffffffc
 ecx = (ecx) + 1; // ML+0x49ee  inc ecx
 La_413faf:;
-edx = (int)(G8(ebp + GS(g_tileType))); // ML+0x49ef  movsx edx, byte ptr [ebp + g_tileType]
+edx = (int)(G8(ebp + GV(g_tileType))); // ML+0x49ef  movsx edx, byte ptr [ebp + g_tileType]
 stk[--sp] = (int)(0); // ML+0x49f6  push 0
 stk[--sp] = (int)(eax); // ML+0x49f8  push eax
 edx = (int)(edx + edx*2); // ML+0x49f9  lea edx, [edx + edx*2]
@@ -2600,7 +2600,7 @@ eax = cc("addSprite", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4], stk
 sp += 11; // ML+0x4a8b  add esp, 0x2c  (caller stack cleanup)
 FD(0x30) = 0xffffffff; // ML+0x4a8e  mov dword ptr [F+0x30], ffffffff
 La_414056:;
-ecx = (ecx & ~0xffu) | ((GU8(ebp + GS(g_tileType))) & 0xff); // ML+0x4a96  mov cl, byte ptr [ebp + g_tileType]
+ecx = (ecx & ~0xffu) | ((GU8(ebp + GV(g_tileType))) & 0xff); // ML+0x4a96  mov cl, byte ptr [ebp + g_tileType]
 eax = (int)((s8)(ecx & 0xff)); // ML+0x4a9c  movsx eax, cl
 FD(0x34) = eax; // ML+0x4a9f  mov dword ptr [F+0x34], eax
 eax = (int)(eax + eax*2); // ML+0x4aa3  lea eax, [eax + eax*2]
@@ -2613,7 +2613,7 @@ if ((int)(G32(GS(g_zoomScale))) <= (int)(1) && !farTrees) goto La_414931; // ML+
 eax = G32(GS(g_flags)); // ML+0x4ac7  mov eax, dword ptr [g_flags]
 // ML+0x4acc  test ah, 4
 if ((((((((eax>>8)&0xff)) & (4)))&0xff)) != 0) goto La_414931; // ML+0x4acf  jne ML+0x5371
-eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GS(g_tileFlags))) & 0xffff); // ML+0x4ad5  mov ax, word ptr [ebp*2 + g_tileFlags]
+eax = (eax & ~0xffffu) | ((GU16(ebp*2 + GV(g_tileFlags))) & 0xffff); // ML+0x4ad5  mov ax, word ptr [ebp*2 + g_tileFlags]
 eax = (eax) & (0x100); // ML+0x4add  and eax, 0x100
 // ML+0x4ae2  test ax, ax
 if (((((eax & 0xffff))&0xffff)) == 0) goto La_4140b0; // ML+0x4ae5  je ML+0x4af0
@@ -2637,11 +2637,9 @@ eax = (eax) & (7); // ML+0x4b1a  and eax, 7
 ecx = G32(eax*4 + GS(f_tab_dirDx_4c2878)); // ML+0x4b1d  mov ecx, dword ptr [eax*4 + f_tab_dirDx_4c2878]
 eax = G32(eax*4 + GS(f_tab_dirDy_4c2898)); // ML+0x4b24  mov eax, dword ptr [eax*4 + f_tab_dirDy_4c2898]
 ecx = (ecx) + (edi); // ML+0x4b2b  add ecx, edi
-ecx = (int)(ecx + ecx*4); // ML+0x4b2d  lea ecx, [ecx + ecx*4]
-ecx = (int)(ecx + ecx*4); // ML+0x4b30  lea ecx, [ecx + ecx*4]
-ecx = (int)(eax + ecx*2); // ML+0x4b33  lea ecx, [eax + ecx*2]
+ecx = (int)(eax + ecx*WN); // ML+0x4b2d..ML+0x4b33  lea ecx, [ecx + ecx*4]; lea ecx, [ecx + ecx*4]; lea ecx, [eax + ecx*2] (row * 50 + col; P38A: row * N + col)
 eax = 1; // ML+0x4b36  mov eax, 1
-ecx = (int)(G8(ecx + esi + GS(g_tileType))); // ML+0x4b3b  movsx ecx, byte ptr [ecx + esi + g_tileType]
+ecx = (int)(G8(ecx + esi + GV(g_tileType))); // ML+0x4b3b  movsx ecx, byte ptr [ecx + esi + g_tileType]
 eax = (eax) << ((ecx & 0xff)); // ML+0x4b43  shl eax, cl
 ebx = (ebx) | (eax); // ML+0x4b45  or ebx, eax
 // ML+0x4b47  test edx, edx
@@ -2668,22 +2666,18 @@ La_414141:;
 eax = G32(edx*4 + GS(f_tab_dirDx_4c2878)); // ML+0x4b81  mov eax, dword ptr [edx*4 + f_tab_dirDx_4c2878]
 ecx = G32(edx*4 + GS(f_tab_dirDy_4c2898)); // ML+0x4b88  mov ecx, dword ptr [edx*4 + f_tab_dirDy_4c2898]
 eax = (eax) + (edi); // ML+0x4b8f  add eax, edi
-eax = (int)(eax + eax*4); // ML+0x4b91  lea eax, [eax + eax*4]
-eax = (int)(eax + eax*4); // ML+0x4b94  lea eax, [eax + eax*4]
-eax = (int)(ecx + eax*2); // ML+0x4b97  lea eax, [ecx + eax*2]
-ebp = (int)(G8(eax + esi + GS(g_tileType))); // ML+0x4b9a  movsx ebp, byte ptr [eax + esi + g_tileType]
+eax = (int)(ecx + eax*WN); // ML+0x4b91..ML+0x4b97  lea eax, [eax + eax*4]; lea eax, [eax + eax*4]; lea eax, [ecx + eax*2] (P38A: row * N + col)
+ebp = (int)(G8(eax + esi + GV(g_tileType))); // ML+0x4b9a  movsx ebp, byte ptr [eax + esi + g_tileType]
 eax = edx; // ML+0x4ba2  mov eax, edx
 eax = (eax & ~0xffu) | ((((eax & 0xff)) | (4)) & 0xff); // ML+0x4ba4  or al, 4
 eax = (eax) << (2); // ML+0x4ba6  shl eax, 2
 ecx = G32(eax + GS(f_tab_dirDx_4c2878)); // ML+0x4ba9  mov ecx, dword ptr [eax + f_tab_dirDx_4c2878]
 eax = G32(eax + GS(f_tab_dirDy_4c2898)); // ML+0x4baf  mov eax, dword ptr [eax + f_tab_dirDy_4c2898]
 ecx = (ecx) + (edi); // ML+0x4bb5  add ecx, edi
-ecx = (int)(ecx + ecx*4); // ML+0x4bb7  lea ecx, [ecx + ecx*4]
-ecx = (int)(ecx + ecx*4); // ML+0x4bba  lea ecx, [ecx + ecx*4]
-ecx = (int)(eax + ecx*2); // ML+0x4bbd  lea ecx, [eax + ecx*2]
+ecx = (int)(eax + ecx*WN); // ML+0x4bb7..ML+0x4bbd  lea ecx, [ecx + ecx*4]; lea ecx, [ecx + ecx*4]; lea ecx, [eax + ecx*2] (P38A: row * N + col)
 eax = (int)(ebp + ebp*2); // ML+0x4bc0  lea eax, [ebp + ebp*2]
 eax = (eax) << (4); // ML+0x4bc4  shl eax, 4
-ecx = (int)(G8(ecx + esi + GS(g_tileType))); // ML+0x4bc7  movsx ecx, byte ptr [ecx + esi + g_tileType]
+ecx = (int)(G8(ecx + esi + GV(g_tileType))); // ML+0x4bc7  movsx ecx, byte ptr [ecx + esi + g_tileType]
 eax = (int)(G8(eax + (GS(g_tileTypeAttrs) + 39))); // ML+0x4bcf  movsx eax, byte ptr [eax + g_tileTypeAttrs+0x27]
 // ML+0x4bd6  cmp eax, ebx
 if ((eax) != (ebx)) goto La_4141bb; // ML+0x4bd8  jne ML+0x4bfb
@@ -2710,7 +2704,7 @@ edx = (edx) + 1; // ML+0x4c10  inc edx
 // ML+0x4c11  cmp edx, 4
 if ((int)(edx) < (int)(4)) goto La_414141; // ML+0x4c14  jl ML+0x4b81
 edx = FD(0x14); // ML+0x4c1a  mov edx, dword ptr [F+0x14]
-eax = (eax & ~0xffu) | ((GU8(edx + GS(g_tileType))) & 0xff); // ML+0x4c1e  mov al, byte ptr [edx + g_tileType]
+eax = (eax & ~0xffu) | ((GU8(edx + GV(g_tileType))) & 0xff); // ML+0x4c1e  mov al, byte ptr [edx + g_tileType]
 // ML+0x4c24  cmp al, 0x10
 if ((((eax & 0xff))&0xff) == ((0x10)&0xff)) goto La_414931; // ML+0x4c26  je ML+0x5371
 // ML+0x4c2c  cmp al, 0xd
@@ -2737,7 +2731,7 @@ FD(0x20) = 0xfffffff9; // ML+0x4c72  mov dword ptr [F+0x20], fffffff9
 La_41423a:;
 FD(0x10) = eax; // ML+0x4c7a  mov dword ptr [F+0x10], eax
 La_41423e:;
-eax = (eax & ~0xffu) | ((GU8(edx + GS(g_tileVariant))) & 0xff); // ML+0x4c7e  mov al, byte ptr [edx + g_tileVariant]
+eax = (eax & ~0xffu) | ((GU8(edx + GV(g_tileVariant))) & 0xff); // ML+0x4c7e  mov al, byte ptr [edx + g_tileVariant]
 // ML+0x4c84  test al, al
 if (((((eax & 0xff))&0xff)) == 0) goto La_414263; // ML+0x4c86  je ML+0x4ca3
 eax = (eax) & (0xff); // ML+0x4c88  and eax, 0xff
@@ -2785,7 +2779,7 @@ ecx = (ecx) - 1; // ML+0x4d04  dec ecx
 // ML+0x4d05  cmp eax, ecx
 if ((eax) != (ecx)) goto La_4142d5; // ML+0x4d07  jne ML+0x4d15
 eax = FD(0x14); // ML+0x4d09  mov eax, dword ptr [F+0x14]
-G8(eax*2 + (GS(g_tileFlags) + 1)) = (GU8(eax*2 + (GS(g_tileFlags) + 1))) & (0xbf); // ML+0x4d0d  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
+G8(eax*2 + (GV(g_tileFlags) + 1)) = (GU8(eax*2 + (GV(g_tileFlags) + 1))) & (0xbf); // ML+0x4d0d  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
 La_4142d5:;
 eax = FD(0x30); // ML+0x4d15  mov eax, dword ptr [F+0x30]
 // ML+0x4d19  test eax, eax
@@ -2832,7 +2826,7 @@ sp += 8; // ML+0x4d96  add esp, 0x20  (caller stack cleanup)
 La_414359:;
 edx = FD(0x14); // ML+0x4d99  mov edx, dword ptr [F+0x14]
 // ML+0x4d9d  cmp byte ptr [edx + g_tileType], 0xe
-if (((GU8(edx + GS(g_tileType)))&0xff) != ((0xe)&0xff)) goto La_4146e1; // ML+0x4da4  jne ML+0x5121
+if (((GU8(edx + GV(g_tileType)))&0xff) != ((0xe)&0xff)) goto La_4146e1; // ML+0x4da4  jne ML+0x5121
 ecx = FD(0x28); // ML+0x4daa  mov ecx, dword ptr [F+0x28]
 eax = 0x194; // ML+0x4dae  mov eax, 0x194
 // ML+0x4db3  cmp ecx, 4
@@ -2953,7 +2947,7 @@ ebp = (ebp) & (3); // ML+0x4f0b  and ebp, 3
 ebp = (ebp) + (0x29); // ML+0x4f0e  add ebp, 0x29
 La_4144d1:;
 edx = FD(0x14); // ML+0x4f11  mov edx, dword ptr [F+0x14]
-ebx = (ebx & ~0xffu) | ((GU8(edx + GS(g_tileVariant))) & 0xff); // ML+0x4f15  mov bl, byte ptr [edx + g_tileVariant]
+ebx = (ebx & ~0xffu) | ((GU8(edx + GV(g_tileVariant))) & 0xff); // ML+0x4f15  mov bl, byte ptr [edx + g_tileVariant]
 // ML+0x4f1b  test bl, bl
 if (((((ebx & 0xff))&0xff)) == 0) goto La_41453d; // ML+0x4f1d  je ML+0x4f7d
 ebx = (ebx) & (0xff); // ML+0x4f1f  and ebx, 0xff
@@ -3012,7 +3006,7 @@ edx = (edx) - 1; // ML+0x4fb1  dec edx
 // ML+0x4fb2  cmp ebx, edx
 if ((ebx) != (edx)) goto La_414582; // ML+0x4fb4  jne ML+0x4fc2
 ecx = FD(0x14); // ML+0x4fb6  mov ecx, dword ptr [F+0x14]
-G8(ecx*2 + (GS(g_tileFlags) + 1)) = (GU8(ecx*2 + (GS(g_tileFlags) + 1))) & (0xbf); // ML+0x4fba  and byte ptr [ecx*2 + g_tileFlags+0x1], 0xbf
+G8(ecx*2 + (GV(g_tileFlags) + 1)) = (GU8(ecx*2 + (GV(g_tileFlags) + 1))) & (0xbf); // ML+0x4fba  and byte ptr [ecx*2 + g_tileFlags+0x1], 0xbf
 La_414582:;
 // ML+0x4fc2  test ebx, ebx
 if (((ebx)) != 0) goto La_41459d; // ML+0x4fc4  jne ML+0x4fdd
@@ -3138,7 +3132,7 @@ sp += 8; // ML+0x511e  add esp, 0x20  (caller stack cleanup)
 La_4146e1:;
 edx = FD(0x14); // ML+0x5121  mov edx, dword ptr [F+0x14]
 // ML+0x5125  cmp byte ptr [edx + g_tileType], 0xf
-if (((GU8(edx + GS(g_tileType)))&0xff) != ((0xf)&0xff)) goto La_41491d; // ML+0x512c  jne ML+0x535d
+if (((GU8(edx + GV(g_tileType)))&0xff) != ((0xf)&0xff)) goto La_41491d; // ML+0x512c  jne ML+0x535d
 eax = FD(0x28); // ML+0x5132  mov eax, dword ptr [F+0x28]
 ebp = 0x197; // ML+0x5136  mov ebp, 0x197
 // ML+0x513b  cmp eax, 4
@@ -3163,7 +3157,7 @@ La_41472d:;
 FD(0x10) = ebp; // ML+0x516d  mov dword ptr [F+0x10], ebp
 La_414731:;
 eax = FD(0x14); // ML+0x5171  mov eax, dword ptr [F+0x14]
-eax = (eax & ~0xffu) | ((GU8(eax + GS(g_tileVariant))) & 0xff); // ML+0x5175  mov al, byte ptr [eax + g_tileVariant]
+eax = (eax & ~0xffu) | ((GU8(eax + GV(g_tileVariant))) & 0xff); // ML+0x5175  mov al, byte ptr [eax + g_tileVariant]
 // ML+0x517b  test al, al
 if (((((eax & 0xff))&0xff)) == 0) goto La_41475d; // ML+0x517d  je ML+0x519d
 eax = (eax) & (0xff); // ML+0x517f  and eax, 0xff
@@ -3194,7 +3188,7 @@ eax = (eax) - 1; // ML+0x51c9  dec eax
 // ML+0x51ca  cmp ebx, eax
 if ((ebx) != (eax)) goto La_41479a; // ML+0x51cc  jne ML+0x51da
 eax = FD(0x14); // ML+0x51ce  mov eax, dword ptr [F+0x14]
-G8(eax*2 + (GS(g_tileFlags) + 1)) = (GU8(eax*2 + (GS(g_tileFlags) + 1))) & (0xbf); // ML+0x51d2  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
+G8(eax*2 + (GV(g_tileFlags) + 1)) = (GU8(eax*2 + (GV(g_tileFlags) + 1))) & (0xbf); // ML+0x51d2  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
 La_41479a:;
 // ML+0x51da  test ebx, ebx
 if (((ebx)) != 0) goto La_4147b0; // ML+0x51dc  jne ML+0x51f0
@@ -3337,14 +3331,14 @@ eax = FD(0x30); // ML+0x535d  mov eax, dword ptr [F+0x30]
 // ML+0x5361  test eax, eax
 if (((int)(eax)) < 0) goto La_414931; // ML+0x5363  jl ML+0x5371
 eax = FD(0x14); // ML+0x5365  mov eax, dword ptr [F+0x14]
-G8(eax*2 + (GS(g_tileFlags) + 1)) = (GU8(eax*2 + (GS(g_tileFlags) + 1))) & (0xbf); // ML+0x5369  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
+G8(eax*2 + (GV(g_tileFlags) + 1)) = (GU8(eax*2 + (GV(g_tileFlags) + 1))) & (0xbf); // ML+0x5369  and byte ptr [eax*2 + g_tileFlags+0x1], 0xbf
 La_414931:;
 edi = (edi) + 1; // ML+0x5371  inc edi
 // ML+0x5372  cmp edi, 0x32
-if ((int)(edi) < (int)(0x32)) goto La_413da7; // ML+0x5375  jl ML+0x47e7
+if ((int)(edi) < (int)(WN)) goto La_413da7; // ML+0x5375  jl ML+0x47e7 (0x32 = N)
 esi = (esi) + 1; // ML+0x537b  inc esi
 // ML+0x537c  cmp esi, 0x32
-if ((int)(esi) < (int)(0x32)) goto La_413da5; // ML+0x537f  jl ML+0x47e5
+if ((int)(esi) < (int)(WN)) goto La_413da5; // ML+0x537f  jl ML+0x47e5 (0x32 = N)
 ecx = G32(GS(f_stateptr_4c1570)); // ML+0x5385  mov ecx, dword ptr [f_stateptr_4c1570]
 esi = (esi) ^ (esi); // ML+0x538b  xor esi, esi
 stk[--sp] = (int)(esi); // ML+0x538d  push esi
@@ -5356,11 +5350,11 @@ void Ph_00415847(u32 F) {
 // sound 0x22 there.
 // ====================================================================================================================
 void P5_tileEvent(u32 F) {
-    const int edi = Rnd(0x32) & 0xffff;                    // ML+0x80a9, mov di, ax / and edi, 0xffff (ML+0x80b8)
-    const int ebx = Rnd(0x32) & 0xffff;                    // ML+0x80be, mov bx, ax / and ebx, 0xffff (ML+0x80c9)
-    const int idx = ebx + edi * 50;                        // ML+0x80c6..ML+0x80d2
+    const int edi = Rnd(WN) & 0xffff;                      // ML+0x80a9 (0x32 = N), mov di, ax / and edi, 0xffff (ML+0x80b8)
+    const int ebx = Rnd(WN) & 0xffff;                      // ML+0x80be (0x32 = N), mov bx, ax / and ebx, 0xffff (ML+0x80c9)
+    const int idx = ebx + edi * WN;                        // ML+0x80c6..ML+0x80d2
     FD(0x28) = idx;                                        // ML+0x80d5
-    if ((GU16(GS(g_tileFlags) + idx * 2) & 0xc00) != 0) return; // ML+0x80d9..ML+0x80e9 -> ML+0x8258
+    if ((GU16(GV(g_tileFlags) + idx * 2) & 0xc00) != 0) return; // ML+0x80d9..ML+0x80e9 -> ML+0x8258
     FD(0x10) = 0;                                          // ML+0x80f1
     FD(0xc) = 0;                                           // ML+0x80f5
     FD(0x18) = 0;                                          // ML+0x80f9
@@ -5370,14 +5364,14 @@ void P5_tileEvent(u32 F) {
         const int ebp = G32(GS(f_tab_dirDy_4c2898) + off) + ebx;       // ML+0x8101 / ML+0x810d
         const int esi = G32(GS(f_tab_dirDx_4c2878) + off) + edi;       // ML+0x8107 / ML+0x810f
         if (cc("tileBlocked", esi, ebp) == 0) {               // ML+0x8113 tileBlocked(esi, ebp); ML+0x811d
-            const int n = ebp + esi * 50;                  // ML+0x811f..ML+0x8125
-            if ((GU16(GS(g_tileFlags) + n * 2) & 0x800) != 0) { // ML+0x8129..ML+0x813a
+            const int n = ebp + esi * WN;                  // ML+0x811f..ML+0x8125
+            if ((GU16(GV(g_tileFlags) + n * 2) & 0x800) != 0) { // ML+0x8129..ML+0x813a
                 const int edx = FD(0x10);                  // ML+0x813c
                 const int ecx = FD(0xc);                   // ML+0x8140
                 FD(0x10) = edx | 1;                        // ML+0x8144 / ML+0x8148
                 FD(0xc) = ecx + 1;                         // ML+0x8147 / ML+0x814c
             }
-            const int t = G8(GS(g_tileType) + n);              // ML+0x8150 movsx
+            const int t = G8(GV(g_tileType) + n);              // ML+0x8150 movsx
             if (G8((GS(g_tileTypeAttrs) + 34) + t * 48) <= 0)              // ML+0x8157..ML+0x8165 (signed byte, jg skips)
                 FD(0x10) = FD(0x10) | 2;                   // ML+0x8167..ML+0x816d
         }
@@ -5385,7 +5379,7 @@ void P5_tileEvent(u32 F) {
         FD(0x18) = off;                                    // ML+0x817b
     } while (off < 0x20);                                  // ML+0x8178 / ML+0x817f
     if (FD(0x10) != 3 || FD(0xc) > 3) FD(0x10) = 0;        // ML+0x8185..ML+0x8198 (eax = 3 at ML+0x8189)
-    if ((GU16(GS(g_tileFlags) + FD(0x28) * 2) & 0x1000) != 0) { // ML+0x81a0..ML+0x81b5
+    if ((GU16(GV(g_tileFlags) + FD(0x28) * 2) & 0x1000) != 0) { // ML+0x81a0..ML+0x81b5
         const int r = Rnd(3) & 0xffff;                     // ML+0x81bd (push eax, eax = 3 from ML+0x8189); ML+0x81c6
         FD(0x10) = (r <= FD(0xc)) ? 1 : 0;                 // ML+0x81c2..ML+0x81d2 setle (signed)
     }
@@ -5393,13 +5387,13 @@ void P5_tileEvent(u32 F) {
     const int g = FD(0x14) << 8;                           // ML+0x81de / ML+0x81e4
     if (cc("holeQuadrants", G32((GS(g_golfers) + 212) + g), G32((GS(g_golfers) + 216) + g), 2) != 0) return;   // ML+0x81f5 holeQuadrants; ML+0x81ff
     const int t2 = FD(0x28);                               // ML+0x8201
-    const s8 cl = G8(GS(g_tileType) + t2);                     // ML+0x8205
+    const s8 cl = G8(GV(g_tileType) + t2);                     // ML+0x8205
     if (cl != 2) {                                         // ML+0x8208 / ML+0x820e
         const u8 a = GU8((GS(g_tileTypeAttrs) + 38) + cl * 48);            // ML+0x8210..ML+0x8219 (movsx index)
         if (a != 4 && a != 0xd) return;                    // ML+0x821f..ML+0x8227 -> ML+0x8258
     }
-    GU8((GS(g_tileFlags) + 1) + t2 * 2) |= 0x48;                      // ML+0x8229
-    GU8(GS(tile_anim_frame) + t2) = 1;                              // ML+0x8249
+    GU8((GV(g_tileFlags) + 1) + t2 * 2) |= 0x48;                      // ML+0x8229
+    GU8(GV(tile_anim_frame) + t2) = 1;                              // ML+0x8249
     cc("playSoundAt", 0x22, (edi << 10) + 0x200, (ebx << 10) + 0x200, 0);   // ML+0x8250 playSoundAt
 }
 
@@ -5648,15 +5642,15 @@ void P5_monthly(u32 F, int edi) {
 
     // ML+0x8c6b..ML+0x8d2e: the year end
     if (G32(GS(g_date)) % 8192 != 0) return;              // ML+0x8c6b..ML+0x8c81 -> ML+0x8d33
-    for (u32 row = GS(g_tileMoodUp); row < GS(g_year); row += 0x32) {   // ML+0x8c87, ML+0x8cdb..ML+0x8ce4
-        const int off = (int)(row - GS(g_tileMoodUp));           // ML+0x8c8c / ML+0x8c90
-        for (int i = 0; i < 0x32; i++) {                   // ML+0x8c8e, ML+0x8cd5..ML+0x8cd9
-            u8 b = GU8(GS(g_tileMoodUp) + i + off);              // ML+0x8c96
-            GU8(GS(g_tileMoodUp) + i + off) = (u8)(b - (b >> 3)); // ML+0x8c9d..ML+0x8ca4
-            b = GU8(GS(g_tileMoodDown) + i + off);                 // ML+0x8cab
-            GU8(GS(g_tileMoodDown) + i + off) = (u8)(b - (b >> 3)); // ML+0x8cb2..ML+0x8cb9
-            b = GU8(GS(g_ballStopCount) + i + off);                 // ML+0x8cc0
-            GU8(GS(g_ballStopCount) + i + off) = (u8)(b - (b >> 3)); // ML+0x8cc7..ML+0x8cce
+    for (u32 row = GV(g_tileMoodUp); row < GV(g_tileMoodUp) + u32(world_tiles(ctx)); row += u32(WN)) {   // ML+0x8c87, ML+0x8cdb..ML+0x8ce4 (the original ends at g_year, the global after the grid; step 0x32 = N)
+        const int off = (int)(row - GV(g_tileMoodUp));           // ML+0x8c8c / ML+0x8c90
+        for (int i = 0; i < WN; i++) {                     // ML+0x8c8e, ML+0x8cd5..ML+0x8cd9 (0x32 = N)
+            u8 b = GU8(GV(g_tileMoodUp) + i + off);              // ML+0x8c96
+            GU8(GV(g_tileMoodUp) + i + off) = (u8)(b - (b >> 3)); // ML+0x8c9d..ML+0x8ca4
+            b = GU8(GV(g_tileMoodDown) + i + off);                 // ML+0x8cab
+            GU8(GV(g_tileMoodDown) + i + off) = (u8)(b - (b >> 3)); // ML+0x8cb2..ML+0x8cb9
+            b = GU8(GV(g_ballStopCount) + i + off);                 // ML+0x8cc0
+            GU8(GV(g_ballStopCount) + i + off) = (u8)(b - (b >> 3)); // ML+0x8cc7..ML+0x8cce
         }
     }
     int e = 0;                                             // ML+0x8ce6
@@ -6553,7 +6547,7 @@ int P7_m51(int x) {
     return q + (int)((unsigned)q >> 31);
 }
 
-// Tile/word flag test: cell word at ([g_cursorTileY] + 50*[g_cursorTileX]) in table g_tileFlags, bit 0x4000 set.
+// Tile/word flag test: cell word at ([g_cursorTileY] + N*[g_cursorTileX]) in table g_tileFlags, bit 0x4000 set.
 // (callers pass the two coords already in locals.)
 
 void Ph_00419d06(u32 F, int eax_in) {
@@ -6575,8 +6569,8 @@ L419d34:
     if (FD(0x58) >= edi) goto L41a97e;          // ML+0xa774/ML+0xa778 (signed)
     edx = G32(GS(g_cursorTileX));                        // ML+0xa77e
     ecx = G32(GS(g_cursorTileY));                        // ML+0xa78a
-    esi = ecx + 50 * edx;                       // ML+0xa784..ML+0xa790 (lea chain: ecx + 50*edx)
-    if ((GU16(esi * 2 + GS(g_tileFlags)) & 0x4000) != 0) goto L41a97e;  // ML+0xa793..ML+0xa7a4
+    esi = ecx + WN * edx;                       // ML+0xa784..ML+0xa790 (lea chain: ecx + 50*edx; P38A: N)
+    if ((GU16(esi * 2 + GV(g_tileFlags)) & 0x4000) != 0) goto L41a97e;  // ML+0xa793..ML+0xa7a4
     if (eax == -1) goto L41a97e;                // ML+0xa7aa/ML+0xa7ad
     if (eax == 4) {                             // ML+0xa7b3
         if (G32(GS(unk_0056a514)) == -1) goto L41a97e;  // ML+0xa7b8/ML+0xa7bf
@@ -6825,7 +6819,7 @@ L41a52e:    // tool 19
     }
     spr = eax; G32(GS(unk_005a9cc8)) = spr;                    // ML+0xaf99
     cc("addSprite", FD(0x60), FD(0x64), FD(0x64), 0x28, 0x28, spr, 4, 0x2a9);  // ML+0xafad
-    if (GU8(G32(GS(g_cursorTileY)) + 50 * G32(GS(g_cursorTileX)) + GS(g_tileType)) == 0x11) goto L41a594;  // ML+0xafc5/ML+0xafcd
+    if (GU8(G32(GS(g_cursorTileY)) + WN * G32(GS(g_cursorTileX)) + GV(g_tileType)) == 0x11) goto L41a594;  // ML+0xafc5/ML+0xafcd
 L41a58f:
     ebx = 0x80007d08;                                  // ML+0xafcf
     // fall to L41a594
@@ -6931,7 +6925,7 @@ L41a990:    // hovered-cell tooltip (idle preview)
     if (FD(0x58) >= edi) return;                        // ML+0xb3d0/ML+0xb3d4 jge ML+0xcb05
     if (G32(GS(g_buildPanelSlot)) != 0) return;                     // ML+0xb3da/ML+0xb3e1
     if (G32(GS(f_w_4c2848)) == -1) return;                    // ML+0xb3e7/ML+0xb3ee
-    if ((GU16((G32(GS(g_cursorTileY)) + 50 * G32(GS(g_cursorTileX))) * 2 + GS(g_tileFlags)) & 0x4000) != 0) return;  // ML+0xb3f4..ML+0xb419
+    if ((GU16((G32(GS(g_cursorTileY)) + WN * G32(GS(g_cursorTileX))) * 2 + GV(g_tileFlags)) & 0x4000) != 0) return;  // ML+0xb3f4..ML+0xb419
     cc("worldToScreen", G32(GS(g_cursorTileX)) << 10, G32(GS(g_cursorTileY)) << 10, FA(0x28c), FA(0x284), 0);  // ML+0xb439 worldToScreen
     cc("tileToScreen", G32(GS(g_cursorTileX)), G32(GS(g_cursorTileY)), FA(0x68), FA(0x58));   // ML+0xb458 tileToScreen
     tc("setDrawTarget", Root(), GS(g_font51b360), 0, 0, 0);           // ML+0xb471 setDrawTarget
@@ -7010,7 +7004,7 @@ L41ac73:    // object info panel (name + optional par/direction label)
         if (GU8(edx + (GS(g_tileTypeAttrs) + 38)) != 0xd) goto L41aea8;   // ML+0xb73c/ML+0xb743
     }
     {
-        int tcell = (int)G8(G32(GS(g_cursorTileY)) + 50 * G32(GS(g_cursorTileX)) + GS(g_tileType));  // ML+0xb749..ML+0xb75b
+        int tcell = (int)G8(G32(GS(g_cursorTileY)) + WN * G32(GS(g_cursorTileX)) + GV(g_tileType));  // ML+0xb749..ML+0xb75b
         if (GU8(48 * tcell + (GS(g_tileTypeAttrs) + 38)) == 0xd) goto L41aea8;  // ML+0xb763..ML+0xb770
     }
     ebx = G32(GS(f_w_4c2848));                                // ML+0xb791/41ad9? (ebx = object id)
@@ -7201,7 +7195,7 @@ Lrate_done:                                              // ML+0xbe36
         int rec = (G32(GS(g_playerGolfer)) << 8);                 // ML+0xbe36
         int cx = G32(rec + (GS(g_golfers) + 212)) >> 10;             // ML+0xbe3e/ML+0xbe4a (signed >>)
         int cy = G32(rec + (GS(g_golfers) + 216)) >> 10;             // ML+0xbe44/ML+0xbe4d
-        int t = (int)G8(cy + 50 * cx + GS(g_tileType));       // ML+0xbe50..ML+0xbe56
+        int t = (int)G8(cy + WN * cx + GV(g_tileType));       // ML+0xbe50..ML+0xbe56
         if (G8(48 * t + (GS(g_tileTypeAttrs) + 34)) > 0) {                // ML+0xbe5e..ML+0xbe6c (test cl,cl; jle, signed)
             G32(GS(g_playerShotStyle)) = 0;                          // ML+0xbe78
             cc("playSound", 0x18, 0x64, 0, 0, 0);          // ML+0xbe82 playSound
@@ -7950,24 +7944,26 @@ a41c9ea:  // key 0x9 (Tab)
 a41ca20:  // key 0x58: reset tile/level tables, rebuild
     if (!(G32(GS(g_flags)) & 0x1000000)) goto a41de11;  // ML+0xd460 test; je
     {
-        for (int i = 0; i < 0x271; i++)                // ML+0xd470 rep stosd ecx=0x271
-            G32(GS(g_tileType) + 4 * i) = 0x04040404;
+        for (int i = 0; i < grid_dwords(ctx, 1); i++)  // ML+0xd470 rep stosd ecx=0x271 (N * N / 4)
+            G32(GV(g_tileType) + 4 * i) = 0x04040404;
     }
-    edx = GS(g_tileFlags);                                  // ML+0xd47f mov edx,g_tileFlags
-    esi = GS(g_cornerLevel);                                  // ML+0xd484 mov esi,g_cornerLevel
+    edx = GV(g_tileFlags);                                  // ML+0xd47f mov edx,g_tileFlags
+    esi = GV(g_cornerLevel);                                  // ML+0xd484 mov esi,g_cornerLevel
 a41ca4b:
     {
-        for (int i = 0; i < 0xC; i++)                  // ML+0xd48b rep stosd ecx=0xc
+        // the first N of the row's N + 1 corner bytes: N / 4 dwords (0xc), then a word (stosw at +0x30) and a byte for what is left
+        for (int i = 0; i < WN / 4; i++)               // ML+0xd48b rep stosd ecx=0xc
             G32(esi + 4 * i) = 0x04040404;
-        G16(esi + 0x30) = (short)0x0404;               // ML+0xd499 stosw (edi at esi+0x30)
-        if (::portsim::g_defect_corner_level_clamp == 0) G8(esi + 0x32) = 4;  // D21 fix: byte 50 of the row is reset too
-        for (int k = 0; k < 0x32; k++) {               // ML+0xd49b..ML+0xd4a9 loop eax=0x32
+        if (WN % 4 >= 2) G16(esi + u32(WN / 4 * 4)) = (short)0x0404;   // ML+0xd499 stosw (edi at esi+0x30)
+        if (WN % 2) G8(esi + u32(WN - 1)) = 4;                          // (N odd only; never at 50)
+        if (::portsim::g_defect_corner_level_clamp == 0) G8(esi + u32(WN)) = 4;  // D21 fix: byte N (50) of the row is reset too
+        for (int k = 0; k < WN; k++) {                 // ML+0xd49b..ML+0xd4a9 loop eax=0x32 (N)
             G16(edx) = (short)(G16(edx) & 0x480);      // ML+0xd4a0 and word [edx],0x480
             edx += 2;                                  // ML+0xd4a5 add edx,2
         }
     }
-    esi += 0x33;                                       // ML+0xd4ab add esi,0x33
-    if (esi < (GS(g_cornerLevel) + 2550)) goto a41ca4b;                // ML+0xd4ae cmp; jl (signed)
+    esi += WV;                                         // ML+0xd4ab add esi,0x33 (N + 1)
+    if (esi < (GV(g_cornerLevel) + u32(WN * WV))) goto a41ca4b;        // ML+0xd4ae cmp; jl (signed) (2550 = N * (N + 1))
     cc("buildGolferBioText");                                    // ML+0xd4b6 buildGolferBioText
     cc("rebuildHeightfield");                                    // ML+0xd4bb rebuildHeightfield
     eax = G32(GS(g_flags));                             // ML+0xd4c0
@@ -8206,7 +8202,7 @@ a41d270:
         int c25 = ecx * 25;                             // ML+0xdd45 lea eax,[ecx+ecx*4]; lea ecx,[eax+eax*4]
         G32((GS(g_golfers) + 39184)) = 0;                            // ML+0xdd48
         eax = G32((GS(g_activeObjectLevel) + 24));                          // ML+0xdd55
-        u8 dl = (GU8(esi + c25 * 2 + GS(g_tileType)) != 0) ? 1 : 0;  // ML+0xdd5a mov dl,[esi+ecx*2+g_tileType]; setne
+        u8 dl = (GU8(esi + c25 * 2 + GV(g_tileType)) != 0) ? 1 : 0;  // ML+0xdd5a mov dl,[esi+ecx*2+g_tileType]; setne
         s8 al = G8((GS(g_golfers) + 39193));                         // ML+0xdd68 mov al,[g_golfers+0x9919]
         G8((GS(g_golfers) + 39202)) = (s8)dl;                        // ML+0xdd6d mov [g_golfers+0x9922],dl
         if (eax != 0 && (al & 4)) G32((GS(g_golfers) + 39184)) = 0x10;  // ML+0xdd66..ML+0xdd79
@@ -8399,7 +8395,7 @@ a41d997:  // key 0x2d: lower terrain cell
         ecx = G32(GS(g_cursorTileX));                          // ML+0xe417
         int cell = ecx * 17;                            // ML+0xe41e..ML+0xe425
         int row = G32(GS(g_cursorTileY));                      // ML+0xe427
-        int p = cell + (row + cell * 2) + GS(g_cornerLevel);   // ML+0xe42d..ML+0xe430
+        int p = ecx * WV + row + GV(g_cornerLevel);            // ML+0xe42d..ML+0xe430 (cell * 3 = x * 51 = x * (N + 1))
         u8 cl = (u8)(GU8(p) - 1);                        // ML+0xe437 dec cl
         G8(p) = (s8)cl;                                 // ML+0xe43b
         // P35B mainLoop.terrainLiftCap13 = 0 (tick.cpp): the bound is the lift top, or the new level when above it
@@ -8409,7 +8405,7 @@ a41d997:  // key 0x2d: lower terrain cell
     edi = G32(GS(g_cursorTileY));                              // ML+0xe450
     {
         int c = edx * 17;                               // ML+0xe456..ML+0xe45e
-        G8(c + (edi + c * 2) + GS(g_cornerLevel)) = (s8)eax;    // ML+0xe463
+        G8(edx * WV + edi + GV(g_cornerLevel)) = (s8)eax;       // ML+0xe463 (c * 3 = x * (N + 1))
     }
     eax = G32(GS(g_ui_542f20));                              // ML+0xe46a
     if (eax != ebx) goto a41dadd;                       // ML+0xe471 cmp eax,ebx; jne
@@ -8425,7 +8421,7 @@ a41da39_lower:
         if (edx > esi) goto a41dadd;                    // ML+0xe480 cmp; jg (never)
         int cell = edx * 17;                            // ML+0xe488..ML+0xe48f
         ebx = (esi - edx) + 1;                          // ML+0xe491 sub ebx,edx; inc ebx (=2)
-        ebp = cell * 3 + GS(g_cornerLevel);                    // ML+0xe494 lea ebp,[eax+eax*2+g_cornerLevel]
+        ebp = edx * WV + GV(g_cornerLevel);                    // ML+0xe494 lea ebp,[eax+eax*2+g_cornerLevel] (cell * 3 = x * (N + 1))
         do {                                            // ML+0xe49b outer (find max)
             eax = edi - 1;                              // ML+0xe49b lea eax,[edi-1]
             if (eax <= edi) {                           // ML+0xe49e cmp; jg skip
@@ -8435,18 +8431,18 @@ a41da39_lower:
                     eax++;                              // ML+0xe4b1
                 } while (eax <= edi);                   // ML+0xe4b2 cmp; jle
             }
-            ebp += 0x33;                                // ML+0xe4b6
+            ebp += WV;                                  // ML+0xe4b6 (0x33 = N + 1)
             ebx--;                                      // ML+0xe4b9
         } while (ebx != 0);                             // ML+0xe4ba jne
         if (edx > esi) goto a41dadd;                    // ML+0xe4bc cmp; jg
         int c2 = edx * 17;                              // ML+0xe4c0
         FD(0x18) = (esi - edx) + 1;                     // ML+0xe4c2 sub esi,edx; inc esi
         ebx = edi - 1;                                  // ML+0xe4ca lea ebx,[edi-1]
-        FD(0x2C) = c2 * 3;                              // ML+0xe4d1 lea eax,[eax+eax*2]
+        FD(0x2C) = edx * WV;                            // ML+0xe4d1 lea eax,[eax+eax*2] (c2 * 3 = x * (N + 1))
         do {                                            // ML+0xe4d8 outer2 (decrement max cells)
             if (ebx <= edi) {                           // ML+0xe4d8 cmp; jg skip
                 esi = (edi - ebx) + 1;                  // ML+0xe4dc sub esi,ebx; inc esi
-                ecx = ebx + FD(0x2C) + GS(g_cornerLevel);      // ML+0xe4de lea ecx
+                ecx = ebx + FD(0x2C) + GV(g_cornerLevel);      // ML+0xe4de lea ecx
                 do {                                    // ML+0xe4e8 inner2
                     u8 al = GU8(ecx);                   // ML+0xe4e8 mov al,[ecx]
                     if ((al & 0xFF) == FD(0x0C) && FD(0x0C) > 3) {  // ML+0xe4ec..ML+0xe4fd
@@ -8457,7 +8453,7 @@ a41da39_lower:
                     esi--;                              // ML+0xe504
                 } while (esi != 0);                     // ML+0xe505 jne
             }
-            FD(0x2C) += 0x33;                           // ML+0xe507..ML+0xe513
+            FD(0x2C) += WV;                             // ML+0xe507..ML+0xe513 (0x33 = N + 1)
             FD(0x18) -= 1;                              // ML+0xe50b mov ecx,[F+0x18]; ML+0xe512 dec ecx; ML+0xe517 store
             // c3fya fix: the row counter lives in ecx / [F+0x18] only; ebx keeps the start column edi - 1 (ML+0xe4ca)
             // for every row (ML+0xe4d8 cmp ebx, edi). The old `ebx = FD(0x18)` made rows 2.. start at column 1, so the
@@ -8492,7 +8488,7 @@ a41db46:  // key 0x3d: raise terrain cell
         ecx = G32(GS(g_cursorTileX));                          // ML+0xe5a1
         int cell = ecx * 17;                            // ML+0xe5a9..ML+0xe5b0
         int row = G32(GS(g_cursorTileY));                      // ML+0xe5b2
-        int p = cell + (row + cell * 2) + GS(g_cornerLevel);   // ML+0xe5b8..ML+0xe5c4
+        int p = ecx * WV + row + GV(g_cornerLevel);            // ML+0xe5b8..ML+0xe5c4 (x * (N + 1))
         const int old = GU8(p);                          // P35B: the level before the press
         u8 cl = (u8)(GU8(p) + 1);                        // ML+0xe5bb inc cl
         G8(p) = (s8)cl;                                 // ML+0xe5cb
@@ -8503,7 +8499,7 @@ a41db46:  // key 0x3d: raise terrain cell
     edi = G32(GS(g_cursorTileY));                              // ML+0xe5e0
     {
         int c = edx * 17;                               // ML+0xe5e6..ML+0xe5ee
-        G8(c + (edi + c * 2) + GS(g_cornerLevel)) = (s8)eax;    // ML+0xe5f3
+        G8(edx * WV + edi + GV(g_cornerLevel)) = (s8)eax;       // ML+0xe5f3 (x * (N + 1))
     }
     if (G32(GS(g_ui_542f20)) != ebx) goto a41dc7d;           // ML+0xe5fa cmp; jne
     goto a41dbd5;                                       // ML+0xe607
@@ -8517,7 +8513,7 @@ a41dbd5:
         if (edx > esi) goto a41dc7d;                    // ML+0xe620 cmp; jg
         int cell = edx * 17;                            // ML+0xe628..ML+0xe62f
         ebx = (esi - edx) + 1;                          // ML+0xe631 (=2)
-        ebp = cell * 3 + GS(g_cornerLevel);                    // ML+0xe634
+        ebp = edx * WV + GV(g_cornerLevel);                    // ML+0xe634 (x * (N + 1))
         do {                                            // ML+0xe63b outer (find min)
             eax = edi - 1;                              // ML+0xe63b
             if (eax <= edi) {                           // ML+0xe63e cmp; jg
@@ -8527,18 +8523,18 @@ a41dbd5:
                     eax++;                              // ML+0xe651
                 } while (eax <= edi);                   // ML+0xe652 cmp; jle
             }
-            ebp += 0x33;                                // ML+0xe656
+            ebp += WV;                                  // ML+0xe656 (0x33 = N + 1)
             ebx--;                                      // ML+0xe659
         } while (ebx != 0);                             // ML+0xe65a jne
         if (edx > esi) goto a41dc7d;                    // ML+0xe65c cmp; jg
         int c2 = edx * 17;                              // ML+0xe660
         FD(0x18) = (esi - edx) + 1;                     // ML+0xe662
         ebx = edi - 1;                                  // ML+0xe66a
-        FD(0x2C) = c2 * 3;                              // ML+0xe671
+        FD(0x2C) = edx * WV;                            // ML+0xe671 (x * (N + 1))
         do {                                            // ML+0xe678 outer2 (increment min cells)
             if (ebx <= edi) {                           // ML+0xe678 cmp; jg
                 esi = (edi - ebx) + 1;                  // ML+0xe67c
-                ecx = ebx + FD(0x2C) + GS(g_cornerLevel);      // ML+0xe67e
+                ecx = ebx + FD(0x2C) + GV(g_cornerLevel);      // ML+0xe67e
                 do {                                    // ML+0xe688
                     u8 al = GU8(ecx);                   // ML+0xe688
                     // P35B mainLoop.terrainLiftCap13 = 0: the brush raises its lowest corners while below the lift top
@@ -8550,7 +8546,7 @@ a41dbd5:
                     esi--;                              // ML+0xe6a4
                 } while (esi != 0);                     // ML+0xe6a5 jne
             }
-            FD(0x2C) += 0x33;                           // ML+0xe6a7..ML+0xe6b3
+            FD(0x2C) += WV;                             // ML+0xe6a7..ML+0xe6b3 (0x33 = N + 1)
             FD(0x18) -= 1;                              // ML+0xe6ab mov ecx,[F+0x18]; ML+0xe6b2 dec ecx; ML+0xe6b7 store
             // c3fya fix: as in the lower loop (ML+0xe51b): ebx stays the start column edi - 1 (ML+0xe66a); only
             // ecx / [F+0x18] counts the rows.
@@ -8976,8 +8972,8 @@ a41e631:
         esi = FD(0x1EC);                               // ML+0xf081
         G32(GS(g_frameMs)) = eax - esi;                   // ML+0xf088 sub eax,esi; mov [g_frameMs],eax
         {
-            s8 al = G8(GS(g_tileWallMask));                    // ML+0xf08f
-            if (al & 8) G8(GS(g_tileWallMask)) = (s8)(al & 0xF7);  // ML+0xf094 test al,8; je; and al,0xf7
+            s8 al = G8(GV(g_tileWallMask));                    // ML+0xf08f
+            if (al & 8) G8(GV(g_tileWallMask)) = (s8)(al & 0xF7);  // ML+0xf094 test al,8; je; and al,0xf7
         }
         // ML+0xf09f..ML+0xf0ef: the wait until frame head + 87 / 125 ms (timeGetTime, waitTicks(1, 0)): pacing only, dropped
         // (re/analysis/sim/time_model.md section 3; no message is dispatched inside it, section 7). The harness's memory
@@ -9268,12 +9264,12 @@ a420e0f:
 // entered only from H1's block ML+0xf112 (ML+0xf114 / ML+0xf120 -> ML+0x11506, ML+0xf134 -> ML+0x1150b): see the notes.
 // Transcribed from log/c3/alt/c3fy_norm.asm. Every [F+X] access is kept at its offset and width.
 
-// tile grids are 50 x 50, cell index x * 50 + y (lea / lea / lea [y + t*2] sequences)
-u32 H2_cell(int x, int y) { return (u32)x * 50u + (u32)y; }
-#define H2_TW(i) GU16(GS(g_tileFlags) + 2u * (u32)(i))   // tile flag word
-#define H2_TWL(i) GU8(GS(g_tileFlags) + 2u * (u32)(i))   // its low byte
-#define H2_TWH(i) GU8((GS(g_tileFlags) + 1) + 2u * (u32)(i))   // its high byte
-#define H2_TT(i) G8(GS(g_tileType) + (u32)(i))          // tile type (signed byte)
+// tile grids are N x N (50 x 50), cell index x * N + y (lea / lea / lea [y + t*2] sequences at 50)
+u32 H2_cell(int x, int y) { return (u32)x * (u32)WN + (u32)y; }
+#define H2_TW(i) GU16(GV(g_tileFlags) + 2u * (u32)(i))   // tile flag word
+#define H2_TWL(i) GU8(GV(g_tileFlags) + 2u * (u32)(i))   // its low byte
+#define H2_TWH(i) GU8((GV(g_tileFlags) + 1) + 2u * (u32)(i))   // its high byte
+#define H2_TT(i) G8(GV(g_tileType) + (u32)(i))          // tile type (signed byte)
 // tile coordinate -> world coordinate (shl 0xa; add 0x200)
 int H2_W(int v) { return (int)(((u32)v << 10) + 0x200u); }
 // (short)[g_year] % 100 (movsx; cdq; idiv 100): the row of the 20-byte records at g_financeYears
@@ -9564,8 +9560,8 @@ void H2_Build(u32 F, int eax) {
         i = H2_cell(x, esi);
         u16 w = H2_TW(i);                             // ML+0xff45
         H2_TT(i) = 0x10;                              // ML+0xff4d
-        G8(GS(tile_anim_frame) + i) = 0;                      // ML+0xff57
-        GU8(GS(g_tileVariant) + i) = (u8)(ecx + 1);         // ML+0xff61 / ML+0xff63
+        G8(GV(tile_anim_frame) + i) = 0;                      // ML+0xff57
+        GU8(GV(g_tileVariant) + i) = (u8)(ecx + 1);         // ML+0xff61 / ML+0xff63
         H2_TW(i) = (u16)((w & 0xe7ffu) | 0x4100u);    // ML+0xff54 / ML+0xff5e / ML+0xff6c
         ebx = G16((GS(f_tab_buildItems_4c26b0) + 18) + 20u * (u32)edi);      // ML+0xff74
         cc("setGrids", x, esi, 0x90, ebx);            // ML+0xff84 setGrids
@@ -9589,11 +9585,11 @@ void H2_Build(u32 F, int eax) {
         cc("rebuildHeightfield");                               // ML+0xffde rebuildHeightfield
         int yy = FD(0x24), xx = FD(0x1c);             // ML+0xffe3 / ML+0xffe7
         for (u32 o = 0; o < 0x20u; o += 8) {          // ML+0xffeb..ML+0x1003b (neighbours 0, 2, 4, 6)
-            u32 j = (u32)(G32(GS(f_tab_dirDx_4c2878) + o) + xx) * 50u + (u32)(G32(GS(f_tab_dirDy_4c2898) + o) + yy);
+            u32 j = (u32)(G32(GS(f_tab_dirDx_4c2878) + o) + xx) * (u32)WN + (u32)(G32(GS(f_tab_dirDy_4c2898) + o) + yy);
             if (ML_T(G32(GS(f_tab_dirDx_4c2878) + o) + xx, G32(GS(f_tab_dirDy_4c2898) + o) + yy)) continue;   // P28A: 0x14 outside
             s8 t = H2_TT(j);                          // ML+0x1000b
             if (t == 0x15 || t == 0x16) {             // ML+0x10011 / ML+0x10015
-                u32 r = (u32)GU8(GS(g_tileVariant) + j) << 4;   // ML+0x1001b / ML+0x10021
+                u32 r = (u32)GU8(GV(g_tileVariant) + j) << 4;   // ML+0x1001b / ML+0x10021
                 if (G16(GS(g_placed_objects) + r) >= 6) H2_TW(j) = (u16)(H2_TW(j) | 0x20);   // ML+0x10024 / ML+0x1002e
             }
         }
@@ -9632,7 +9628,7 @@ void H2_Build(u32 F, int eax) {
             i = H2_cell(esi, yy);
             int c = G32(GS(unk_0056a514));                  // ML+0x10193
             H2_TW(i) = (u16)((H2_TW(i) & 0xefffu) | 0x220u);   // ML+0x10198..ML+0x101a9
-            GU8(GS(g_tileVariant) + i) = (u8)(c % 5);       // ML+0x101b1 / ML+0x101b4
+            GU8(GV(g_tileVariant) + i) = (u8)(c % 5);       // ML+0x101b1 / ML+0x101b4
             cc("setGrids", esi, yy, 0x81, ebx);       // ML+0x101ba setGrids
             cc("playSoundAt", 0x106, H2_W(FD(0x1c)), H2_W(FD(0x24)), 0);   // ML+0x101e1 playSoundAt
             goto L_fab3;                              // ML+0x101e9
@@ -9648,18 +9644,18 @@ void H2_Build(u32 F, int eax) {
         i = H2_cell(esi, FD(0x24));
         u16 w = H2_TW(i);                             // ML+0x10248
         if (w & 0x1000) {                             // ML+0x10250..ML+0x1025b
-            GU8(GS(g_tileVariant) + i) = (u8)ecx;           // ML+0x102c2
+            GU8(GV(g_tileVariant) + i) = (u8)ecx;           // ML+0x102c2
             goto L_f888;
         }
         H2_TW(i) = (u16)(w | 0x5000u);                // ML+0x10263 / ML+0x1026d
-        G8(GS(tile_anim_frame) + i) = 0;                      // ML+0x10275
+        G8(GV(tile_anim_frame) + i) = 0;                      // ML+0x10275
         cc("playSound", 0x94, 0x64, 0, 0, 0);          // ML+0x1027c playSound
         esi = FD(0x1c);
         int yy = FD(0x24);
         u8 c = GU8(GS(unk_0056a514));                       // ML+0x10289
         i = H2_cell(esi, yy);
         H2_TWH(i) = (u8)(H2_TWH(i) & 0xf4);           // ML+0x102a0
-        GU8(GS(g_tileVariant) + i) = c;                     // ML+0x102a8
+        GU8(GV(g_tileVariant) + i) = c;                     // ML+0x102a8
         H2_TT(i) = 4;                                 // ML+0x102ae
         cc("setGrids", esi, yy, 0x82, ebx);           // ML+0x102b5 setGrids
         goto L_fab3;                                  // ML+0x102bd
@@ -9702,7 +9698,7 @@ void H2_Build(u32 F, int eax) {
         if (edi == 2) {                               // ML+0x103cf
             i = H2_cell(FD(0x1c), FD(0x24));
             H2_TWH(i) = (u8)(H2_TWH(i) | 0x40);       // ML+0x103f2
-            G8(GS(tile_anim_frame) + i) = 0;                  // ML+0x103fa
+            G8(GV(tile_anim_frame) + i) = 0;                  // ML+0x103fa
             cc("playSound", 0x94, 0x64, 0, 0, 0);      // ML+0x10401 playSound
             ecx = G32(GS(unk_0056a514));                    // ML+0x10406
             edi = G32((GS(f_w_4c2848) + 12));                    // ML+0x1040c
@@ -9752,7 +9748,7 @@ L_faea:
     // ML+0x1052a: the build sound (esi = [F+0x1c] on every path here)
     i = H2_cell(esi, FD(0x24));
     H2_TWH(i) = (u8)(H2_TWH(i) | 0x40);               // ML+0x10543
-    G8(GS(tile_anim_frame) + i) = 0;                          // ML+0x1054b
+    G8(GV(tile_anim_frame) + i) = 0;                          // ML+0x1054b
     {
         int r = Rnd(0x12c);                           // ML+0x10552 Random::range(0x12c)
         cc("playSound", 0x90, 0x64, 0, H2_neg((int)((u32)r & 0xffffu)), 0);   // ML+0x10557..ML+0x10568 playSound
@@ -9924,7 +9920,7 @@ int H2_Terrain(u32 F) {
         int ddy = G32(GS(f_tab_dirDy_4c2898) + 4u * (u32)k);     // ML+0x10951
         int ddx = G32(GS(f_tab_dirDx_4c2878) + 4u * (u32)k);     // ML+0x10958
         if (cc("tileBlocked", FD(0x1c) + ddx, FD(0x24) + ddy) != 0) continue;   // ML+0x10965 tileBlocked / ML+0x1096f
-        u32 j = (u32)(FD(0x1c) + G32(GS(f_tab_dirDx_4c2878) + 4u * (u32)k)) * 50u + (u32)FD(0x24) +
+        u32 j = (u32)(FD(0x1c) + G32(GS(f_tab_dirDx_4c2878) + 4u * (u32)k)) * (u32)WN + (u32)FD(0x24) +
                 (u32)G32(GS(f_tab_dirDy_4c2898) + 4u * (u32)k);  // ML+0x10971..ML+0x10991
         int t = H2_TT(j);                             // ML+0x10998
         u32 bit = (u32)ebp << ((u32)t & 31u);         // ML+0x109a0 / ML+0x109a2
@@ -10047,7 +10043,7 @@ int H2_Terrain(u32 F) {
                     G32((GS(g_holes) + 20) + hr) = esi;      // ML+0x10d97
                     i = H2_cell(ecx, esi);
                     H2_TW(i) = (u16)ebp;              // ML+0x10da3
-                    GU8(GS(g_tileVariant) + i) = 0;         // ML+0x10dab
+                    GU8(GV(g_tileVariant) + i) = 0;         // ML+0x10dab
                 } else {
                     FD(0x10) = 0;                     // ML+0x10db9
                 }
@@ -10112,12 +10108,12 @@ L_561:
         if (mode == 1 && (bx & 0x200) == 0) {         // ML+0x10fcb..ML+0x10fdb
             int r = G32((GS(g_ui_5a34e4) + 12)) % 12;             // ML+0x10fdd..ML+0x10fe8
             ebp = G32(GS(g_holesPlusOne));                    // ML+0x10fea
-            GU8(GS(g_tileVariant) + c) = (u8)((u32)r + 0xcu);   // ML+0x10ff0 / ML+0x10ff3
+            GU8(GV(g_tileVariant) + c) = (u8)((u32)r + 0xcu);   // ML+0x10ff0 / ML+0x10ff3
         }
         int t48 = G32(GS(f_w_4c2848));                    // ML+0x10ff9
         mode = G32((GS(g_rootInput) + 16));                       // ML+0x11001
         if (t48 == 1 && mode == 1) {                  // ML+0x10ffe..ML+0x1100b
-            GU8(GS(g_tileVariant) + c) = (((u8)G32((GS(g_ui_5a34e4) + 12)) & (u8)mode) != 0) ? 0xff : 0;   // ML+0x1100d..ML+0x1101f
+            GU8(GV(g_tileVariant) + c) = (((u8)G32((GS(g_ui_5a34e4) + 12)) & (u8)mode) != 0) ? 0xff : 0;   // ML+0x1100d..ML+0x1101f
         }
         if (G32(GS(f_w_4c2848)) == FD(0x20) && mode != 2) return H2_Rebuild(F);   // ML+0x11025..ML+0x11034
         if (mode != 1) {                              // ML+0x1103a / ML+0x1103d
@@ -10127,14 +10123,14 @@ L_561:
         }
         int tool = G32(GS(f_w_4c2848));                   // ML+0x11043
         H2_TW(c) = (u16)((bx & 0xd6ffu) | 0x4000u);   // ML+0x11048 / ML+0x1104c / ML+0x11051
-        G8(GS(tile_anim_frame) + c) = 0;                      // ML+0x11059
+        G8(GV(tile_anim_frame) + c) = 0;                      // ML+0x11059
         cc("placeHabitat", ecx, esi, tool);               // ML+0x11060 placeHabitat
         ecx = FD(0x1c);                               // ML+0x11065
         esi = FD(0x24);                               // ML+0x11069
         c = H2_cell(ecx, esi);
         if ((H2_TW(c) & 0x200) == 0) {                // ML+0x11079..ML+0x11089
             int r = G32((GS(g_ui_5a34e4) + 12)) % 12;             // ML+0x1108b..ML+0x11096
-            GU8(GS(g_tileVariant) + c) = (u8)((u32)r + 0xcu);   // ML+0x11098 / ML+0x1109a
+            GU8(GV(g_tileVariant) + c) = (u8)((u32)r + 0xcu);   // ML+0x11098 / ML+0x1109a
         }
         int t = G32(GS(f_w_4c2848));                      // ML+0x110a0 (edi)
         int kind = G8((GS(g_tileTypeAttrs) + 38) + (u32)t * 0x30u);  // ML+0x110ac
@@ -10158,7 +10154,7 @@ L_561:
         }
         // ML+0x111a0
         int t2 = G32(GS(f_w_4c2848));                     // ML+0x111a0
-        if (t2 == 0) GU8(GS(g_tileVariant) + H2_cell(ecx, esi)) = 0;   // ML+0x111a6..ML+0x111b0
+        if (t2 == 0) GU8(GV(g_tileVariant) + H2_cell(ecx, esi)) = 0;   // ML+0x111a6..ML+0x111b0
         int lv = G32(GS(g_difficulty));                     // ML+0x111b7
         if (lv == 0) {                                // ML+0x111bc / ML+0x111be
             if (t2 == 0x10) {                         // ML+0x111c0 / ML+0x111c3
@@ -10201,7 +10197,7 @@ L_814:
         int y = FD(0x24);                             // ML+0x112be
         u32 c = H2_cell(x, y);
         int tt = H2_TT(c);                            // ML+0x112cb
-        GU8(GS(g_tilePathCost) + c) = GU8((GS(g_tileTypeAttrs) + 37) + (u32)tt * 0x30u);   // ML+0x112d8 / ML+0x112de
+        GU8(GV(g_tilePathCost) + c) = GU8((GS(g_tileTypeAttrs) + 37) + (u32)tt * 0x30u);   // ML+0x112d8 / ML+0x112de
         int t20 = FD(0x20);                           // ML+0x112e4
         if (tt == t20) return H2_Rebuild(F);          // ML+0x112e8 / ML+0x112ea
         if (t20 == 0) {                               // ML+0x112f2 / ML+0x112f4 -> ML+0x11347
@@ -10253,7 +10249,7 @@ bool P13A_UndoTarget(int x, int y) {
     u16 w = H2_TW(i);
     if (w & 0x8000) return false;
     if ((w & 0x400) && cc("objectAt", x, y) != -1) return true;
-    return GU8(GS(g_tileBuildCode) + i) != 0xff;
+    return GU8(GV(g_tileBuildCode) + i) != 0xff;
 }
 
 int Ph_0041ecbb(u32 F, const int* in) {

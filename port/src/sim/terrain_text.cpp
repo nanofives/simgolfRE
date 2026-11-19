@@ -6,6 +6,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/tiles.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -36,8 +37,8 @@ enum : uint32_t {
 uint32_t text_va(Ctx &c) { return state_va(c, &GameState::g_textBuffer); }
 uint32_t pool_a(Ctx &c, uint32_t off) { return state_va(c, &GameState::f_strpool_4c4970) + off; }
 uint32_t pool_b(Ctx &c, uint32_t off) { return state_va(c, &GameState::f_strpool_4c4f98) + off; }
-Grid<int8_t> types(Ctx &c) { return state_grid(c, &GameState::g_tileType, kGridW); }
-Grid<uint16_t> flags(Ctx &c) { return state_grid(c, &GameState::g_tileFlags, kGridW); }
+Grid<int8_t> types(Ctx &c) { return tile_grid(c, &GameState::g_tileType); }
+Grid<uint16_t> flags(Ctx &c) { return tile_grid(c, &GameState::g_tileFlags); }
 Ptr<PlacedObject> placed(Ctx &c, int32_t i) { return state_arr(c, &GameState::g_placed_objects) + i; }
 
 // 3.1b's landmarkName (re/analysis/course/004074a0), called through the registry by its hooks.csv name.
@@ -65,7 +66,7 @@ int32_t decoration_name(Ctx &ctx, int32_t x, int32_t y, int32_t id) {
   const uint32_t text = text_va(ctx);
   const auto cat = [&](uint32_t off) { vstrcat(ctx.mem, text, pool_a(ctx, off)); };
   if (type == 0x16 || type == 0x15) {
-    const Ptr<PlacedObject> o = placed(ctx, state_grid(ctx, &GameState::g_tileVariant, kGridW)(x, y));
+    const Ptr<PlacedObject> o = placed(ctx, tile_grid(ctx, &GameState::g_tileVariant)(x, y));
     const int16_t kind = o.field(&PlacedObject::type).get();
     if (kind == 4) {
       landmark_name_peer(ctx, o.field(&PlacedObject::value).get(), 0);
@@ -81,7 +82,7 @@ int32_t decoration_name(Ctx &ctx, int32_t x, int32_t y, int32_t id) {
         (state_arr(ctx, &GameState::g_courseTable) + ctx.gs().g_courseIndex).field(&CourseRecord::location_id).get());
   };
   const auto fl = [&] { return flags(ctx)(x, y); };
-  const auto obj_byte = [&] { return state_grid(ctx, &GameState::g_tileVariant, kGridW)(x, y); };
+  const auto obj_byte = [&] { return tile_grid(ctx, &GameState::g_tileVariant)(x, y); };
   const int32_t category =
       (state_arr(ctx, &GameState::g_tileTypeAttrs) + type).field(&TileTypeAttr::collar).get();
   uint32_t s;
@@ -157,7 +158,7 @@ int32_t build_tool_label(Ctx &ctx, int32_t x, int32_t y) {
       return 1;
     }
   }
-  const uint8_t item = state_grid(ctx, &GameState::g_tileBuildCode, kGridW)(x, y);
+  const uint8_t item = tile_grid(ctx, &GameState::g_tileBuildCode)(x, y);
   if (item != 0xFF) {
     if (item & 0x80) {
       cpy(kBlItem80);

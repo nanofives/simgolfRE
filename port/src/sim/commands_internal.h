@@ -7,6 +7,7 @@
 
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/util.h"
@@ -105,5 +106,9 @@ extern int g_defect_editor_esc_keeps;     // P31C: showCharacterEditor.escKeepsE
 }  // namespace portsim
 
 #define GS(sym) portsim::state_va(ctx, &portsim::GameState::sym)
+// P38A: a world grid's base (portsim/sim/world.h) and the world size: WN = N (the original's 50 / 0x32), WV = N + 1 (51)
+#define GV(sym) portsim::grid_va(ctx, &portsim::GameState::sym)
+#define WN portsim::world_n(ctx)
+#define WV portsim::world_v(ctx)
 
 #endif  // PORTSIM_SIM_COMMANDS_INTERNAL_H

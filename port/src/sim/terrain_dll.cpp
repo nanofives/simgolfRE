@@ -11,6 +11,7 @@
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/tiles.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -64,7 +65,7 @@ uint32_t rot_angle(int32_t r) {
 Ptr<uint8_t> need_normals(Ctx &c) { return state_arr(c, &GameState::g_terrain820f2a) + 2; }
 Ptr<uint8_t> need_path_render(Ctx &c) { return state_arr(c, &GameState::g_terrain820f2a) + 1; }
 uint8_t flag_lo(Ctx &c, int32_t x, int32_t y) {
-  return (state_arr(c, &GameState::g_tileFlags) + add32(mul32(x, 50), y)).as<uint8_t>().get();
+  return (grid_arr(c, &GameState::g_tileFlags) + tile_index(c, x, y)).as<uint8_t>().get();
 }
 // the collar table passCollarInfo receives (applyCourseType, initTerrain): each type's collar group, 4 for every walkable
 // type other than 5 and 7 when the course type is 1
@@ -99,7 +100,7 @@ int32_t terrain_draw_type(Ctx &ctx, int32_t x, int32_t y, int32_t t) {
   const int8_t course = ctx.gs().g_courseType;
   if (course != 0 && course != 2) return t;  // stampCourseTiles' and evalPlacementArea's water rule for item 12
   // the anchor's flag word carries the build item + 1 in its low 5 bits (stampCourseTiles); 12 = Marina
-  const uint16_t w = (state_arr(ctx, &GameState::g_tileFlags) + add32(mul32(x, 50), y)).get();
+  const uint16_t w = (grid_arr(ctx, &GameState::g_tileFlags) + tile_index(ctx, x, y)).get();
   return (w & ((1u << 5) - 1)) == 12 + 1 ? 0x11 : t;
 }
 TerrainApi &terrain_api(Ctx &ctx) {
@@ -120,8 +121,8 @@ namespace {
 // every tile with tileFlag20 is re-pathed, then the path-render byte is set
 void update_all_paths(Ctx &ctx) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
-  for (int32_t xx = 0; xx < 50; ++xx)
-    for (int32_t yy = 0; yy < 50; ++yy)
+  for (int32_t xx = 0; xx < world_n(ctx); ++xx)
+    for (int32_t yy = 0; yy < world_n(ctx); ++yy)
       if (tile_flag20(ctx, xx, yy) != 0) api().update_path(terrain_self(ctx), xx, yy, flag_lo(ctx, xx, yy) & 0x40);
   need_path_render(ctx).set(1);
 }
@@ -151,9 +152,9 @@ int32_t toggle_path(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
 int32_t rebuild_terrain_grid(Ctx &ctx) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   const uint32_t self = terrain_self(ctx);
-  for (int32_t x = 49; x >= 0; --x) {
+  for (int32_t x = world_last(ctx); x >= 0; --x) {
     api().pump_input();
-    for (int32_t y = 49; y >= 0; --y) {
+    for (int32_t y = world_last(ctx); y >= 0; --y) {
       const uint32_t tile = tile_at_va(ctx, x, y);
       const int32_t var = tile_byte(ctx, x, y);
       const int32_t type = terrain_tile_type(ctx, x, y);  // P35F syncTiles.marinaAnchorLand
@@ -161,9 +162,9 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
     }
   }
   const int32_t short_by = SG_NEGCTL(g_negctl_rebuild_terrain_grid) == 1 ? 1 : 0;
-  for (int32_t x = 49; x >= 0; --x) {
+  for (int32_t x = world_last(ctx); x >= 0; --x) {
     api().pump_input();
-    for (int32_t y = 49; y >= 0; --y) {
+    for (int32_t y = world_last(ctx); y >= 0; --y) {
       if (tile_type(ctx, x, y) == 0x11) continue;
       for (int32_t c = 1; c < 8; c += 2) {
         if (corner_height_at(ctx, x, y, c) <= 3) continue;
@@ -176,10 +177,10 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
       }
     }
   }
-  for (int32_t x = 49; x >= 0; --x)
-    for (int32_t y = 49; y >= 0; --y) api().calc_normals(self, tile_at_va(ctx, x, y));
-  for (int32_t x = 49; x >= 0; --x)
-    for (int32_t y = 49; y >= 0; --y)
+  for (int32_t x = world_last(ctx); x >= 0; --x)
+    for (int32_t y = world_last(ctx); y >= 0; --y) api().calc_normals(self, tile_at_va(ctx, x, y));
+  for (int32_t x = world_last(ctx); x >= 0; --x)
+    for (int32_t y = world_last(ctx); y >= 0; --y)
       for (int32_t c = 0; c < 8; c += 2) {
         if (!wall_height(ctx, x, y, c)) continue;
         const uint32_t tile = tile_at_va(ctx, x, y);
@@ -187,8 +188,8 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
         api().set_wall(self, tile, c, h, 1);
       }
   int32_t r = 0;
-  for (int32_t x = 49; x >= 0; --x)
-    for (int32_t y = 49; y >= 0; --y) {
+  for (int32_t x = world_last(ctx); x >= 0; --x)
+    for (int32_t y = world_last(ctx); y >= 0; --y) {
       r = tile_flag20(ctx, x, y);
       if (!r) continue;
       const uint32_t tile = tile_at_va(ctx, x, y);
@@ -341,13 +342,14 @@ void rebuild_tile_data_impl(Ctx &ctx, int32_t x0, int32_t y0, bool whole) {
   // P11A: zoom 8 (mainLoop.zoomInStopsAt4 = 0, the only way it arrives) takes zoom 4's 13: 4 / 8 = 0 would start at the camera's
   // own row and column and leave the tiles above and left of it out
   const int32_t zq = ctx.gs().g_zoomScale > 4 ? 4 : ctx.gs().g_zoomScale;
-  const int32_t d = whole ? 50 : div32(4, zq) * 13;   // P13D item 5: whole = from row and column 0
+  const int32_t N = world_n(ctx);  // the grid side (50 in the original)
+  const int32_t d = whole ? N : div32(4, zq) * 13;   // P13D item 5: whole = from row and column 0
   int32_t x = sub32(x0, d);
-  if (x >= 50) return;
+  if (x >= N) return;
   for (;;) {
     if (x < 0) x = 0;
-    int32_t y = sub32(y0, whole ? 50 : div32(4, zq) * 13);
-    if (!(y >= 50)) {
+    int32_t y = sub32(y0, whole ? N : div32(4, zq) * 13);
+    if (!(y >= N)) {
       for (;;) {
         if (y < 0) y = 0;
         if (tile_blocked(ctx, x, y) == 0) {
@@ -359,10 +361,10 @@ void rebuild_tile_data_impl(Ctx &ctx, int32_t x0, int32_t y0, bool whole) {
           const uint8_t any = SG_NEGCTL(g_negctl_rebuild_tile_data) == 1 ? ele : static_cast<uint8_t>(var | ele | wal | pth);
           if (any != 0) push_tile(ctx, tile);
         }
-        if (!(++y < 50)) break;
+        if (!(++y < N)) break;
       }
     }
-    if (!(++x < 50)) break;
+    if (!(++x < N)) break;
   }
 }
 }  // namespace
@@ -438,10 +440,11 @@ int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom,
     // P13D item 5 (updateTerrainRender.syncTilesAfterEdit = 0): the whole map once after a fresh terrain picture
     const bool whole = t_sync_pending && !SG_DEFECT(g_defect_terrain_sync_after_edit);
     t_sync_pending = false;
-    if (whole || (!(g.g_tileWallMask[0] & 2) && SG_NEGCTL(g_negctl_update_terrain_render) != 1)) {
+    if (whole || (!(grid_ref(ctx, &GameState::g_tileWallMask, 0) & 2) && SG_NEGCTL(g_negctl_update_terrain_render) != 1)) {
       if (whole) rebuild_heightfield(ctx);   // the height grid as every course edit recomputes it (terrain.cpp)
       rebuild_tile_data_impl(ctx, x, y, whole);
-      g.g_tileWallMask[0] = static_cast<int8_t>(g.g_tileWallMask[0] | 2);
+      int8_t &wm0 = grid_ref(ctx, &GameState::g_tileWallMask, 0);  // the absolute byte 0 (bit 1: tiles synced)
+      wm0 = static_cast<int8_t>(wm0 | 2);
     }
     const uint32_t list = state_va(ctx, &GameState::gTileBuffer);
     if (ctx.mem.load<int32_t>(list + 8) == 0) return 0;

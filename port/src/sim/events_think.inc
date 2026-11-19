@@ -53,7 +53,7 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     if (kTypeBit7Clear(g) == 0) snd += 5;
     int delta = 0;
     const int x = G<int>(ctx, r + 0), y = G<int>(ctx, r + 4);
-    const int tile = (x >> 10) * 50 + (y >> 10);
+    const int tile = (x >> 10) * WN + (y >> 10);
     bool pathMark = false;
     bool typeFlagCall = false;
     unsigned char typeFlagBit = 1;
@@ -64,7 +64,7 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
         break;
     case 2: case 3: case 8: {
         delta = (kind == 2) ? -1 : -2;
-        const int f34 = (kind == 8) ? 0 : (G<unsigned char>(ctx, GS(g_tileType) + static_cast<unsigned>(tile)) != 0x11 ? 0 : 1000);
+        const int f34 = (kind == 8) ? 0 : (G<unsigned char>(ctx, GV(g_tileType) + static_cast<unsigned>(tile)) != 0x11 ? 0 : 1000);
         kPlaySoundAt(((G<unsigned>(ctx, r + 0x10) & 0x20000u) ? static_cast<int>(0xffffff34u) : 0) + 0xdc + snd, x, y, f34);
         break;
     }
@@ -198,11 +198,11 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     if ((roll <= G<int>(ctx, GS(g_difficulty)) || (G<unsigned>(ctx, r + 0x10) & 0x20000000u)) &&
         delta < 0 && (G<unsigned>(ctx, GS(g_flags)) & 0x4000000u) == 0 && kind != 0x2f &&
         kHoleQuadrants(G<int>(ctx, r + 0), G<int>(ctx, r + 4), 2) == 0) {
-        const unsigned tl = static_cast<unsigned>((G<int>(ctx, r + 0) >> 10) * 50 + (G<int>(ctx, r + 4) >> 10));
-        const unsigned short w = G<unsigned short>(ctx, GS(g_tileFlags) + tl * 2u);
-        if ((w & 0xc00) == 0 && G<unsigned char>(ctx, GS(g_tileType) + tl) != 0x11) {
-            G<unsigned char>(ctx, GS(tile_anim_frame) + tl) = 1;
-            G<unsigned short>(ctx, GS(g_tileFlags) + tl * 2u) = static_cast<unsigned short>(w | 0x4800);
+        const unsigned tl = static_cast<unsigned>((G<int>(ctx, r + 0) >> 10) * WN + (G<int>(ctx, r + 4) >> 10));
+        const unsigned short w = G<unsigned short>(ctx, GV(g_tileFlags) + tl * 2u);
+        if ((w & 0xc00) == 0 && G<unsigned char>(ctx, GV(g_tileType) + tl) != 0x11) {
+            G<unsigned char>(ctx, GV(tile_anim_frame) + tl) = 1;
+            G<unsigned short>(ctx, GV(g_tileFlags) + tl * 2u) = static_cast<unsigned short>(w | 0x4800);
             G<int>(ctx, GS(g_cachedCameraTileX)) = -1;
         }
     }
@@ -214,14 +214,14 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     }
     if (switchDelta < 0) G<unsigned short>(ctx, r + 0x88) |= 0x8000;
     if (delta < 0) G<unsigned char>(ctx, r + 0x89) |= 0xc0;
-    const unsigned tl = static_cast<unsigned>((G<int>(ctx, r + 0) >> 10) * 50 + (G<int>(ctx, r + 4) >> 10));
+    const unsigned tl = static_cast<unsigned>((G<int>(ctx, r + 0) >> 10) * WN + (G<int>(ctx, r + 4) >> 10));
     if (SG_DEFECT(g_defect_tile_mood_wrap)) {
-        if (delta > 0) G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) += 1;
-        if (delta < 0) G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) += 1;
+        if (delta > 0) G<unsigned char>(ctx, GV(g_tileMoodUp) + tl) += 1;
+        if (delta < 0) G<unsigned char>(ctx, GV(g_tileMoodDown) + tl) += 1;
     } else {
         // fixed: saturate at 255 instead of wrapping to 0
-        if (delta > 0 && G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) != 0xff) G<unsigned char>(ctx, GS(g_tileMoodUp) + tl) += 1;
-        if (delta < 0 && G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) != 0xff) G<unsigned char>(ctx, GS(g_tileMoodDown) + tl) += 1;
+        if (delta > 0 && G<unsigned char>(ctx, GV(g_tileMoodUp) + tl) != 0xff) G<unsigned char>(ctx, GV(g_tileMoodUp) + tl) += 1;
+        if (delta < 0 && G<unsigned char>(ctx, GV(g_tileMoodDown) + tl) != 0xff) G<unsigned char>(ctx, GV(g_tileMoodDown) + tl) += 1;
     }
     if (kind == 0x32) return;
     const uint32_t pron = kTypeBit7Clear(g) != 0 ? (GS(f_strpool_4c6d6c) + 4) : GS(f_strpool_4c6d6c);
@@ -251,7 +251,7 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     case 8: CatAt(GS(f_strpool_4e2718)); break;
     case 9: CatAt((GS(f_strpool_4e2620) + 116)); break;
     case 0xa: CatAt((GS(f_strpool_4e2358) + 152)); Cat(buf, typeName); CatAt((GS(f_strpool_4e2358) + 112)); break;
-    case 0xb: CatAt((GS(f_strpool_4e216c) + 268)); kDecorationName(arg % 50, arg / 50, -1); CatAt((GS(f_strpool_4e216c) + 240)); break;
+    case 0xb: CatAt((GS(f_strpool_4e216c) + 268)); kDecorationName(arg % WN, arg / WN, -1); CatAt((GS(f_strpool_4e216c) + 240)); break;
     case 0xc: CatAt((GS(f_strpool_4e216c) + 204)); kBuildGolferName(g, 0); CatAt((GS(f_strpool_4e216c) + 168)); break;
     case 0xd: CatAt((GS(f_strpool_4e216c) + 132)); Cat(buf, typeName); CatAt(GS(f_strpool_4d3414)); kBuildGolferName(g, 0); CatAt((GS(f_strpool_4e216c) + 168)); break;
     case 0xe: CatAt((GS(f_strpool_4e216c) + 92)); Cat(buf, pron); CatAt((GS(f_strpool_4e216c) + 72)); break;
@@ -259,14 +259,14 @@ void emit_golfer_thought(Ctx &ctx, int32_t g, int32_t kind, int32_t arg) {
     case 0x10: CatAt(GS(f_strpool_4e2088)); break;
     case 0x11: CatAt((GS(f_strpool_4e2088) + 56)); break;
     case 0x12: CatAt(GS(f_strpool_4e2044)); break;
-    case 0x14: CatAt((GS(f_strpool_4e1fa8) + 56)); kDecorationName(arg % 50, arg / 50, -1); CatAt(GS(f_strpool_4e1fa8)); break;
+    case 0x14: CatAt((GS(f_strpool_4e1fa8) + 56)); kDecorationName(arg % WN, arg / WN, -1); CatAt(GS(f_strpool_4e1fa8)); break;
     case 0x15: CatAt(GS(f_strpool_4e1e50)); CatAt(GS(f_strpool_4e1e04)); CatAt((GS(f_strpool_4e1e50) + 124)); break;
     case 0x16: CatAt((GS(f_strpool_4e1e50) + 104)); Cat(buf, Txt(GS(g_celebrities) + static_cast<unsigned>(arg) * 37u)); CatAt((GS(f_strpool_4e1e50) + 64)); break;
     case 0x18: CatAt((GS(f_strpool_4e1f18) + 48)); CatAt(GS(f_strpool_4e1f18)); CatAt((GS(f_strpool_4e1e50) + 124)); break;
     case 0x19: CatAt((GS(f_strpool_4e1fa8) + 84)); break;
     case 0x1a: CatAt((GS(f_strpool_4e216c) + 28)); Cat(buf, pron); CatAt(GS(f_strpool_4e216c)); break;
     case 0x1b: CatAt((GS(f_strpool_4e2088) + 148)); break;
-    case 0x1c: CatAt((GS(f_strpool_4e2358) + 36)); kDecorationName(arg % 50, arg / 50, -1); CatAt(GS(f_strpool_4e2358)); break;
+    case 0x1c: CatAt((GS(f_strpool_4e2358) + 36)); kDecorationName(arg % WN, arg / WN, -1); CatAt(GS(f_strpool_4e2358)); break;
     case 0x1d: CatAt(GS(f_strpool_4e2310)); break;
     case 0x1e: CatAt((GS(f_strpool_4e216c) + 300)); break;
     case 0x1f: CatAt((GS(f_strpool_4e248c) + 160)); kBuildGolferName(g, 0); CatAt((GS(f_strpool_4e248c) + 108)); break;
@@ -723,7 +723,7 @@ void build_golfer_comment(Ctx &ctx, int32_t kind, int32_t arg, int32_t place, in
         CatAt(G<unsigned char>(ctx, TypeName(arg) + 0x26) == 0xd ? (GS(f_strpool_4e28e0) + 432) : (GS(f_strpool_4e28e0) + 444));
         Cat(buf, TypeName(arg));
         break;
-    case 0xb: case 0x14: case 0x1c: kDecorationName(arg % 50, arg / 50, -1); break;
+    case 0xb: case 0x14: case 0x1c: kDecorationName(arg % WN, arg / WN, -1); break;
     case 0xc: Cat(buf, TypeName(arg)); break;
     case 0x27: Cat(buf, Txt(GS(f_tab_animals_4c1998) + static_cast<unsigned>(arg) * 18u)); break;
     default:

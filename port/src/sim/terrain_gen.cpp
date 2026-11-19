@@ -12,6 +12,7 @@
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -95,10 +96,10 @@ template <class F> bool miss_placement(int32_t &misses, F any_candidate) {
 int32_t generate_random_course(Ctx &ctx, int32_t n) {
   GameState &g = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_generate);
-  const Ptr<int8_t> type = state_arr(ctx, &GameState::g_tileType);
-  const Ptr<uint16_t> word = state_arr(ctx, &GameState::g_tileFlags);
-  const Ptr<int8_t> cost = state_arr(ctx, &GameState::g_tilePathCost);
-  const Ptr<uint8_t> level = state_arr(ctx, &GameState::g_cornerLevel);
+  const Ptr<int8_t> type = grid_arr(ctx, &GameState::g_tileType);
+  const Ptr<uint16_t> word = grid_arr(ctx, &GameState::g_tileFlags);
+  const Ptr<int8_t> cost = grid_arr(ctx, &GameState::g_tilePathCost);
+  const Ptr<uint8_t> level = grid_arr(ctx, &GameState::g_cornerLevel);
   const Ptr<TileTypeAttr> attrs = state_arr(ctx, &GameState::g_tileTypeAttrs);
   const Ptr<int32_t> dir_dx = state_arr(ctx, &GameState::f_tab_dirDx_4c2878);
   const Ptr<int32_t> dir_dy = state_arr(ctx, &GameState::f_tab_dirDy_4c2898);
@@ -117,8 +118,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   const auto and_hi = [&](int32_t idx, uint8_t m) { hi(idx).set(static_cast<uint8_t>(hi(idx).get() & m)); };
   const auto lv = [&](int32_t off) { return level + off; };
   const auto add_lv = [&](int32_t off, int d) { lv(off).set(static_cast<uint8_t>(lv(off).get() + d)); };
-  const auto cell = [](int32_t x, int32_t y) { return add32(mul32(x, 50), y); };
-  const auto corner = [](int32_t x, int32_t y) { return add32(mul32(x, kCornerW), y); };
+  const int32_t N = world_n(ctx);  // P38A: the grid side (50); the walk counts, ranges and look constants stay the original's (phase C)
+  const auto cell = [&](int32_t x, int32_t y) { return add32(mul32(x, N), y); };
+  const auto corner = [&](int32_t x, int32_t y) { return add32(mul32(x, world_v(ctx)), y); };
   const auto dx = [&](int32_t k) { return dir_dx[k & 7]; };
   const auto dy = [&](int32_t k) { return dir_dy[k & 7]; };
   const auto obj_value = [&](int32_t oi) { return (objects + oi).field(&PlacedObject::value); };
@@ -157,7 +159,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       s10 = 4;
       s10_set = true;
     } else {
-      for (int32_t k = 0; k < 2500; ++k) set_type(k, 0x0E);
+      for (int32_t k = 0; k < world_tiles(ctx); ++k) set_type(k, 0x0E);
     }
   }
   if (flag == 0) {
@@ -172,16 +174,16 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   }
   // the original reads its stack slot here whatever it holds (U-filed by the integrator; see the module report)
   if (!s10_set) throw MissingResource{"generateRandomCourse: base type read from an uninitialised stack slot"};
-  for (int32_t k = 0; k < 2500; ++k) set_type(k, s10);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) set_type(k, s10);
   {
     const int8_t c = path_cost(ty(0));
-    for (int32_t k = 0; k < 2500; ++k) (cost + k).set(c);
+    for (int32_t k = 0; k < world_tiles(ctx); ++k) (cost + k).set(c);
   }
-  for (int32_t k = 0; k < 2500; ++k) {
-    (state_arr(ctx, &GameState::g_ballStopCount) + k).set(0);
-    (state_arr(ctx, &GameState::g_tileMoodUp) + k).set(0);
-    (state_arr(ctx, &GameState::g_tileMoodDown) + k).set(0);
-    (state_arr(ctx, &GameState::g_tileVariant) + k).set(0);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) {
+    (grid_arr(ctx, &GameState::g_ballStopCount) + k).set(0);
+    (grid_arr(ctx, &GameState::g_tileMoodUp) + k).set(0);
+    (grid_arr(ctx, &GameState::g_tileMoodDown) + k).set(0);
+    (grid_arr(ctx, &GameState::g_tileVariant) + k).set(0);
   }
 
   // ---- C: blobs
@@ -190,8 +192,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     int32_t total = 0, limit = 5000, t = 0;
     for (;;) {
       int32_t cnt = 0;
-      int32_t r = rnd(0x32);
-      int32_t c = rnd(0x32);
+      int32_t r = rnd(N);  // a random tile (0x32 = N)
+      int32_t c = rnd(N);
       const int32_t ct = course_type();
       if (u32(ct) <= 4) {
         switch (ct) {
@@ -202,7 +204,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           default: t = ((p & 1) << 3) | 4; break;
         }
       }
-      while (r >= 0 && c >= 0 && r < 0x32 && c < 0x32 && cnt < limit / 128) {
+      while (r >= 0 && c >= 0 && r < N && c < N && cnt < limit / 128) {
         const int32_t idx = cell(r, c);
         ++cnt;
         set_type(idx, t);
@@ -227,11 +229,11 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     int32_t bestk = 0;  // the original's slot is always written before it is read (sampleHeight < 999)
     for (p = 0; p < rivers; ++p) {
       const int32_t r0 = rnd(0x10);
-      int32_t col = 0x31;
+      int32_t col = world_last(ctx);  // the east edge (0x31)
       const int32_t base = (5 * p + 5) * 10;
       int32_t row = add32(base / 3, r0);  // imul 0x55555556: the quotient toward zero
       int32_t prevk = 0;
-      while (row >= 0 && row <= 0x31) {
+      while (row >= 0 && row <= world_last(ctx)) {
         const int32_t tile = static_cast<uint8_t>(g.g_courseType) != 1 ? 0x11 : 0xB;
         const int32_t idx = cell(row, col);
         set_type(idx, tile);
@@ -242,7 +244,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         int32_t best = 999, bestc = c1;
         int32_t nrow = add32(rnd(2) != 0 ? 1 : -1, row);
         const int32_t idx2 = cell(nrow, c1);
-        const bool idx2_off = !SG_DEFECT(g_defect_river_outside) && !(nrow >= 0 && nrow < 50 && c1 >= 0 && c1 < 50);  // P28A
+        const bool idx2_off = !SG_DEFECT(g_defect_river_outside) && !(nrow >= 0 && nrow < N && c1 >= 0 && c1 < N);  // P28A
         if (!idx2_off && ty(idx2) != 0x11 && height_blend(ctx, nrow, c1) == 3) {
           set_type(idx2, p == 0 ? ((~shl32(add32(nrow, c1), 1) & 4) | 8) : 0xC);
           if (g.g_courseType == 1) set_type(idx2, 0xA);
@@ -264,8 +266,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           row = nrow;
         }
         prevk = bestk;
-        // row may be -1 or 50 and col -1 here: read outside the grid (model_defects#6); P28A: at 0 leave without the read
-        if (!SG_DEFECT(g_defect_river_outside) && !(row >= 0 && row < 50 && col >= 0 && col < 50)) break;
+        // row may be -1 or N (50) and col -1 here: read outside the grid (model_defects#6); P28A: at 0 leave without the read
+        if (!SG_DEFECT(g_defect_river_outside) && !(row >= 0 && row < N && col >= 0 && col < N)) break;
         if (ty(cell(row, col)) == 0x11) break;
         if (col < 0) break;
       }
@@ -275,7 +277,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   // ---- E: the west shore (setting 1)
   if (setting() == 1) {
     int32_t width = 5;
-    for (p = 0; p < 0x9C4; p += 0x32) {
+    for (p = 0; p < world_tiles(ctx); p += N) {  // every row's first `width` columns (0x9c4, 0x32 = N * N, N)
       for (int32_t s = 0; s < width; ++s) {
         const int32_t ix = p + s;
         if (ty(ix) != 0x11) {
@@ -297,9 +299,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   }
 
   // ---- F: flag bit 0x1000 cleared, the corner levels
-  for (int32_t k = 0; k < 2500; ++k) and_hi(k, 0xEF);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) and_hi(k, 0xEF);
   {
-    const int32_t last = mode == 3 ? 0x31 : 0x32;
+    const int32_t last = mode == 3 ? world_last(ctx) : N;  // 0x31 / 0x32
     for (int32_t x = 0; x <= last; ++x)
       for (int32_t y = 0; y <= last; ++y) lv(corner(x, y)).set(static_cast<uint8_t>(height_blend(ctx, x, y)));
   }
@@ -337,7 +339,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         }
         if (rnd(2) != 0) x += rnd(2) != 0 ? 1 : -1;
         else y += rnd(2) != 0 ? 1 : -1;
-        if (x < 0 || x >= 0x32 || y < 0 || y >= 0x32) break;
+        if (x < 0 || x >= N || y < 0 || y >= N) break;
         ++steps;
         if (steps <= 4) continue;
         if (rnd(0x10) != 0) continue;
@@ -350,9 +352,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   for (int32_t k = 0; k < 16; ++k) {
     const int32_t s = rnd(0x2A);
     const int32_t r = rnd(0x2A);
-    or_word(s + 50 * r + 204, 0x100);
+    or_word(s + N * r + (4 * N + 4), 0x100);  // tile (r + 4, s + 4): 204 = 4 * 50 + 4
   }
-  for (int32_t k = 0; k < 2500; ++k) {
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) {
     and_hi(k, 0xFE);
     if (ty(k) == 0x10) set_type(k, 0xD);
   }
@@ -386,21 +388,21 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     } while (m < mul32(sub32(4, g.g_difficulty), 9));
   }
 
-  // ---- J: level smoothing next to water (rows and columns 0..50: one past the grid, model_defects#6)
+  // ---- J: level smoothing next to water (rows and columns 0..N: one past the grid, model_defects#6)
   {
     static const int8_t kRow[5] = {0, 1, 1, 0, 0};
     static const int8_t kCol[5] = {-1, -1, 0, 0, -1};
-    for (int32_t x = 0; x <= 50; ++x) {
-      for (int32_t y = 0; y <= 0x32; ++y) {
+    for (int32_t x = 0; x <= N; ++x) {
+      for (int32_t y = 0; y <= N; ++y) {
         const bool sm_fix = !SG_DEFECT(g_defect_smoothing_outside);  // P28A: type 0x14 outside the grid
-        const int8_t a0 = sm_fix && (x >= 50 || y >= 50) ? 0x14 : ty(cell(x, y));
+        const int8_t a0 = sm_fix && (x >= N || y >= N) ? 0x14 : ty(cell(x, y));
         if (a0 != 0x11 && a0 != 0x12) continue;
         for (int32_t k = 0; k < 4; ++k) {
           const int32_t x1 = kRow[k] + x, y1 = kCol[k] + y;
-          if (x1 < 0 || x1 >= 0x32 || y1 < 0 || y1 >= 0x32) continue;
+          if (x1 < 0 || x1 >= N || y1 < 0 || y1 >= N) continue;
           const int32_t nx = add32(dx(2 * k), x), ny = add32(dy(2 * k), y);
-          const bool n_off = sm_fix && !(nx >= 0 && nx < 50 && ny >= 0 && ny < 50);
-          if (!n_off && ty(add32(add32(mul32(add32(dx(2 * k), x), 50), dy(2 * k)), y)) == 0x11) continue;
+          const bool n_off = sm_fix && !(nx >= 0 && nx < N && ny >= 0 && ny < N);
+          if (!n_off && ty(add32(add32(mul32(add32(dx(2 * k), x), N), dy(2 * k)), y)) == 0x11) continue;
           const Ptr<uint8_t> c = lv(corner(x1, y1));
           const uint8_t v = c.get();
           if (v <= 3) continue;
@@ -445,9 +447,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       const int8_t set = setting();
       const auto island_lim = [&](int32_t v) { return clamp(abs32(v - 0x19), 8, 0x32) + count - 0xC + 2; };
       const auto cleared = [&](int32_t r, int32_t c) {
-        if (r < 0 || r >= 50 || c < 0 || c >= 50) return true;
-        if (set == 2) return r < island_lim(c) || r > 49 - island_lim(c) || c < island_lim(r) || c > 49 - island_lim(r);
-        return r < count || r > 49 - count || c > 49 - count || (set == 0 && c < count);
+        if (r < 0 || r >= N || c < 0 || c >= N) return true;
+        if (set == 2) return r < island_lim(c) || r > N - 1 - island_lim(c) || c < island_lim(r) || c > N - 1 - island_lim(r);
+        return r < count || r > N - 1 - count || c > N - 1 - count || (set == 0 && c < count);
       };
       const Ptr<int32_t> type_level = state_arr(ctx, &GameState::g_objectTypeLevel);
       const auto footprint = [&](int32_t kind) {  // stampCourseTiles' side
@@ -608,15 +610,15 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
               if (ty(ix) == 0x11) break;
               if (c0 == 5) {  // a pond with a shore of type 5
                 set_type(ix, 0x11);
-                lv(corner(x, y) + 50).set(6);
+                lv(corner(x, y) + N).set(6);  // vertex (x + 1, y - 1): + 50 = + N
                 rnd(4);
                 for (int32_t k = 0; k < 8; ++k) {
                   const int32_t nr = add32(dx(k), x), nc = add32(dy(k), y);
                   const int32_t nx = cell(nr, nc);
                   switch (k) {
-                    case 0: case 6: set_type(nx, 0x11); lv(corner(nr, nc) + 50).set(6); break;
-                    case 1: case 7: set_type(nx, 5); lv(corner(nr, nc) + 50).set(6); break;
-                    case 2: set_type(nx, 0x11); lv(corner(nr, nc) + 50).set(3); break;
+                    case 0: case 6: set_type(nx, 0x11); lv(corner(nr, nc) + N).set(6); break;
+                    case 1: case 7: set_type(nx, 5); lv(corner(nr, nc) + N).set(6); break;
+                    case 2: set_type(nx, 0x11); lv(corner(nr, nc) + N).set(3); break;
                     default:
                       if (rnd(2) != 0) set_type(nx, 0x11);
                       lv(corner(nr, nc) - 1).set(3);
@@ -632,7 +634,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
                 else if (c0 == 0xC) obj_value(oi).set(3);
                 obj_orient(oi).set(static_cast<uint8_t>(rnd(4)));
                 for (int32_t k = 0; k < 8; ++k) {
-                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), 50), dy(k)), y);
+                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), N), dy(k)), y);
                   const int8_t t = ty(ix2);
                   if (t == 0x16 || t == 0x11) continue;
                   if (p3 & 1) {
@@ -644,9 +646,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
                     if (k != 0) continue;
                     const int32_t b = corner(x, y);
                     add_lv(b, 2);
-                    add_lv(b + 51, 2);
+                    add_lv(b + world_v(ctx), 2);
                     add_lv(b - 1, 2);
-                    add_lv(b + 50, 2);
+                    add_lv(b + N, 2);
                   } else {
                     set_type(ix2, 5);
                     or_word(ix2, static_cast<uint16_t>(((k & 1) << 9) | 0x20));
@@ -660,7 +662,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
                 obj_value(oi).set(1);
                 obj_orient(oi).set(static_cast<uint8_t>(rnd(4)));
                 for (int32_t k = 0; k < 8; ++k) {
-                  const int8_t t = ty(add32(add32(mul32(add32(dx(k), x), 50), dy(k)), y));
+                  const int8_t t = ty(add32(add32(mul32(add32(dx(k), x), N), dy(k)), y));
                   if (collar(t) == 0xD) obj_value(oi).set(0xA);
                   if (t == 0x11) {
                     obj_value(oi).set(9);
@@ -669,7 +671,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
                 }
                 for (int32_t k = 0; k < 8; ++k) {
                   const int32_t rv = obj_value(oi).get();
-                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), 50), dy(k)), y);
+                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), N), dy(k)), y);
                   if (rv == 1) {
                     or_hi(ix2, 1);
                     set_type(ix2, 0xB);
@@ -685,7 +687,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
                 obj_value(oi).set(8 + 4 * bb);
                 obj_orient(oi).set(static_cast<uint8_t>(rnd(4)));
                 for (int32_t k = 0; k < 8; ++k) {
-                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), 50), dy(k)), y);
+                  const int32_t ix2 = add32(add32(mul32(add32(dx(k), x), N), dy(k)), y);
                   if (bb != 0) or_hi(ix2, 0x10);
                   else if (ty(ix2) != 0x11) or_word(ix2, static_cast<uint16_t>(((k & 1) << 9) | 0x20));
                 }
@@ -757,7 +759,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         or_word(ix, 0x8000);
         obj_orient(oi).set(static_cast<uint8_t>(rv));
         if (g.g_courseType == 1)
-          for (int32_t k = 0; k < 8; ++k) set_type(add32(add32(mul32(add32(dx(k), s), 50), dy(k)), d), 0xB);
+          for (int32_t k = 0; k < 8; ++k) set_type(add32(add32(mul32(add32(dx(k), s), N), dy(k)), d), 0xB);
         ++p4;
       } while (p4 < g.g_difficulty);
     }
@@ -782,13 +784,13 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     } while (c * c * 4 > e5);
   }
   const int8_t kind = rec.field(&CourseRecord::setting).get();
-  for (int32_t k = 0; k < 2500; ++k) (state_arr(ctx, &GameState::g_tileTypeSaved) + k).set(ty(k));
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) (grid_arr(ctx, &GameState::g_tileTypeSaved) + k).set(ty(k));
   if (kind == 2) {
     count -= 0xC;
-    for (int32_t x = 0; x < 0x32; ++x) {
+    for (int32_t x = 0; x < N; ++x) {
       const int32_t jitter = rnd(3);
-      const int32_t lim = clamp(abs32(x - 0x19), 8, 0x32) + count + jitter;
-      for (int32_t a = 0, b = 0x31; a < lim; ++a, --b) {
+      const int32_t lim = clamp(abs32(x - 0x19), 8, 0x32) + count + jitter;  // the island's shape: phase C
+      for (int32_t a = 0, b = world_last(ctx); a < lim; ++a, --b) {
         clear_tile(ctx, a, x);
         clear_tile(ctx, x, a);
         clear_tile(ctx, b, x);
@@ -798,8 +800,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     mark_tile_kind11(ctx);
     return i32(rebuild_heightfield(ctx));
   }
-  for (int32_t a = 0, b = 0x31; a < count; ++a, --b) {
-    for (int32_t s = 0; s < 0x32; ++s) {
+  for (int32_t a = 0, b = world_last(ctx); a < count; ++a, --b) {
+    for (int32_t s = 0; s < N; ++s) {
       clear_tile(ctx, a, s);
       if (rec.field(&CourseRecord::setting).get() == 0) clear_tile(ctx, s, a);
       if (mode != 2) clear_tile(ctx, s, b);

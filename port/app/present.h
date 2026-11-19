@@ -184,7 +184,8 @@ struct CursorProj {
   int32_t tile_x = 0, tile_y = 0;  // the frame's g_cursorTileX / Y
   int32_t sw = 0, sh = 0, rot = 0, cam_x = 0, cam_y = 0, step = 0;  // g_screenWidth / Height, g_cameraRot, gCameraTileX / Y, g_tileStep4c2840
   int32_t dir_dx[8] = {}, dir_dy[8] = {};                           // f_tab_dirDx_4c2878 / f_tab_dirDy_4c2898
-  std::vector<int32_t> sx, sy;  // tileToScreen's point per tile (cell tx * 50 + ty)
+  int32_t n = 50;               // P38A: the world's tiles a side (portsim::world_n at the snapshot)
+  std::vector<int32_t> sx, sy;  // tileToScreen's point per tile (cell tx * n + ty)
   std::vector<uint8_t> on;      // tileToScreen's result per tile (1 = on screen, the point written)
 };
 // screenToTile(px, py, useWorld 0) on the snapshot: the rotation's inverse, then the descent over the 8 neighbours by

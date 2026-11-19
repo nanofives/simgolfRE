@@ -11,10 +11,10 @@ void announce_landmark(Ctx &ctx, int32_t g, int32_t who) {
     int x = G<int>(ctx, GS(g_golfers) + g * 0x100) >> 10;
     int y = G<int>(ctx, (GS(g_golfers) + 4) + g * 0x100) >> 10;
     for (;;) {
-        const int index = x * 50 + y;
-        const signed char type = G<signed char>(ctx, GS(g_tileType) + index);
+        const int index = x * WN + y;
+        const signed char type = G<signed char>(ctx, GV(g_tileType) + index);
         if (G<unsigned char>(ctx, (GS(g_tileTypeAttrs) + 38) + type * 0x30) == 4 && type != 0x16 &&
-            (G<unsigned short>(ctx, GS(g_tileFlags) + index * 2) & 0x320) == 0)
+            (G<unsigned short>(ctx, GV(g_tileFlags) + index * 2) & 0x320) == 0)
             break;
         x += (Rnd(SG_NEGCTL(g_negctl_announce_landmark) == 2 ? 2 : 3) & 0xFFFF) - 1;
         y += (Rnd(3) & 0xFFFF) - 1;
@@ -444,9 +444,9 @@ void open_hole(Ctx &ctx) {
     const int ang = kAngleFixed(G<int>(ctx, (GS(g_holes) + 24) + rec) - G<int>(ctx, (GS(g_holes) + 16) + rec),
                                 G<int>(ctx, (GS(g_holes) + 28) + rec) - G<int>(ctx, (GS(g_holes) + 20) + rec));
     G<unsigned char>(ctx, (GS(g_holes) + 2) + rec) = static_cast<unsigned char>(((((ang >> 0x1c) & 0xf) + (SG_NEGCTL(g_negctl_open_hole) == 2 ? 0 : 1)) >> 1) & 7);
-    const int cell = G<int>(ctx, (GS(g_holes) + 12) + rec) + G<int>(ctx, (GS(g_holes) + 8) + rec) * 50;
-    G<unsigned char>(ctx, (GS(g_tileFlags) + 1) + cell * 2) |= 0x40;
-    G<unsigned char>(ctx, GS(tile_anim_frame) + cell) = 0;
+    const int cell = G<int>(ctx, (GS(g_holes) + 12) + rec) + G<int>(ctx, (GS(g_holes) + 8) + rec) * WN;
+    G<unsigned char>(ctx, (GV(g_tileFlags) + 1) + cell * 2) |= 0x40;
+    G<unsigned char>(ctx, GV(tile_anim_frame) + cell) = 0;
     Cpy(GS(g_textBuffer), ((GS(f_strpool_4c581c) + 256)));
     Cat(GS(g_textBuffer), portsim::ev::itoa_to(ctx, hole, GS(g_textBuf), 10));
     Cat(GS(g_textBuffer), ((GS(f_strpool_4c581c) + 248)));

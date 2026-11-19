@@ -20,8 +20,8 @@ int32_t update_walkers(Ctx &ctx) {
   const int mode_n = SG_NEGCTL(g_negctl_update_walkers);
   const Ptr<int32_t> dx8 = state_arr(ctx, &GameState::f_tab_dirDx_4c2878);
   const Ptr<int32_t> dy8 = state_arr(ctx, &GameState::f_tab_dirDy_4c2898);
-  const Ptr<uint16_t> tflags = state_arr(ctx, &GameState::g_tileFlags);
-  const Ptr<int8_t> ttype = state_arr(ctx, &GameState::g_tileType);
+  const Ptr<uint16_t> tflags = grid_arr(ctx, &GameState::g_tileFlags);
+  const Ptr<int8_t> ttype = grid_arr(ctx, &GameState::g_tileType);
   const auto rnd = [&](int32_t n) { return gl::rnd(ctx, n); };
   // two stack slots keep their value from one record to the next (the flagged-walker arm reads them)
   int32_t s30 = 0, s28 = 0;
@@ -144,7 +144,7 @@ int32_t update_walkers(Ctx &ctx) {
             for (int32_t b = -16; b <= 16; ++b) {
               const int32_t gx = W_postx.get() + a, gy = W_posty.get() + b;
               if (tile_blocked(ctx, gx, gy) != 0) continue;
-              if (((tflags + (gy + gx * 50)).get() & 0x800) == 0) continue;
+              if (((tflags + (gy + gx * world_n(ctx))).get() & 0x800) == 0) continue;
               const int32_t dd = approx_distance(sub32(sub32(gx * 2, W_postx.get()), px), sub32(sub32(gy * 2, W_posty.get()), py));
               if (dd >= lim) continue;
               lim = dd;
@@ -243,10 +243,10 @@ int32_t update_walkers(Ctx &ctx) {
         if (static_cast<uint8_t>(W_kind.get()) == 0xfa && (state_arr(ctx, &GameState::g_holes) + 1).field(&HoleRecord::par).get() == 0) {
           // P6A (updateWalkers.cursorTargetOffGrid = 0): the cursor tile clamped to the grid, as pathStep clamps its tiles
           const bool on_map = !SG_DEFECT(g_defect_walker_cursor_offgrid);
-          const int32_t cur_tx = on_map ? clamp(gs.g_cursorTileX, 0, 0x31) : gs.g_cursorTileX;
-          const int32_t cur_ty = on_map ? clamp(gs.g_cursorTileY, 0, 0x31) : gs.g_cursorTileY;
+          const int32_t cur_tx = on_map ? clamp(gs.g_cursorTileX, 0, world_last(ctx)) : gs.g_cursorTileX;
+          const int32_t cur_ty = on_map ? clamp(gs.g_cursorTileY, 0, world_last(ctx)) : gs.g_cursorTileY;
           if ((u32(gs.g_date) & 0x200u) == 0 &&
-              static_cast<uint8_t>(ttype[add32(cur_ty, mul32(cur_tx, 50))]) != 0x11) {
+              static_cast<uint8_t>(ttype[add32(cur_ty, mul32(cur_tx, world_n(ctx)))]) != 0x11) {
             tx = add32(shl32(cur_tx, 10), 0x200);
             ty = add32(shl32(cur_ty, 10), 0x200);
           } else {
@@ -327,10 +327,10 @@ int32_t update_walkers(Ctx &ctx) {
                   W_action.set(0xfc);
                   W_seq.set(0xc);
                   W_wait.set(static_cast<int16_t>(((~W_flags.get()) & 8) >> 3));
-                  const int32_t fl = add32(sel_gy, mul32(sel_idx, 50));
+                  const int32_t fl = add32(sel_gy, mul32(sel_idx, world_n(ctx)));
                   const Ptr<uint16_t> fwp = tflags + fl;
                   uint16_t fw = fwp.get();
-                  const Ptr<uint8_t> anim = state_arr(ctx, &GameState::tile_anim_frame) + fl;
+                  const Ptr<uint8_t> anim = grid_arr(ctx, &GameState::tile_anim_frame) + fl;
                   if ((fw & 0x4000) == 0) {
                     fw = static_cast<uint16_t>(fw | 0x4000);
                     fwp.set(fw);
@@ -411,7 +411,7 @@ int32_t update_walkers(Ctx &ctx) {
       if (W_wait.get() != 0) W_facing.set(static_cast<int8_t>(octant(angle_fixed(dxv, dyv))));
     }
     // ---- take the step
-    const int32_t tile = add32(sar32(W_y.get(), 10), mul32(sar32(W_x.get(), 10), 50));
+    const int32_t tile = add32(sar32(W_y.get(), 10), mul32(sar32(W_x.get(), 10), world_n(ctx)));
     const int8_t typ = ttype[tile];
     int32_t speed = clamp(6 - (state_arr(ctx, &GameState::g_tileTypeAttrs) + typ).field(&TileTypeAttr::path_cost).get(), 2, 5);
     if (((tflags + tile).as<uint8_t>().get() & 0x20) != 0) speed = 6;
@@ -425,9 +425,9 @@ int32_t update_walkers(Ctx &ctx) {
     W_x.set(add32(W_x.get(), (mul32(dx8[dsel], sp) / 2) / div));
     const int32_t dsel2 = W_facing.get();
     W_y.set(add32(W_y.get(), (mul32(dy8[dsel2], sp) / 2) / (((static_cast<uint8_t>(W_facing.get()) & 1) != 0 ? 1 : 0) + 3)));
-    if (!SG_DEFECT(g_defect_walker_cursor_offgrid)) {  // P6A: the step never leaves the 50 x 50 grid (world 0..0xc7ff)
-      W_x.set(clamp(W_x.get(), 0, 0xc7ff));
-      W_y.set(clamp(W_y.get(), 0, 0xc7ff));
+    if (!SG_DEFECT(g_defect_walker_cursor_offgrid)) {  // P6A: the step never leaves the N x N grid (world 0..(N << 10) - 1 = 0xc7ff)
+      W_x.set(clamp(W_x.get(), 0, world_units(ctx) - 1));
+      W_y.set(clamp(W_y.get(), 0, world_units(ctx) - 1));
     }
     W_steps.set(static_cast<int16_t>(W_steps.get() - 1));
     if (W_steps.get() != 0) {

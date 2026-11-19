@@ -183,13 +183,13 @@ struct Rend : TkBase {
   // tileToScreen(tx, ty, &sx, &sy) (c3h.cpp): the tile centre on screen through the cache g_tileScreenX / Y (0 = not
   // computed, -99 = off screen); returns 1 when on screen
   int tileToScreen(int tx, int ty, uint32_t sx, uint32_t sy) {
-    if (tx < 0 || tx >= 50 || ty < 0 || ty >= 50) return 0;
-    const uint32_t cell = static_cast<uint32_t>(tx * 50 + ty);
-    const int16_t c = G16(GS(g_tileScreenX) + cell * 2);
+    if (tx < 0 || tx >= WN || ty < 0 || ty >= WN) return 0;
+    const uint32_t cell = static_cast<uint32_t>(tx * WN + ty);
+    const int16_t c = G16(GV(g_tileScreenX) + cell * 2);
     if (c != 0) {
       if (c == -99) return 0;
       G32(sx) = c;
-      G32(sy) = G16(GS(g_tileScreenY) + cell * 2).get();
+      G32(sy) = G16(GV(g_tileScreenY) + cell * 2).get();
       return 1;
     }
     // P33C tileToScreen.spriteReach at 0: projected with a margin (the point keeps its height off screen), and the window is the
@@ -203,11 +203,11 @@ struct Rend : TkBase {
     if (reach) m = tile_sprite_reach(ctx);
     if (x >= -m.x - E && x < gs().g_screenWidth + m.x + E && y >= -m.top && y < gs().g_screenHeight + m.bottom) {
       if (SG_NEGCTL(g_negctl_tile_to_screen) == 1) return 1;  // the on-screen point is not cached
-      G16(GS(g_tileScreenX) + cell * 2) = static_cast<int16_t>(x);
-      G16(GS(g_tileScreenY) + cell * 2) = static_cast<int16_t>(y);
+      G16(GV(g_tileScreenX) + cell * 2) = static_cast<int16_t>(x);
+      G16(GV(g_tileScreenY) + cell * 2) = static_cast<int16_t>(y);
       return 1;
     }
-    G16(GS(g_tileScreenX) + cell * 2) = static_cast<int16_t>(-99);
+    G16(GV(g_tileScreenX) + cell * 2) = static_cast<int16_t>(-99);
     return 0;
   }
 

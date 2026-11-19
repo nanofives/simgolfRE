@@ -98,6 +98,8 @@ class Ctx {
   std::shared_ptr<void> lowio;
   // P8B: the view block's host memory (bridge.h view_map; empty until mapped)
   std::shared_ptr<void> view;
+  // P38A: the world's tiles a side (portsim/sim/world.h; the original's 50, nothing sets another value yet)
+  int32_t world_n = 50;
 
  private:
   std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it

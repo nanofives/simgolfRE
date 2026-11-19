@@ -5,6 +5,7 @@
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -19,9 +20,9 @@ int g_negctl_path_step = 0;
 // decimal text, the _itoa buffer g_textBuf) and drops the drawing and the wait (UI; port/CORE.md, PHASE23_PLAN.md 8.2).
 void debug_overlay(Ctx &ctx) {
   GameState &g = ctx.gs();
-  for (int32_t gx = 0; gx < 50; ++gx)
-    for (int32_t gy = 0; gy < 50; ++gy) {
-      const uint8_t v = g.g_pathGrid[gx * 50 + gy];
+  for (int32_t gx = 0; gx < world_n(ctx); ++gx)
+    for (int32_t gy = 0; gy < world_n(ctx); ++gy) {
+      const uint8_t v = grid_ref(ctx, &GameState::g_pathGrid, tile_index(ctx, gx, gy));
       if (v == 0) continue;
       g.g_textBuffer[0] = 0;
       // the static CRT's _itoa(v, g_textBuf, 10) of a value 1..255
@@ -39,15 +40,19 @@ void debug_overlay(Ctx &ctx) {
 int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int32_t p5) {
   GameState &g = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_path_step);
-  uint8_t *grid = g.g_pathGrid;
-  for (int i = 0; i < 2500; ++i) grid[i] = 0;
+  uint8_t *grid = grid_host(ctx, &GameState::g_pathGrid);
+  const int8_t *path_cost = grid_host(ctx, &GameState::g_tilePathCost);
+  const uint16_t *tile_flags = grid_host(ctx, &GameState::g_tileFlags);
+  const int8_t *tile_types = grid_host(ctx, &GameState::g_tileType);
+  const int32_t N = world_n(ctx), last = world_last(ctx);  // 50 and 0x31 in the original
+  for (int i = 0; i < world_tiles(ctx); ++i) grid[i] = 0;
   const int32_t dir0 = direction8(sub32(p1, p3), sub32(p2, p4));
-  const int32_t sx = clamp(sar32(p1, 10), 0, 0x31), sy = clamp(sar32(p2, 10), 0, 0x31);
-  const int32_t tx = clamp(sar32(p3, 10), 0, 0x31), ty = clamp(sar32(p4, 10), 0, 0x31);
+  const int32_t sx = clamp(sar32(p1, 10), 0, last), sy = clamp(sar32(p2, 10), 0, last);
+  const int32_t tx = clamp(sar32(p3, 10), 0, last), ty = clamp(sar32(p4, 10), 0, last);
   const Ptr<Golfer> golfers = state_arr(ctx, &GameState::g_golfers);
   const Ptr<Golfer> partner = golfers + (p5 ^ 1);
-  int32_t ox = clamp(sar32(partner.field(&Golfer::x).get(), 10), 0, 0x31);
-  const int32_t oy = clamp(sar32(partner.field(&Golfer::y).get(), 10), 0, 0x31);
+  int32_t ox = clamp(sar32(partner.field(&Golfer::x).get(), 10), 0, last);
+  const int32_t oy = clamp(sar32(partner.field(&Golfer::y).get(), 10), 0, last);
   if (ox == sx && oy == sy) ox = -1;
   if (sx == tx && sy == ty) return dir0;
   const int32_t ex = sx - tx, ey = sy - ty;
@@ -58,46 +63,46 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
   qx.set(static_cast<int16_t>(sx));
   qy.set(static_cast<int16_t>(sy));
   int32_t tail = 1;
-  grid[sx * 50 + sy] = 1;
+  grid[sx * N + sy] = 1;
   const uint32_t mask = (1u << ((a + 1) & 6)) | (1u << (a & 6));
   int32_t limit = ((g.g_flags & 0x100u) ? 0x5A : 0) + 0xA0;
   int32_t head = 0;
-  const Grid<uint16_t> fl = state_grid(ctx, &GameState::g_tileFlags, kGridW);
+  const Grid<uint16_t> fl = tile_grid(ctx, &GameState::g_tileFlags);
   const Ptr<TileTypeAttr> attrs = state_arr(ctx, &GameState::g_tileTypeAttrs);
   do {
     const int32_t x = qx[head], y = qy[head];
     head = (head + 1) & 0x3FF;
-    const int32_t flat = add32(y, mul32(x, 50));
-    const int32_t cur = (state_arr(ctx, &GameState::g_pathGrid) + flat).get();
+    const int32_t flat = add32(y, mul32(x, N));
+    const int32_t cur = (grid_arr(ctx, &GameState::g_pathGrid) + flat).get();
     if (!(cur > limit)) {
       for (int32_t k = 0; k < 8; ++k) {
         const int32_t nx = add32(state_arr(ctx, &GameState::f_tab_dirDx_4c2878)[k], x);
         const int32_t ny = add32(state_arr(ctx, &GameState::f_tab_dirDy_4c2898)[k], y);
-        if (nx < 0 || ny < 0 || nx >= 0x32 || ny >= 0x32) continue;
-        const int32_t flat2 = ny + nx * 50;
+        if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
+        const int32_t flat2 = ny + nx * N;
         const int32_t par = mode == 1 ? 0 : (k & 1);
-        int32_t cost = g.g_tilePathCost[flat2] + par;
+        int32_t cost = path_cost[flat2] + par;
         const int32_t ndist = grid[flat2];
         if (nx == ox && ny == oy && mode != 3) cost += 2;
         if ((k & 1) == 0) {
           const uint32_t date = static_cast<uint32_t>(g.g_date);
           const int32_t v = static_cast<int32_t>(((~date & 0x40u) | 0x80u) >> 6);
           if (dist > v) {
-            if ((g.g_tileFlags[flat2] & 0x420) == 0x20 && ((state_arr(ctx, &GameState::g_tileFlags) + flat).as<uint8_t>().get() & 0x20) != 0) {
+            if ((tile_flags[flat2] & 0x420) == 0x20 && ((grid_arr(ctx, &GameState::g_tileFlags) + flat).as<uint8_t>().get() & 0x20) != 0) {
               const int32_t r = direction_of(nx - sx, ny - sy);
               cost = (k != r) ? 1 : 0;
             }
           }
         }
         if ((g.g_flags & 0x100u) != 0 || (golfers + p5).field(&Golfer::hole).as<uint8_t>().get() == 0x13) {
-          const int8_t t = g.g_tileType[flat2];
+          const int8_t t = tile_types[flat2];
           if (t == 1 || t == 2 || t == 0 || static_cast<uint8_t>((attrs + t).field(&TileTypeAttr::collar).get()) == 7)
             cost += 1;
           else
             cost = sar32(cost + 1, 1);
         }
-        const uint8_t tt = static_cast<uint8_t>(g.g_tileType[flat2]);
-        if ((tt == 0x11 || tt == 0x14) && (g.g_tileFlags[flat2] & 0x20) == 0 && cur < 0x40) cost += 0x10;
+        const uint8_t tt = static_cast<uint8_t>(tile_types[flat2]);
+        if ((tt == 0x11 || tt == 0x14) && (tile_flags[flat2] & 0x20) == 0 && cur < 0x40) cost += 0x10;
         const int32_t total = cost + cur;
         if (ndist != 0 && ndist <= total) continue;
         if (total > 0xFF) continue;
@@ -110,19 +115,19 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
     }
   } while (head != tail && g.g_flag_83afcc == 0);
   if ((g.g_flags & 0x1000u) != 0) debug_overlay(ctx);
-  const int32_t target = ty + tx * 50;
+  const int32_t target = ty + tx * N;
   int32_t best = -1;
   int32_t best_cost = grid[target] * 2 + 1;
   uint32_t &seed = state_obj(ctx, &GameState::g_rng).field(&Random::state).ref();
   const int32_t rnd = static_cast<int32_t>(random_range(seed, 8) & 0xFFFFu);
-  const bool target_path = static_cast<uint8_t>(g.g_tileType[target]) == 0x11 && (g.g_tileFlags[target] & 0x20) != 0;
+  const bool target_path = static_cast<uint8_t>(tile_types[target]) == 0x11 && (tile_flags[target] & 0x20) != 0;
   for (int32_t n = 0; n < 8; ++n) {
     const int32_t k = (n + rnd) & 7;
     const int32_t nx = state_arr(ctx, &GameState::f_tab_dirDx_4c2878)[k] + tx;
     const int32_t ny = state_arr(ctx, &GameState::f_tab_dirDy_4c2898)[k] + ty;
-    if (nx < 0 || ny < 0 || nx >= 0x32 || ny >= 0x32) continue;
+    if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
     if (tile_blocked(ctx, nx, ny) != 0) continue;
-    const int32_t d = grid[ny + nx * 50];
+    const int32_t d = grid[ny + nx * N];
     if (d == 0) continue;
     const int32_t par = k & 1;
     int32_t cand = par + d * 2;

@@ -2081,3 +2081,14 @@ lotLabelLeftover, 0 in play). Evidence: segments x64 205 / 205 differing 0, test
 test_profiles, smoke 1080 OK; driven EN 1080 / ES 2560 dpi 120 on Jur2031 and a Christmas Pines save.
 - Published 2026-11-19 with the P37 panel style (d1a40689): fast check on fd1fd6c5 (x64 0 errors, test_static 7 / 7, SEGCMP 205 /
   205 differing 0, SMOKE OK, paint 93-96 % of 120 Hz), LAN publish and GitHub release port-2026-11-19-fd1fd6c5.
+
+## P38A: the world size as a variable (2026-11-19; worker P38A, notes log/roadmap/P38/P38A_notes.md)
+Phase A of re/roadmap/P38_LARGE_MAPS.md. Ctx::world_n (50; nothing sets another value yet) and port/include/portsim/sim/world.h:
+every grid access, stride and bound in port/src and port/app goes through it (42 files; the hidden neighbours through
+g_courseTable+734 / +783, tick_frame.inc's lea-split 25 x 2 strides, the year-end loop that ended at g_year's address, the
+Terrain port's (3 * 50)^2 arrays, P38H's lot geometry L = (N - 2) / 3). test_world_size refuses new world-size literals next to
+a grid symbol (allowlist port/test/world_size_allow.tsv). Evidence: segments x64 205 / 205 and Win32 205 / 205 equal to I25,
+controls 2 / 2 RED (tile_index with N read as 51: 184 / 205 segments fail; the tick hooks' WN as 51: 205 / 205), the module test
+files and oracles that ran pass (failures identical on the base: emptied log/ data of 2026-11-18, test_commands' memory cap).
+Open for phase B: odd N tails in whole-grid clears, HeadlessTerrain's 16 MB arena under 23 MB at 200, int8 walker posts and the
+undo journal's uint8 x / y, pathStep's 1,024-entry ring.

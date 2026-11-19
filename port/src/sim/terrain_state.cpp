@@ -24,6 +24,7 @@
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/terrain_gl_setup.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -161,16 +162,16 @@ template <class T> class VPtr {
 // writable: then every access takes Memory's path).
 class ViewScope {
  public:
-  ViewScope(const Memory &m, uint32_t base) : prev_(t_view) {
+  ViewScope(const Memory &m, uint32_t base, uint32_t size) : prev_(t_view) {
     if (base == 0) return;
     try {
-      v_.host = m.at(base, kTerrainObjectSize, true);
+      v_.host = m.at(base, size, true);
     } catch (const Fault &) {
       return;
     }
     v_.mem = &m;
     v_.base = base;
-    v_.size = kTerrainObjectSize;
+    v_.size = size;
     t_view = &v_;
   }
   ~ViewScope() { t_view = prev_; }
@@ -469,9 +470,9 @@ void terrain_pass_collar_info(TerrainGlobals &g, const int32_t *table, int32_t n
 
 void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t width, int32_t height) {
   const auto h = hdr_p(ctx, terrain);
-  // the member constructors first: the vector constructor of the 0x9c4 tiles runs Tile::Tile, whose members Faces (count 0),
+  // the member constructors first: the vector constructor of the 0x9c4 tiles (N * N: terrain_max_tiles) runs Tile::Tile, whose members Faces (count 0),
   // PathInfo (clear) and WallInfo (clear) construct themselves (re/match/terrain_tile6.cpp); the draw list follows (below)
-  for (int32_t i = 0; i < kTerrainMaxTiles; ++i) {
+  for (int32_t i = 0; i < terrain_max_tiles(ctx); ++i) {
     const TileP t = tile_p(ctx, terrain + kTerrainTilesOffset + static_cast<uint32_t>(i) * static_cast<uint32_t>(sizeof(TerrainTile)));
     t.field(&TerrainTile::face_count).set(0);
     t.field(&TerrainTile::connected).set(0);
@@ -504,9 +505,9 @@ void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t wi
   g.textures.assign(static_cast<size_t>(kTerrainTextureTypes) * kTerrainTextureVariations * kTerrainTextureSlots, 0u);
   // the draw list's constructor (std::list<Tile*>, re/match/terrain_list.cpp): the allocator byte is copied from a default-constructed
   // temporary in the debug build's stack fill (0xcc), the head node comes from operator new (a heap address: a token here), size 0
-  VPtr<uint8_t>(ctx.mem, terrain + kTerrainDrawListOffset).set(0xcc);
-  VPtr<uint32_t>(ctx.mem, terrain + kTerrainDrawListOffset + 4).set(kListHeadToken);
-  VPtr<uint32_t>(ctx.mem, terrain + kTerrainDrawListOffset + 8).set(0u);
+  VPtr<uint8_t>(ctx.mem, terrain + terrain_draw_list_offset(ctx)).set(0xcc);
+  VPtr<uint32_t>(ctx.mem, terrain + terrain_draw_list_offset(ctx) + 4).set(kListHeadToken);
+  VPtr<uint32_t>(ctx.mem, terrain + terrain_draw_list_offset(ctx) + 8).set(0u);
 }
 
 void terrain_apply_gl_state(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, const TerrainGlState &st) {
@@ -1241,7 +1242,7 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
                           const int32_t *table, int32_t n) {
   // the object view for this call (getInstance included: the host maps the object before it); the object is the DLL's, wherever
   // the method's ecx points
-  const ViewScope view(ctx.mem, dll.terrain != 0 ? dll.terrain : self);
+  const ViewScope view(ctx.mem, dll.terrain != 0 ? dll.terrain : self, terrain_object_size(ctx));
   const char *log = state_log_file();
   if (!log) return terrain_dll_call_body(ctx, g, dll, name, self, a, table, n);
   const bool pass = name == "render" || name == "localRender" || name == "stripRender" || name == "pathUpdateRender";
@@ -1283,7 +1284,7 @@ uint32_t terrain_dll_call_body(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, con
   }
   if (name == "getInstance") {
     if (!dll.constructed) {
-      terrain_construct(ctx, g, dll.terrain, 50, 50);
+      terrain_construct(ctx, g, dll.terrain, world_n(ctx), world_n(ctx));
       terrain_gl_construct(ctx, dll.setup, dll.st);
       terrain_apply_gl_state(ctx, g, dll.terrain, dll.st);
       dll.sink.text.clear();

@@ -7,6 +7,7 @@
 #include "portsim/registry.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -193,7 +194,7 @@ int32_t append_to_buffer_45b8b0(Ctx &ctx, int32_t id) {
 // byte is <= 0 -> -8; 0x11 -> 32; 0x12 on course type 1 -> 16; collar group 13 -> cost * 5 / 2; else cost * walk / 2.
 int32_t clear_cost(Ctx &ctx, int32_t x, int32_t y) {
   if (tile_blocked(ctx, x, y)) return 0;
-  const int32_t t = state_grid(ctx, &GameState::g_tileType, 50)(x, y);
+  const int32_t t = tile_grid(ctx, &GameState::g_tileType)(x, y);
   if (t == 4) return SG_NEGCTL(g_negctl_clear_cost) == 1 ? 13 : 12;
   if (t == 0x14) return 0;
   if (t == 0x15) return -0x10;

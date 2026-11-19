@@ -44,6 +44,7 @@
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 #include "tick_hook.h"
 #include "golfer_wait.h"  // P36B
 #include "landoffer.h"    // P38H (tick_frame.inc, the land popup)
@@ -211,7 +212,8 @@ inline std::vector<Poly> fall_occluders(Ctx &ctx, int tx, int ty, int srcx, int 
   std::vector<Poly> out;
   const GameState &gs = ctx.gs();
   const int rot = gs.g_cameraRot;
-  if (rot & 1 || tx < 0 || tx >= 50 || ty < 0 || ty >= 50 || srcx < 0 || srcx >= 50 || srcy < 0 || srcy >= 50) return out;
+  const int N = world_n(ctx);
+  if (rot & 1 || tx < 0 || tx >= N || ty < 0 || ty >= N || srcx < 0 || srcx >= N || srcy < 0 || srcy >= N) return out;
   static const int kDx[4] = {0, 1, 1, 0}, kDy[4] = {0, 0, 1, 1};
   const int fall_top = tile_top(ctx, srcx, srcy);   // the fall's top: nearer ground must rise above it to cover the fall
   const double per = static_cast<double>(gs.f_w_4c2e00[0]) * gs.g_zoomScale / 4.0;   // pixels per level (worldToScreen)
@@ -219,10 +221,10 @@ inline std::vector<Poly> fall_occluders(Ctx &ctx, int tx, int ty, int srcx, int 
   const int d0 = depth(rot, tx, ty);
   for (int nx = tx - kReach; nx <= tx + kReach; ++nx)
     for (int ny = ty - kReach; ny <= ty + kReach; ++ny) {
-      if (nx < 0 || nx >= 50 || ny < 0 || ny >= 50 || depth(rot, nx, ny) <= d0) continue;
+      if (nx < 0 || nx >= N || ny < 0 || ny >= N || depth(rot, nx, ny) <= d0) continue;
       // land only: a tile the terrain does not draw (0x14), and water a fall pours into or a structure stands over (stream 0x0a,
       // water 0x11, wetland 0x12, a placed object's tiles 0x15 / 0x16: a bridge's span) never covers it
-      const int8_t t = gs.g_tileType[nx * 50 + ny];
+      const int8_t t = grid_ref(ctx, &GameState::g_tileType, nx * N + ny);
       if (t == 0x14 || t == 0x0a || t == 0x11 || t == 0x12 || t == 0x15 || t == 0x16) continue;
       int h[4], low = 1 << 30;
       for (int k = 0; k < 4; ++k) low = std::min(low, h[k] = corner_heights(ctx, nx, ny, kCorner[k], 1));
@@ -339,8 +341,8 @@ int g_defect_ml_edge_no_flags = 1;
 // is missing. Fixed (0): the three corners are projected with kSpriteReachProject's margin (every corner keeps its height) and
 // the cell is gated by the tile pass's tileToScreen alone. Drawing only.
 int g_defect_ml_grid_edge = 1;
-// true when tile (x, y) is outside the 50 x 50 grid (the P28A switches above)
-inline bool p28_off(int x, int y) { return x < 0 || x >= 50 || y < 0 || y >= 50; }
+// true when tile (x, y) is outside the N x N grid (the P28A switches above)
+inline bool p28_off(const Ctx &ctx, int x, int y) { return x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx); }
 // updateGolfers.partnerWaitBlocksTee (P20A, Mariano's "the golfers are stuck", log/roadmap/P20/P20A_notes.md): a golfer at its ball
 // with swing counter 1 holds its shot while some golfer k of its hole (older or equal arrival order, not its partner, flag bit 10,
 // more strokes) stands within 0x64 of the hole's tee (updateGolfers+0x380a..updateGolfers+0x383e). A k that already played and
@@ -1381,9 +1383,9 @@ class HeadlessTerrain : public NullTerrain {
     Blocks &b = blocks()[&c];
     b.arena_used = 0;
     const uint32_t ter = c.gs().gTerrain;
-    if (ter != 0 && !mapped(c, ter, kObjSize) && ensure(c, b.terrain, b.terrain_va, ter, kObjSize)) {
-      c.mem.store<int32_t>(ter + 0x14, 50);  // width (terrain_dll.cpp kTerWidth)
-      c.mem.store<int32_t>(ter + 0x18, 50);  // height (kTerHeight)
+    if (ter != 0 && !mapped(c, ter, obj_size(c)) && ensure(c, b.terrain, b.terrain_va, ter, obj_size(c))) {
+      c.mem.store<int32_t>(ter + 0x14, world_n(c));  // width (terrain_dll.cpp kTerWidth)
+      c.mem.store<int32_t>(ter + 0x18, world_n(c));  // height (kTerHeight)
     }
     const uint32_t list = state_va(c, &GameState::gTileBuffer);
     const uint32_t head = c.mem.load<uint32_t>(list + 4);
@@ -1410,9 +1412,9 @@ class HeadlessTerrain : public NullTerrain {
   // Terrain::getInstance for a boot run (phase 4): the object the exe reads fields of (width +0x14, height +0x18, the tile
   // array from +0x3a4), carved from the arena like the ones mapped at a segment image's gTerrain: zeroed but the 50 x 50 size
   uint32_t get_instance() override {
-    const uint32_t va = operator_new(kObjSize);
-    ctx_.mem.store<int32_t>(va + 0x14, 50);
-    ctx_.mem.store<int32_t>(va + 0x18, 50);
+    const uint32_t va = operator_new(obj_size(ctx_));
+    ctx_.mem.store<int32_t>(va + 0x14, world_n(ctx_));
+    ctx_.mem.store<int32_t>(va + 0x18, world_n(ctx_));
     return va;
   }
   uint32_t operator_new(uint32_t n) override {
@@ -1427,7 +1429,8 @@ class HeadlessTerrain : public NullTerrain {
   }
 
  private:
-  static constexpr uint32_t kObjSize = 0x3A4 + 2500 * 0x248;  // the tile array's end (kTerTiles + 50 * 50 * kTileSize)
+  // the tile array's end (kTerTiles + N * N * kTileSize; 0x3a4 + 2500 * 0x248 at 50)
+  static uint32_t obj_size(const Ctx &c) { return 0x3A4u + static_cast<uint32_t>(world_tiles(c)) * 0x248u; }
   static constexpr uint32_t kArenaSize = 0x01000000u;   // 16 MB: cov_b_holes18/00 ran a 1 MB arena out at record 1140 (38d)
   struct Blocks {
     std::vector<uint8_t> terrain, sentinel, arena;

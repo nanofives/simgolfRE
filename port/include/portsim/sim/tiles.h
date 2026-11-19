@@ -3,7 +3,7 @@
 // Specifications: re/analysis/terrain/<addr>_<name>.md, re/analysis/util/00456bb0_overlayCharAt.md,
 // re/analysis/course/0040df80_objectAt.md, re/analysis/sim/004070b0_inRange.md and the vector corpus.
 //
-// The grids are 50 x 50, cell (x, y) = element x * 50 + y (re/model/include/sections/c.h). Like the original, these
+// The grids are N x N, cell (x, y) = element x * N + y (N = 50 in the original: re/model/include/sections/c.h; world.h). Like the original, these
 // accessors do NOT bound-check unless stated: an index outside the grid reads the neighbouring GameState bytes
 // (model_defects.md section 1), and a type byte outside 0..22 indexes g_tileTypeAttrs out of range the same way.
 #ifndef PORTSIM_SIM_TILES_H
@@ -12,10 +12,10 @@
 #include <cstdint>
 
 #include "portsim/registry.h"
+#include "portsim/sim/world.h"  // P38A: the grid width N (world_n), was kGridW = 50
 
 namespace portsim {
 
-constexpr int32_t kGridW = 50;            // SGC_GRID_W
 constexpr int32_t kTileOutOfBounds = 20;  // TILE_OUT_OF_BOUNDS: off the grid or land not bought
 
 // tileType: g_tileType[x][y] sign-extended (unchecked).

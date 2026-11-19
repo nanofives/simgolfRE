@@ -4,14 +4,15 @@
 
 #include "portsim/ptr.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
 namespace {
 // Negative controls: mode 0 is the correct body.
-//   tileType 1 = transposed index (y * 50 + x), 2 = zero-extended (BLIND: no negative type byte in the vectors)
+//   tileType 1 = transposed index (y * N + x), 2 = zero-extended (BLIND: no negative type byte in the vectors)
 //   tileByte 1 = sign-extended          tileFlag20 1 = bit 0x10
-//   tileBlocked 1 = x == 50 allowed     typeAtPos 1 = shift 9               overlayCharAt 1 = walk >= 0
+//   tileBlocked 1 = x == N allowed     typeAtPos 1 = shift 9               overlayCharAt 1 = walk >= 0
 //   wallHeight 1 = no neighbour fallback, 2 = dirDx / dirDy swapped, 3 = mask zero-extended (BLIND: needs dir >= 8
 //              with a negative mask byte)
 //   objectAt 1 = no level extension, 2 = right edge inclusive, 3 = type 7 also extended (BLIND: no type-7 object
@@ -27,7 +28,7 @@ int g_negctl_wall_height = 0;
 int g_negctl_object_at = 0;
 int g_negctl_in_range = 0;
 
-Grid<int8_t> types(Ctx &c) { return state_grid(c, &GameState::g_tileType, kGridW); }
+Grid<int8_t> types(Ctx &c) { return tile_grid(c, &GameState::g_tileType); }
 Ptr<TileTypeAttr> attr(Ctx &c, int32_t type) { return state_arr(c, &GameState::g_tileTypeAttrs) + type; }
 }  // namespace
 
@@ -37,19 +38,19 @@ int32_t tile_type(Ctx &ctx, int32_t x, int32_t y) {
 }
 
 int32_t tile_byte(Ctx &ctx, int32_t x, int32_t y) {
-  const uint8_t b = state_grid(ctx, &GameState::g_tileVariant, kGridW)(x, y);
+  const uint8_t b = tile_grid(ctx, &GameState::g_tileVariant)(x, y);
   return SG_NEGCTL(g_negctl_tile_byte) == 1 ? sx8(b) : i32(b);
 }
 
 int32_t tile_flag20(Ctx &ctx, int32_t x, int32_t y) {
   // the original reads only the low byte of the flag word
-  const uint8_t lo = state_grid(ctx, &GameState::g_tileFlags, kGridW).cell(x, y).as<uint8_t>().get();
+  const uint8_t lo = tile_grid(ctx, &GameState::g_tileFlags).cell(x, y).as<uint8_t>().get();
   return lo & (SG_NEGCTL(g_negctl_tile_flag20) == 1 ? 0x10 : 0x20);
 }
 
 int32_t tile_blocked(Ctx &ctx, int32_t x, int32_t y) {
-  const int32_t xmax = SG_NEGCTL(g_negctl_tile_blocked) == 1 ? kGridW + 1 : kGridW;
-  if (x < 0 || x >= xmax || y < 0 || y >= kGridW) return 1;
+  const int32_t xmax = SG_NEGCTL(g_negctl_tile_blocked) == 1 ? world_n(ctx) + 1 : world_n(ctx);
+  if (x < 0 || x >= xmax || y < 0 || y >= world_n(ctx)) return 1;
   return types(ctx)(x, y) == kTileOutOfBounds ? 1 : 0;
 }
 
@@ -67,7 +68,7 @@ int32_t overlay_char_at(Ctx &ctx, int32_t x, int32_t y) {
 }
 
 int32_t wall_height(Ctx &ctx, int32_t x, int32_t y, int32_t dir) {
-  const int8_t m8 = state_grid(ctx, &GameState::g_tileWallMask, kGridW)(x, y);
+  const int8_t m8 = tile_grid(ctx, &GameState::g_tileWallMask)(x, y);
   const int32_t mask = SG_NEGCTL(g_negctl_wall_height) == 3 ? i32(zx8(u32(m8))) : m8;
   if ((shl32(1, dir) & mask) == 0) return 0;
   const int8_t h = attr(ctx, types(ctx)(x, y)).field(&TileTypeAttr::wall_height).get();
@@ -108,7 +109,7 @@ namespace {
 int32_t in_range_body(Ctx &ctx, int32_t type, int32_t v, int32_t row, int32_t col, bool widest) {
   int32_t hi, lo;
   if (type == 0x16 || type == 0x15) {
-    const uint8_t f = state_grid(ctx, &GameState::g_tileFlags, kGridW).cell(row, col).as<uint8_t>().get();
+    const uint8_t f = tile_grid(ctx, &GameState::g_tileFlags).cell(row, col).as<uint8_t>().get();
     hi = (static_cast<int32_t>(f & 0x1F) - 1 > 3) ? 200 : 0;
     lo = 0;
   } else {

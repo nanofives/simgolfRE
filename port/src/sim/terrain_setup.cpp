@@ -10,6 +10,7 @@
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_reset
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -64,7 +65,7 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   const auto va = [&](auto member) { return state_va(ctx, member); };
   fill_dwords(ctx, va(&GameState::g_objectTypeLevel), 0x14, 0);
   fill_dwords(ctx, va(&GameState::g_activeObjectLevel), 0x14, 0);
-  fill_dwords(ctx, va(&GameState::tile_anim_frame), 0x271, 0);
+  fill_dwords(ctx, grid_va(ctx, &GameState::tile_anim_frame), grid_dwords(ctx, 1), 0);
   fill_dwords(ctx, va(&GameState::g_golfers), 0x2700, 0);
   fill_dwords(ctx, va(&GameState::g_holes), 0xA28, 0);
   fill_dwords(ctx, va(&GameState::g_walkers), 0x4C0, 0);
@@ -73,16 +74,16 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   for (int32_t i = 0; i < 256; ++i) g.g_placed_objects[i].type = -1;
   fill_dwords(ctx, va(&GameState::g_scenicDedications), 0xC8, 0xFFFFFFFFu);
   fill_dwords(ctx, va(&GameState::g_skyActors), 0x10, 0xFFFFFFFFu);
-  fill_dwords(ctx, va(&GameState::g_tileFlags), 0x4E2, 0);
-  fill_dwords(ctx, va(&GameState::g_tileVariant), 0x271, 0);
+  fill_dwords(ctx, grid_va(ctx, &GameState::g_tileFlags), grid_dwords(ctx, 2), 0);
+  fill_dwords(ctx, grid_va(ctx, &GameState::g_tileVariant), grid_dwords(ctx, 1), 0);
   fill_dwords(ctx, va(&GameState::g_golferTypeState), 0x39C, 0);
   fill_dwords(ctx, va(&GameState::g_ballTrailX), 0x98, 0xFFFFFFFFu);
-  fill_dwords(ctx, va(&GameState::g_tileBuildCode), 0x271, 0xFFFFFFFFu);
+  fill_dwords(ctx, grid_va(ctx, &GameState::g_tileBuildCode), grid_dwords(ctx, 1), 0xFFFFFFFFu);
   course_undo_reset(ctx);  // P11D: a new course, no edit to undo (mainLoop.courseUndo = 0 only)
   fill_dwords(ctx, va(&GameState::g_bestRounds), 0xA, 0);
   fill_dwords(ctx, va(&GameState::g_holePoints), 0x72, 0xFFFFFFFFu);
   ctx.mem.store<uint16_t>(va(&GameState::g_skillMaskBlock) + 8, 0);
-  fill_dwords(ctx, va(&GameState::g_ballStopCount), 0x271, 0);
+  fill_dwords(ctx, grid_va(ctx, &GameState::g_ballStopCount), grid_dwords(ctx, 1), 0);
   call_peer(ctx, "clearBuffers", {});
   fill_dwords(ctx, va(&GameState::g_eventHistory), 0xFA, 0);
   for (int32_t i = 0; i < 152; ++i) g.g_golfers[i].partner = -1;

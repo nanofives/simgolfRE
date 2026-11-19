@@ -24,6 +24,7 @@
 #include <string>
 
 #include "portsim/registry.h"
+#include "portsim/sim/world.h"  // P38A: the tile count follows the world size
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
@@ -86,7 +87,7 @@ struct TerrainObjectHeader {
   uint32_t glrc;         // +0x00 initSystem's GL context handle (0 from the constructor; initSystem returns at once when set). The
                          //       OS chooses its value (0x10000 in every recording): the port writes kContextToken, compare zero / nonzero
   float m4, m8, mc, m10; // +0x04 0.15, 0.15, 0.2, 1.0 (constructor; no reader in the ported code)
-  int32_t width, height; // +0x14, +0x18 grid size (50 x 50 from getInstance)
+  int32_t width, height; // +0x14, +0x18 grid size (N x N from getInstance: 50 x 50 in the original)
   int32_t zoom;          // +0x1c zoom shift (setZoomLevel)
   int32_t screen_w, screen_h;  // +0x20, +0x24 (resize)
   uint8_t flip_y;        // +0x28 (initSystem)
@@ -98,10 +99,17 @@ static_assert(sizeof(TerrainObjectHeader) == 0x3a4, "TerrainObjectHeader");
 #pragma pack(pop)
 
 constexpr uint32_t kTerrainTilesOffset = 0x3a4;
-constexpr int32_t kTerrainMaxTiles = 0x9c4;   // 50 x 50
-constexpr uint32_t kTerrainDrawListOffset = kTerrainTilesOffset + kTerrainMaxTiles * sizeof(TerrainTile);   // std::list<Tile*>
-constexpr uint32_t kTerrainObjectSize = kTerrainDrawListOffset + 0x0c;
-static_assert(kTerrainDrawListOffset == 0x164ac4 && kTerrainObjectSize == 0x164ad0, "Terrain object size (operator new argument)");
+// The DLL's object holds one tile per world tile (2,500 at the original's 50 x 50) and the draw list after them (P38A: by context).
+constexpr uint32_t kTerrainDrawListOffset50 = kTerrainTilesOffset + static_cast<uint32_t>(kGridTiles) * sizeof(TerrainTile);
+constexpr uint32_t kTerrainObjectSize50 = kTerrainDrawListOffset50 + 0x0c;
+static_assert(kTerrainDrawListOffset50 == 0x164ac4 && kTerrainObjectSize50 == 0x164ad0, "Terrain object size (operator new argument)");
+inline int32_t terrain_max_tiles(const Ctx &c) { return world_tiles(c); }
+inline uint32_t terrain_draw_list_offset(const Ctx &c) {   // std::list<Tile*>
+  return kTerrainTilesOffset + static_cast<uint32_t>(terrain_max_tiles(c)) * static_cast<uint32_t>(sizeof(TerrainTile));
+}
+inline uint32_t terrain_object_size(const Ctx &c) { return terrain_draw_list_offset(c) + 0x0c; }
+// the DLL's bss vertex and normal arrays: 3 x 3 vertices per tile, (3 * N)^2 (22,500 at 50)
+inline size_t terrain_vertex_count(const Ctx &c) { return static_cast<size_t>(3 * world_n(c)) * static_cast<size_t>(3 * world_n(c)); }
 constexpr uint8_t kNewFill = 0xcd;            // the debug CRT's fill of new memory
 constexpr uint32_t kListHeadToken = 2;        // the port's stand-in for the draw list's heap head node (compare zero / nonzero)
 constexpr uint32_t kContextToken = 1;         // the port's stand-in for a GL context handle in TerrainObjectHeader::glrc

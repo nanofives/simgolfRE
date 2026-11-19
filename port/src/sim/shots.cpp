@@ -34,6 +34,7 @@
 #include "portsim/sim/text.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -73,7 +74,7 @@ thread_local const uint8_t *t_draws = nullptr;
 //                                       full shot and back; fixed: putt calls bypass the cache
 //   chooseShotTarget.strictFlagSticky   [F+0xb4] is never cleared: once one landing sets it, every later scan of the
 //                                       search runs strict; fixed: recomputed per landing
-//   prepareShot.hazardCellTransposed    the hazard probe stores its cell as y * 50 + x; fixed: x * 50 + y
+//   prepareShot.hazardCellTransposed    the hazard probe stores its cell as y * N + x; fixed: x * N + y
 //   narrateShot.maskNotRestored         two missed-shot exits return before the skill-mask restore; fixed: restored
 int g_defect_shot_power_putt = 1;
 int g_defect_strict_sticky = 1;
@@ -182,14 +183,15 @@ struct World {
   const Memory &m;
   uint32_t golfers, tiles, flags, attrs, holes, variant, walls, dir_x, dir_y;
   explicit World(Ctx &ctx)
-      : c(ctx), m(ctx.mem), golfers(state_va(ctx, &GameState::g_golfers)), tiles(state_va(ctx, &GameState::g_tileType)),
-        flags(state_va(ctx, &GameState::g_tileFlags)), attrs(state_va(ctx, &GameState::g_tileTypeAttrs)),
-        holes(state_va(ctx, &GameState::g_holes)), variant(state_va(ctx, &GameState::g_tileVariant)),
-        walls(state_va(ctx, &GameState::g_tileWallMask)), dir_x(state_va(ctx, &GameState::f_tab_dirDx_4c2878)),
+      : c(ctx), m(ctx.mem), golfers(state_va(ctx, &GameState::g_golfers)), tiles(grid_va(ctx, &GameState::g_tileType)),
+        flags(grid_va(ctx, &GameState::g_tileFlags)), attrs(state_va(ctx, &GameState::g_tileTypeAttrs)),
+        holes(state_va(ctx, &GameState::g_holes)), variant(grid_va(ctx, &GameState::g_tileVariant)),
+        walls(grid_va(ctx, &GameState::g_tileWallMask)), dir_x(state_va(ctx, &GameState::f_tab_dirDx_4c2878)),
         dir_y(state_va(ctx, &GameState::f_tab_dirDy_4c2898)) {}
   GameState &gs() const { return c.gs(); }
   Rec rec(int32_t g) const { return Rec{&m, golfers + u32(shl32(g, 8))}; }
-  static int32_t cell(int32_t x, int32_t y) { return add32(mul32(x, 50), y); }
+  int32_t n() const { return world_n(c); }                          // the world's tiles a side (50)
+  int32_t cell(int32_t x, int32_t y) const { return tile_index(c, x, y); }
   int32_t tile(int32_t idx) const { return static_cast<int8_t>(m.load<uint8_t>(tiles + u32(idx))); }
   int32_t tile_u(int32_t idx) const { return m.load<uint8_t>(tiles + u32(idx)); }
   int32_t tflags(int32_t idx) const { return m.load<uint16_t>(flags + u32(mul32(idx, 2))); }
@@ -330,7 +332,7 @@ int32_t trial_shot(Ctx &ctx, int32_t g, int32_t x, int32_t y, int32_t aim) {
   int32_t steps = 0;
   while (r.i(kSpeed) != 0) {
     const int32_t ty = sar32(r.i(kBallY), 10), tx = sar32(r.i(kBallX), 10);
-    const int32_t type = tile_blocked(ctx, tx, ty) ? 0x14 : w.tile(World::cell(tx, ty));
+    const int32_t type = tile_blocked(ctx, tx, ty) ? 0x14 : w.tile(w.cell(tx, ty));
     const int32_t h0 = f_heightAt(ctx, {r.i(kBallX), r.i(kBallY)});
     const int32_t dx = fold_range(ctx, r.i(kDir), r.i(kSpeed) / 16);
     const int32_t dy = abs_diff(ctx, r.i(kDir), r.i(kSpeed) / 16);
@@ -350,12 +352,12 @@ int32_t trial_shot(Ctx &ctx, int32_t g, int32_t x, int32_t y, int32_t aim) {
     // P28A trialShot.edgeNeighbourType: at 0 a neighbour (nx, ny) outside the grid has type 0x14
     const bool edge_fix = !SG_DEFECT(g_defect_trial_edge_type);
     const auto nb = [&](int32_t nx, int32_t ny, int32_t cell) -> int32_t {
-      return edge_fix && !(nx >= 0 && nx < 50 && ny >= 0 && ny < 50) ? 0x14 : w.tile(cell);
+      return edge_fix && !(nx >= 0 && nx < w.n() && ny >= 0 && ny < w.n()) ? 0x14 : w.tile(cell);
     };
-    if (fx <= 1 && nb(sub32(tx, 1), ty, World::cell(sub32(tx, 1), ty)) != type) edge = 1;
-    if (fy <= 1 && nb(tx, sub32(ty, 1), sub32(World::cell(tx, ty), 1)) != type) edge = 1;
-    if (fx >= 14 && nb(add32(tx, 1), ty, World::cell(add32(tx, 1), ty)) != type) edge = 1;
-    if (fy >= 14 && nb(tx, add32(ty, 1), add32(World::cell(tx, ty), 1)) != type) edge = 1;
+    if (fx <= 1 && nb(sub32(tx, 1), ty, w.cell(sub32(tx, 1), ty)) != type) edge = 1;
+    if (fy <= 1 && nb(tx, sub32(ty, 1), sub32(w.cell(tx, ty), 1)) != type) edge = 1;
+    if (fx >= 14 && nb(add32(tx, 1), ty, w.cell(add32(tx, 1), ty)) != type) edge = 1;
+    if (fy >= 14 && nb(tx, add32(ty, 1), add32(w.cell(tx, ty), 1)) != type) edge = 1;
     const int32_t oct = octant(r.i(kDir));
     if (r.i(kBallZ) > 1) {  // in the air
       const int32_t h1 = f_heightAt(ctx, {r.i(kBallX), r.i(kBallY)});
@@ -396,16 +398,16 @@ int32_t trial_shot(Ctx &ctx, int32_t g, int32_t x, int32_t y, int32_t aim) {
       }
       if (tx != sar32(r.i(kBallX), 10)) {
         const int32_t mask = dx > 0 ? 4 : 0x40;
-        if (mask & w.twall(World::cell(tx, ty))) r.i(kDir, neg32(r.i(kDir)));
+        if (mask & w.twall(w.cell(tx, ty))) r.i(kDir, neg32(r.i(kDir)));
       }
       if (ty != sar32(r.i(kBallY), 10)) {
         const int32_t mask = dy > 0 ? 1 : 0x10;
-        if (mask & w.twall(World::cell(tx, ty))) r.i(kDir, sub32(INT32_MIN, r.i(kDir)));
+        if (mask & w.twall(w.cell(tx, ty))) r.i(kDir, sub32(INT32_MIN, r.i(kDir)));
       }
     }
     if (r.i(kBallZ) <= 0 && r.i(kVz) < 0) {  // the bounce
       const int32_t inner = (fx >= 5 && fx < 11 && fy >= 5) ? 1 : 0;
-      const int32_t cell = World::cell(tx, ty);
+      const int32_t cell = w.cell(tx, ty);
       int32_t b = w.ts(type, 0);
       if (s.unk_005a9cc4 == 0) {
         if (b < 2 && edge) b = 2;
@@ -492,7 +494,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   s.g_shotRedrawGolfer = -1;
   if ((s.g_flags & 0x20u) && s.g_msgState53df54 > 0) s.g_shotRedrawGolfer = s.g_msgState53df54 - 1;
   const int32_t btx = sar32(r.i(kBallX), 10), bty = sar32(r.i(kBallY), 10);  // F+0x34 / F+0x40
-  const int32_t bcell = World::cell(btx, bty);                                // F+0x50
+  const int32_t bcell = w.cell(btx, bty);                                // F+0x50
   int32_t lie = w.tile(bcell);                                                // F+0x14
   if (mode == 0) {
     r.i(kTargetX, w.hole_x(hole0));
@@ -549,10 +551,10 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       s.g_shotTargetY = add32(shl32(tY, 10), 0x200);
       if (lie != 1 && dist > 0x19) {  // green slope
         const int32_t o1 = oct0 & 6, o2 = (oct0 + 1) & 6;
-        const int32_t sum = w.ts(w.tile(add32(sub32(mul32(sub32(tX, w.dx(o1)), 50), w.dy(o1)), tY)), 2) +
-                            w.ts(w.tile(add32(sub32(mul32(sub32(tX, w.dx(o2)), 50), w.dy(o2)), tY)), 2) -
-                            w.ts(w.tile(add32(add32(mul32(add32(w.dx(o1), tX), 50), w.dy(o1)), tY)), 2) -
-                            w.ts(w.tile(add32(add32(mul32(add32(tX, w.dx(o2)), 50), w.dy(o2)), tY)), 2);
+        const int32_t sum = w.ts(w.tile(add32(sub32(mul32(sub32(tX, w.dx(o1)), w.n()), w.dy(o1)), tY)), 2) +
+                            w.ts(w.tile(add32(sub32(mul32(sub32(tX, w.dx(o2)), w.n()), w.dy(o2)), tY)), 2) -
+                            w.ts(w.tile(add32(add32(mul32(add32(w.dx(o1), tX), w.n()), w.dy(o1)), tY)), 2) -
+                            w.ts(w.tile(add32(add32(mul32(add32(tX, w.dx(o2)), w.n()), w.dy(o2)), tY)), 2);
         if (sum >= 4) {
           const int32_t k = w.ts(lie, 2) <= 0 ? 6 : 0;
           dist = add32(dist, clamp(dist / 4 - k, 0, 12));
@@ -578,7 +580,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       const int32_t py = sar32(sub32(r.i(kBallY), abs_diff(ctx, r.i(kDir), along)), 10);
       f3c = py;
       if (tile_blocked(ctx, px, py)) break;
-      const int32_t idx = World::cell(px, py);
+      const int32_t idx = w.cell(px, py);
       const int32_t t = w.tile(idx);
       const int32_t b2 = w.ts(t, 2);
       acc = add32(acc, shl32(mul32(i, b2), 1));
@@ -601,7 +603,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       const int32_t off = w.rnd(2) ? 0x0aaaaaaa : i32(0xf5555556u);
       const int32_t qx = sar32(add32(fold_range(ctx, add32(r.i(kDir), off), along), r.i(kBallX)), 10);
       const int32_t qy = sar32(sub32(r.i(kBallY), abs_diff(ctx, add32(r.i(kDir), off), along)), 10);
-      acc = add32(acc, mul32(w.ts(w.tile(World::cell(qx, qy)), 2), n));
+      acc = add32(acc, mul32(w.ts(w.tile(w.cell(qx, qy)), 2), n));
       i = n;
       along = add32(along, 0x400);
     } while (i < steps);
@@ -611,7 +613,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     if (tile_blocked(ctx, nx, ny)) {
       acc = add32(acc, add32(shl32(steps, 2), 4));
     } else {
-      const int32_t t = w.tile(World::cell(nx, ny));
+      const int32_t t = w.tile(w.cell(nx, ny));
       const int32_t v = mul32(w.ts(t, 2), add32(steps, 1)) / 2;
       acc = add32(acc, v);
       counts(t) = add32(counts(t), v);
@@ -631,7 +633,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   {
     int32_t dif = div32(acc, add32(steps, 3));
     if (rough >= 2) dif += 4;
-    if (w.tile_u(World::cell(sar32(r.i(kBallX), 10), sar32(r.i(kBallY), 10))) == 1) dif = 0;
+    if (w.tile_u(w.cell(sar32(r.i(kBallX), 10), sar32(r.i(kBallY), 10))) == 1) dif = 0;
     if (dist <= 0x28 && dif > 10) dif = 10;
     r.b(kShotValue, dif);
   }
@@ -672,7 +674,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   if (r.b(kSkillMask) & 0x10) acu = add32(acu, mul32(r.b(0xf4), acu) / 8);
   {
     const int32_t h = r.hole();
-    if (w.tvariant(World::cell(w.hole_x(h), w.hole_y(h))) & 0x80) acu -= 10;
+    if (w.tvariant(w.cell(w.hole_x(h), w.hole_y(h))) & 0x80) acu -= 10;
   }
   if (r.sb(kMoodByte) < 2) acu /= 2;
   const int32_t halfAcu = acu / 2;
@@ -778,12 +780,12 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     } else {
       const int32_t py = sar32(sub32(r.i(kBallY), abs_diff(ctx, dir, 0x80)), 10);
       const int32_t px = sar32(add32(fold_range(ctx, dir, 0x80), r.i(kBallX)), 10);
-      if (w.tu(w.tile(World::cell(px, py)), 6) == 0xd) {
+      if (w.tu(w.tile(w.cell(px, py)), 6) == 0xd) {
         chip = true;
       } else {
         const int32_t py2 = sar32(sub32(r.i(kBallY), abs_diff(ctx, dir, 0x400)), 10);
         const int32_t px2 = sar32(add32(fold_range(ctx, dir, 0x400), r.i(kBallX)), 10);
-        chip = w.tu(w.tile(World::cell(px2, py2)), 6) == 0xd;
+        chip = w.tu(w.tile(w.cell(px2, py2)), 6) == 0xd;
       }
     }
   }
@@ -795,7 +797,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
     aim = 0;
     r.w(kShotKind, 4);
   } else if ((r.b(kPrefs) & 4) && aim == 0 && lie != 1 && w.ts(lie, 2) == 0 && r.sb(kClub) >= 4 && dist > 0x19) {
-    const bool go = mode == 0 ? w.tile_u(World::cell(r.i(kTargetX), r.i(kTargetY))) == 1 : s.g_playerShotStyle == 3;
+    const bool go = mode == 0 ? w.tile_u(w.cell(r.i(kTargetX), r.i(kTargetY))) == 1 : s.g_playerShotStyle == 3;
     if (go) {  // a lob
       r.u(kFlags, r.u(kFlags) | 0x80u);
       const int32_t vz = r.i(kVz);
@@ -810,13 +812,13 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   int32_t e7 = b7a;
   if (x == -1) {  // a real shot: hazards on the way and the golfer's thoughts
     if (r.b(kClub) == 0xd) {
-      if (w.tile_u(World::cell(r.i(kTargetX), r.i(kTargetY))) == 1) r.i(kSpeed, shot_power(ctx, dist + 2, 0, 1));
+      if (w.tile_u(w.cell(r.i(kTargetX), r.i(kTargetY))) == 1) r.i(kSpeed, shot_power(ctx, dist + 2, 0, 1));
     } else {
       int32_t n = 0;  // F+0x20
       w.hole_i(r.hole(), 0x24, add32(w.hole_i(r.hole(), 0x24), 1));
       // the cell the thoughts name: transposed in the original (prepareShot.hazardCellTransposed)
-      auto hazardCell = [](int32_t px, int32_t py) {
-        return SG_DEFECT(g_defect_hazard_transposed) ? World::cell(py, px) : World::cell(px, py);
+      auto hazardCell = [&](int32_t px, int32_t py) {
+        return SG_DEFECT(g_defect_hazard_transposed) ? w.cell(py, px) : w.cell(px, py);
       };
       auto probes = [&] { return div32(shl32(f_heightBlend(ctx, {btx, bty, 0}), 4), add32(s.g_difficulty, 2)); };
       if (probes() > 0) {
@@ -830,8 +832,8 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
             const int32_t py = sar32(sub32(r.i(kY), abs_diff(ctx, dr, st)), 10);
             const int32_t o3 = octant(dr);
             if (!tile_blocked(ctx, px, py)) {
-              const int32_t idx = World::cell(px, py);
-              const int32_t back = add32(sub32(mul32(sub32(px, w.dx(o3)), 50), w.dy(o3)), py);
+              const int32_t idx = w.cell(px, py);
+              const int32_t back = add32(sub32(mul32(sub32(px, w.dx(o3)), w.n()), w.dy(o3)), py);
               if ((w.tflags(idx) & 0x100) || w.tile_u(idx) == 0x13) {
                 const int32_t h1 = add32(f_heightBlend(ctx, {btx, bty, 0}), 1);
                 const int32_t h2 = f_heightBlend(ctx, {px, py, 0});
@@ -864,7 +866,7 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
       const int32_t h2 = f_heightBlend(ctx, {btx, bty, 0});
       r.b(kShotValue, r.b(kShotValue) + abs32(sub32(h2, h1)));
     }
-    if (s.unk_005a9ce4 != 0 && w.ts(w.tile(World::cell(r.i(kTargetX), r.i(kTargetY))), 2) > 0 && w.ts(lie, 2) <= 0 &&
+    if (s.unk_005a9ce4 != 0 && w.ts(w.tile(w.cell(r.i(kTargetX), r.i(kTargetY))), 2) > 0 && w.ts(lie, 2) <= 0 &&
         mode == 0 && !(r.b(kFlags) & 1)) {
       think({g, 8, 0x14});
     } else if (f38 != 0) {
@@ -1151,7 +1153,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
   const int32_t reach = f_golferShotReach(ctx, {g});  // F+0x4c
   const int32_t entryTX = r.i(kTargetX), entryTY = r.i(kTargetY);
   const int32_t bx = sar32(r.i(kBallX), 10), by = sar32(r.i(kBallY), 10);
-  const int32_t ballCell = World::cell(bx, by);
+  const int32_t ballCell = w.cell(bx, by);
   const int32_t ballType = w.tile(ballCell);
   if (s.unk_005a9cc4 == 0 && !(r.b(kFlags) & 1) && (w.ts(ballType, 2) <= 0 || r.b(kKind) == 0)) s.unk_005a9cc4 = 1;
   int32_t aimMask = w.ts(ballType, 2) > 0 ? 0 : ((r.b(kPrefs) & 4) ? 3 : 0);  // F+0x3c
@@ -1214,7 +1216,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
           if (cellDist > add32(reach, 16)) continue;
           if (!(cellDist >= reach / 3 || cellDist >= holeDist / 3 || (r.b(kFlags) & 1))) continue;
           if (cx == bx && cy == by) continue;
-          const int32_t t = w.tile(World::cell(cx, cy));
+          const int32_t t = w.tile(w.cell(cx, cy));
           if (t == 0) continue;
           const int32_t t2 = w.ts(t, 2);
           if (t2 > 1) continue;
@@ -1222,11 +1224,11 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
           if (t2 == 1) {
             nbOk = 0;
             for (int32_t k = 0; k < 8; k += 2)
-              if (w.ts(w.tile(add32(mul32(add32(w.dx(k), cx), 50), add32(w.dy(k), cy))), 2) <= 0) nbOk = 1;
+              if (w.ts(w.tile(add32(mul32(add32(w.dx(k), cx), w.n()), add32(w.dy(k), cy))), 2) <= 0) nbOk = 1;
           }
           const int32_t d1 = distance(sub32(cx, w.hole_x(r.hole())), sub32(cy, w.hole_y(r.hole())));
           const int32_t d2 = distance(sub32(bx, w.hole_x(r.hole())), sub32(by, w.hole_y(r.hole())));
-          if (w.tile_u(World::cell(cx, cy)) == 1 && d1 > 3) continue;
+          if (w.tile_u(w.cell(cx, cy)) == 1 && d1 > 3) continue;
           const int32_t e = nbOk ? 1 : d2 / 2;
           if (add32(e, d1) > d2) continue;
           for (int k = 0; k < 6; ++k) A[co + k] = 0;
@@ -1271,7 +1273,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
                     if (tile_blocked(ctx, px, py)) {
                       sc = add32(sc, w.ts(0x14, 2));
                     } else {
-                      const int32_t ix = World::cell(px, py);
+                      const int32_t ix = w.cell(px, py);
                       sc = add32(sc, w.ts(w.tile(ix), 2));
                       if (w.tflags(ix) & 0x80) sc = sub32(sc, 1);
                     }
@@ -1279,7 +1281,7 @@ int32_t choose_shot_target(Ctx &ctx, int32_t g) {
                   trial = sc;
                 }
                 const int32_t lx = sar32(s.g_shot56a78c, 10), ly = sar32(s.g_shot56a790, 10);
-                const int32_t landCell = World::cell(lx, ly);
+                const int32_t landCell = w.cell(lx, ly);
                 int32_t lv = w.ts(w.tile(landCell), 2);
                 if (tile_blocked(ctx, lx, ly) || (w.tflags(landCell) & 0x400)) {
                   lv = w.ts(0x14, 2);
@@ -2060,7 +2062,7 @@ bool margin_carry(Ctx &c, const World &w, const Rec &r, int32_t &x, int32_t &y, 
   for (int32_t t = 0; t < 2000; ++t) {
     if (r.i(kSpeed) == 0) break;
     const int32_t L18 = sar32(r.i(kBallX), 10), L20 = sar32(r.i(kBallY), 10);
-    const int32_t L14 = tile_blocked(c, L18, L20) ? 0x14 : w.tile(World::cell(L18, L20));
+    const int32_t L14 = tile_blocked(c, L18, L20) ? 0x14 : w.tile(w.cell(L18, L20));
     const int32_t hb = f_heightAt(c, {r.i(kBallX), r.i(kBallY)});
     r.i(kBallX, add32(r.i(kBallX), fold_range(c, r.i(kDir), r.i(kSpeed) / 16)));
     r.i(kBallY, sub32(r.i(kBallY), abs_diff(c, r.i(kDir), r.i(kSpeed) / 16)));
@@ -2200,7 +2202,7 @@ const DefectDef kDefects[] = {
      &g_defect_shot_power_putt},
     {"chooseShotTarget.strictFlagSticky", "model_defects#37",
      "the strict-scan flag is never initialised or cleared within a search", &g_defect_strict_sticky},
-    {"prepareShot.hazardCellTransposed", "model_defects#38", "the hazard cell passed to the thoughts is y * 50 + x",
+    {"prepareShot.hazardCellTransposed", "model_defects#38", "the hazard cell passed to the thoughts is y * N + x (N = 50)",
      &g_defect_hazard_transposed},
     {"narrateShot.maskNotRestored", "model_defects#39",
      "two missed-shot exits skip restoring the named golfer's skill mask", &g_defect_mask_not_restored},

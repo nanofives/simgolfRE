@@ -672,8 +672,8 @@ bool world_cursor_of(const LiveTerrainWorld *wp, std::vector<uint16_t> &px, std:
 LiveTerrain::LiveTerrain(Ctx &ctx, uint32_t va, std::vector<uint32_t> snap_after)
     : ctx_(ctx), engine_(make_headless_terrain(ctx)), snap_after_(std::move(snap_after)) {
   dll_.terrain = va;
-  g_.vertices.assign(static_cast<size_t>(22500) * 3, 0.0f);   // the DLL's bss arrays: 22,500 vertices each
-  g_.normals.assign(static_cast<size_t>(22500) * 3, 0.0f);
+  g_.vertices.assign(terrain_vertex_count(ctx) * 3, 0.0f);   // the DLL's bss arrays: 22,500 vertices each at 50 ((3 * N)^2)
+  g_.normals.assign(terrain_vertex_count(ctx) * 3, 0.0f);
   // the rasteriser the GL setup also goes to (the window size initTerrain passes is the screen's: 800 x 600, U-1310); the
   // constructor's texture load runs before any context exists, like the original's
   raster_ = std::make_unique<gl::GlRaster>(800, 600);
@@ -824,13 +824,14 @@ void LiveTerrain::drop_log() {
 
 uint32_t LiveTerrain::get_instance() {
   if (!dll_.constructed) {
-    object_.assign(kTerrainObjectSize, kNewFill);   // operator new's fill (debug CRT)
+    const uint32_t size = terrain_object_size(ctx_);
+    object_.assign(size, kNewFill);   // operator new's fill (debug CRT)
     uint32_t va = dll_.terrain;
-    if (va == 0 || !ctx_.mem.map(va, object_.data(), kTerrainObjectSize, false)) {
+    if (va == 0 || !ctx_.mem.map(va, object_.data(), size, false)) {
       va = 0;
       uint32_t base = (ctx_.mem.data_base() + static_cast<uint32_t>(sizeof(GameState)) + (32u << 20)) & ~0xFFFFu;
       for (int tries = 0; tries < 64 && va == 0; ++tries, base += (4u << 20))
-        if (ctx_.mem.map(base, object_.data(), kTerrainObjectSize, false)) va = base;
+        if (ctx_.mem.map(base, object_.data(), size, false)) va = base;
       if (va == 0) throw MissingResource{"LiveTerrain: no free range for the Terrain object"};
     }
     dll_.terrain = va;

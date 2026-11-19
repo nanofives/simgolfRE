@@ -2209,8 +2209,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     // P7 draws no placement preview with the cursor's y at or below 0x1e0 (ML+0xa774, ML+0xb3d0): the preview stays where the
     // cursor left the course until the next frame removes it
     if (ly >= 0x1e0) return;
-    if (!proj_tile(P, lx, ly, tx, ty) || tx < 0 || tx >= 50 || ty < 0 || ty >= 50) return;
-    const size_t a = static_cast<size_t>(P.tile_x * 50 + P.tile_y), b = static_cast<size_t>(tx * 50 + ty);
+    if (!proj_tile(P, lx, ly, tx, ty) || tx < 0 || tx >= P.n || ty < 0 || ty >= P.n) return;
+    const size_t a = static_cast<size_t>(P.tile_x * P.n + P.tile_y), b = static_cast<size_t>(tx * P.n + ty);
     if (!P.on[b]) return;
     Presenter::CursorLive c;
     c.sx = P.sx[b] - P.sx[a];

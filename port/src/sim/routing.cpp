@@ -31,6 +31,7 @@
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/lang.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 #include "commands_internal.h"
 #include "gfx_reports.h"
 #include "landoffer.h"   // P38H
@@ -164,20 +165,20 @@ struct MapDraw {
   // the two tile passes: pass 1 a diamond in 0x80001284 under every tile whose type byte of
   // unk_0058dd34 is 0xff; pass 2 one diamond per tile in the mode's colour (no tile = type 0x14, skipped by both)
   void tiles(int32_t mode) const {
-    const uint32_t grid = state_va(ctx, &GameState::g_tileType), tbyte = state_va(ctx, &GameState::unk_0058dd34);
+    const uint32_t grid = grid_va(ctx, &GameState::g_tileType), tbyte = state_va(ctx, &GameState::unk_0058dd34);
     const uint32_t attrs = state_va(ctx, &GameState::g_tileTypeAttrs);
-    for (int32_t x = 0; x < 50; ++x)
-      for (int32_t y = 0; y < 50; ++y) {
-        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
+    for (int32_t x = 0; x < world_n(ctx); ++x)
+      for (int32_t y = 0; y < world_n(ctx); ++y) {
+        const int32_t t = m.load<int8_t>(grid + u32(tile_index(ctx, x, y)));
         if (t == 0x14 || m.load<uint8_t>(tbyte + u32(t)) != 0xff) continue;
         int32_t sx, sy;
         map_to_screen(x, y, sx, sy);
         gx("drawRoutingPoly.diamond", {u32(sx), u32(sy), 0x80001284u});
       }
     uint32_t colour = 0;
-    for (int32_t x = 0; x < 50; ++x)
-      for (int32_t y = 0; y < 50; ++y) {
-        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
+    for (int32_t x = 0; x < world_n(ctx); ++x)
+      for (int32_t y = 0; y < world_n(ctx); ++y) {
+        const int32_t t = m.load<int8_t>(grid + u32(tile_index(ctx, x, y)));
         if (t == 0x14) continue;
         int32_t sx, sy;
         map_to_screen(x, y, sx, sy);
@@ -189,8 +190,8 @@ struct MapDraw {
           if (area == -1) colour = 0x80002000u;
         }
         if (mode == 1) {   // the aura: shade A >> 3 red, shade B >> 3 green, (A + B) & 0xff >> 4 blue
-          const uint32_t a = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeA) + u32(x * 50 + y));
-          const uint32_t b = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeB) + u32(x * 50 + y));
+          const uint32_t a = m.load<uint8_t>(grid_va(ctx, &GameState::g_tileShadeA) + u32(tile_index(ctx, x, y)));
+          const uint32_t b = m.load<uint8_t>(grid_va(ctx, &GameState::g_tileShadeB) + u32(tile_index(ctx, x, y)));
           colour = 0x80000000u | (a >> 3) << 10 | (b >> 3) << 5 | ((a + b) & 0xff) >> 4;
           if (t == 0x11) colour = 0x80000218u;
         }
@@ -422,7 +423,7 @@ struct Screen {
         ways(state_va(c, &GameState::g_holePoints)),
         walkers(state_va(c, &GameState::g_walkers)),
         golfers(state_va(c, &GameState::g_golfers)),
-        flags(state_va(c, &GameState::g_tileFlags)),
+        flags(grid_va(c, &GameState::g_tileFlags)),
         sheet(state_va(c, &GameState::g_sheetCols)) {
     for (int i = 0; i < 20; ++i) perm[i] = i;
   }
@@ -435,7 +436,7 @@ struct Screen {
   // +0x1c of the hole record; no bound test, as the original has none)
   void tile_number(uint32_t rec, uint32_t off, int32_t h) const {
     const int32_t x = m.load<int32_t>(rec + off), y = m.load<int32_t>(rec + off + 4);
-    const uint32_t at = flags + 2u * u32(add32(mul32(x, 50), y));
+    const uint32_t at = flags + 2u * u32(tile_index(ctx, x, y));
     m.store<uint16_t>(at, static_cast<uint16_t>((m.load<uint16_t>(at) & 0xffe0u) | static_cast<uint32_t>(h)));
   }
   void number_hole(int32_t k) const {
@@ -631,8 +632,8 @@ void hole_jump_camera(Ctx &ctx, uint32_t rec, int32_t hole) {
   // key's test therefore asks "is the green in the picture now"); the cache is emptied as the next frame head empties it for a
   // moved camera (mainLoop ML+0xfca: the 0x4e2 dwords from g_tileScreenX), so the green is judged at the new camera
   {
-    const uint32_t cache = state_va(ctx, &GameState::g_tileScreenX);
-    for (uint32_t i = 0; i < 0x4e2u; ++i) ctx.mem.store<uint32_t>(cache + 4u * i, 0);
+    const uint32_t cache = grid_va(ctx, &GameState::g_tileScreenX);
+    for (uint32_t i = 0; i < u32(grid_dwords(ctx, 2)); ++i) ctx.mem.store<uint32_t>(cache + 4u * i, 0);  // 0x4e2 at 50
   }
   gs.g_msgState53df54 = 0;
   if (ctx.view && call_peer(ctx, "tileToScreen", {m.load<uint32_t>(rec + 0x18), m.load<uint32_t>(rec + 0x1c), kPortViewHoleOutXVa,

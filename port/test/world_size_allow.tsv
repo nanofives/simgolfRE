@@ -1,0 +1,10 @@
+rule	file	match	reason
+base	src/sim/saveload_fields.inc	offsetof(GameState, g_	the .sve field tables: the save format holds the 50 x 50 grids of the original (P38 decision: existing saves stay 50; a large map gets a port-only save, phase D)
+base	src/sim/gfx_hud.cpp	GSO(g_tileFlags, 0x0)	a loop bound: the sprite table g_sprites53c570 ends where g_tileFlags starts (the original's loop ends at that address); no grid entry is read
+disguised	src/sim/tick_frame.inc	GS(g_rootInput)	fields of the root input widget g_rootInput (0x40 bytes, offsets +8 .. +0x38 inside it); the shade grid g_tileShadeA only follows it
+disguised	src/sim/tick_menu.inc	GS(g_rootInput)	fields of the root input widget g_rootInput (0x40 bytes); not g_tileShadeA
+disguised	src/sim/tick_panels.inc	GS(g_rootInput)	fields of the root input widget g_rootInput (0x40 bytes); not g_tileShadeA
+disguised	app/host.cpp	GameState::g_rootInput) + 0x10	the root input widget's button field (+0x10 of its 0x40 bytes); not g_tileShadeA
+disguised	src/sim/shots.cpp	GameState::g_rootInput) + 0x3c	the root input widget's last field (+0x3c of its 0x40 bytes); not g_tileShadeA
+disguised	src/sim/tick_frame.inc	GS(g_courseRanking) + 236	the end of the 0xf0-byte g_courseRanking table (the year-end ranking loop's bound); g_tileTypeSaved starts after it
+literal	src/sim/saveload_fields.inc	offsetof(GameState, g_	the .sve field sizes 0x9c4 / 0x1388 / 0xa29: the save format holds the 50 x 50 grids (saves stay 50; phase D)

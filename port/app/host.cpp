@@ -35,6 +35,7 @@
 #include "portsim/sim/gfx.h"  // P8A: gfx_drop("loading.banner")  // P8B: gfx_back_terrain  // P6B item 2: sheet_to_gfx_stats
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/util.h"  // P10E: distance (proj_tile)
+#include "portsim/sim/world.h"  // P38A: the world size (take_proj)
 #include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (CameraSnap::t_ns)
 #include "portsim/state_hash.h"
 
@@ -836,7 +837,8 @@ static void take_proj(portsim::Ctx &ctx, CursorProj &p, bool pic) {
   if (g.unk_005a9cbc != 0 || g.unk_005a9cc0 != 0) return;
   if (g.g_cameraRot != 0 && g.g_cameraRot != 2 && g.g_cameraRot != 4 && g.g_cameraRot != 6) return;
   if (g.g_tileStep4c2840 == 0) return;
-  if (g.g_cursorTileX < 0 || g.g_cursorTileX >= 50 || g.g_cursorTileY < 0 || g.g_cursorTileY >= 50) return;
+  const int32_t N = portsim::world_n(ctx);  // P38A: the grid side (50)
+  if (g.g_cursorTileX < 0 || g.g_cursorTileX >= N || g.g_cursorTileY < 0 || g.g_cursorTileY >= N) return;
   // P12A fix 1: the snapshot is in the coordinates of the frame's own picture. The key cases and edge scroll move the camera after
   // the picture was drawn and before the present (present.h CameraSnap), so the camera is the one updateTerrainRender drew with
   // (g_terrainLastCamX / Y, equal to gCameraTileX / Y when the camera did not move), and worldToScreen's answers (which read
@@ -867,18 +869,21 @@ static void take_proj(portsim::Ctx &ctx, CursorProj &p, bool pic) {
     p.dir_dx[k] = g.f_tab_dirDx_4c2878[k];
     p.dir_dy[k] = g.f_tab_dirDy_4c2898[k];
   }
-  p.sx.assign(2500, 0);
-  p.sy.assign(2500, 0);
-  p.on.assign(2500, 0);
+  p.n = N;
+  p.sx.assign(static_cast<size_t>(N) * N, 0);
+  p.sy.assign(static_cast<size_t>(N) * N, 0);
+  p.on.assign(static_cast<size_t>(N) * N, 0);
+  const int16_t *screen_x = portsim::grid_host(ctx, &portsim::GameState::g_tileScreenX);
+  const int16_t *screen_y = portsim::grid_host(ctx, &portsim::GameState::g_tileScreenY);
   const int32_t E = portsim::wide_view_margin_t2s(ctx);
-  for (int32_t tx = 0; tx < 50; ++tx)
-    for (int32_t ty = 0; ty < 50; ++ty) {
-      const size_t cell = static_cast<size_t>(tx * 50 + ty);
-      const int16_t c = g.g_tileScreenX[cell];
+  for (int32_t tx = 0; tx < N; ++tx)
+    for (int32_t ty = 0; ty < N; ++ty) {
+      const size_t cell = static_cast<size_t>(tx * N + ty);
+      const int16_t c = screen_x[cell];
       if (c != 0) {
         if (c == -99) continue;
         p.sx[cell] = c;
-        p.sy[cell] = g.g_tileScreenY[cell];
+        p.sy[cell] = screen_y[cell];
         p.on[cell] = 1;
         continue;
       }
@@ -894,14 +899,14 @@ static void take_proj(portsim::Ctx &ctx, CursorProj &p, bool pic) {
         p.on[cell] = 1;
       }
     }
-  p.ok = p.on[static_cast<size_t>(p.tile_x * 50 + p.tile_y)] != 0;
+  p.ok = p.on[static_cast<size_t>(p.tile_x * N + p.tile_y)] != 0;
 }
 
 // P10E: screenToTile (tick_render.inc Rend::screenToTile) with useWorld 0 on the snapshot. As the original, the point of the last
 // tileToScreen that answered is kept for the distance when a tile has none.
 bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t &ty) {
   using namespace portsim;
-  if (!p.ok || p.step == 0 || p.on.size() != 2500) return false;
+  if (!p.ok || p.step == 0 || p.on.size() != static_cast<size_t>(p.n) * p.n) return false;
   int32_t cx = px - p.sw / 2 - 0x40;
   int32_t cy = py - p.sh / 2;
   if (p.rot == 2) {
@@ -931,8 +936,8 @@ bool proj_tile(const CursorProj &p, int32_t px, int32_t py, int32_t &tx, int32_t
   int32_t a = 0, b = 0;
   bool have = false;
   auto t2s = [&](int32_t x, int32_t y) {
-    if (x < 0 || x >= 50 || y < 0 || y >= 50) return;
-    const size_t cell = static_cast<size_t>(x * 50 + y);
+    if (x < 0 || x >= p.n || y < 0 || y >= p.n) return;
+    const size_t cell = static_cast<size_t>(x * p.n + y);
     if (!p.on[cell]) return;
     a = p.sx[cell];
     b = p.sy[cell];

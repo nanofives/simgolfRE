@@ -1,7 +1,7 @@
 // Terrain, tile-grid and heightfield functions of the simulation core (phase 3.1a, stage B, 2026-10-19).
 // Specifications: re/analysis/{terrain,sim,course,render,golfer}/<addr>_<name>.md, the C3/C4 hook sources named in
-// re/port/simcore_order.tsv (reading reference) and the vector corpus. Grids are 50 x 50 (cell (x, y) = x * 50 + y),
-// the corner-level grid g_cornerLevel is 51 x 51 (x * 51 + y). Like the original, nothing here bound-checks unless
+// re/port/simcore_order.tsv (reading reference) and the vector corpus. Grids are N x N (cell (x, y) = x * N + y, N = 50 in the original),
+// the corner-level grid g_cornerLevel is (N + 1) x (N + 1) (x * (N + 1) + y), portsim/sim/world.h. Like the original, nothing here bound-checks unless
 // stated: an index outside a grid reads or writes the neighbouring GameState bytes (model_defects.md section 1).
 #ifndef PORTSIM_SIM_TERRAIN_H
 #define PORTSIM_SIM_TERRAIN_H
@@ -9,10 +9,9 @@
 #include <cstdint>
 
 #include "portsim/registry.h"
+#include "portsim/sim/world.h"  // P38A: the grid widths (world_n, world_v)
 
 namespace portsim {
-
-constexpr int32_t kCornerW = 51;  // g_cornerLevel row width
 
 // ---- level 0
 // freeAtTile: frees (x = -1) every live ball record whose start point (>> 10) lies on tile (tx, ty).

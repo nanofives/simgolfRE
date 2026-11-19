@@ -10,6 +10,7 @@
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_note
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -99,12 +100,12 @@ int g_defect_hblend_row_past_end = 1;
 //                                tileBlocked (called on the same cell) and typeAtPos give it.
 int g_defect_scan_edge_type = 1;
 
-inline bool on_grid(int32_t x, int32_t y) { return x >= 0 && x < kGridW && y >= 0 && y < kGridW; }
+inline bool on_grid(const Ctx &c, int32_t x, int32_t y) { return x >= 0 && x < world_n(c) && y >= 0 && y < world_n(c); }
 
-Grid<int8_t> types(Ctx &c) { return state_grid(c, &GameState::g_tileType, kGridW); }
-Grid<uint16_t> flags(Ctx &c) { return state_grid(c, &GameState::g_tileFlags, kGridW); }
-Grid<int8_t> levels(Ctx &c) { return state_grid(c, &GameState::g_tileLevel, kGridW); }
-Grid<uint8_t> variants(Ctx &c) { return state_grid(c, &GameState::g_tileVariant, kGridW); }
+Grid<int8_t> types(Ctx &c) { return tile_grid(c, &GameState::g_tileType); }
+Grid<uint16_t> flags(Ctx &c) { return tile_grid(c, &GameState::g_tileFlags); }
+Grid<int8_t> levels(Ctx &c) { return tile_grid(c, &GameState::g_tileLevel); }
+Grid<uint8_t> variants(Ctx &c) { return tile_grid(c, &GameState::g_tileVariant); }
 Ptr<TileTypeAttr> attr(Ctx &c, int32_t type) { return state_arr(c, &GameState::g_tileTypeAttrs) + type; }
 int8_t walk_of(Ctx &c, int32_t type) { return attr(c, type).field(&TileTypeAttr::walk).get(); }
 int8_t collar_of(Ctx &c, int32_t type) { return attr(c, type).field(&TileTypeAttr::collar).get(); }
@@ -131,11 +132,11 @@ void free_at_tile(Ctx &ctx, int32_t tx, int32_t ty) {
 namespace {
 // shared body of raise / lowerCornerLevelsAround; dir +1 raises, -1 lowers
 void corner_levels_around(Ctx &ctx, int32_t x, int32_t y, int dir, bool wrong) {
-  const Ptr<uint8_t> centre = state_arr(ctx, &GameState::g_cornerLevel) + add32(mul32(x, kCornerW), y);
+  const Ptr<uint8_t> centre = grid_arr(ctx, &GameState::g_cornerLevel) + add32(mul32(x, world_v(ctx)), y);
   const int32_t c = centre.get();
   const Ptr<int16_t> kernel = state_arr(ctx, &GameState::g_levelFalloffKernel);
-  Ptr<uint8_t> row = centre - (2 * kCornerW + 2);
-  for (int32_t r = 0; r < 5; ++r, row = row + kCornerW) {
+  Ptr<uint8_t> row = centre - (2 * world_v(ctx) + 2);
+  for (int32_t r = 0; r < 5; ++r, row = row + world_v(ctx)) {
     for (int32_t k = 0; k < 5; ++k) {
       const int32_t kv = kernel[r * 5 + k];
       const Ptr<uint8_t> cell = row + k;
@@ -170,13 +171,13 @@ void push_triple_entry(Ctx &ctx, int32_t a, int32_t b, int32_t c) {
 }
 
 void set_grids(Ctx &ctx, int32_t x, int32_t y, int32_t a, int32_t b) {
-  const int32_t cell = add32(mul32(x, kGridW), y);
+  const int32_t cell = tile_index(ctx, x, y);
   if (!SG_DEFECT(g_defect_course_undo))  // P11D (mainLoop.courseUndo = 0): the journal keeps what this edit overwrites
-    course_undo_note(ctx, x, y, (state_arr(ctx, &GameState::g_tileBuildCode) + cell).get(),
-                     (state_arr(ctx, &GameState::g_tileRefund) + cell).get(), a & 0xff, static_cast<int8_t>(b));
-  (state_arr(ctx, &GameState::g_tileBuildCode) + cell).set(static_cast<uint8_t>(a));
-  (state_arr(ctx, &GameState::g_tileRefund) + cell).set(static_cast<int8_t>(b));
-  if (SG_NEGCTL(g_negctl_set_grids) == 1) (state_arr(ctx, &GameState::g_tileBuildCode) + add32(cell, 1)).set(static_cast<uint8_t>(b));
+    course_undo_note(ctx, x, y, (grid_arr(ctx, &GameState::g_tileBuildCode) + cell).get(),
+                     (grid_arr(ctx, &GameState::g_tileRefund) + cell).get(), a & 0xff, static_cast<int8_t>(b));
+  (grid_arr(ctx, &GameState::g_tileBuildCode) + cell).set(static_cast<uint8_t>(a));
+  (grid_arr(ctx, &GameState::g_tileRefund) + cell).set(static_cast<int8_t>(b));
+  if (SG_NEGCTL(g_negctl_set_grids) == 1) (grid_arr(ctx, &GameState::g_tileBuildCode) + add32(cell, 1)).set(static_cast<uint8_t>(b));
 }
 
 void flood_mark(Ctx &ctx, int32_t x, int32_t y) {
@@ -190,7 +191,7 @@ void flood_mark(Ctx &ctx, int32_t x, int32_t y) {
   const uint16_t mask = SG_NEGCTL(g_negctl_flood_mark) == 1 ? 0x20 : 0x420;
   for (int32_t k = 0; k < 8; k += 2) {
     const int32_t nx = add32(dir_dx(ctx, k), x), ny = add32(dir_dy(ctx, k), y);
-    if (!SG_DEFECT(g_defect_flood_outside) && !on_grid(nx, ny)) continue;  // P28A: the cell does not exist
+    if (!SG_DEFECT(g_defect_flood_outside) && !on_grid(ctx, nx, ny)) continue;  // P28A: the cell does not exist
     const uint16_t w2 = f(nx, ny);
     if ((w2 & mask) != 0 && (w2 & 0x40) == 0) flood_mark(ctx, nx, ny);
   }
@@ -224,7 +225,7 @@ int32_t can_step(Ctx &ctx, int32_t x, int32_t y, int32_t dir) {
   if (t == 0x16 || t == 0x15) return 0;
   const int32_t nx = add32(x, dir_dx(ctx, dir)), ny = add32(y, dir_dy(ctx, dir));
   const uint16_t mask = SG_NEGCTL(g_negctl_can_step) == 2 ? 0x100 : 0x120;
-  if (!SG_DEFECT(g_defect_canstep_before_bound) && !on_grid(nx, ny)) return 0;  // P28A: tileBlocked's arm before the reads
+  if (!SG_DEFECT(g_defect_canstep_before_bound) && !on_grid(ctx, nx, ny)) return 0;  // P28A: tileBlocked's arm before the reads
   if (flags(ctx)(nx, ny) & mask) return 0;
   if (walk_of(ctx, types(ctx)(nx, ny)) <= 0 && SG_NEGCTL(g_negctl_can_step) != 1) return 0;
   if (tile_blocked(ctx, nx, ny) != 0) return 0;
@@ -356,8 +357,8 @@ void rebuild_tile_coverage(Ctx &ctx) {
   const Ptr<PlacedObject> o0 = placed(ctx, 0);
   const int32_t py = o0.field(&PlacedObject::y).get();  // the clubhouse's tile
   const int32_t px = o0.field(&PlacedObject::x).get();
-  const Ptr<uint16_t> fl0 = state_arr(ctx, &GameState::g_tileFlags);
-  for (int32_t i = 0; i < 2500; ++i) {
+  const Ptr<uint16_t> fl0 = grid_arr(ctx, &GameState::g_tileFlags);
+  for (int32_t i = 0; i < world_tiles(ctx); ++i) {
     const Ptr<uint8_t> lo = (fl0 + i).as<uint8_t>();
     lo.set(static_cast<uint8_t>(lo.get() & 0xBF));
   }
@@ -385,7 +386,7 @@ void rebuild_tile_coverage(Ctx &ctx) {
     }
     for (int32_t dr = 0; dr < n; ++dr)
       for (int32_t dc = 0; dc < n; ++dc) {
-        const int32_t idx = add32(add32(r.field(&PlacedObject::y).get(), dc), mul32(50, add32(r.field(&PlacedObject::x).get(), dr)));
+        const int32_t idx = add32(add32(r.field(&PlacedObject::y).get(), dc), mul32(world_n(ctx), add32(r.field(&PlacedObject::x).get(), dr)));
         if ((fl0 + idx).as<uint8_t>().get() & 0x40) flag.set(static_cast<uint8_t>(flag.get() | 0x40));
       }
     const bool diff_test = SG_NEGCTL(g_negctl_rebuild_coverage) != 2;
@@ -434,8 +435,8 @@ int32_t raise_from_neighbours(Ctx &ctx, int32_t x, int32_t y, int32_t same_byte)
 
 void spread_shade(Ctx &ctx, int32_t row, int32_t col, int32_t value) {
   const int32_t amount = add32(value, value) / 3;
-  const Grid<uint8_t> plus = state_grid(ctx, &GameState::g_tileShadeB, kGridW);
-  const Grid<uint8_t> minus = state_grid(ctx, &GameState::g_tileShadeA, kGridW);
+  const Grid<uint8_t> plus = tile_grid(ctx, &GameState::g_tileShadeB);
+  const Grid<uint8_t> minus = tile_grid(ctx, &GameState::g_tileShadeA);
   const int32_t extra = SG_NEGCTL(g_negctl_spread_shade) == 1 ? 1 : 2;
   for (int32_t di = 0; di < 15; ++di) {
     const int32_t r = add32(row, di - 7), rw = -21 + 3 * di;
@@ -457,13 +458,13 @@ void spread_shade(Ctx &ctx, int32_t row, int32_t col, int32_t value) {
 // ================================================================================================== level 2
 int32_t height_blend(Ctx &ctx, int32_t x, int32_t y) {
   GameState &g = ctx.gs();
-  if ((g.g_flags & 1u) || x < 0 || x >= 50 || y < 0 || y >= 50) return 3;
+  if ((g.g_flags & 1u) || x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx)) return 3;
   if (g.g_date != 0) {
     if (types(ctx)(x, y) == 0x14 && tile_blocked(ctx, x - 1, y) && tile_blocked(ctx, x, y + 1)) return 3;
-    return (state_arr(ctx, &GameState::g_cornerLevel) + (x * kCornerW + y)).get();
+    return (grid_arr(ctx, &GameState::g_cornerLevel) + (x * world_v(ctx) + y)).get();
   }
   const int8_t t = types(ctx)(x, y);
-  const bool next_off = !SG_DEFECT(g_defect_hblend_row_past_end) && !on_grid(x + 1, y);  // P28A: type 0x14 there
+  const bool next_off = !SG_DEFECT(g_defect_hblend_row_past_end) && !on_grid(ctx, x + 1, y);  // P28A: type 0x14 there
   if (t == 0x11 || (next_off ? 0x14 : types(ctx)(x + 1, y)) == 0x11 || t == 0x12 || t == 0x13) return 3;
   const Ptr<CourseRecord> c = state_arr(ctx, &GameState::g_courseTable) + g.g_courseIndex;
   const int32_t sh = c.field(&CourseRecord::relief).get() == 2 ? 7 : 6;
@@ -502,13 +503,13 @@ int32_t golfer_shot_reach(Ctx &ctx, int32_t i) {
 uint32_t mark_tile_kind11(Ctx &ctx) {
   const Grid<int8_t> ty = types(ctx);
   const Grid<uint8_t> var = variants(ctx);
-  for (int32_t x = 0; x < 50; ++x)
-    for (int32_t y = 0; y < 50; ++y)
+  for (int32_t x = 0; x < world_n(ctx); ++x)
+    for (int32_t y = 0; y < world_n(ctx); ++y)
       if (static_cast<uint8_t>(collar_of(ctx, ty(x, y))) == 0x11)
         var.cell(x, y).set(SG_NEGCTL(g_negctl_mark_kind11) == 1 ? 1 : 2);
   uint32_t eax = 0;  // the original's eax: the last cell's type (sign-extended) or its propagateType11 result
-  for (int32_t x = 0; x < 50; ++x)
-    for (int32_t y = 0; y < 50; ++y) {
+  for (int32_t x = 0; x < world_n(ctx); ++x)
+    for (int32_t y = 0; y < world_n(ctx); ++y) {
       eax = u32(ty(x, y));
       if (static_cast<uint8_t>(collar_of(ctx, ty(x, y))) == 0x11) eax = propagate_type11(ctx, x, y);
     }
@@ -516,18 +517,21 @@ uint32_t mark_tile_kind11(Ctx &ctx) {
 }
 
 void spread_all_shade(Ctx &ctx) {
-  GameState &g = ctx.gs();
   int32_t total = 0;
-  for (int32_t k = 0; k < 2500; ++k) total += g.g_ballStopCount[k];
-  for (int32_t k = 0; k < 2500; ++k) g.g_tileShadeB[k] = 0;
-  for (int32_t k = 0; k < 2500; ++k) g.g_tileShadeA[k] = 0;
+  const uint8_t *stops = grid_host(ctx, &GameState::g_ballStopCount);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) total += stops[k];
+  uint8_t *shade_b = grid_host(ctx, &GameState::g_tileShadeB);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) shade_b[k] = 0;
+  uint8_t *shade_a = grid_host(ctx, &GameState::g_tileShadeA);
+  for (int32_t k = 0; k < world_tiles(ctx); ++k) shade_a[k] = 0;
   if (total < 10) return;
   if (total > 0x6D6) total = SG_NEGCTL(g_negctl_spread_all_shade) == 1 ? 0x6D5 : 0x6D6;
-  for (int32_t i = 0; i < 50; ++i)
-    for (int32_t j = 0; j < 50; ++j) {
-      const int32_t cell = i * 50 + j;
-      if (g.g_tileMoodUp[cell] != 0) spread_shade(ctx, i, j, g.g_tileMoodUp[cell] * 20000 / total);
-      if (g.g_tileMoodDown[cell] != 0) spread_shade(ctx, i, j, g.g_tileMoodDown[cell] * -40000 / total);
+  for (int32_t i = 0; i < world_n(ctx); ++i)
+    for (int32_t j = 0; j < world_n(ctx); ++j) {
+      const int32_t cell = tile_index(ctx, i, j);
+      const int32_t up = grid_ref(ctx, &GameState::g_tileMoodUp, cell), down = grid_ref(ctx, &GameState::g_tileMoodDown, cell);
+      if (up != 0) spread_shade(ctx, i, j, up * 20000 / total);
+      if (down != 0) spread_shade(ctx, i, j, down * -40000 / total);
     }
 }
 
@@ -567,11 +571,11 @@ int32_t scan_tile_line(Ctx &ctx, int32_t x0, int32_t y0, int32_t tx, int32_t ty,
     return 0;
   }
   const int32_t half = steps / 2;
-  const auto ttype = [&](int32_t cell) { return static_cast<int32_t>((state_arr(ctx, &GameState::g_tileType) + cell).get()); };
+  const auto ttype = [&](int32_t cell) { return static_cast<int32_t>((grid_arr(ctx, &GameState::g_tileType) + cell).get()); };
   // P28A scanTileLine.edgeCellType: the cell (row rx, column ry) at index `cell`; outside the grid it has type 0x14 at 0
   const bool edge_fix = !SG_DEFECT(g_defect_scan_edge_type);
   const auto ctype = [&](int32_t rx, int32_t ry, int32_t cell) {
-    return edge_fix && !on_grid(rx, ry) ? 0x14 : ttype(cell);
+    return edge_fix && !on_grid(ctx, rx, ry) ? 0x14 : ttype(cell);
   };
   const auto byte2 = [&](int32_t t) { return static_cast<int32_t>(walk_of(ctx, t)); };
   const auto is13 = [&](int32_t t) { return static_cast<uint8_t>(collar_of(ctx, t)) == 0xD; };
@@ -595,7 +599,7 @@ int32_t scan_tile_line(Ctx &ctx, int32_t x0, int32_t y0, int32_t tx, int32_t ty,
       py = add32(add32(abs_diff(ctx, a2, L), tyw), 0x200);
     }
     const int32_t fx = sub_tile(px), fy = sub_tile(py);
-    const int32_t cell = add32(sar32(py, 10), mul32(sar32(px, 10), 50));
+    const int32_t cell = add32(sar32(py, 10), mul32(sar32(px, 10), world_n(ctx)));
     const int32_t lead = steps <= 5 ? 1 : (steps >= 9 ? 3 : 2);
     const int32_t cx = sar32(px, 10), cy = sar32(py, 10);
     const int32_t t = ctype(cx, cy, cell);
@@ -605,14 +609,14 @@ int32_t scan_tile_line(Ctx &ctx, int32_t x0, int32_t y0, int32_t tx, int32_t ty,
       if (is13(t)) score = add32(score, 0x20 / (i + 1));
       if (t == 0x11 || tile_blocked(ctx, sar32(px, 10), sar32(py, 10))) score = add32(score, 0x10);
       const int32_t ddx = dir_dx(ctx, dir), ddy = dir_dy(ctx, dir);
-      if (fx < 0xF && ddy) score = add32(score, byte2(ctype(cx - 1, cy, cell - 50)) / 2);
-      if (fx > 0x30 && ddy) score = add32(score, byte2(ctype(cx + 1, cy, cell + 50)) / 2);
+      if (fx < 0xF && ddy) score = add32(score, byte2(ctype(cx - 1, cy, cell - world_n(ctx))) / 2);
+      if (fx > 0x30 && ddy) score = add32(score, byte2(ctype(cx + 1, cy, cell + world_n(ctx))) / 2);
       if (fy < 0xF && ddx) score = add32(score, byte2(ctype(cx, cy - 1, cell - 1)) / 2);
       if (fy > 0x30 && ddx && mode != 1) score = add32(score, byte2(ctype(cx, cy + 1, cell + 1)) / 2);
     }
     const int32_t qx = add32(x0, fold_range(ctx, angle, R));
     const int32_t qy = sub32(y0, abs_diff(ctx, angle, R));
-    if (is13(ctype(sar32(qx, 10), sar32(qy, 10), add32(sar32(qy, 10), mul32(sar32(qx, 10), 50))))) ++count13;
+    if (is13(ctype(sar32(qx, 10), sar32(qy, 10), add32(sar32(qy, 10), mul32(sar32(qx, 10), world_n(ctx)))))) ++count13;
     acc += acc_step;
     L = sub32(L, 0x400);
     R = add32(R, 0x400);
@@ -655,10 +659,10 @@ void corner_range(Ctx &ctx, int32_t x, int32_t y, int32_t &mx, int32_t &mn) {
 }
 
 int32_t corner_heights(Ctx &ctx, int32_t x, int32_t y, int32_t corner, int32_t flag) {
-  if (!(u32(x) < 50u && u32(y) < 50u && (corner & 1))) return 3;
-  const int32_t cell = y + x * 50;
+  if (!(u32(x) < u32(world_n(ctx)) && u32(y) < u32(world_n(ctx)) && (corner & 1))) return 3;
+  const int32_t cell = y + x * world_n(ctx);
   if (flag != 0) {
-    const int8_t cached = (state_arr(ctx, &GameState::g_cornerCache) + add32(cell * 8, corner)).as<int8_t>().get();
+    const int8_t cached = (grid_arr(ctx, &GameState::g_cornerCache) + add32(cell * 8, corner)).as<int8_t>().get();
     if (cached != 0) return cached;
   }
   const uint32_t f = type_flags(ctx, types(ctx)(x, y));
@@ -736,7 +740,7 @@ int32_t slope_mix(Ctx &ctx, int32_t x, int32_t y, int32_t dir) {
 void relax_edges(Ctx &ctx, int32_t x, int32_t y) {
   int32_t mx, mn;
   corner_range(ctx, x, y, mx, mn);  // outputs discarded
-  const Ptr<int8_t> p = state_grid(ctx, &GameState::g_tileWallMask, kGridW).cell(x, y);
+  const Ptr<int8_t> p = tile_grid(ctx, &GameState::g_tileWallMask).cell(x, y);
   p.set(0);
   for (int32_t k = 0; k < 8; k += 2) {
     const int32_t nx = add32(x, dir_dx(ctx, k)), ny = add32(y, dir_dy(ctx, k));
@@ -770,13 +774,15 @@ int32_t height_at(Ctx &ctx, int32_t x, int32_t y) {
 uint32_t rebuild_heightfield(Ctx &ctx) {
   GameState &g = ctx.gs();
   g.f_w_4c2e00[1] = -1;
-  for (int i = 0; i < 2500; ++i) g.g_tileLevel[i] = 0;
-  for (int i = 0; i < 20000; ++i) g.g_cornerCache[i] = 0;
+  int8_t *level = grid_host(ctx, &GameState::g_tileLevel);
+  for (int i = 0; i < world_tiles(ctx); ++i) level[i] = 0;
+  uint8_t *cache = grid_host(ctx, &GameState::g_cornerCache);
+  for (int i = 0; i < 8 * world_tiles(ctx); ++i) cache[i] = 0;
   const Grid<int8_t> ty = types(ctx);
-  for (int32_t x = 0; x < 50; ++x) {
-    for (int32_t y = 0; y < 50; ++y) {
-      const int32_t cell = x * 50 + y;
-      uint8_t *c = g.g_cornerCache + cell * 8;
+  for (int32_t x = 0; x < world_n(ctx); ++x) {
+    for (int32_t y = 0; y < world_n(ctx); ++y) {
+      const int32_t cell = tile_index(ctx, x, y);
+      uint8_t *c = cache + cell * 8;
       c[1] = static_cast<uint8_t>(corner_heights(ctx, x, y, 1, 0));
       c[3] = static_cast<uint8_t>(corner_heights(ctx, x, y, 3, 0));
       c[5] = static_cast<uint8_t>(corner_heights(ctx, x, y, 5, 0));
@@ -785,8 +791,8 @@ uint32_t rebuild_heightfield(Ctx &ctx) {
         int32_t third, fourth;
         corner_range(ctx, x, y, third, fourth);
         const uint32_t f = type_flags(ctx, ty(x, y));
-        if (f & 2) g.g_tileLevel[cell] = static_cast<int8_t>(fourth);
-        if ((f & 4) && SG_NEGCTL(g_negctl_rebuild_heightfield) != 1) g.g_tileLevel[cell] = static_cast<int8_t>(third);
+        if (f & 2) level[cell] = static_cast<int8_t>(fourth);
+        if ((f & 4) && SG_NEGCTL(g_negctl_rebuild_heightfield) != 1) level[cell] = static_cast<int8_t>(third);
       }
     }
   }
@@ -795,8 +801,8 @@ uint32_t rebuild_heightfield(Ctx &ctx) {
   std::vector<std::vector<int8_t>> seen;
   for (;;) {
     int32_t changed = 0;
-    for (int32_t x = 0; x < 50; ++x) {
-      for (int32_t y = 0; y < 50; ++y) {
+    for (int32_t x = 0; x < world_n(ctx); ++x) {
+      for (int32_t y = 0; y < world_n(ctx); ++y) {
         const uint32_t f = type_flags(ctx, ty(x, y));
         if (!(f & 1)) continue;
         if (f & 2) changed = add32(changed, relax_tile(ctx, x, y));
@@ -807,14 +813,15 @@ uint32_t rebuild_heightfield(Ctx &ctx) {
       }
     }
     if (!changed) break;
-    std::vector<int8_t> now(g.g_tileLevel, g.g_tileLevel + 2500);
+    std::vector<int8_t> now(level, level + world_tiles(ctx));
     for (const auto &s : seen)
       if (s == now) throw NoReturn{"rebuildHeightfield"};
     seen.push_back(std::move(now));
   }
-  for (int32_t x = 0; x < 50; ++x)
-    for (int32_t y = 0; y < 50; ++y) relax_edges(ctx, x, y);
-  g.g_tileWallMask[0] = static_cast<int8_t>((g.g_tileWallMask[0] & 0xFD) | 8);
+  for (int32_t x = 0; x < world_n(ctx); ++x)
+    for (int32_t y = 0; y < world_n(ctx); ++y) relax_edges(ctx, x, y);
+  int8_t &wm0 = grid_ref(ctx, &GameState::g_tileWallMask, 0);  // the absolute byte 0 (bits 1, 3: terrain state flags)
+  wm0 = static_cast<int8_t>((wm0 & 0xFD) | 8);
   g.g_flags &= 0xFFFBFFFFu;
   return g.g_flags;  // eax at the original's ret
 }

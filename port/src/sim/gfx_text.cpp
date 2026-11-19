@@ -64,6 +64,7 @@
 #include "gfx_body.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
 
@@ -1445,9 +1446,9 @@ void hover_help_terrain(Gfx &g, Ctx &ctx, int32_t cx, int32_t cy) {
   if (++d.count <= hover_tip_dwell()) return;
   int32_t t = 20;
   if (cm::call_peer(ctx, "tileBlocked", {u(tx), u(ty)}).eax == 0) {
-    const uint32_t cell = u(add32(mul32(tx, 50), ty));
-    t = static_cast<int8_t>(ctx.mem.load<uint8_t>(state_va(ctx, &GameState::g_tileType) + cell));
-    const uint16_t fl = ctx.mem.load<uint16_t>(state_va(ctx, &GameState::g_tileFlags) + 2u * cell);
+    const uint32_t cell = u(tile_index(ctx, tx, ty));
+    t = static_cast<int8_t>(ctx.mem.load<uint8_t>(grid_va(ctx, &GameState::g_tileType) + cell));
+    const uint16_t fl = ctx.mem.load<uint16_t>(grid_va(ctx, &GameState::g_tileFlags) + 2u * cell);
     if (t == 0x15 || t == 0x16 || (fl & (1u << 10)) != 0) return;
   }
   const std::string text = hover_help_line(ctx, t);
