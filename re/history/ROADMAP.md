@@ -2032,3 +2032,8 @@ P36B (golfers waiting), P36C (past 100 %) on claude2. Published so far: 83900fc8
   replay (<name>.pre_rec kept), 441 more recovered; P15Z_segs.sh, P19Z_merge_check.sh, P17Z_smoke.sh brought to their true last
   versions; lost.tsv: 2,051 paths with no text in any transcript (1,177 .log, 462 .txt, 76 .tsv, 67 .out, 30 .png; 126 scripts
   or notes, among them P22A_drive.py, P11B_drive.py). stale.tsv lists 812 files with later commands that could not be replayed.
+- Recovery closed (worker REC, 2026-11-19; log/roadmap/P36/recover/REC_notes.md): the 62 partial files: 36 completed, the six of
+  P10-P22 corrected; extracted/ rebuilt with unshield on iso/data1.hdr and 7z on the v1.03 patch (PORTABLE_RUNTIME.md section 2):
+  5,663 files in the same 95 directories, every game file equal to original/ (the cab's golf.exe is v1.00), movie_inventory
+  --check and tests/test_movie_inventory.py 7 / 7 pass. Remaining loss: lost.tsv (2,051 paths, run outputs mostly; 126 scripts
+  or notes) and the 812 rows of stale.tsv that may be older texts. No backup of log/ exists yet.
