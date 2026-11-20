@@ -1,7 +1,10 @@
 // The context (GameState + 32-bit address space) and the port function registry (phase 2.6, 2026-10-19).
 #include "portsim/registry.h"
+#include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 
 #include <cstring>
+#include <string_view>
+#include <unordered_map>
 #include <utility>
 
 #include "portsim/registry_list.h"
@@ -42,7 +45,20 @@ bool Memory::unmap(uint32_t base) {
 uint8_t *Memory::at(uint32_t va, uint32_t len, bool write) const {
   uint32_t rel = va - data_base_;
   if (rel < state_size_ && len <= state_size_ - rel) return state_ + rel;
-  if (last_ < maps_.size()) {  // P38B: the previous hit first (a run of grid reads in one side block)
+  if (!p38g_off()) {
+    // P38G (registry.h recent_): the four most recent mappings first; a hit moves to the front
+    for (int k = 0; k < 4; ++k) {
+      const size_t i = recent_[k];
+      if (i >= maps_.size()) continue;
+      const Mapping &m = maps_[i];
+      rel = va - m.base;
+      if (rel < m.size && len <= m.size - rel && !(write && m.readonly)) {
+        for (int j = k; j > 0; --j) recent_[j] = recent_[j - 1];
+        recent_[0] = i;
+        return m.host + rel;
+      }
+    }
+  } else if (last_ < maps_.size()) {  // P38B: the previous hit first (a run of grid reads in one side block)
     const Mapping &m = maps_[last_];
     rel = va - m.base;
     if (rel < m.size && len <= m.size - rel && !(write && m.readonly)) return m.host + rel;
@@ -53,6 +69,8 @@ uint8_t *Memory::at(uint32_t va, uint32_t len, bool write) const {
     if (rel < m.size && len <= m.size - rel) {
       if (write && m.readonly) break;
       last_ = i;
+      for (int j = 3; j > 0; --j) recent_[j] = recent_[j - 1];   // P38G
+      recent_[0] = i;
       return m.host + rel;
     }
   }
@@ -111,9 +129,22 @@ const FuncDef *registry_at(int i, const char **module) {
 int registry_find(const char *name) {
   if (name == nullptr) return -1;
   const std::vector<Entry> &e = entries();
-  for (size_t i = 0; i < e.size(); ++i)
-    if (std::strcmp(e[i].def->name, name) == 0) return static_cast<int>(i);
-  return -1;
+  if (p38g_off()) {  // development A/B (SG_P38G_OFF=1): the linear search
+    for (size_t i = 0; i < e.size(); ++i)
+      if (std::strcmp(e[i].def->name, name) == 0) return static_cast<int>(i);
+    return -1;
+  }
+  // P38G (log/roadmap/P38/P38G_notes.md): the index of every name's first entry (the one the linear search over the entries
+  // returned; the entries never change after they are made). Every call_peer looks its callee up here: at N = 152 the frame's
+  // worldToScreen calls cornerHeights four times per tile, and the strcmp over every entry was most of its cost.
+  static const std::unordered_map<std::string_view, int> index = [&e] {
+    std::unordered_map<std::string_view, int> m;
+    m.reserve(e.size());
+    for (size_t i = 0; i < e.size(); ++i) m.emplace(e[i].def->name, static_cast<int>(i));
+    return m;
+  }();
+  const auto it = index.find(std::string_view(name));
+  return it == index.end() ? -1 : it->second;
 }
 
 namespace {

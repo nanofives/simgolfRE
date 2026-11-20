@@ -229,6 +229,13 @@ bool terrain_world_reach();
 // keeps 0, and screens without terrain never show the world (world_frame_of needs back_terrain), so their black stays.
 void terrain_world_set_backdrop(uint16_t rgb555);
 uint16_t terrain_world_backdrop();
+// P38G (log/roadmap/P38/P38G_notes.md; RENDER-ONLY): set by updateTerrainRender (terrain_dll.cpp) around the whole-map tile sync of
+// P13D item 5, which a window paint and a full render always follow (a lowered corner pushes its tile onto the render list, and that
+// path repaints whenever the list holds a tile). While it is set LiveTerrain::lower_edge_corner hands no renderTileAtFiveOffsets pass
+// to the backend: the window paint clears every pixel such a pass draws, on the 800 root and the world layer, before anything reads
+// them. Measured at N = 152: 1,975 such passes, 7 s and 4.9 GB (each pass recorded a 2.5 MB copy of the vertex array for the world
+// thread). Nothing in the GameState or the address space changes either way.
+inline thread_local bool t_terrain_sync_repaints = false;
 // the reach and margin of a world of the given size (exposed for the unit test): tiles = the rows past Terrain::render's 16 that
 // the window's farthest corner needs, with the kWorldCullY margin, plus 1
 void terrain_world_reach_of(int32_t margin, int32_t &tiles, int32_t &cull_y);

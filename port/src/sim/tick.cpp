@@ -35,6 +35,7 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/bridge.h"  // P8B: the view block (tick_render.inc, tick_boot.inc)
 #include "portsim/sim/gfx.h"
+#include "portsim/sim/perf.h"  // P38G development profiler (perf_now_ns)
 #include "portsim/sim/lang.h"  // P24D fix 5b (tick_panels.inc drawBuildingPanel)
 #include "portsim/execonst.h"
 #include "portsim/sim/integrator.h"
@@ -664,7 +665,10 @@ std::map<std::string, Local> &fallbacks() {
   return m;
 }
 
-thread_local std::unordered_map<std::string, uint64_t> t_counts;
+// the callee counts of this thread (sg_tick_callee_counts). P38G: keyed by the name literal's address, so a call costs no string
+// (two literals of one name are summed by name when read: tick_callee_counts)
+thread_local std::unordered_map<const char *, uint64_t> t_counts;
+thread_local std::unordered_map<std::string, uint64_t> t_counts_off;   // SG_P38G_OFF=1: by name, as before P38G
 thread_local std::vector<std::string> t_stop_path;  // the callees an exception left, innermost first (TkBase::call)
 
 Entry resolve(const char *name) {
@@ -708,17 +712,24 @@ IoScope::~IoScope() { t_io = prev; }
 
 TkBase::TkBase(Ctx &c) : ctx(c), io(cur_io()), kBuf(GS(g_textBuffer)) {}
 
+
 int TkBase::call(const char *name, const uint32_t *a, int n) {
   static std::mutex mu;
   static std::unordered_map<const void *, Entry> cache;  // keyed by the name literal's address
+  // P38G: this thread's copy of the entries it has looked up (an entry in `cache` never changes once made), so a call takes no lock
+  thread_local std::unordered_map<const void *, Entry> t_cache;
   Entry e;
-  {
+  if (auto ht = p38g_off() ? t_cache.end() : t_cache.find(name); ht != t_cache.end()) {
+    e = ht->second;
+  } else {
     std::lock_guard<std::mutex> g(mu);
     auto it = cache.find(name);
     if (it == cache.end()) it = cache.emplace(name, resolve(name)).first;
     e = it->second;
+    t_cache.emplace(name, e);
   }
-  ++t_counts[name];
+  if (p38g_off()) ++t_counts_off[name];
+  else ++t_counts[name];
   // development: SG_TICK_CALL_LIMIT=<n> stops a run after n callee calls on this thread (a loop that never ends, with its
   // callee path in sg_run_frames_detail)
   static const long long call_limit = std::getenv("SG_TICK_CALL_LIMIT") ? std::atoll(std::getenv("SG_TICK_CALL_LIMIT")) : 0;
@@ -771,6 +782,7 @@ int TkBase::call(const char *name, const uint32_t *a, int n) {
       if (std::uncaught_exceptions() > 0 && t_stop_path.size() < 12) t_stop_path.push_back(n);
     }
   } path{name};
+  const DevProfScope dev_prof(name);   // P38G development (SG_P38G_FUNCPROF)
   // P9B: a callee that draws one HUD panel opens that panel's pixel layer around the call (gfx.h; inert without the app's capture)
   GfxLayerScope hud_layer(ctx, g_gfx_hud_capture.load(std::memory_order_relaxed) != 0 ? gfx_layer_of_callee(name) : -1);
   switch (e.kind) {
@@ -933,7 +945,8 @@ struct Frame : TkBase {
 
   // MainLoopBody's frame order (c3fy.cpp): the preamble, P1..P7, H1, and H2 when H1 falls through
   FrameExit run(u32 F, bool retile) {
-    FramePreamble(F, retile ? 1 : 0);
+    const DevProfScope frame_prof("@frame");
+    { const DevProfScope p("@preamble"); FramePreamble(F, retile ? 1 : 0); }
     {
       // P33A item 1 (gfx.h gfx_set_quiet_frame): the world phases of a faster speed's unshown frame draw nothing (drawing only;
       // without a backend, or with no speed button, both calls return at once)
@@ -942,20 +955,22 @@ struct Frame : TkBase {
         explicit QuietWorld(Ctx &x) : c(x) { gfx_world_quiet_begin(c); }
         ~QuietWorld() { gfx_world_quiet_end(c); }
       } quiet_world(ctx);
-      Ph_00410604(F);
-      Ph_0041234e(F);
-      Ph_0041353d(F);
-      Ph_00415847(F);
+      { const DevProfScope p("@P1 tile pass"); Ph_00410604(F); }
+      { const DevProfScope p("@P2 tile pass"); Ph_0041234e(F); }
+      { const DevProfScope p("@P3"); Ph_0041353d(F); }
+      { const DevProfScope p("@P4 P5"); Ph_00415847(F); }
     }
-    Ph_004175f2(F);
+    { const DevProfScope p("@P6"); Ph_004175f2(F); }
     const int r6 = Ph_00418bc7(F);
     {
       GfxCursorScope cursor_scope(ctx);  // P9E fix 4: P7's tool previews are drawn at the cursor tile (records only, gfx.h)
+      const DevProfScope p("@P7");
       Ph_00419d06(F, r6);
     }
     int h2in[6] = {0, 0, 0, 0, 0, 0};
-    int d = Ph_0041c0c5(F, h2in);
-    if (d == kNext) d = Ph_0041ecbb(F, h2in);
+    int d;
+    { const DevProfScope p("@H1"); d = Ph_0041c0c5(F, h2in); }
+    if (d == kNext) { const DevProfScope p("@H2"); d = Ph_0041ecbb(F, h2in); }
     // the title menu ML+0x11875 and the session dispatch, then the next frame head (phase 3.8, stream 38j)
     if (d == kMenu) return menu_session(F);
     // ML+0x664 (rebuildTileCoverage) runs before the frame head ML+0x669, where the original's frame record is taken: the
@@ -1559,11 +1574,16 @@ FrameExit tick_frame(Ctx &ctx, const FrameInput &in) {
 }
 
 std::vector<std::pair<std::string, uint64_t>> tick_callee_counts() {
-  std::vector<std::pair<std::string, uint64_t>> v(tk::t_counts.begin(), tk::t_counts.end());
-  std::sort(v.begin(), v.end());
+  std::map<std::string, uint64_t> by_name;
+  for (const auto &kv : tk::t_counts) by_name[kv.first] += kv.second;
+  for (const auto &kv : tk::t_counts_off) by_name[kv.first] += kv.second;
+  std::vector<std::pair<std::string, uint64_t>> v(by_name.begin(), by_name.end());
   return v;
 }
-void tick_callee_counts_reset() { tk::t_counts.clear(); }
+void tick_callee_counts_reset() {
+  tk::t_counts.clear();
+  tk::t_counts_off.clear();
+}
 
 // ------------------------------------------------------------------------------------------------ trace slices
 // A trace slice (re/model/trace_schema.md) gives, per frame: the clock values by call site, the cursor reads, the

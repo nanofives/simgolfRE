@@ -19,6 +19,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_render.h"
+#include "portsim/sim/terrain_state.h"  // P38G: terrain_draw_list_offset
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
@@ -53,8 +54,10 @@ constexpr uint32_t kTileFaceCount = 0x44, kTileFaces = 0x48, kFaceSize = 0x38;
 constexpr uint32_t kFaceVertex = 0x00, kFaceUv = 0x0C, kFaceTexture = 0x24, kFaceSlot = 0x28;
 constexpr uint32_t kTileHasPath = 0x208, kTileConnected = 0x209, kTileDrawPath = 0x20A;
 constexpr uint32_t kTileWallKind = 0x210, kTileWallOn = 0x234, kTileVariation = 0x240;
-// the draw list (a std::list<Tile*>): +0x164ac4 allocator, +0x164ac8 head node, +0x164acc size
-constexpr uint32_t kTerDrawListSize = 0x164ACC;
+// the draw list (a std::list<Tile*>) after the tile array: +0 allocator, +4 head node, +8 size (+0x164ac4 / +0x164ac8 / +0x164acc at
+// 50). P38G: at the context's N (terrain_state.h terrain_draw_list_offset); the fixed 50 offset read tile 2,500's data at N = 152, so
+// begin_pass threw and every strip, local and path-update pass was dropped (edge scrolling showed a new picture ~4 times a second)
+inline uint32_t ter_draw_list_size(const Ctx &c) { return terrain_draw_list_offset(c) + 8u; }
 constexpr int32_t kTypeHidden = 0x14, kTypeRotated = 7;
 constexpr uint32_t kTextureVariations = 0x19, kTextureSlots = 9;   // textures[type][variation][slot], 0x25 types
 
@@ -362,7 +365,7 @@ class Renderer {
 
   // the frame every draw-list pass opens with: modelview reset, pushed, the screen-scale tilt, the camera angle, the pivot
   void begin_pass(uint32_t pivot, float angle, bool translate) {
-    if (i32(terrain_ + kTerDrawListSize) != 0) throw Fault{terrain_ + kTerDrawListSize, 4};   // never seen: not modelled
+    if (i32(terrain_ + ter_draw_list_size(c_)) != 0) throw Fault{terrain_ + ter_draw_list_size(c_), 4};   // never seen: not modelled
     gl_.load_identity();
     gl_.push_matrix();
     gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);

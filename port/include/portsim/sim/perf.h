@@ -12,6 +12,12 @@
 #include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
+#include <mutex>
+#include <string>
+#include <unordered_map>
 
 namespace portsim {
 
@@ -41,6 +47,87 @@ class PerfScope {
  private:
   PerfCounter c_;
   int64_t t0_;
+};
+
+// P38G development: SG_P38G_FUNCPROF=<file> times every callee of the tick (tick.cpp TkBase::call) (inclusive wall time and count, by name) and the
+// mainLoop phases (DevProfScope), and appends a snapshot of every row ("T <steady ns>" then "name count ns") about once a second.
+// Off unless set (one getenv at the first call); nothing in the simulation reads it.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)  // getenv, fopen
+#endif
+namespace devprof {
+struct Row {
+  int64_t n = 0, ns = 0;
+};
+inline bool on() {
+  static const bool o = std::getenv("SG_P38G_FUNCPROF") != nullptr;
+  return o;
+}
+inline std::mutex &mu() {
+  static std::mutex m;
+  return m;
+}
+inline std::map<std::string, Row> &rows() {
+  static std::map<std::string, Row> r;
+  return r;
+}
+// per thread, keyed by the name literal's address; merged into rows() by name and written out about once a second
+inline thread_local std::unordered_map<const char *, Row> t_rows;
+inline thread_local int64_t t_last = 0;
+inline void add(const char *name, int64_t ns, int64_t now) {
+  Row &r = t_rows[name];
+  ++r.n;
+  r.ns += ns;
+  if (now - t_last <= 1000000000LL) return;
+  t_last = now;
+  std::lock_guard<std::mutex> g(mu());
+  for (const auto &kv : t_rows) {
+    Row &d = rows()[kv.first];
+    d.n += kv.second.n;
+    d.ns += kv.second.ns;
+  }
+  t_rows.clear();
+  if (FILE *f = std::fopen(std::getenv("SG_P38G_FUNCPROF"), "a")) {
+    std::fprintf(f, "T %lld\n", static_cast<long long>(now));
+    for (const auto &kv : rows()) std::fprintf(f, "%s %lld %lld\n", kv.first.c_str(), static_cast<long long>(kv.second.n), static_cast<long long>(kv.second.ns));
+    std::fclose(f);
+  }
+}
+}  // namespace devprof
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+// P38G (log/roadmap/P38/P38G_notes.md): the P38G speed fixes off, the before arm of a measurement or of an equality test in one
+// build. Development only: SG_P38G_OFF=1 at start, or sg_p38g_off(1) (portsim_c.h) at run time; every fix gives the same results
+// either way (port/test/test_p38g_speed.py compares them)
+inline std::atomic<int> g_p38g_off{-1};  // -1 = from SG_P38G_OFF
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)  // getenv
+#endif
+inline bool p38g_off() {
+  const int v = g_p38g_off.load(std::memory_order_relaxed);
+  if (v >= 0) return v != 0;
+  static const bool o = [] {
+    const char *e = std::getenv("SG_P38G_OFF");
+    return e != nullptr && e[0] == '1';
+  }();
+  return o;
+}
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+struct DevProfScope {
+  const char *n;
+  int64_t t0;
+  explicit DevProfScope(const char *name) : n(name), t0(devprof::on() ? perf_now_ns() : 0) {}
+  ~DevProfScope() {
+    if (t0) {
+      const int64_t now = perf_now_ns();
+      devprof::add(n, now - t0, now);
+    }
+  }
 };
 
 // P15A (log/roadmap/P15/P15A_notes.md): detail counters of the client-size work on the sim thread, read only by the host's frame

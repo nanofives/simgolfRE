@@ -100,6 +100,8 @@ SG_API int sg_mem_write(sg_ctx *ctx, uint32_t va, const void *buf, uint32_t len)
 SG_API int sg_negctl_set(const char *name, int32_t mode); /* mode 0 = correct body; returns previous mode */
 SG_API int32_t sg_negctl_get(const char *name);
 SG_API void sg_negctl_reset(void);
+/* P38G (development): 1 = the P38G speed fixes off (their before arm), 0 = on, -1 = from SG_P38G_OFF; returns the previous value */
+SG_API int32_t sg_p38g_off(int32_t v);
 
 /* ---- object table and hashes (gamestate_meta.inc order) ---- */
 SG_API int32_t sg_object_count(const char *cls);          /* cls NULL = every object */

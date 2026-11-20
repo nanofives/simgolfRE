@@ -2,6 +2,7 @@
 // (analysis notes, the C3/C4 hook sources as reading reference, the disassembly of rows without a hook, the vector
 // corpus); no original address or code.
 #include "portsim/sim/terrain.h"
+#include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 
 #include <utility>
 #include <vector>
@@ -456,9 +457,34 @@ void spread_shade(Ctx &ctx, int32_t row, int32_t col, int32_t value) {
 }
 
 // ================================================================================================== level 2
+namespace {
+// P38G (log/roadmap/P38/P38G_notes.md): heightBlend's value per tile while rebuildHeightfield runs. heightBlend reads g_flags bit 0,
+// g_date, the tile types, g_cornerLevel, the course record, g_heightRelief, g_difficulty and the noise maps (sampleHeight); the
+// rebuild writes none of them (it writes g_tileLevel, g_cornerCache, g_tileWallMask and, after its last heightBlend, g_flags), so a
+// value computed once is the value every later call in the same rebuild computes. Each blend point is a corner of four tiles and
+// the rebuild asks for every corner of every tile twice (the cache pass, then relaxEdges' sixteen uncached corners per tile).
+struct HeightBlendMemo {
+  int32_t n = 0;
+  std::vector<int32_t> v;  // value + 1; 0 = not computed
+};
+thread_local HeightBlendMemo *t_hb_memo = nullptr;
+int32_t height_blend_body(Ctx &ctx, int32_t x, int32_t y);
+}  // namespace
+
 int32_t height_blend(Ctx &ctx, int32_t x, int32_t y) {
   GameState &g = ctx.gs();
   if ((g.g_flags & 1u) || x < 0 || x >= world_n(ctx) || y < 0 || y >= world_n(ctx)) return 3;
+  if (HeightBlendMemo *m = t_hb_memo; m != nullptr && m->n == world_n(ctx)) {
+    int32_t &e = m->v[static_cast<size_t>(x) * static_cast<size_t>(m->n) + static_cast<size_t>(y)];
+    if (e == 0) e = height_blend_body(ctx, x, y) + 1;
+    return e - 1;
+  }
+  return height_blend_body(ctx, x, y);
+}
+
+namespace {
+int32_t height_blend_body(Ctx &ctx, int32_t x, int32_t y) {
+  GameState &g = ctx.gs();
   if (g.g_date != 0) {
     if (types(ctx)(x, y) == 0x14 && tile_blocked(ctx, x - 1, y) && tile_blocked(ctx, x, y + 1)) return 3;
     return (grid_arr(ctx, &GameState::g_cornerLevel) + (x * world_v(ctx) + y)).get();
@@ -474,6 +500,7 @@ int32_t height_blend(Ctx &ctx, int32_t x, int32_t y) {
   const int32_t lo = (g.g_difficulty != 0 ? 1 : 0) + (SG_NEGCTL(g_negctl_height_blend) == 1 ? 2 : 3);
   return clamp(add32(div32(h, d), 1), lo, 15);
 }
+}  // namespace
 
 int32_t golfer_shot_reach(Ctx &ctx, int32_t i) {
   const Ptr<Golfer> gp = state_arr(ctx, &GameState::g_golfers) + i;
@@ -773,6 +800,17 @@ int32_t height_at(Ctx &ctx, int32_t x, int32_t y) {
 
 uint32_t rebuild_heightfield(Ctx &ctx) {
   GameState &g = ctx.gs();
+  // P38G: heightBlend memoised for this rebuild (HeightBlendMemo above); 46 -> 11.6 ms at N = 152, 4.5 -> 0.7 at 50 (log/roadmap/P38/P38G_work/bench_calls.py)
+  HeightBlendMemo memo;
+  struct MemoOn {
+    HeightBlendMemo *prev;
+    explicit MemoOn(HeightBlendMemo *m) : prev(t_hb_memo) { t_hb_memo = m; }
+    ~MemoOn() { t_hb_memo = prev; }
+  } memo_on(p38g_off() ? nullptr : &memo);
+  if (!p38g_off()) {
+    memo.n = world_n(ctx);
+    memo.v.assign(static_cast<size_t>(world_tiles(ctx)), 0);
+  }
   g.f_w_4c2e00[1] = -1;
   int8_t *level = grid_host(ctx, &GameState::g_tileLevel);
   for (int i = 0; i < world_tiles(ctx); ++i) level[i] = 0;

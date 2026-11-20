@@ -71,15 +71,27 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
   int32_t head = 0;
   const Grid<uint16_t> fl = tile_grid(ctx, &GameState::g_tileFlags);
   const Ptr<TileTypeAttr> attrs = state_arr(ctx, &GameState::g_tileTypeAttrs);
+  // P38G (log/roadmap/P38/P38G_notes.md): the values the loop below reads and never writes, read once (the direction tables, the
+  // flags, the date, the golfer's hole); the path grid and the flags through the host pointers above. The same reads as before:
+  // 1.19 -> 0.57 ms a call for a far target at N = 152, 0.51 -> 0.24 at 50 (log/roadmap/P38/P38G_work/bench_path.py)
+  int32_t dir_dx[8], dir_dy[8];
+  for (int32_t k = 0; k < 8; ++k) {
+    dir_dx[k] = state_arr(ctx, &GameState::f_tab_dirDx_4c2878)[k];
+    dir_dy[k] = state_arr(ctx, &GameState::f_tab_dirDy_4c2898)[k];
+  }
+  const bool flag100 = (g.g_flags & 0x100u) != 0;
+  const bool hole13 = !flag100 && (golfers + p5).field(&Golfer::hole).as<uint8_t>().get() == 0x13;   // read only where the loop reads it
+  const uint32_t date = static_cast<uint32_t>(g.g_date);
+  const int32_t dist_v = static_cast<int32_t>(((~date & 0x40u) | 0x80u) >> 6);
   do {
     const int32_t x = qx[head], y = qy[head];
     head = (head + 1) & ring_mask;
     const int32_t flat = add32(y, mul32(x, N));
-    const int32_t cur = (grid_arr(ctx, &GameState::g_pathGrid) + flat).get();
+    const int32_t cur = grid[flat];
     if (!(cur > limit)) {
       for (int32_t k = 0; k < 8; ++k) {
-        const int32_t nx = add32(state_arr(ctx, &GameState::f_tab_dirDx_4c2878)[k], x);
-        const int32_t ny = add32(state_arr(ctx, &GameState::f_tab_dirDy_4c2898)[k], y);
+        const int32_t nx = add32(dir_dx[k], x);
+        const int32_t ny = add32(dir_dy[k], y);
         if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
         const int32_t flat2 = ny + nx * N;
         const int32_t par = mode == 1 ? 0 : (k & 1);
@@ -87,16 +99,14 @@ int32_t path_step(Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_t p4, int3
         const int32_t ndist = grid[flat2];
         if (nx == ox && ny == oy && mode != 3) cost += 2;
         if ((k & 1) == 0) {
-          const uint32_t date = static_cast<uint32_t>(g.g_date);
-          const int32_t v = static_cast<int32_t>(((~date & 0x40u) | 0x80u) >> 6);
-          if (dist > v) {
-            if ((tile_flags[flat2] & 0x420) == 0x20 && ((grid_arr(ctx, &GameState::g_tileFlags) + flat).as<uint8_t>().get() & 0x20) != 0) {
+          if (dist > dist_v) {
+            if ((tile_flags[flat2] & 0x420) == 0x20 && (static_cast<uint8_t>(tile_flags[flat]) & 0x20) != 0) {
               const int32_t r = direction_of(nx - sx, ny - sy);
               cost = (k != r) ? 1 : 0;
             }
           }
         }
-        if ((g.g_flags & 0x100u) != 0 || (golfers + p5).field(&Golfer::hole).as<uint8_t>().get() == 0x13) {
+        if (flag100 || hole13) {
           const int8_t t = tile_types[flat2];
           if (t == 1 || t == 2 || t == 0 || static_cast<uint8_t>((attrs + t).field(&TileTypeAttr::collar).get()) == 7)
             cost += 1;

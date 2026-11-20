@@ -11,6 +11,7 @@
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/tiles.h"
+#include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
 
 namespace portsim {
@@ -442,7 +443,13 @@ int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom,
     t_sync_pending = false;
     if (whole || (!(grid_ref(ctx, &GameState::g_tileWallMask, 0) & 2) && SG_NEGCTL(g_negctl_update_terrain_render) != 1)) {
       if (whole) rebuild_heightfield(ctx);   // the height grid as every course edit recomputes it (terrain.cpp)
-      rebuild_tile_data_impl(ctx, x, y, whole);
+      {
+        struct SyncFlag {   // P38G (terrain_live.h): the edge passes of the whole-map sync are repainted below
+          explicit SyncFlag(bool on) { t_terrain_sync_repaints = on; }
+          ~SyncFlag() { t_terrain_sync_repaints = false; }
+        } sync_flag(whole && !p38g_off());
+        rebuild_tile_data_impl(ctx, x, y, whole);
+      }
       int8_t &wm0 = grid_ref(ctx, &GameState::g_tileWallMask, 0);  // the absolute byte 0 (bit 1: tiles synced)
       wm0 = static_cast<int8_t>(wm0 | 2);
     }

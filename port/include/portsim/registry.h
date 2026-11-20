@@ -68,6 +68,10 @@ class Memory {
   uint32_t data_base_ = 0x20000000u;
   std::vector<Mapping> maps_;
   mutable size_t last_ = 0;  // P38B: the mapping the previous non-state access hit (tried first; the side blocks)
+  // P38G: the mappings the last four distinct non-state accesses hit, most recent first (tried before the scan). The side storage
+  // at N != 50 is 4 or 5 mappings at the end of maps_, and a frame's grid reads alternate between them, so one entry missed and
+  // scanned every mapping before them. Mappings never overlap, so the mapping found is the same whichever is tried first.
+  mutable size_t recent_[4] = {0, 0, 0, 0};
 };
 
 class ExeConstants;  // portsim/execonst.h

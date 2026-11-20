@@ -893,7 +893,7 @@ uint32_t LiveTerrain::lower_corner(uint32_t self, uint32_t tile, int32_t corner)
 // vertex arrays before the lowering, so it is handed to the backend BEFORE the state call. A NULL tile does neither. Control 15
 // of the terrain body family: the pass is not handed over.
 uint32_t LiveTerrain::lower_edge_corner(uint32_t self, uint32_t tile, int32_t corner, uint32_t tile2, uint32_t angle) {
-  if (tile != 0 && SG_NEGCTL(g_negctl_gfx_terrain) != 15)
+  if (tile != 0 && SG_NEGCTL(g_negctl_gfx_terrain) != 15 && !t_terrain_sync_repaints)   // P38G: none under the whole-map sync
     to_gfx("terrain.pass", {static_cast<uint32_t>(kEntryRenderTileAtFiveOffsets), self, tile, tile2, angle});
   return call("lowerEdgeCorner", self, {tile, static_cast<uint32_t>(corner), tile2, angle});
 }

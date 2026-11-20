@@ -20,6 +20,7 @@
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/world.h"  // P38B: sg_world_*
+#include "portsim/sim/perf.h"   // P38G: sg_p38g_off
 #include "portsim/sim/terrain_state.h"
 #include "portsim/sim/live.h"
 #include "portsim/sim/tick.h"
@@ -270,6 +271,8 @@ void sg_negctl_reset(void) {
     if (d->negctl) *d->negctl = 0;
   }
 }
+
+int32_t sg_p38g_off(int32_t v) { return portsim::g_p38g_off.exchange(v); }
 
 int32_t sg_object_count(const char *cls) { return static_cast<int32_t>(portsim::objects_of(cls).size()); }
 

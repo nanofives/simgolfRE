@@ -2130,3 +2130,13 @@ Open: the year's finance record keeps the price in 16 bits (wraps after five pur
   shows each row's true sum past 16 bits (not saved across a load). Key C at N != 50 saves nothing and says so. Evidence:
   segments x64 and Win32 205 / 205; test_p38fe2 2 / 2 (six 152 lots: word wraps to 14,412, the report shows -116,660); 18 test
   files and the buyland / reports / financial oracles pass.
+
+## P38G: performance at N = 152 / 101 (2026-11-20; notes log/roadmap/P38/P38G_notes.md)
+Before (1920 x 1080): sim per tick at 152 33 / 48 / 74 ms (idle / arrows / edge), edge-scroll paint 59 / s, a 5.9 GB peak at course
+start (the play whole-map tile sync's 1,975 edge-corner render passes, each keeping a 2.5 MB vertex copy; now skipped: start
+0.18 s). Speed-only fixes, identical results (test_p38g_speed: GameState and every side grid byte-identical with SG_P38G_OFF=1,
+at 50 and 152; a broken memo turns 6 tests red): registry_find by a name index, TkBase::call without lock / allocation,
+Memory::at remembers 4 mappings, rebuildHeightfield caches per tile (46 -> 11.6 ms at 152), pathStep invariants hoisted. A P38A
+gap fixed: the terrain renderer read a list field at a 50-sized offset (at N != 50 edge scrolling dropped render passes).
+After: 152 at 1920 x 1080 sim 17 / 19 / 26 ms, paint 120 / 88 / 121, peak 1.42 GB; at 2560 x 1351 dpi 120 sim 21.5 / 26.4 / 31.7,
+peak 1.62 GB; 50 got faster too (5.7 / 6.0 / 6.9 from 10.4 / 11.9 / 14.2). Segments x64 and Win32 205 / 205.
