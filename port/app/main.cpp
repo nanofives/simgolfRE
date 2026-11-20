@@ -1045,6 +1045,7 @@ const ProfileMember kPlayProfile[] = {
     {"showBuyLandScreen.lotLabelLeftover", 0}, // P38H: the lot number at the lot's for-sale tile nearest its centre on the map
     {"showBuyLandScreen.financeOtherNarrow", 0}, // P38FE2: the finance report shows land purchases beyond 16 bits
     {"courseActionMenu.worldSizes", 0},          // P38W: the world map's courses carry their sizes (50 / 101 / 152)
+    {"showBuyLandScreen.lotPricePerTile", 0},    // P38W3: TRACTS FOR SALE lots at $1,250 an acre (the world map's scale)
     {"layPath.underEveryType", 0},               // P39B: paths drawn under every element but tees / greens, paved from the clubhouse
 };
 

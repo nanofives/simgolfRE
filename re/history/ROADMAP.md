@@ -2190,3 +2190,10 @@ nearer cup; edges whose neighbour is not green, projected with worldToScreen so 
 marks scope, the same blink), module greenline (cached per hole). Drawing only. Evidence: segments x64 205 / 205 (option off);
 test_p39c_green_highlight (tile set, edges, the drop record unchanged off, no GameState write; control RED); looks at 1920 x 1080
 dpi 96 / 120 on a flat and a sloped green. The outline draws over sprites (wide window); 2560 x 1351 not possible on LIVING-PC.
+
+## P38W3: buy-land lots at $1,250 an acre (2026-11-20; notes log/roadmap/P38/P38W3_notes.md)
+Mariano's pick (one price scale with the world map). Play switch showBuyLandScreen.lotPricePerTile (0 in play): a lot costs its
+shown acres (max(1, tiles for sale / 10)) x $1,250 rounded to $1,000, at every size and after any number of purchases (no
+doubling); the price line, the purchase check and the cash taken read that price; the per-tile random draws, the converted tiles
+and g_landPurchaseCount (I.M.Picky's bar) unchanged. A full flat lot: $31,000 at 50, $134,000 at 101, $309,000 at 152. Evidence:
+segments x64 and Win32 205 / 205; test_p38w3_lot_price 10 (+ oracle); buyland tests pass.

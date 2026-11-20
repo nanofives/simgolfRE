@@ -51,6 +51,7 @@
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
 #include "commands_internal.h"
 #include "landoffer.h"
+#include "worldsizes.h"   // P38W3: world_price_of_acres
 
 namespace portsim {
 
@@ -76,6 +77,19 @@ int g_defect_land_offer_once = 1;
 int g_defect_lot_label_leftover = 1;
 // P38FE2 showBuyLandScreen.financeOtherNarrow (landoffer.h)
 int g_defect_finance_narrow = 1;
+// P38W3 (Mariano 2026-11-20, log/roadmap/P38/P38W3_notes.md) showBuyLandScreen.lotPricePerTile (1 = the original): a lot for sale is
+// priced by its tiles, each tile whose Random::range(3) draw is 0 adding 1 << g_landPurchaseCount (5 + that sum, * 20 / 100 * 10),
+// so the price doubles with every purchase and grows with the world's tiles. At 0 the price is on the world map's scale: the acres the
+// screen shows for the lot (its for-sale tiles / 10) x $1,250, to the nearest $1,000 (worldsizes.h world_price_of_acres), the same at
+// every world size and after any number of purchases. The draws are still made (the RNG sequence of the original); a lot with no
+// tile for sale keeps the original's 50; g_landPurchaseCount still counts the purchases (I.M.Picky's bar). A lot with 1..9 tiles for
+// sale shows and is priced as 1 acre ($1,000: never free; the original's least was 5 * 20 / 100 * 10 = $1,000 too).
+int g_defect_lot_price_per_tile = 1;
+// the acres the screen shows for a lot of `count` tiles for sale: count / 10, and at 0 at least 1 while any tile is for sale
+static int32_t lot_acres_shown(int32_t count) {
+  const int32_t a = div32(count, 10);
+  return !SG_DEFECT(g_defect_lot_price_per_tile) && count > 0 && a < 1 ? 1 : a;
+}
 
 namespace {
 constexpr uint32_t kCourseRecSize = 0x2e, kCourseRecCredits = 0x21;   // CourseRecord stride; the byte no code addresses
@@ -266,7 +280,7 @@ struct BuyLand {
     cpy(ctx, tb, p368c + 0xc);
     cat(ctx, tb, itoa10(ctx, add32(lot, 1), itoa_buf));
     cat(ctx, tb, comma);
-    cat(ctx, tb, itoa10(ctx, div32(count, 10), itoa_buf));
+    cat(ctx, tb, itoa10(ctx, lot_acres_shown(count), itoa_buf));   // P38W3: at least 1 while any tile is for sale
     cat(ctx, tb, p368c + 4);
     cat(ctx, tb, p368c);
     for (int32_t k = 0; k < 3; ++k) {
@@ -355,6 +369,8 @@ struct BuyLand {
       label_x = add32(q << 8, lot >= 6 ? 0x58 : 0x4e);
       label_y = add32(mul32(r, 68), 0x3e);
       if (first) F[1 + lot] = mode() == 1 ? value : mul32(value, 10);
+      if (first && count != 0 && !SG_DEFECT(g_defect_lot_price_per_tile))   // P38W3: the acres shown x $1,250
+        F[1 + lot] = world_price_of_acres(lot_acres_shown(count));
       F[33 + lot] = lot;
       if (count == 0) {
         if (on) image(img + 0x18c, layout_at(0x12c, lot), layout_at(0x150, lot));
@@ -563,6 +579,11 @@ const DefectDef kDefects[] = {
      "a lot whose centre tile is not for sale has its number drawn at the previous lot's text box (a stray digit beside the "
      "previous lot's ball); fixed: at the lot's for-sale tile nearest its centre on the map (drawing only)",
      &g_defect_lot_label_leftover},
+    {"showBuyLandScreen.lotPricePerTile", "P38W3",
+     "a lot is priced per tile for sale, 1 << g_landPurchaseCount for each tile whose draw is 0, so the price doubles with every "
+     "purchase and grows with the world (a fresh 152 lot about $171,000); fixed: the acres the screen shows x $1,250 to the "
+     "nearest $1,000, the world map's price per acre, the same at every size and after any number of purchases",
+     &g_defect_lot_price_per_tile},
 };
 }  // namespace
 
