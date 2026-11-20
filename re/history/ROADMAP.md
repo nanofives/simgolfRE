@@ -2208,3 +2208,4 @@ world units of the cup on the hole's own green it snaps to the cup centre (byte-
 P39C outline stops blinking and widens while snapped). Evidence: segments x64 205 / 205; test_p39d_free_aim 9 (control RED),
 test_shots, test_golfers_p36b, test_defects_p28 / p6a, test_p39c; a GIF and stills of the aim sweep. play_profile.tsv merged by
 hand (P38W3's row kept).
+- Published 2026-11-20: P39D in 16e2fc22 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-16e2fc22.
