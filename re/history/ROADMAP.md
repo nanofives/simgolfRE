@@ -2197,3 +2197,5 @@ shown acres (max(1, tiles for sale / 10)) x $1,250 rounded to $1,000, at every s
 doubling); the price line, the purchase check and the cash taken read that price; the per-tile random draws, the converted tiles
 and g_landPurchaseCount (I.M.Picky's bar) unchanged. A full flat lot: $31,000 at 50, $134,000 at 101, $309,000 at 152. Evidence:
 segments x64 and Win32 205 / 205; test_p38w3_lot_price 10 (+ oracle); buyland tests pass.
+- Published 2026-11-20: P38W2 + P38W3 + P39B + P39C in 56a5576d (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK;
+  paint not judged on the 60 Hz virtual display), LAN + GitHub release port-2026-11-20-56a5576d.
