@@ -81,3 +81,9 @@ Order: P39B and P39C in parallel now, then P39D, then the P39A survey and design
   (walkers drawn at the deck), side table entry; wider gaps: stairs down and up. Storage: a sidecar file next to the .sve (the
   original then shows a boardwalk / plain path) or a .sgw section (version 2). New module crossings.cpp (bridge.cpp is taken).
 - Sizes: (a) M (L with per-rotation tuning), (b1) M, (b2) L, storage S-M.
+
+## P39A decided (2026-11-20)
+Gap bridges: the path tool ASKS FIRST (a game-style popup with the bridge and its cost), threshold 3 levels. Stairs: always
+allowed, a stairs tile costs path cost x 2. The scenic-bridge thought (+mood) only on scenic WATER bridges (as the original).
+Storage: a small sidecar file next to the save (the .sve stays readable by the original). Order: A1 (two-tile scenic bridge over
+water / stream + crossings module + sidecar) and A2 (stairs) in parallel, then A3 (gap bridges with the popup).
