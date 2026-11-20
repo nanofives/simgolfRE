@@ -52,3 +52,15 @@ Proposed: C and B-A first (small, visible), then D, then A (art risk). Questions
 change its look in his games; paths on greens / tees drawn on the putting surface or stopping at the edge; whether a path should
 survive placing a tee / cup (gameplay); which highlight he means (the blinking marker while aiming); the snap distance and whether
 he wants to aim putts too; bridges over streams too, and the cost.
+
+## Decided 2026-11-20
+- Paths: B (drawn on every type and building + a texture-only flood from the clubhouse across fairway / tee / green paths;
+  TF_FLOOD_REACHED unchanged). On greens and tees the path STOPS AT THE EDGE (not drawn on the putting surface or tee box), and
+  resumes after.
+- Highlight: the blinking marker while aiming becomes an outline of the whole green; aiming snaps to the cup.
+- Bridges, extended: two-tile bridges over water AND streams AND big gaps in height; "a rework on the path to make bridges where
+  the gap is too high, and we should add stairs if the height difference is too high as well". P39A becomes: the two-tile scenic
+  bridge (water, stream) + a path rework: where the path tool crosses a height gap too high for a path, it builds a bridge; where
+  a slope is too steep, stairs. Needs its own survey (path over slopes, the steep-slope thoughts 0xa / 0x2b, height limits, art
+  for stairs: none known) before its design.
+Order: P39B and P39C in parallel now, then P39D, then the P39A survey and design.
