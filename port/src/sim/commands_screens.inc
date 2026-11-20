@@ -259,7 +259,8 @@ int32_t show_financial_report(Ctx &ctx) {
           });
     };
     for (int32_t i = 0; i < 8; ++i) {
-      const int32_t v = ctx.mem.load<int16_t>(row + 2 * u32(i));
+      int32_t v = ctx.mem.load<int16_t>(row + 2 * u32(i));
+      if (i == 7) v = finance_other_shown(ctx, year, static_cast<int16_t>(v));   // P38FE2: the wide `other` (= the word at 1)
       call_peer(ctx, "appendNumber", {u32(mul32(v, 100))});
       cell(v, v, v == 0);
       cell_y += i != 7 ? 0x11 : 0x18;

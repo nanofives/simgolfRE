@@ -1,6 +1,9 @@
 // Course and hole records, placed objects, animals, names and titles (see portsim/sim/course.h). Phase 3 stage B,
 // child 3.1b, written from the specification (analysis notes, the C3 / C4 hook sources' transcriptions, vector corpus);
 // no original address, code or text.
+#include "portsim/sim/terrain_gen.h"  // P38FE2: generate_flat_course
+#include "landoffer.h"   // P38FE2: finance_other_note
+#include "portsim/sim/world.h"
 #include "portsim/sim/course.h"
 
 #include <cmath>
@@ -794,7 +797,14 @@ void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
       .set(SG_DEFECT(g_defect_cash_low_word)
                ? static_cast<int16_t>(gs.g_cash_div100)
                : static_cast<int16_t>(gs.g_cash_div100 > 0x7fff ? 0x7fff : gs.g_cash_div100 < -0x8000 ? -0x8000 : gs.g_cash_div100));
-  call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);
+  {  // P38FE2 (showBuyLandScreen.financeOtherNarrow = 0): the report shows the carried cash whole
+    const int32_t r = mode == 1 ? row + 1 : row;
+    finance_other_note(ctx, r, gs.g_cash_div100, (state_arr(ctx, &GameState::g_financeYears) + r).field(&FinanceYear::other).get());
+  }
+  if (world_n(ctx) != kWorldOriginal)
+    generate_flat_course(ctx, chosen);   // P38FE2: the next course of a career at N != 50 starts flat as the first did (P38B)
+  else
+    call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);
   call_peer_or(ctx, "rebuildHeightfield", {}, true);
   gs.g_date = date;
   call_peer_or(ctx, "applyCourseType", {u32(int32_t(gs.g_courseType))}, true);

@@ -368,7 +368,7 @@ def test_negctl_reads_red(portlib, mode, what):
 
 def test_buyland_module_registers_the_screen(portlib):
     mine = {n for n, f in portlib.functions().items() if f.get("module") == "buyland"}
-    assert mine == {NAME, "syncTiles", "buyLotTiles"}  # P38B: buyLotTiles, the purchase's tile conversion (port-only)
+    assert mine == {NAME, "syncTiles", "buyLotTiles", "p38feFinanceOther", "p38feWorldCash"}  # P38B: buyLotTiles, the purchase's tile conversion (port-only)
 
 
 # ------------------------------------------------------------------------------------------------ the pinned scenario

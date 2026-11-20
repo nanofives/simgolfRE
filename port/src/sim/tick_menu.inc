@@ -401,7 +401,10 @@ int Session(u32 F, int sel) {
             G32(GS(g_buildingUnlockLevel)) = 0x11;                 // ML+0x642
             G32(GS(g_amenityUnlockMask)) = 0x3FFF;               // ML+0x64c
         }
-        GU16((GS(g_financeYears) + 14)) = static_cast<u16>(cash_word(G32(GS(g_cash_div100))));  // ML+0x656..ML+0x65d (D23 switch) (mov dx,[g_cash_div100]; mov [g_financeYears+0xe],dx)
+        // P38FE2: at N != 50 the start cash (the career's 0x3e8 or the sandbox's 0x2710 above) scales with the world (world.h)
+        if (WN != portsim::kWorldOriginal) G32(GS(g_cash_div100)) = portsim::world_cash(ctx, G32(GS(g_cash_div100)));
+        GU16((GS(g_financeYears) + 14)) = static_cast<u16>(cash_word(G32(GS(g_cash_div100))));  // ML+0x656..ML+0x65d
+        portsim::finance_other_note(ctx, 0, G32(GS(g_cash_div100)), G16(GS(g_financeYears) + 14));   // P38FE2 (switch at 0 only) (D23 switch) (mov dx,[g_cash_div100]; mov [g_financeYears+0xe],dx)
         return sFrame;                              // ML+0x664 falls into FramePreamble
     }
     // loadWorldAssets block ML+0x5a3 (reached by the championship's startNewCourse != 0 and mode == 6 fall-throughs)

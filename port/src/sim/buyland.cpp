@@ -74,6 +74,8 @@ int g_negctl_buy_land = 0;
 //                                     as in the original. Drawing only.
 int g_defect_land_offer_once = 1;
 int g_defect_lot_label_leftover = 1;
+// P38FE2 showBuyLandScreen.financeOtherNarrow (landoffer.h)
+int g_defect_finance_narrow = 1;
 
 namespace {
 constexpr uint32_t kCourseRecSize = 0x2e, kCourseRecCredits = 0x21;   // CourseRecord stride; the byte no code addresses
@@ -95,6 +97,25 @@ void set_land_offer_credits(Ctx &ctx, int32_t n) {
   if (!land_offer_credits_on(ctx)) return;
   const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + kCourseRecSize * u32(ctx.gs().g_courseIndex);
   ctx.mem.store<uint8_t>(rec + kCourseRecCredits, static_cast<uint8_t>(n < 0 ? 0 : n > 255 ? 255 : n));
+}
+
+void finance_other_add(Ctx &ctx, int32_t row, int32_t delta) {
+  const uint32_t at = state_va(ctx, &GameState::g_financeYears) + 0xe + u32(mul32(row, 20));
+  const int16_t old = ctx.mem.load<int16_t>(at);
+  ctx.mem.store<int16_t>(at, static_cast<int16_t>(old + static_cast<int16_t>(delta)));   // the original's int16 sum
+  if (SG_DEFECT(g_defect_finance_narrow) || row < 0 || row > 100) return;
+  const int32_t w = ctx.fin_other_on[row] && ctx.fin_other_word[row] == old ? ctx.fin_other_wide[row] : old;  // the wide sum it stands for
+  finance_other_note(ctx, row, add32(w, delta), ctx.mem.load<int16_t>(at));
+}
+void finance_other_note(Ctx &ctx, int32_t row, int32_t full, int16_t stored) {
+  if (SG_DEFECT(g_defect_finance_narrow) || row < 0 || row > 100) return;
+  ctx.fin_other_wide[row] = full;
+  ctx.fin_other_word[row] = stored;
+  ctx.fin_other_on[row] = true;
+}
+int32_t finance_other_shown(Ctx &ctx, int32_t row, int16_t stored) {
+  if (SG_DEFECT(g_defect_finance_narrow) || row < 0 || row > 100 || !ctx.fin_other_on[row]) return stored;
+  return ctx.fin_other_word[row] == stored ? ctx.fin_other_wide[row] : stored;
 }
 
 namespace {
@@ -438,8 +459,7 @@ struct BuyLand {
       const int32_t price = frame(1 + sel);
       gs.g_cash_div100 = sub32(gs.g_cash_div100, price);
       const int32_t yr = add32(static_cast<int16_t>(gs.g_year) % 100, mode() == 8 ? 1 : 0);
-      const uint32_t fin = state_va(ctx, &GameState::g_financeYears) + 0xe + u32(mul32(yr, 20));
-      m.store<int16_t>(fin, static_cast<int16_t>(m.load<int16_t>(fin) - static_cast<int16_t>(price)));
+      finance_other_add(ctx, yr, neg32(price));   // the row's `other` word -= (int16) price (P38FE2: wide at the switch's 0)
       if (mode() != 3) buy_lot_tiles(ctx, sel);
       call_peer(ctx, "logTick", {mode() == 5 ? 0x141u : 0x140u, u32(sel)});
       return 1;
@@ -502,6 +522,16 @@ int32_t sync_tiles(Ctx &ctx) {
 }
 
 const FuncDef kFuncs[] = {
+    // P38FE2 (port-only, the tests): what the finance report shows for row a[0]'s `other` word, and world_cash(a[0])
+    {"p38feFinanceOther", "default", "int", 1, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) {
+       const int32_t row = static_cast<int32_t>(a[0]);
+       const int16_t w = c.mem.load<int16_t>(state_va(c, &GameState::g_financeYears) + 0xe + u32(mul32(row, 20)));
+       r.set_i32(finance_other_shown(c, row, w));
+     },
+     &g_negctl_sync_tiles},
+    {"p38feWorldCash", "default", "int", 1, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(world_cash(c, static_cast<int32_t>(a[0]))); }, &g_negctl_sync_tiles},
     {"buyLotTiles", "default", "int", 1, 0, [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(buy_lot_tiles(c, static_cast<int32_t>(a[0]))); },
      &g_negctl_sync_tiles},  // P38B: port-only (the tests' far-lot purchase)
     {"syncTiles", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(sync_tiles(c)); },
@@ -519,6 +549,11 @@ const FuncDef kFuncs[] = {
 };
 // P38H: the module's play switches (re/port/play_profile.tsv)
 const DefectDef kDefects[] = {
+    {"showBuyLandScreen.financeOtherNarrow", "P38FE2",
+     "the year's finance row keeps land purchases (and patron income) in its int16 `other` word, which a 152 lot price wraps after "
+     "a few purchases; fixed: the port keeps the row's wide sum beside it and the finance report shows it (the word stays the "
+     "original's)",
+     &g_defect_finance_narrow},
     {"mainLoop.landOfferOnce", "P38H",
      "I.M.Picky's approval allows one purchase in the popup that follows it and is gone after it (No, Done or a purchase); "
      "fixed: the approval tops the course's credits (course record +0x21) up to 2, No keeps them, the routing map shows a Buy "

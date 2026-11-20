@@ -15,6 +15,7 @@
 
 #include "events_hook.h"
 #include "golfer_wait.h"  // P36B
+#include "landoffer.h"   // P38FE2: finance_other_add / finance_other_shown
 #include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 

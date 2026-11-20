@@ -25,4 +25,15 @@ bool land_offer_credits_on(Ctx &ctx);
 int32_t land_offer_credits(Ctx &ctx);
 void set_land_offer_credits(Ctx &ctx, int32_t n);   // clamped to 0 .. 255; nothing when land_offer_credits_on is false
 
+// P38FE2 (play switch showBuyLandScreen.financeOtherNarrow, 1 = the original): the finance row's `other` word (g_financeYears[row]
+// +0x0e: land purchases, patron income) is an int16 that a 152 lot price wraps after a few purchases. finance_other_add stores the
+// original's int16 sum; at 0 it also keeps the row's wide sum (Ctx::fin_other_wide). finance_other_shown gives what the finance
+// report shows for a stored word: the wide sum while the word is the one finance_other_add / finance_other_note last left there,
+// else the word (another writer replaced it). finance_other_note records a write of `full` the caller stored as `stored` (the
+// start cash, which the original stores clamped or truncated to 16 bits).
+extern int g_defect_finance_narrow;
+void finance_other_add(Ctx &ctx, int32_t row, int32_t delta);
+void finance_other_note(Ctx &ctx, int32_t row, int32_t full, int16_t stored);
+int32_t finance_other_shown(Ctx &ctx, int32_t row, int16_t stored);
+
 }  // namespace portsim

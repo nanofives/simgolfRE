@@ -1037,6 +1037,7 @@ const ProfileMember kPlayProfile[] = {
     {"skillPointDialog.top100", 0},          // P36C: skill points go past 100 % (to 200 %) once all ten skills are at 100 %
     {"mainLoop.landOfferOnce", 0},             // P38H: I.M.Picky's approval = 2 land credits, bought later from the routing map
     {"showBuyLandScreen.lotLabelLeftover", 0}, // P38H: the lot number at the lot's for-sale tile nearest its centre on the map
+    {"showBuyLandScreen.financeOtherNarrow", 0}, // P38FE2: the finance report shows land purchases beyond 16 bits
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

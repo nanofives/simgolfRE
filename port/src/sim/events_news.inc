@@ -82,7 +82,7 @@ void patron_event(Ctx &ctx, int32_t g) {
             kStartMessage(0x80001204, 1, g);
             G<int>(ctx, GS(g_cash_div100)) += amount;
             const int slot = G<short>(ctx, GS(g_year)) % 100;
-            G<short>(ctx, (GS(g_financeYears) + 14) + slot * 0x14) += static_cast<short>(amount);
+            portsim::finance_other_add(ctx, slot, amount);   // the row's other word += (short) amount (P38FE2: wide at 0)
             kPlaySound(0x19, 100, 0, 0, 0);
         } else {
             CatAt((GS(f_strpool_4c715c)));

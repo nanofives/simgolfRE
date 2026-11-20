@@ -93,6 +93,17 @@ inline void grid_fill_tail(Ctx &c, uint32_t grid, int32_t elem_bytes, uint32_t p
   for (int32_t i = 0; i < grid_tail(c, elem_bytes); ++i) c.mem.store<uint8_t>(at + static_cast<uint32_t>(i), static_cast<uint8_t>(pattern >> (8 * i)));
 }
 
+// ---- P38FE2 (Mariano 2026-11-19): money scales with the world. A course at N starts with the 50-size amount times
+// ((N - 2) / 48)^2 (the buyable area's ratio), rounded to $1,000 (10 units of g_cash_div100); at 50 the amount itself.
+// $100,000 (1000) -> $977,000 (9770) at 152, $425,000 (4250) at 101.
+inline int32_t world_cash(const Ctx &c, int32_t cash50) {
+  if (c.world_n == kWorldOriginal) return cash50;
+  const int64_t b = c.world_n - 2;
+  const int64_t v = int64_t{cash50} * b * b;              // / 48^2, then to the nearest 10 units
+  const int64_t q = (v + 2304 * 5) / (2304 * 10);         // 2304 = 48^2
+  return static_cast<int32_t>(q * 10);
+}
+
 // ---- P38F: the small map (the F5 routing map and the TRACTS FOR SALE map: routing.cpp / buyland.cpp mapToScreen456b70)
 // At 50 the original's projection: x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - adj, tile diamonds of half sizes 6 x 3. At N != 50
 // the same panel area: x = 0x6a + round(300 (a + b) / N), y = 0x1b8 + round(150 (b - a) / N) - adj, and diamonds of half sizes

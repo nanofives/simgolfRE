@@ -114,6 +114,11 @@ class Ctx {
   WorldCluster world_clusters[4];
   std::shared_ptr<void> world_side;
   int32_t world_request = 0;  // P38B: the app's --world-size for the next new sandbox course (0 = 50)
+  // P38FE2 (play switch showBuyLandScreen.financeOtherNarrow = 0, buyland.cpp): the wide value of each finance row's `other` word
+  // (g_financeYears[row] +0x0e: the start cash, land purchases, patron income), valid while the stored word is the one we wrote
+  int32_t fin_other_wide[101] = {};
+  int16_t fin_other_word[101] = {};
+  bool fin_other_on[101] = {};
   int32_t dev_land_credits = 0;  // P38E development (the app's SG_P38E_CREDITS): land credits a new sandbox course starts with
 
  private:

@@ -289,7 +289,7 @@ void FramePreamble(u32 F, int retile) {
     int fl1 = G32(GS(g_flags));                      // ML+0x690
     G32(GS(g_buildingKindMask)) = 0;                            // ML+0x69c (ebx = 0)
     if (fl1 & 0x1000000)                            // ML+0x697 test; ML+0x6a2 je ML+0x6ae
-        G32(GS(g_cash_div100)) = 0x2710;                   // ML+0x6a4
+        G32(GS(g_cash_div100)) = world_cash(ctx, 0x2710);  // ML+0x6a4 (P38FE2: the sandbox purse scales with N; 0x2710 at 50)
 
     // ML+0x6ae..ML+0x727 : for each placed object (16-byte records) of type >= 6 (and != 5), clamp its two
     // per-type accumulators [g_objectTypeLevel + type*4] and (if byte+7 & 0x40) [g_activeObjectLevel + type*4] to <= 0x63 and OR type into
@@ -7974,6 +7974,15 @@ a41ca4b:
     goto a41de11;                                      // ML+0xd4d3
 a41ca98:  // key 0x43
     if (G32(GS(g_flags)) & 0x200000) goto a41cc20;      // ML+0xd4d8 test; jne
+    if (WN != portsim::kWorldOriginal) {
+        // P38FE2 (port-only, N != 50): the championship course file (.cse, saveCourse) holds the 50 x 50 world only, so the key
+        // saves nothing and says so in the message window (the SimFoto branch's call; the text through lang, P38FE2_lang_es.txt)
+        static const char kOnly50[] = "Championship course files can only be saved on 50 x 50 courses.";
+        std::memcpy(ctx.mem.at(kBuf, sizeof kOnly50, true), kOnly50, sizeof kOnly50);
+        cc("startMessage", 0x80006000, 0, -1);
+        cc("playSound", 0x18, 0x64, 0, 0, 0);
+        goto a41de11;
+    }
     G8(kBuf) = 0;                                      // ML+0xd4ea mov byte[kBuf],0 (push -1 at ML+0xd4e8)
     cc("appendCourseTitle", -1);                                // ML+0xd4f1 appendCourseTitle(-1)
     cc("appendToBuffer45b8b0", ebp);                               // ML+0xd4f7 appendToBuffer45b8b0(0) (push ebp)

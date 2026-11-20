@@ -2124,3 +2124,9 @@ $1,297,000) against $19,000 at 50; a sandbox starts with $100,000. Evidence: seg
 test_buyland, test_p36a_hole_jump, test_p38h_land_offer, test_p38b_world, test_p38fe_buyland 4 / 4; oracles buyland 13, routing
 14; drives at 152 and 101 at 1920 x 1080 and 2560 x 1351 dpi 120. Dev switches SG_P38E_CREDITS, SG_P38E_CASHKEY (inert unless set).
 Open: the year's finance record keeps the price in 16 bits (wraps after five purchases at 152).
+- P38FE2 (Mariano's answers): starting cash at N != 50 = the 50-size amount x ((N - 2) / 48)^2 rounded to $1,000 (career $977,000
+  / sandbox $9,766,000 at 152), in tick_menu.inc's new-course path and the sandbox purse reset in tick_frame.inc; a career's next
+  course at N != 50 makes the flat course. Play switch showBuyLandScreen.financeOtherNarrow (0 in play): the Financial Report
+  shows each row's true sum past 16 bits (not saved across a load). Key C at N != 50 saves nothing and says so. Evidence:
+  segments x64 and Win32 205 / 205; test_p38fe2 2 / 2 (six 152 lots: word wraps to 14,412, the report shows -116,660); 18 test
+  files and the buyland / reports / financial oracles pass.
