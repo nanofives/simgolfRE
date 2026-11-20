@@ -2199,3 +2199,12 @@ and g_landPurchaseCount (I.M.Picky's bar) unchanged. A full flat lot: $31,000 at
 segments x64 and Win32 205 / 205; test_p38w3_lot_price 10 (+ oracle); buyland tests pass.
 - Published 2026-11-20: P38W2 + P38W3 + P39B + P39C in 56a5576d (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK;
   paint not judged on the 60 Hz virtual display), LAN + GitHub release port-2026-11-20-56a5576d.
+
+## P39D: free shot aiming with a snap to the cup (2026-11-20; notes log/roadmap/P39/P39D_notes.md)
+Play switch mainLoop.aimHalfTileLattice (0 in play): the aim follows the exact world point under the cursor (sub-tile refine
+through worldToScreen with terrain height, worst error 0.0625 px), held outside the GameState (tile fields point >> 10); the aim
+line, the P32D spread preview and the player's real shot (hazards and thoughts included) use it; within max(0x200, 0x800 / zoom)
+world units of the cup on the hole's own green it snaps to the cup centre (byte-identical to the original's cup-tile click; the
+P39C outline stops blinking and widens while snapped). Evidence: segments x64 205 / 205; test_p39d_free_aim 9 (control RED),
+test_shots, test_golfers_p36b, test_defects_p28 / p6a, test_p39c; a GIF and stills of the aim sweep. play_profile.tsv merged by
+hand (P38W3's row kept).

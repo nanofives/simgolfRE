@@ -402,6 +402,15 @@ int g_defect_partner_waits_ball_rest = 1;
 // Random::range(hole + 4) is 0 (updateGolfers+0x373a..updateGolfers+0x375d), so the pause before a shot grows with the hole number
 // (a mean of 5 ticks per try on hole 1, 18 on hole 14). Fixed (0): Random::range(5), hole 1's draw, on every hole.
 int g_defect_pre_shot_gate_by_hole = 1;
+// mainLoop.aimHalfTileLattice (P39D, Mariano 2026-11-20: "selecting where to throw the ball should be free instead of tied to an
+// invisible grid, and it should snap near hole"): while the player aims (g_panelListMode 3) the aim block (ML+0xbc93..ML+0xbde0)
+// takes the cursor tile's centre or the nearest of its corners (golfer +0x10 bit 28 for a corner), and the handed-over shot
+// (prepareShot mode 1, updateGolfers+0x35e8) flies to the target tile's centre ((tile << 10) + 0x200: the corner is dropped).
+// Fixed (0): the aim point is the world point under the cursor (tick_frame.inc P39D_FreeAim, the terrain height included), held
+// in Ctx::aim_free_* (not in the GameState); the tile fields stay point >> 10; the player's shot is prepareShot(i, 1, x, y) with
+// that point; within aim_free_snap_radius (greenline.h) world units of the cup centre on the hole's own green (greenline.h's tile set) the point is the
+// cup centre, which is exactly the original's shot at the cup tile.
+int g_defect_aim_lattice = 1;
 // mainLoop.treesHiddenFarZoom (P11A fix 1, Mariano's play-test 5: "furthest zoom is not rendering trees"): the tile pass of
 // mainLoop P3 queues the sprite of a tile whose type class byte (g_tileTypeAttrs + 0x26 of its 48-byte row) is 0xd (the
 // forest trees, tropical trees and palms) only while g_zoomScale > 1 (ML+0x4aba cmp / ML+0x4ac1 jle past the whole block), so
@@ -860,6 +869,20 @@ uint32_t TkBase::clock_site(int32_t site) {
 const int32_t kSiteFrameMs = 0xf081 - 0x66f;
 // waitTicks' first clock call site (waitTicks+0x33), as an offset from the frame-head return address; its others are +4, +0x30
 const int32_t kSiteWaitTicks = 0x4c384;
+
+// P39D (mainLoop.aimHalfTileLattice = 0): golfer g's held free aim point (Ctx::aim_free_*, tick_frame.inc P39D_FreeAim) when it
+// still belongs to the golfer's tile pair at +off / +off + 4 (+0xc4 the aim tile, +0xcc the shot's target) and its ball (+0xd4 /
+// +0xd8) has not moved since the aim; false otherwise: the tile's centre is used, as the original.
+bool p39d_held_point(Ctx &ctx, int g, uint32_t off, int32_t &x, int32_t &y) {
+  if (SG_DEFECT(g_defect_aim_lattice) || ctx.aim_free_g != g || g < 0 || g >= 0x98) return false;
+  const uint32_t rec = state_va(ctx, &GameState::g_golfers) + (static_cast<uint32_t>(g) << 8);
+  if ((ctx.aim_free_x >> 10) != ctx.mem.load<int32_t>(rec + off) || (ctx.aim_free_y >> 10) != ctx.mem.load<int32_t>(rec + off + 4))
+    return false;
+  if (ctx.aim_free_bx != ctx.mem.load<int32_t>(rec + 0xd4) || ctx.aim_free_by != ctx.mem.load<int32_t>(rec + 0xd8)) return false;
+  x = ctx.aim_free_x;
+  y = ctx.aim_free_y;
+  return true;
+}
 
 struct Frame : TkBase {
   using TkBase::TkBase;
@@ -2761,6 +2784,11 @@ const DefectDef kDefects[] = {
      "at its ball, off the green, a golfer swings on a tick where Random::range(hole + 4) is 0, so the pause before a shot grows with "
      "the hole number; fixed: Random::range(5), hole 1's draw, on every hole",
      &g_defect_pre_shot_gate_by_hole},
+    {"mainLoop.aimHalfTileLattice", "P39D",
+     "while the player aims, the aim snaps to the cursor tile's centre or one of its corners (a half-tile grid), and the shot then "
+     "flies to the tile's centre whatever was shown; fixed: the aim follows the world point under the cursor, the shot flies there, "
+     "and near the cup on the hole's own green the aim snaps to the cup",
+     &g_defect_aim_lattice},
     {"mainLoop.treesHiddenFarZoom", "P11A",
      "at the furthest zoom (g_zoomScale 1) the tile pass queues no tree, tropical tree or palm sprite (type class 0xd): forests "
      "show bare ground; fixed: they are drawn at zoom 1 too, at a quarter of zoom 4's size, while the sprite queue has room "

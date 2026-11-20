@@ -68,6 +68,9 @@ int g_negctl_narrate_shot = 0;
 // thoughts prepareShot emits are muted (they play a sound). Outside an estimate both are off and nothing changes.
 enum DrawSite { kDrawWobble, kDrawMishit, kDrawLie, kDrawDir, kDrawSpeed, kDrawSpinRoll, kDrawSpinPro, kDrawSites };
 thread_local const uint8_t *t_draws = nullptr;
+// P39D (shots.h FreeTargetScope): the free aim point a real mode-1 shot is prepared towards, while a scope is open
+thread_local bool t_free_on = false;
+thread_local int32_t t_free_x = 0, t_free_y = 0;
 
 // Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
 //   shotPower.cacheIgnoresPutt          model_defects#18: the cache key leaves out `putt`, so a putt result can answer a
@@ -506,6 +509,12 @@ int32_t prepare_shot(Ctx &ctx, int32_t g, int32_t mode, int32_t x, int32_t y, in
   }
   int32_t ex = add32(sub32(shl32(r.i(kTargetX), 10), r.i(kBallX)), 0x200);
   int32_t ey = add32(sub32(shl32(r.i(kTargetY), 10), r.i(kBallY)), 0x200);
+  if (t_free_on && mode == 1 && x == -1 && sar32(t_free_x, 10) == r.i(kTargetX) && sar32(t_free_y, 10) == r.i(kTargetY)) {
+    // P39D (FreeTargetScope): the player's real shot towards the free aim point inside the target tile (the tile's centre gives
+    // exactly the original's vector); everything else is the real shot's (hazards, thoughts, the hole's counter)
+    ex = sub32(t_free_x, r.i(kBallX));
+    ey = sub32(t_free_y, r.i(kBallY));
+  }
   if (x != -1) {
     ex = sub32(x, r.i(kBallX));
     ey = sub32(y, r.i(kBallY));
@@ -2096,7 +2105,18 @@ bool margin_carry(Ctx &c, const World &w, const Rec &r, int32_t &x, int32_t &y, 
 void shot_margin_set(bool on) { g_margin_on.store(on ? 1 : 0, std::memory_order_relaxed); }
 bool shot_margin_on() { return g_margin_on.load(std::memory_order_relaxed) != 0; }
 
-bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out) {
+FreeTargetScope::FreeTargetScope(int32_t x, int32_t y) : prev_on(t_free_on), prev_x(t_free_x), prev_y(t_free_y) {
+  t_free_on = true;
+  t_free_x = x;
+  t_free_y = y;
+}
+FreeTargetScope::~FreeTargetScope() {
+  t_free_on = prev_on;
+  t_free_x = prev_x;
+  t_free_y = prev_y;
+}
+
+bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out, int32_t px, int32_t py) {
   out = ShotMargin{};
   if (g < 0 || g >= 0x98) return false;
   std::memcpy(scratch.bytes(), live.bytes(), sizeof(GameState));
@@ -2128,7 +2148,14 @@ bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out) {
     r.i(kTargetY, r.i(0xc8));
     r.u(kFlags, r.u(kFlags) & ~0x1800u);
     t_draws = d;
-    prepare_shot(scratch, g, 1, -1, 0, 0);
+    if (px != -1) {   // P39D: the real shot towards the free aim point (FreeTargetScope)
+      r.i(kTargetX, sar32(px, 10));
+      r.i(kTargetY, sar32(py, 10));
+      FreeTargetScope free_target(px, py);
+      prepare_shot(scratch, g, 1, -1, 0, 0);
+    } else {
+      prepare_shot(scratch, g, 1, -1, 0, 0);
+    }
     t_draws = nullptr;
     r.i(0xc4, r.i(kBallX));
     r.i(0xc8, r.i(kBallY));
@@ -2183,6 +2210,12 @@ void a_narrate_shot(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(narrate_shot(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3)));
 }
 void a_scan_shot_area(Ctx &c, const uint32_t *a, Ret &) { scan_shot_area(c, S(a, 0)); }
+// prepareShot.free(g, x, y): test entry (port/test/test_p39d_free_aim.py): the player's real shot prepareShot(g, 1, -1, 0, 0) inside
+// a FreeTargetScope(x, y), as updateGolfers runs it with mainLoop.aimHalfTileLattice at 0
+void a_prepare_shot_free(Ctx &c, const uint32_t *a, Ret &r) {
+  FreeTargetScope free_target(S(a, 1), S(a, 2));
+  r.set_i32(prepare_shot(c, S(a, 0), 1, -1, 0, 0));
+}
 void a_prepare_shot(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(prepare_shot(c, S(a, 0), S(a, 1), S(a, 2), S(a, 3), S(a, 4)));
 }
@@ -2193,6 +2226,7 @@ const FuncDef kFuncs[] = {
     {"trialShot", "default", "int", 4, 0x027F, a_trial_shot, &g_negctl_trial_shot},
     {"chooseShotTarget", "default", "int", 1, 0x027F, a_choose_shot_target, &g_negctl_choose_shot_target},
     {"prepareShot", "default", "int", 5, 0x027F, a_prepare_shot, &g_negctl_prepare_shot},
+    {"prepareShot.free", "default", "int", 3, 0x027F, a_prepare_shot_free, &g_negctl_prepare_shot},
     {"narrateShot", "default", "int", 4, 0x027F, a_narrate_shot, &g_negctl_narrate_shot},
     {"scanShotArea", "default", "void", 1, 0x027F, a_scan_shot_area, &g_negctl_scan_shot_area},
 };

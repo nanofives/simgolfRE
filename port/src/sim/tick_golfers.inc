@@ -1256,6 +1256,21 @@ int updateGolfers() {
                 gwt.tag(kGwPlayerShot);
                 continue;                                                               // updateGolfers+0x35e3
             }
+            int32_t p39d_x = 0, p39d_y = 0;
+            const bool p39d_free = p39d_held_point(ctx, i, 0xcc, p39d_x, p39d_y);
+            static FILE *const p39d_log = std::getenv("SG_P39D_LOG") ? std::fopen(std::getenv("SG_P39D_LOG"), "a") : nullptr;
+            if (p39d_log) {   // development (P39D's drives): the player's shot and whether it took the held free point
+                std::fprintf(p39d_log, "shot golfer %d target %d %d ball %d %d held %d %d %d %d %d free %d\n", i,
+                             (int)GD(i, (GS(g_golfers) + 204)), (int)GD(i, (GS(g_golfers) + 208)), (int)GD(i, (GS(g_golfers) + 212)),
+                             (int)GD(i, (GS(g_golfers) + 216)), ctx.aim_free_g, ctx.aim_free_x, ctx.aim_free_y, ctx.aim_free_bx,
+                             ctx.aim_free_by, p39d_free ? 1 : 0);
+                std::fflush(p39d_log);
+            }
+            if (p39d_free) {   // P39D (mainLoop.aimHalfTileLattice = 0): towards the free point
+                FreeTargetScope p39d_free(p39d_x, p39d_y);   // shots.h: the real shot (hazards, thoughts) with the free vector
+                kPrepareShot(i, 1, -1, 0, 0);
+                ctx.aim_free_g = -1;
+            } else
             kPrepareShot(i, 1, -1, 0, 0);                                               // updateGolfers+0x35e8..updateGolfers+0x3610
         } else {
             if (G<int>(GS(unk_0059b738)) != 0) { gwt.tag(kGwShotThrottle); continue; }        // updateGolfers+0x35f7..updateGolfers+0x35fd

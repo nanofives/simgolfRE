@@ -124,6 +124,11 @@ class Ctx {
   int16_t fin_other_word[101] = {};
   bool fin_other_on[101] = {};
   int32_t dev_land_credits = 0;  // P38E development (the app's SG_P38E_CREDITS): land credits a new sandbox course starts with
+  // P39D (play switch mainLoop.aimHalfTileLattice = 0, tick_frame.inc P39D_FreeAim): the player's free aim point in world units, its
+  // golfer (-1: none) and that golfer's ball when it was taken; used while the golfer's aim tile (+0xc4 / +0xc8) or shot target
+  // (+0xcc / +0xd0) equals the point >> 10 and the ball has not moved; aim_free_snap: the point is the cup centre (the snap)
+  int32_t aim_free_g = -1, aim_free_x = 0, aim_free_y = 0, aim_free_bx = 0, aim_free_by = 0;
+  bool aim_free_snap = false;
 
  private:
   std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it

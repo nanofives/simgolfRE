@@ -5334,13 +5334,15 @@ void P4_holeHud(u32 F) {
 void P39C_GreenOutline() {
     if (!green_highlight_on()) return;
     const int h = green_highlight_hole(ctx);
-    if (h <= 0 || !green_highlight_blink(ctx)) return;
+    // P39D: while the free aim is snapped to the cup (mainLoop.aimHalfTileLattice = 0) the outline stays lit, one pixel wider
+    const bool snap = !SG_DEFECT(g_defect_aim_lattice) && ctx.aim_free_snap && ctx.aim_free_g == G32(GS(g_playerGolfer));
+    if (h <= 0 || (!snap && !green_highlight_blink(ctx))) return;
     const GreenOutline &o = green_outline(ctx, h);
     if (o.edges.empty()) return;   // no green at the cup: P1_flag80 drew the original's marker
     GfxWideLineScope marks_scope(ctx, kGfxWideMarks);
     green_outline_lines(ctx, o, [&](int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t col, int32_t w, int32_t al) {
         cc("drawMapLine", x1, y1, x2, y2, (int)col, w, al);
-    });
+    }, snap ? 1 : 0);
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -5971,9 +5973,53 @@ bool P19B_HoleLineEnds(u32 F, bool firstOnScreen) {
 // line's own primitives (setLinePoint / lineTo, its width and alpha, a black shadow one pixel lower, then white), before the aim
 // line so the line stays on top. Nothing for a putt from the green (Mariano, 2026-11-16): the ball's tile of type 1. A small red
 // cross ("tree in the path", Mariano 2026-11-16) marks where the no-random flight can be caught by the game's tree test.
+// P39D (play switch mainLoop.aimHalfTileLattice = 0; re/roadmap/P39_COURSE_FEATURES.md "P39D", log/roadmap/P39/P39D_notes.md): the
+// aim block's point. The original (ML+0xbc93..ML+0xbde0) projects the cursor tile's centre and its four corners with worldToScreen
+// and keeps the one nearest the cursor's local point (F+0x68, F+0x58); here the world point whose worldToScreen is that local point
+// is solved from the cursor tile's centre (screenToTile's tile) by Newton steps on worldToScreen's exact projection (bridge.h
+// world_to_screen_exact; finite differences of 64 world units, steps capped at 1.5 tiles, kept on the map), so the terrain height is
+// in it. Within aim_free_snap_radius world units (greenline.h) of the cup centre ((cup tile << 10) + 0x200, g_holes +0x18 / +0x1c of the golfer's hole
+// +0x21) and on that hole's own green (greenline.h green_outline's tiles: the cup's green, split by the nearer cup) the point
+// becomes the cup centre. Writes what the original's block writes: g_cursorTileX / Y and golfer +0xc4 / +0xc8 = point >> 10, bit 28
+// of golfer +0x10 clear (the block cleared it at ML+0xbd17; a corner set it); the point itself goes to Ctx::aim_free_* only.
+// false (the original's lattice runs): no player golfer or a cursor tile off the map.
+bool P39D_FreeAim(u32 F) {
+    const int g = G32(GS(g_playerGolfer));
+    if (g < 0 || g >= 0x98) return false;
+    const int last = world_last(ctx), cx = G32(GS(g_cursorTileX)), cy = G32(GS(g_cursorTileY));
+    if (cx < 0 || cx > last || cy < 0 || cy > last) return false;
+    const u32 rec = (u32)g << 8;
+    const double mx = FD(0x68), my = FD(0x58);
+    const int h = G8((GS(g_golfers) + 33) + rec);
+    int32_t px = 0, py = 0, rx = 0, ry = 0;
+    bool snap = false;
+    aim_free_point(ctx, mx, my, cx, cy, h, px, py, snap, &rx, &ry);
+    const int tx = px >> 10, ty = py >> 10;
+    G32(GS(g_cursorTileX)) = tx;
+    G32(GS(g_cursorTileY)) = ty;
+    G32((GS(g_golfers) + 16) + rec) &= ~(1u << 28);
+    G32((GS(g_golfers) + 196) + rec) = tx;
+    G32((GS(g_golfers) + 200) + rec) = ty;
+    ctx.aim_free_g = g;
+    ctx.aim_free_x = px;
+    ctx.aim_free_y = py;
+    ctx.aim_free_bx = G32((GS(g_golfers) + 212) + rec);
+    ctx.aim_free_by = G32((GS(g_golfers) + 216) + rec);
+    ctx.aim_free_snap = snap;
+    // development (P39D's drives): SG_P39D_LOG=<file> appends one line per aim frame
+    static FILE *const dev_log = std::getenv("SG_P39D_LOG") ? std::fopen(std::getenv("SG_P39D_LOG"), "a") : nullptr;
+    if (dev_log) {
+        std::fprintf(dev_log, "date %d golfer %d hole %d zoom %d cursor %.0f %.0f cell %d %d raw %d %d point %d %d tile %d %d snap %d\n",
+                     (int)G32(GS(g_date)), g, h, (int)G32(GS(g_zoomScale)), mx, my, cx, cy, rx, ry, px, py, tx, ty, snap ? 1 : 0);
+        std::fflush(dev_log);
+    }
+    return true;
+}
+bool P39D_HeldPoint(int g, u32 off, int32_t &x, int32_t &y) { return p39d_held_point(ctx, g, off, x, y); }
+
 struct P32D_Margin {
     std::unique_ptr<Ctx> scratch;
-    int32_t key[12] = {};
+    int32_t key[14] = {};
     bool valid = false;
     ShotMargin m;
 };
@@ -5985,21 +6031,33 @@ void P32D_ShotMargin() {
     const u32 rec = (u32)g << 8;
     const int bx = (int)G32((GS(g_golfers) + 0xd4) + rec), by = (int)G32((GS(g_golfers) + 0xd8) + rec);
     if (cc("typeAtPos", bx, by) == 1) return;   // the ball on a green (the shot panel's Lie tile): no margin
-    const int32_t key[12] = {g, bx, by, (int32_t)G32((GS(g_golfers) + 0xc4) + rec), (int32_t)G32((GS(g_golfers) + 0xc8) + rec),
+    int32_t key[14] = {g, bx, by, (int32_t)G32((GS(g_golfers) + 0xc4) + rec), (int32_t)G32((GS(g_golfers) + 0xc8) + rec),
                              (int32_t)G32(GS(g_playerShotStyle)), (int32_t)G32((GS(g_golfers) + 0x10) + rec),
                              (int32_t)GU8((GS(g_golfers) + 0x36) + rec), (int32_t)GU8((GS(g_golfers) + 0x22) + rec),
                              (int32_t)GU8((GS(g_golfers) + 0x21) + rec), (int32_t)G32(GS(g_difficulty)),
-                             (int32_t)G32(GS(g_courseIndex))};
+                             (int32_t)G32(GS(g_courseIndex)), -1, -1};
+    // P39D: the free aim point (mainLoop.aimHalfTileLattice = 0) moves the shape with it; the key holds it to 1 / 16 tile
+    int32_t fx = -1, fy = 0;
+    const bool free_aim = P39D_HeldPoint(g, 0xc4, fx, fy);
+    if (free_aim) {
+        key[12] = fx >> 6;
+        key[13] = fy >> 6;
+    }
     if (!sp.valid || std::memcmp(key, sp.key, sizeof(key)) != 0) {
         if (!sp.scratch) sp.scratch = std::make_unique<Ctx>();
-        shot_margin(ctx, *sp.scratch, g, sp.m);
+        if (free_aim) shot_margin(ctx, *sp.scratch, g, sp.m, (key[12] << 6) + 0x20, (key[13] << 6) + 0x20);
+        else shot_margin(ctx, *sp.scratch, g, sp.m);
         std::memcpy(sp.key, key, sizeof(key));
         sp.valid = true;
     }
     if (!sp.m.valid) return;
     // the aim point as the aim line takes it (ML+0xbdac..ML+0xbdda): the tile's centre unless flag 0x10000000
-    const int ax = (key[3] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
-    const int ay = (key[4] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
+    int ax = (key[3] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
+    int ay = (key[4] << 10) + ((G32((GS(g_golfers) + 16) + rec) & 0x10000000) ? 0 : 0x200);
+    if (free_aim) {   // P39D: the aim line's end is the free point
+        ax = fx;
+        ay = fy;
+    }
     const double vx = ax - bx, vy = ay - by;
     // centred where the aim line ends: the aim distance in yards clamped to the reach (ML+0xbdf3..ML+0xbe2c: golferShotReach,
     // 13 / 18 of it for shot style 3, half for style 4; ML+0xbedf..ML+0xbf83: 25 * distance / 1024 clamped), back in world units
@@ -7159,6 +7217,11 @@ L41b20f:    // ==== drag preview (course-edit / hole / path drag, [g_panelListMo
         int rec = (G32(GS(g_playerGolfer)) << 8) + (GS(g_golfers) + 16);      // ML+0xbce8..ML+0xbd17
         G32(rec) &= 0xefffffff;                         // clear bit 28
     }
+    if (!SG_DEFECT(g_defect_aim_lattice) && P39D_FreeAim(F)) {   // P39D: the free point instead of the half-tile lattice
+        edi = ctx.aim_free_x;
+        ebx = ctx.aim_free_y;
+        goto L41b3f3_p39d;
+    }
     edi = 0;                                            // ML+0xbc85
 L41b2d9:                                                 // outer loop over edi (0..1)
     esi = 0;                                            // ML+0xbd19
@@ -7196,6 +7259,7 @@ L41b358:
         G32(rec + (GS(g_golfers) + 196)) = ecx;                      // ML+0xbde0
         G32(rec + (GS(g_golfers) + 200)) = edx;                      // ML+0xbded
     }
+L41b3f3_p39d:
     esi = cc("golferShotReach", G32(GS(g_playerGolfer)));                  // ML+0xbdf3 golferShotReach (esi = drag length / quality)
     {
         int mode = G32(GS(g_playerShotStyle));                       // ML+0xbdfa

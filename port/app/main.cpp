@@ -1047,6 +1047,7 @@ const ProfileMember kPlayProfile[] = {
     {"courseActionMenu.worldSizes", 0},          // P38W: the world map's courses carry their sizes (50 / 101 / 152)
     {"showBuyLandScreen.lotPricePerTile", 0},    // P38W3: TRACTS FOR SALE lots at $1,250 an acre (the world map's scale)
     {"layPath.underEveryType", 0},               // P39B: paths drawn under every element but tees / greens, paved from the clubhouse
+    {"mainLoop.aimHalfTileLattice", 0},          // P39D: free shot aiming (the shot flies to the point under the cursor), snap to the cup
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1889,6 +1890,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     // development (P39B's drives): SG_P39B_PATHS=0 puts layPath.underEveryType back to the original's 1 for this run (before / after)
     if (std::getenv("SG_P39B_PATHS") && std::atoi(std::getenv("SG_P39B_PATHS")) == 0) {
       const int k = portsim::defect_find("layPath.underEveryType");
+      if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+    }
+    // development (P39D's drives): SG_P39D_AIM=0 puts mainLoop.aimHalfTileLattice back to the original's 1 for this run (before / after)
+    if (std::getenv("SG_P39D_AIM") && std::atoi(std::getenv("SG_P39D_AIM")) == 0) {
+      const int k = portsim::defect_find("mainLoop.aimHalfTileLattice");
       if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
     }
     // development (P38E's drives): SG_P38E_CASHKEY=1 gives back the original's '+' cash key (mainLoop.hiddenCheatKeys = 1)

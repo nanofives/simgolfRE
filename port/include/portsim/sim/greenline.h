@@ -41,11 +41,23 @@ const GreenOutline &green_outline(Ctx &ctx, int32_t hole);
 // the screen lines of an outline in the marker's colour (sink(x1, y1, x2, y2, colour, width, alpha), drawMapLine's arguments);
 // sides wholly off the view are skipped. Returns the number of lines given to the sink.
 using GreenLineSink = std::function<void(int32_t, int32_t, int32_t, int32_t, uint32_t, int32_t, int32_t)>;
-int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink &sink);
+// P39D: wider > 0 draws the lines that many pixels wider (the aim's snap to the cup)
+int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink &sink, int32_t wider = 0);
 
 // the marker's look: g_sprite5423e8 drawn through the g_color16Lut shade table lightens the cup tile towards white (measured on
 // the presented frame: (148, 206, 99) -> (184, 237, 126), P39C_notes.md); the line is white (555 word 0x7fff) at the terrain
 // tool's mark alpha 7 of 10
+// P39D (play switch mainLoop.aimHalfTileLattice = 0): the world point (px, py) whose worldToScreen is the local point (mx, my),
+// solved from tile (cx, cy)'s centre by Newton steps on worldToScreen's exact projection (finite differences of 64 world units,
+// steps capped at 1.5 tiles, kept on the map); (rx, ry) gets it before the snap. Within aim_free_snap_radius of hole h's cup centre
+// ((cup tile << 10) + 0x200, g_holes +0x18 / +0x1c) and on that hole's green (green_outline's tiles) the point becomes the cup
+// centre and snap is set. Reads only.
+void aim_free_point(Ctx &ctx, double mx, double my, int32_t cx, int32_t cy, int32_t hole, int32_t &px, int32_t &py, bool &snap,
+                    int32_t *rx = nullptr, int32_t *ry = nullptr);
+// the snap radius in world units at the current zoom: max(0x200, 0x800 / g_zoomScale), the same size on screen at zooms 1, 2 and 4
+// (half a tile at zoom 4), half a tile at zoom 8 (log/roadmap/P39/P39D_notes.md, the drive)
+int32_t aim_free_snap_radius(Ctx &ctx);
+
 constexpr uint32_t kGreenLineColour = 0x80007fffu;
 
 }  // namespace portsim

@@ -68,7 +68,21 @@ struct ShotMargin {
   bool tree = false;
   int32_t tree_x = 0, tree_y = 0;
 };
-bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out);
+// P39D: (px, py) != (-1, ..): the shot prepared towards that world point (a FreeTargetScope around prepareShot(g, 1, -1, 0, 0), the
+// target tile = the point >> 10), as the player's real shot is with mainLoop.aimHalfTileLattice at 0
+// P39D: while one is open on this thread, prepareShot(g, 1, -1, ..) (the player's real shot) whose target tile (+0xcc / +0xd0)
+// holds (x, y) takes the shot vector towards (x, y) instead of the tile's centre; every other step is the real shot's. (The
+// trial path x != -1 would skip the hazards, the thoughts and the hole's shot counter.) The tile's centre gives the original's.
+struct FreeTargetScope {
+  FreeTargetScope(int32_t x, int32_t y);
+  ~FreeTargetScope();
+  FreeTargetScope(const FreeTargetScope &) = delete;
+  FreeTargetScope &operator=(const FreeTargetScope &) = delete;
+ private:
+  bool prev_on;
+  int32_t prev_x, prev_y;
+};
+bool shot_margin(Ctx &live, Ctx &scratch, int32_t g, ShotMargin &out, int32_t px = -1, int32_t py = 0);
 
 }  // namespace portsim
 

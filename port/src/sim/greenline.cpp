@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cmath>
 #include <cstring>
 
 #include "commands_internal.h"
@@ -152,13 +153,13 @@ const GreenOutline &green_outline(Ctx &ctx, int32_t hole) {
   return c.o;
 }
 
-int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink &sink) {
+int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink &sink, int32_t wider) {
   if (o.edges.empty()) return 0;
   const GameState &gs = ctx.gs();
   const int32_t kFar = 1 << 24;   // the screen test passes for any point of the map: the line's clip cuts it at the view's edge
   const int32_t E = wide_view_margin_w2s(ctx), W = gs.g_screenWidth, H = gs.g_screenHeight, pad = 16;
   const int32_t z = gs.g_zoomScale;
-  const int32_t width = z < 4 ? 2 : 3;   // the terrain tool's mark edges are 3 wide at zoom 4 (P4_holeGrid's drawMapLine)
+  const int32_t width = (z < 4 ? 2 : 3) + wider;   // the terrain tool's mark edges are 3 wide at zoom 4 (P4_holeGrid's drawMapLine)
   struct L {
     int32_t x1, y1, x2, y2;
   };
@@ -180,6 +181,68 @@ int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink
     ++n;
   }
   return n;
+}
+
+int32_t aim_free_snap_radius(Ctx &ctx) {
+  const int32_t z = std::max<int32_t>(1, ctx.gs().g_zoomScale);
+  return std::max<int32_t>(0x200, 0x800 / z);
+}
+
+void aim_free_point(Ctx &ctx, double mx, double my, int32_t cx, int32_t cy, int32_t hole, int32_t &px, int32_t &py, bool &snap,
+                    int32_t *rx, int32_t *ry) {
+  const int32_t last = world_last(ctx), kFar = 1 << 24;
+  const double top = static_cast<double>((last + 1) << 10) - 1.0;
+  auto proj = [&](double x, double y, double &sx, double &sy) {
+    const int32_t ix = static_cast<int32_t>(std::lround(x)), iy = static_cast<int32_t>(std::lround(y));
+    int32_t a = 0, b = 0;
+    world_to_screen(ctx, ix, iy, a, b, kFar);
+    double ex = 0, ey = 0;
+    if (world_to_screen_exact(ix, iy, a, b, ex, ey)) {
+      sx = ex;
+      sy = ey;
+    } else {
+      sx = a;
+      sy = b;
+    }
+  };
+  double wx = (cx << 10) + 0x200, wy = (cy << 10) + 0x200;
+  for (int it = 0; it < 8; ++it) {
+    double sx = 0, sy = 0, ax = 0, ay = 0, bx = 0, by = 0;
+    proj(wx, wy, sx, sy);
+    const double ex = mx - sx, ey = my - sy;
+    if (std::fabs(ex) < 0.25 && std::fabs(ey) < 0.25) break;
+    const double h = 64.0;
+    proj(wx + h, wy, ax, ay);
+    proj(wx, wy + h, bx, by);
+    const double j11 = (ax - sx) / h, j21 = (ay - sy) / h, j12 = (bx - sx) / h, j22 = (by - sy) / h;
+    const double det = j11 * j22 - j12 * j21;
+    if (std::fabs(det) < 1e-9) break;
+    double dx = (j22 * ex - j12 * ey) / det, dy = (-j21 * ex + j11 * ey) / det;
+    const double len = std::hypot(dx, dy);
+    if (len > 1536.0) {
+      dx *= 1536.0 / len;
+      dy *= 1536.0 / len;
+    }
+    wx = std::min(std::max(wx + dx, 0.0), top);
+    wy = std::min(std::max(wy + dy, 0.0), top);
+  }
+  px = static_cast<int32_t>(std::lround(wx));
+  py = static_cast<int32_t>(std::lround(wy));
+  if (rx) *rx = px;
+  if (ry) *ry = py;
+  snap = false;
+  if (hole <= 0 || hole >= 0x13) return;
+  const uint32_t rec = state_va(ctx, &GameState::g_holes) + 0x208u * static_cast<uint32_t>(hole);
+  const int32_t ux = ctx.mem.load<int32_t>(rec + 0x18), uy = ctx.mem.load<int32_t>(rec + 0x1c);
+  if (ux < 0 || ux > last || uy < 0 || uy > last) return;
+  const int32_t qx = (ux << 10) + 0x200, qy = (uy << 10) + 0x200;
+  if (std::hypot(static_cast<double>(px - qx), static_cast<double>(py - qy)) > aim_free_snap_radius(ctx)) return;
+  const GreenOutline &o = green_outline(ctx, hole);
+  const int32_t ti = (px >> 10) * (last + 1) + (py >> 10);
+  if (!std::binary_search(o.tiles.begin(), o.tiles.end(), ti)) return;
+  px = qx;
+  py = qy;
+  snap = true;
 }
 
 namespace {
@@ -222,12 +285,37 @@ void a_option(Ctx &, const uint32_t *a, Ret &r) {
   r.set_i32(green_highlight_on() ? 1 : 0);
   green_highlight_set(a[0] != 0);
 }
+// aimFree.point(mx * 16, my * 16, cx, cy, hole, out): aim_free_point with the local point in 1 / 16 pixels; out = px, py, snap,
+// rx, ry, radius, and the exact projection of (rx, ry) x 16 (port/test/test_p39d_free_aim.py)
+void a_aim_point(Ctx &c, const uint32_t *a, Ret &r) {
+  int32_t px = 0, py = 0, rx = 0, ry = 0;
+  bool snap = false;
+  aim_free_point(c, static_cast<int32_t>(a[0]) / 16.0, static_cast<int32_t>(a[1]) / 16.0, static_cast<int32_t>(a[2]),
+                 static_cast<int32_t>(a[3]), static_cast<int32_t>(a[4]), px, py, snap, &rx, &ry);
+  // the exact projection of the unsnapped point, in 1 / 16 pixels (bridge.h world_to_screen_exact; the integer one when unavailable)
+  int32_t sx = 0, sy = 0;
+  world_to_screen(c, rx, ry, sx, sy, 1 << 24);
+  double ex = sx, ey = sy;
+  world_to_screen_exact(rx, ry, sx, sy, ex, ey);
+  const int32_t w[8] = {px, py, snap ? 1 : 0, rx, ry, aim_free_snap_radius(c), static_cast<int32_t>(std::lround(ex * 16)),
+                        static_cast<int32_t>(std::lround(ey * 16))};
+  for (uint32_t k = 0; k < 8; ++k) c.mem.store<int32_t>(a[5] + 4 * k, w[k]);
+  r.set_i32(snap ? 1 : 0);
+}
+// aimFree.held(out): Ctx::aim_free_g, x, y, bx, by, snap (the held free point, tick_frame.inc P39D_FreeAim)
+void a_aim_held(Ctx &c, const uint32_t *a, Ret &r) {
+  const int32_t w[6] = {c.aim_free_g, c.aim_free_x, c.aim_free_y, c.aim_free_bx, c.aim_free_by, c.aim_free_snap ? 1 : 0};
+  for (uint32_t k = 0; k < 6; ++k) c.mem.store<int32_t>(a[0] + 4 * k, w[k]);
+  r.set_i32(c.aim_free_g);
+}
 int g_negctl_greenline = 0;
 const FuncDef kFuncs[] = {
     {"greenLine.tiles", "default", "int", 3, 0, a_tiles, &g_negctl_greenline},
     {"greenLine.edges", "default", "int", 3, 0, a_edges, &g_negctl_greenline},
     {"greenLine.lines", "default", "int", 2, 0, a_lines, &g_negctl_greenline},
     {"greenLine.option", "default", "int", 1, 0, a_option, &g_negctl_greenline},
+    {"aimFree.point", "default", "int", 6, 0, a_aim_point, &g_negctl_greenline},
+    {"aimFree.held", "default", "int", 1, 0, a_aim_held, &g_negctl_greenline},
 };
 }  // namespace
 
