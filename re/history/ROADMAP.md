@@ -2160,3 +2160,7 @@ prices scale by ((N - 2) / 48)^2 (pins and the purchase check use it; sandbox ke
 against P38C's generated owned land: -3.5..+2.7 %). A new game and switchToCourse resize to the record's size before P38C's
 generator. `--world-size` overrides for tests. Evidence: segments x64 and Win32 205 / 205; test_p38w_world_sizes 9; 18 gates incl.
 oracles course_menu / saveload; drives 1920 x 1080 and 2560 x 1351 dpi 120, English and Spanish.
+- Published 2026-11-20: large maps A-G + C + W in 6a673506 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK; the
+  paint-rate phase could not judge: after the 03:43 reboot the active display is a 60 Hz USB virtual display with the RTX 3070
+  headless, 19 paints / s and 46 ms presents on 52e05ae2 and 6a673506 alike, against 110 / s on 0a78a33a with the 120 Hz monitor;
+  re-measure with the monitor on). LAN + GitHub release port-2026-11-20-6a673506. Round P38 (large maps) DONE.
