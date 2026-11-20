@@ -314,3 +314,66 @@ def test_generated_152_course_saves_and_loads(portlib, loc):
         assert [b.call("heightBlend", [x, y]).eax for x, y in pts] == hb_before
     finally:
         b.__exit__(None, None, None)
+
+
+# ---- P38W2 (log/roadmap/P38/P38W2_notes.md): a world map record with its own acres (byte +0x2a) generated at its own size (byte
+# +0x29) with courseActionMenu.worldSizes at 0 owns the land of those acres: setting 0 the square (acres x 10 to the side's
+# rounding), setting 1 the square's rows to the coast (shore water included), setting 2 the island's land (lakes aside)
+W2_ACRES = [40, 80, 110, 150, 190, 230, 260, 300, 340, 380, 410, 450, 490, 530, 560, 600]
+W2_SIZES = [50] * 3 + [101] * 9 + [152] * 4
+
+
+def _w2_generate(portlib, rec_i, setting_want):
+    locs = _locations(portlib)
+    loc = next(i for i, l in enumerate(locs) if l[1] == setting_want)
+    ctype, setting, relief = locs[loc]
+    a, n = W2_ACRES[rec_i], W2_SIZES[rec_i]
+    img = bytearray(_fixed_image(portlib, n=COURSE, loc=loc, acres=min(a, 0xFA), relief=relief, setting=setting, ctype=ctype,
+                                 difficulty=1))
+    rec = objs(portlib)["g_courseTable"][0] + 0x2E * COURSE
+    img[rec + 0x29] = 0 if n == 50 else (n - 2) // 3
+    img[rec + 0x2A] = a // 10
+    st = new_state(portlib).__enter__()
+    st.load_image(bytes(img))
+    st.call("genNoise", [])
+    if n != 50:
+        st.world_resize(n)
+    st.call("generateRandomCourse", [COURSE])
+    t = st.mem_read(st.grid_va("g_tileType"), n * n)
+    return st, a, n, t
+
+
+@need_exe
+@pytest.mark.parametrize("setting,tol", [(0, 0.07), (1, 0.10), (2, 0.12)])
+def test_w2_owned_land_matches_the_record_acres(portlib, setting, tol):
+    portlib.defect("courseActionMenu.worldSizes", False)
+    try:
+        for rec_i in (0, 2, 3, 7, 11, 12, 15):
+            st, a, n, t = _w2_generate(portlib, rec_i, setting)
+            try:
+                if setting == 2:
+                    owned = sum(1 for v in t if v not in (0x14, 0x11, 0x12, 0x13))   # the island's land
+                else:
+                    owned = sum(1 for v in t if v != 0x14)                           # every tile not for sale
+                assert abs(owned / 10 - a) <= tol * a, (setting, rec_i, n, a, owned / 10)
+                if setting != 2:
+                    assert t[(n // 2) * n + n // 2] != 0x14                           # the centre is owned
+                    assert t[0] == 0x14 and t[n * n - 1] == 0x14                      # the corners are for sale
+            finally:
+                if n != 50:
+                    st.world_resize(50)
+                st.__exit__(None, None, None)
+    finally:
+        portlib.defect_reset()
+
+
+@need_exe
+def test_w2_switch_at_1_keeps_p38c_share(portlib):
+    """the switch at 1 (tests and segments): the record's byte +0x2a is ignored and the owned border is P38C's share of the side"""
+    st, a, n, t = _w2_generate(portlib, 15, 0)   # 600 acres at 152, switch at 1: 0xfa's border, 50's share of the side
+    try:
+        rows = sum(1 for x in range(n) if t[x * n + n // 2] != 0x14)
+        assert rows == n - 2 * ((_count50(0xFA) * n + 25) // 50)
+    finally:
+        st.world_resize(50)
+        st.__exit__(None, None, None)

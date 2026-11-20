@@ -13,6 +13,7 @@
 #include "portsim/sim/tick.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
+#include "worldsizes.h"  // P38W2: record_owned_border
 
 namespace portsim {
 
@@ -113,18 +114,7 @@ int32_t area_count(const Ctx &ctx, int32_t c) {
 // Section M's `count` (the rows cleared on each side of the owned square): at 50 the original's loop (c from 0x19 down while
 // c * c * 4 > acres * 10, count = 0x19 - c); at N the sweep radius is N / 2 and the owned square keeps the 50 proportion:
 // round(count50 * N / 50) (P38B's flat course and P38C's generator; Mariano's pick, 2026-11-19).
-int32_t owned_border(const Ctx &ctx, int32_t acres) {
-  int32_t count50 = 0;
-  {
-    const int32_t e5 = acres * 10;
-    int32_t c = 0x19;
-    do {
-      ++count50;
-      --c;
-    } while (c * c * 4 > e5);
-  }
-  return (count50 * world_n(ctx) + kWorldOriginal / 2) / kWorldOriginal;
-}
+int32_t owned_border(const Ctx &ctx, int32_t acres) { return world_owned_border_share(world_n(ctx), acres); }   // (worldsizes.h)
 
 int32_t generate_random_course(Ctx &ctx, int32_t n) {
   GameState &g = ctx.gs();
@@ -490,7 +480,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     if (!SG_DEFECT(g_defect_feature_outside)) {  // P24E: keep the clubhouse and its free feature inside the border sweep
       // the sweep of section M: `count` from the acres; setting 2 clears an island edge of clamp(|x - 25|, 8, 50) + count
       // - 12 + Random::range(3) cells per row / column (the worst case, 2, is taken: the draw comes later)
-      const int32_t count = owned_border(ctx, rec.field(&CourseRecord::acres).get());   // P38C: at N (count50 at 50)
+      const int32_t count = record_owned_border(ctx, n);   // P38C: at N (count50 at 50); P38W2: a record's own acres at its size
       const int8_t set = setting();
       const auto island_lim = [&](int32_t v) { return island_edge(v, count - len(0xC), big ? len(3) - 1 : 2); };
       const auto cleared = [&](int32_t r, int32_t c) {
@@ -819,7 +809,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     set_walker_post(ctx, w, 0, leaving.field(&HoleRecord::tee_x).get());
     set_walker_post(ctx, w, 1, leaving.field(&HoleRecord::tee_y).get());
   }
-  int32_t count = owned_border(ctx, rec.field(&CourseRecord::acres).get());   // P38C: the sweep radius N / 2, 50's proportion
+  int32_t count = record_owned_border(ctx, n);   // P38C: the sweep radius N / 2, 50's proportion; P38W2: a record's own acres (worldsizes.h)
   const int8_t kind = rec.field(&CourseRecord::setting).get();
   for (int32_t k = 0; k < world_tiles(ctx); ++k) (grid_arr(ctx, &GameState::g_tileTypeSaved) + k).set(ty(k));
   if (kind == 2) {

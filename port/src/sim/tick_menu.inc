@@ -381,6 +381,11 @@ int Session(u32 F, int sel) {
         G32(GS(unk_00543cf4)) = 0;                        // ML+0x5c9
         G32(GS(g_courseIndex)) = 0;                        // ML+0x5d4
         G32(GS(g_cash_div100)) = (flags & 0x1000000) ? 0x2710 : 0x3E8;  // ML+0x5b7..ML+0x5da (neg/sbb/and 0x2328 + 0x3e8)
+        {   // P38W2 development only (inert unless set): SG_P38W_CASH=<n> = the career's cash before the world map (x $100; drives)
+#pragma warning(suppress : 4996)
+            const char *dev_cash = std::getenv("SG_P38W_CASH");
+            if (dev_cash && (flags & 0x1000000) == 0) G32(GS(g_cash_div100)) = std::atoi(dev_cash);
+        }
         int r = cc("courseActionMenu", 1);                  // ML+0x5df courseActionMenu(1) (thunk -> courseActionMenu)
         G32(GS(g_courseIndex)) = r;                        // ML+0x5ea
         if (r == -1)                                // ML+0x5ef je ML+0x11875

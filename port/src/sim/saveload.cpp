@@ -1071,11 +1071,34 @@ int32_t record_world_n(Ctx &ctx, int32_t c) {
 
 void seed_record_world_sizes(Ctx &ctx) {
   if (!world_sizes_on()) return;
-  for (int32_t c = 0; c < 16; ++c) {   // records 0..7 Standard, 8..11 Large, 12..15 Huge (the dearer tiers: tierPrice)
-    const int32_t n = c >= 12 ? 152 : c >= 8 ? 101 : kWorldOriginal;
-    ctx.mem.store<uint8_t>(state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c) + kRecordWorldSize,
-                           world_code_of_n(n));
+  const bool sandbox = (ctx.gs().g_flags & 0x1000000u) != 0;
+  for (int32_t c = 0; c < 16; ++c) {   // P38W2: each record's acres (the even table) and the size that holds them with land to buy
+    const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c);
+    const int32_t acres = world_record_acres(c);
+    ctx.mem.store<uint8_t>(rec + kRecordWorldSize, world_code_of_n(world_size_for_acres(acres)));
+    if (sandbox) continue;   // the sandbox keeps the original's 0xfa (all but the border) and P38C's share of the side
+    ctx.mem.store<uint8_t>(rec + kRecordAcres10, static_cast<uint8_t>(acres / 10));
+    ctx.mem.store<uint8_t>(rec + 0x1Du, static_cast<uint8_t>(acres < 0xFA ? acres : 0xFA));   // the byte the original reads (50 x 50 ones)
   }
+}
+
+int32_t record_acres(Ctx &ctx, int32_t c) {
+  if (c < 0 || c > 16) return 0;
+  const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c);
+  const uint8_t a10 = world_sizes_on() ? ctx.mem.load<uint8_t>(rec + kRecordAcres10) : 0;
+  return a10 != 0 ? a10 * 10 : ctx.mem.load<uint8_t>(rec + 0x1Du);
+}
+
+int32_t record_owned_border(Ctx &ctx, int32_t c) {
+  const uint32_t rec = state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c);
+  const int32_t n = world_n(ctx);
+  if (world_sizes_on() && ctx.mem.load<uint8_t>(rec + kRecordAcres10) != 0 && record_world_n(ctx, c) == n)
+    switch (ctx.mem.load<int8_t>(rec + 0x1Fu)) {   // the record's setting
+      case 1: return world_owned_border_coast(n, record_acres(ctx, c));    // the coast keeps its waterfront
+      case 2: return world_owned_border_island(n, record_acres(ctx, c));   // the island
+      default: return world_owned_border_at(n, record_acres(ctx, c));
+    }
+  return world_owned_border_share(n, ctx.mem.load<uint8_t>(rec + 0x1Du));
 }
 
 // ------------------------------------------------------------------------------------------------ tierPrice
@@ -1145,8 +1168,20 @@ int32_t course_action_menu(Ctx &ctx) {
   // P38W (worldsizes.h; all three are the original's at courseActionMenu.worldSizes = 1 or for a 50 x 50 record): the record's
   // acres and price at its world size, and the price the purchase tests and takes (the sandbox's stays the 50-size one: its cash
   // is a placeholder the course start resets)
-  auto acres_of = [&](int32_t c) { return world_acres_at(rec_byte(ctx, c, 1), record_world_n(ctx, c)); };
-  auto price_of = [&](int32_t c) { return world_amount_at(tier_price(c), record_world_n(ctx, c)); };
+  // P38W2: a record's own acres (the even table) are shown as they are, priced at $1,250 an acre; the sandbox's 0xfa shows the land it
+  // owns at the record's size (all but P38C's border)
+  auto acres_of = [&](int32_t c) {
+    if (!world_sizes_on()) return static_cast<int32_t>(rec_byte(ctx, c, 1));
+    const int32_t n = record_world_n(ctx, c);
+    if (rec_byte(ctx, c, kRecordAcres10 - kRecFromSite) != 0) return record_acres(ctx, c);
+    if (n == kWorldOriginal) return static_cast<int32_t>(rec_byte(ctx, c, 1));
+    const int32_t side = n - 2 * world_owned_border_share(n, rec_byte(ctx, c, 1));
+    return (side * side + 5) / 10;
+  };
+  auto price_of = [&](int32_t c) {
+    if (world_sizes_on() && rec_byte(ctx, c, kRecordAcres10 - kRecFromSite) != 0) return world_price_of_acres(record_acres(ctx, c));
+    return world_amount_at(tier_price(c), record_world_n(ctx, c));
+  };
   auto cost_of = [&](int32_t c) { return (gs.g_flags & 0x1000000u) != 0 ? tier_price(c) : price_of(c); };
   // drawing (phase 5): the root surface, the three fonts, the frame's Surface array (8) and Image
   const uint32_t root = gs.f_stateptr_4c1570[0];
@@ -1614,9 +1649,10 @@ const FuncDef kFuncs[] = {
 // P38W: the module's play switch (re/port/play_profile.tsv)
 const DefectDef kDefects[] = {
     {"courseActionMenu.worldSizes", "P38W",
-     "every course of the world map is 50 x 50; fixed: each course record carries a world size (records 0..7 50, 8..11 101, "
-     "12..15 152, in record byte +0x29, which the original never addresses), the map shows it with acres scaled by (N / 50)^2 "
-     "and price by ((N - 2) / 48)^2, and the new course and a career's next course start at it",
+     "every course of the world map is 50 x 50; fixed: each course record carries acres in an even progression (40 .. 600) and "
+     "the world size that holds them with land to buy (records 0..2 50, 3..11 101, 12..15 152; bytes +0x29 / +0x2a, which the "
+     "original never addresses), the map shows the size, the acres and a price of $1,250 an acre, and the new course and a "
+     "career's next course start at that size with an owned square of those acres",
      &g_defect_world_sizes},
 };
 extern const ModuleDef kModule_saveload = {"saveload", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,

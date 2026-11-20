@@ -2164,3 +2164,12 @@ oracles course_menu / saveload; drives 1920 x 1080 and 2560 x 1351 dpi 120, Engl
   paint-rate phase could not judge: after the 03:43 reboot the active display is a 60 Hz USB virtual display with the RTX 3070
   headless, 19 paints / s and 46 ms presents on 52e05ae2 and 6a673506 alike, against 110 / s on 0a78a33a with the 120 Hz monitor;
   re-measure with the monitor on). LAN + GitHub release port-2026-11-20-6a673506. Round P38 (large maps) DONE.
+
+## P38W2: balanced acres on the world map (2026-11-20; notes log/roadmap/P38/P38W2_notes.md)
+Mariano after playing 6a673506: "la cantidad de acres tiene que ser más equilibrada"; his picks: an even progression, the price
+proportional to the acres. Acres = 40 + 560 c / 15 rounded to 10 (40 .. 600 over records 0..15), stored / 10 in record byte +0x2a
+(unaddressed by the original); the size is the smallest of 50 / 101 / 152 leaving half a lot ring for sale (split 3 / 9 / 4); the
+owned land at the record's size matches the shown acres within about 4 % (coast and island settings wider, measured per setting);
+price = acres x $1,250 (only records 0 and 1 affordable at a career start); sandbox shows its real all-but-border figure. Records
+from older saves keep P38W pricing. Evidence: segments x64 and Win32 205 / 205; test_p38w_world_sizes 18, test_p38c_terrain +4;
+drives at 1920 x 1080 and 2560 x 1351 dpi 120, English and Spanish, one career course bought at each size.

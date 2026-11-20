@@ -1,7 +1,10 @@
 """P38W (Mariano 2026-11-20; log/roadmap/P38/P38W_notes.md): the world map's courses carry their world sizes.
+P38W2 (log/roadmap/P38/P38W2_notes.md): the acres an even progression 40 .. 600 over records 0..15 (byte +0x2a = acres / 10), the
+size the smallest that holds them with half a lot for sale on every side (records 0..2 50, 3..11 101, 12..15 152), the price
+$1,250 an acre to the nearest $1,000; a record without byte +0x2a (an older save) keeps P38W's tier price scaled by its size.
 
 Play switch courseActionMenu.worldSizes (1 = the original). At 0: seedCourseTable writes each record's size into byte +0x29
-(records 0..7 50, 8..11 101, 12..15 152; code 0 = 50, else N = 3 * code + 2) and draws nothing more from the RNG; the world map
+(code 0 = 50, else N = 3 * code + 2; P38W2's split below) and draws nothing more from the RNG; the world map
 prices a record at ((N - 2) / 48)^2 times its tier price (to the nearest $1,000; the sandbox's test stays the 50-size price) and
 the purchase takes that price; switchToCourse (a career's next course) starts the world at the record's size. The map's drawing
 (the size badge, the scaled acres) is judged in the app (screenshots, P38W_notes.md)."""
@@ -22,6 +25,12 @@ pytestmark = [pytest.mark.port,
 
 SWITCH = "courseActionMenu.worldSizes"
 TIER = [500, 600, 700, 800, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+ACRES = [40, 80, 110, 150, 190, 230, 260, 300, 340, 380, 410, 450, 490, 530, 560, 600]   # P38W2
+SIZES = [50] * 3 + [101] * 9 + [152] * 4
+
+
+def price_of_acres(a: int) -> int:
+    return (a * 125 + 50) // 100 * 10   # $1,250 an acre, to the nearest $1,000 (x $100)
 
 
 def at(v50: int, n: int) -> int:
@@ -53,19 +62,22 @@ def test_seed_writes_the_sizes_and_nothing_else(portlib):
     on, off = _seed(portlib, True), _seed(portlib, False)
     t_on, t_off = _table(portlib, on), _table(portlib, off)
     codes = [t_on[0x2E * c + 0x29] for c in range(16)]
-    assert codes == [0] * 8 + [33] * 4 + [50] * 4                         # 50 x 8, 101 x 4, 152 x 4
-    assert all(t_off[0x2E * c + 0x29] == 0 for c in range(17))            # the switch at 1: the original's zero
-    strip = lambda t: bytes(b for i, b in enumerate(t) if i % 0x2E != 0x29)
+    assert codes == [0 if n == 50 else (n - 2) // 3 for n in SIZES]       # P38W2: 50 x 3, 101 x 9, 152 x 4
+    assert [t_on[0x2E * c + 0x2A] * 10 for c in range(16)] == ACRES        # the even acres
+    assert [t_on[0x2E * c + 0x1D] for c in range(16)] == [min(a, 0xFA) for a in ACRES]   # the original's byte (50 x 50 ones exact)
+    assert all(t_off[0x2E * c + 0x29] == 0 and t_off[0x2E * c + 0x2A] == 0 for c in range(17))   # the switch at 1: the original
+    strip = lambda t: bytes(b for i, b in enumerate(t) if i % 0x2E not in (0x1D, 0x29, 0x2A))
     assert strip(t_on) == strip(t_off)                                     # the same records (the same RNG draws)
     off_t, _ = TS.objs(portlib)["g_courseTable"]
     assert on[:off_t] == off[:off_t] and on[off_t + 17 * 0x2E:] == off[off_t + 17 * 0x2E:]
 
 
-def _buy(portlib, record: int, code: int, cash: int, switch_on: bool, flags: int = 0, refused: bool = False):
+def _buy(portlib, record: int, code: int, cash: int, switch_on: bool, flags: int = 0, refused: bool = False, acres10: int = 0):
     """the world map with record `record` (open, size code `code`) bought by a press on its spot; returns (eax, cash after)"""
     img = bytearray(TCM.menu_image(portlib, 7, cash=cash, flags=flags))
     off, _ = TS.objs(portlib)["g_courseTable"]
     img[off + 0x2E * record + 0x29] = code
+    img[off + 0x2E * record + 0x2A] = acres10
     img[off + 0x2E * record + 0x22] = 0xFF
     steps = [TCM.press(*TCM.spot_of_record(portlib, bytes(img), record))]
     if refused:   # the insufficient-funds window waits for a key (test_course_menu's buy_without_cash)
@@ -82,6 +94,8 @@ def _buy(portlib, record: int, code: int, cash: int, switch_on: bool, flags: int
     portlib.defect(SWITCH, not switch_on)
     try:
         with portlib.state() as st:
+            if st.lib.has("audio_exe.stubRequests"):   # the purchase's sound (records whose sound byte is 0..3)
+                st.call("audio_exe.stubRequests", [1])
             st.set_data_base(E.DATA_VA)
             st.load_image(bytes(img))
             st.map(0x30000000, script, readonly=True)
@@ -161,3 +175,22 @@ def test_switch_to_course_starts_the_world_at_the_record_size(portlib, code, n):
                 st.world_resize(50)
     finally:
         portlib.defect_reset()
+
+
+@pytest.mark.parametrize("record", [0, 1, 2, 3, 9, 11, 12, 15])
+def test_p38w2_price_is_proportional_to_the_acres(portlib, record):
+    a, n = ACRES[record], SIZES[record]
+    cash = 10 ** 5
+    eax, after = _buy(portlib, record, 0 if n == 50 else (n - 2) // 3, cash, switch_on=True, acres10=a // 10)
+    assert eax == record and after == cash - price_of_acres(a)            # $50,000 for 40 acres .. $750,000 for 600
+    eax, after = _buy(portlib, record, 0 if n == 50 else (n - 2) // 3, cash, switch_on=False, acres10=a // 10)
+    assert after == cash - TIER[record]                                    # the switch at 1: the original's tier price
+
+
+def test_p38w2_start_cash_buys_records_0_and_1(portlib):
+    """the career's $100,000: 40 acres ($50,000) and 80 acres ($100,000) can be bought, 110 acres ($138,000) cannot"""
+    assert [price_of_acres(a) <= 1000 for a in ACRES] == [True, True] + [False] * 14
+    eax, after = _buy(portlib, 1, 0, 1000, switch_on=True, acres10=8)
+    assert eax == 1 and after == 0
+    eax, after = _buy(portlib, 2, 0, 1000, switch_on=True, acres10=11, refused=True)
+    assert eax == 0xFFFFFFFF and after == 1000
