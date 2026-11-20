@@ -10,6 +10,7 @@
 // terrain_strip.cpp, terrain_pathrender.cpp; evidence: kind-3 / kind-4 / kind-1 passes of the GL corpora
 // (port/test/test_terrain_render.py).
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -18,6 +19,7 @@
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/gl_sink.h"
+#include "portsim/sim/terrain.h"  // P39A2: path_stairs_axes (layPath.stairs)
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/terrain_state.h"  // P38G: terrain_draw_list_offset
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
@@ -40,6 +42,9 @@ namespace {
 //  17 enableBlackLight1 gives light 1 the ambient (0.2, 0.2, 0.2, 1) (GlRaster models light 0 only: blind in its pixels)
 //  18 renderTileAtFiveOffsets swaps its 90 and 180 degree neighbour sets
 //  19 a turned fairway tile's piece-2 faces draw piece 0 (P13A fix 6; Tile::render.fairwayStripesFixed = 0 only)
+//  20 a stairs span is one tread (not one step per level; P39A2, layPath.stairs = 0 only)
+//  21 a stairs span is drawn near to far (P39A2, layPath.stairs = 0 only)
+//  22 a stairs face turned away from the camera is drawn too (P39A2's first version: it covered the treads)
 int32_t g_negctl_terrain_render = 0;
 int32_t g_cull_margin = 0;   // P8B: terrain_render_set_cull_margin
 int32_t g_world_reach = 0, g_world_cull_y = 0;   // P35D: terrain_render_set_world_reach
@@ -651,6 +656,10 @@ class Renderer {
     const bool n3 = neighbour(t, 3) != 0 && u8(neighbour(t, 3) + kTileHasPath) != 0;
     const bool n1 = neighbour(t, 1) != 0 && u8(neighbour(t, 1) + kTileHasPath) != 0;
     const uint32_t tex = u8(t + kTileConnected) != 0 ? 0x21u : 0x20u;
+    // P39A2 layPath.stairs = 0: the halves along a stairs axis (terrain.h path_stairs_axes of this tile) are drawn as steps after
+    // the corner overlays instead of as a band; nothing changes on a tile with no stairs axis (or at 1)
+    bool stair[4] = {false, false, false, false};
+    if (!SG_DEFECT(g_defect_path_stairs)) stairs_halves(t, n0, n1, n2, n3, stair);
     gl_.enable(gl::kBlend);
     gl_.blend_func(gl::kSrcAlpha, gl::kOneMinusSrcAlpha);
     gl_.bind_texture(gl::kTexture2D, texture(tex, 0, 0));
@@ -664,51 +673,259 @@ class Renderer {
     if (n0) {
       mask += 1;
       const float *a = vert(f0v2), *b = vert(f1v2);
-      gl_.begin(gl::kTriangleFan);
-      vtx(f0v2, 0.333f, 0.667f, a[0] - w, a[1], a[2]);
-      vtx(f0v2, 0.667f, 0.667f, w + a[0], a[1], a[2]);
-      vtx(f1v2, 0.667f, 1.0f, w + a[0], b[1], b[2]);
-      vtx(f1v2, 0.333f, 1.0f, a[0] - w, b[1], b[2]);
-      gl_.end();
+      if (!stair[0]) {
+        gl_.begin(gl::kTriangleFan);
+        vtx(f0v2, 0.333f, 0.667f, a[0] - w, a[1], a[2]);
+        vtx(f0v2, 0.667f, 0.667f, w + a[0], a[1], a[2]);
+        vtx(f1v2, 0.667f, 1.0f, w + a[0], b[1], b[2]);
+        vtx(f1v2, 0.333f, 1.0f, a[0] - w, b[1], b[2]);
+        gl_.end();
+      }
     }
     if (n1) {
       mask += 2;
       gl_.bind_texture(gl::kTexture2D, texture(tex, 0, 0));
       const int32_t f6v1 = fv(t, 6, 1), f6v2 = fv(t, 6, 2);
       const float *a = vert(f0v2), *b = vert(f6v1);
-      gl_.begin(gl::kTriangleFan);
-      vtx(f0v2, 0.333f, 0.333f, a[0] - w, a[1], a[2]);
-      vtx(f6v1, 0.333f, 0.0f, b[0] - w, b[1], b[2]);
-      vtx(f6v2, 0.667f, 0.0f, w + b[0], b[1], b[2]);
-      vtx(f0v2, 0.667f, 0.333f, w + a[0], a[1], a[2]);
-      gl_.end();
+      if (!stair[1]) {
+        gl_.begin(gl::kTriangleFan);
+        vtx(f0v2, 0.333f, 0.333f, a[0] - w, a[1], a[2]);
+        vtx(f6v1, 0.333f, 0.0f, b[0] - w, b[1], b[2]);
+        vtx(f6v2, 0.667f, 0.0f, w + b[0], b[1], b[2]);
+        vtx(f0v2, 0.667f, 0.333f, w + a[0], a[1], a[2]);
+        gl_.end();
+      }
     }
     if (n3) {
       mask += 4;
       gl_.bind_texture(gl::kTexture2D, texture(tex, 0, 0));
       const int32_t f7v2 = fv(t, 7, 2);
       const float *a = vert(f0v2), *b = vert(f7v2);
-      gl_.begin(gl::kTriangleFan);
-      vtx(f0v2, 0.667f, 0.667f, a[0], a[1], a[2] - w);
-      vtx(f0v2, 0.667f, 0.333f, a[0], a[1], w + a[2]);
-      vtx(f7v2, 1.0f, 0.333f, b[0], b[1], w + b[2]);
-      vtx(f7v2, 1.0f, 0.667f, b[0], b[1], b[2] - w);
-      gl_.end();
+      if (!stair[3]) {
+        gl_.begin(gl::kTriangleFan);
+        vtx(f0v2, 0.667f, 0.667f, a[0], a[1], a[2] - w);
+        vtx(f0v2, 0.667f, 0.333f, a[0], a[1], w + a[2]);
+        vtx(f7v2, 1.0f, 0.333f, b[0], b[1], w + b[2]);
+        vtx(f7v2, 1.0f, 0.667f, b[0], b[1], b[2] - w);
+        gl_.end();
+      }
     }
     if (n2) {
       mask += 8;
       gl_.bind_texture(gl::kTexture2D, texture(tex, 0, 0));
       const int32_t f4v0 = fv(t, 4, 0);
       const float *a = vert(f0v2), *b = vert(f4v0);
-      gl_.begin(gl::kTriangleFan);
-      vtx(f0v2, 0.333f, 0.667f, a[0], a[1], a[2] - w);
-      vtx(f4v0, 0.0f, 0.667f, b[0], b[1], b[2] - w);
-      vtx(f4v0, 0.0f, 0.333f, b[0], b[1], w + b[2]);
-      vtx(f0v2, 0.333f, 0.333f, a[0], a[1], w + a[2]);
-      gl_.end();
+      if (!stair[2]) {
+        gl_.begin(gl::kTriangleFan);
+        vtx(f0v2, 0.333f, 0.667f, a[0], a[1], a[2] - w);
+        vtx(f4v0, 0.0f, 0.667f, b[0], b[1], b[2] - w);
+        vtx(f4v0, 0.0f, 0.333f, b[0], b[1], w + b[2]);
+        vtx(f0v2, 0.333f, 0.333f, a[0], a[1], w + a[2]);
+        gl_.end();
+      }
     }
     draw_corner_overlays(t, mask, static_cast<int32_t>(tex));
+    if (stair[0] || stair[1] || stair[2] || stair[3]) draw_stairs(t, stair, tex, w);
     gl_.disable(gl::kBlend);
+  }
+
+  // ---- P39A2 layPath.stairs = 0: stairs (re/roadmap/P39_COURSE_FEATURES.md "P39A decided", log/roadmap/P39/P39A2_notes.md) ----
+  // Half k (the band toward neighbour k: 0 y - 1, 1 y + 1, 2 x - 1, 3 x + 1, terrain_state.h TerrainSide) runs from the centre vertex
+  // (face 0 vertex 2) to the edge vertex its band ends at; its texture corners and its fan order are the band's in draw_paths. The y
+  // axis (bit 1 << 1 of path_stairs_axes) holds halves 0 / 1, the x axis (bit 1 << 0) halves 2 / 3.
+  struct StairHalf { int32_t face, vtx; float tc[2][2][2]; bool order_b; };   // tc[u][side][s / t]: u 0 centre / 1 edge, side - / +
+  static const StairHalf &stair_half(int k) {
+    static const StairHalf kHalves[4] = {
+        {1, 2, {{{0.333f, 0.667f}, {0.667f, 0.667f}}, {{0.333f, 1.0f}, {0.667f, 1.0f}}}, false},
+        {6, 1, {{{0.333f, 0.333f}, {0.667f, 0.333f}}, {{0.333f, 0.0f}, {0.667f, 0.0f}}}, true},
+        {4, 0, {{{0.333f, 0.667f}, {0.333f, 0.333f}}, {{0.0f, 0.667f}, {0.0f, 0.333f}}}, true},
+        {7, 2, {{{0.667f, 0.667f}, {0.667f, 0.333f}}, {{1.0f, 0.667f}, {1.0f, 0.333f}}}, false},
+    };
+    return kHalves[k];
+  }
+  // which halves of tile t are drawn as stairs: a half whose band is drawn (the neighbour has a path), on a stairs axis, rising at
+  // least a quarter level between its two vertices (a flat half of a stairs tile keeps its band)
+  void stairs_halves(uint32_t t, bool n0, bool n1, bool n2, bool n3, bool out[4]) {
+    const int32_t axes = path_stairs_axes(c_, tile_x(t), tile_y(t));
+    if (axes == 0) return;
+    const bool on[4] = {n0, n1, n2, n3};
+    const float step = g_.corner_step > 0.0f ? g_.corner_step : 15.0f;
+    const float hc = vert(fv(t, 0, 2))[1];
+    for (int k = 0; k < 4; ++k) {
+      if (!on[k] || (axes & (k < 2 ? 2 : 1)) == 0) continue;
+      const float he = vert(fv(t, stair_half(k).face, stair_half(k).vtx))[1];
+      out[k] = (he > hc ? he - hc : hc - he) >= 0.25f * step;
+    }
+  }
+  // the camera's side along GL axis `al` (0 x, 2 z) for the four views, +1 or -1 (Terrain::render's tile order: at angle 0 it walks
+  // y upward and x downward, so the camera is toward +y (+z) and -x; at 90 toward -x / -y, at 180 toward +x / -y, at -90 toward +x / +y)
+  float camera_side(int al) const {
+    const int32_t v = g_.view_index;
+    return al == 2 ? ((v == 0 || v == 3) ? 1.0f : -1.0f) : ((v == 0 || v == 1) ? -1.0f : 1.0f);
+  }
+  // the stairs halves as one span per axis (both halves of an axis: edge to edge through the centre), the y axis first
+  void draw_stairs(uint32_t t, const bool stair[4], uint32_t tex, float w) {
+    if (stair[0] || stair[1]) draw_stair_span(t, 2, stair[0], stair[1], tex, w);
+    if (stair[2] || stair[3]) draw_stair_span(t, 0, stair[2], stair[3], tex, w);
+  }
+  // One axis as steps, along GL axis `al` (2: halves 0 / 1, the y axis; 0: halves 2 / 3, the x axis), from the end of the stairs
+  // half on the low side (or the centre) to the end of the one on the high side (or the centre). The span's centre line (edge
+  // vertex, centre vertex, edge vertex) is cut where it crosses a level (a multiple of the corner step, the height one Terrain level
+  // adds: elevate / lowerCorner), so a tile's rise gives one step per level and neighbouring stairs meet on the same lattice. Each
+  // piece is a flat tread at the highest point of its piece of the line (never under the slope), in the path texture with the
+  // band's texture coordinates of the half it lies in (split at the centre); a riser in the retaining-wall texture (0x22,
+  // RetainWallA) where two treads, or a tread and the span's end, differ; both sides of each tread closed down to the line with the
+  // same wall. A vertical face takes the side normal the walls and skirts use for a face toward that neighbour (Tile::drawSkirts:
+  // toward 1 -> block 0, 0 -> 1, 3 -> 2, 2 -> 3; the row by view quadrant). Only a vertical face whose side the camera is on is drawn:
+  // with no depth test a face turned away, painted after its tread, covered the tread (the dark saw edges seen from the top of a
+  // climb, rotations 2 / 3 on a stairs rising toward +x); a drawn face is sent in both windings (culling keeps the one facing the
+  // window whatever glFrontFace says). The pieces go far to near.
+  void draw_stair_span(uint32_t t, int al, bool lo_on, bool hi_on, uint32_t tex, float w) {
+    const int ac = 2 - al;
+    const int k_lo = al == 2 ? 0 : 2, k_hi = k_lo + 1;   // the half toward -s and the one toward +s (s = the GL coordinate al)
+    const float *cv = vert(fv(t, 0, 2));
+    const float *ev[2] = {vert(fv(t, stair_half(k_lo).face, stair_half(k_lo).vtx)), vert(fv(t, stair_half(k_hi).face, stair_half(k_hi).vtx))};
+    const float step = g_.corner_step > 0.0f ? g_.corner_step : 15.0f, eps = 0.01f * step;
+    // the line: up to three points by rising s
+    float ps[3], ph[3];
+    int np = 0;
+    if (lo_on) { ps[np] = ev[0][al]; ph[np++] = ev[0][1]; }
+    ps[np] = cv[al]; ph[np++] = cv[1];
+    if (hi_on) { ps[np] = ev[1][al]; ph[np++] = ev[1][1]; }
+    auto line = [&](float s) {
+      for (int i = 0; i + 1 < np; ++i)
+        if (s <= ps[i + 1] || i + 2 == np) return ph[i] + (ph[i + 1] - ph[i]) * (s - ps[i]) / (ps[i + 1] - ps[i]);
+      return ph[0];
+    };
+    // the cuts: the span's ends and every level the line crosses inside a segment
+    constexpr int kMax = 64;
+    float cut[kMax];
+    int nc = 0;
+    cut[nc++] = ps[0];
+    for (int i = 0; i + 1 < np; ++i) {
+      const float h0 = ph[i], h1 = ph[i + 1], lo = std::min(h0, h1), hi = std::max(h0, h1);
+      if (g_negctl_terrain_render == 20 || hi - lo < eps) continue;
+      float seg[kMax];
+      int ns = 0;
+      for (int m = static_cast<int>(std::floor(lo / step)) + 1; static_cast<float>(m) * step < hi - eps && ns < kMax / 2; ++m) {
+        const float hm = static_cast<float>(m) * step;
+        if (hm > lo + eps) seg[ns++] = ps[i] + (ps[i + 1] - ps[i]) * (hm - h0) / (h1 - h0);
+      }
+      if (h1 < h0) std::reverse(seg, seg + ns);   // by rising s
+      for (int j = 0; j < ns && nc < kMax - 2; ++j) cut[nc++] = seg[j];
+    }
+    cut[nc++] = ps[np - 1];
+    float tread[kMax];
+    for (int i = 0; i + 1 < nc; ++i) {
+      float y = std::max(line(cut[i]), line(cut[i + 1]));
+      if (cut[i] < cv[al] - eps && cv[al] + eps < cut[i + 1]) y = std::max(y, cv[1]);   // the centre vertex inside the piece
+      tread[i] = y;
+    }
+    // half k's parameter u (0 centre, 1 edge) of s, and a point of half k: u, across side (-1 / +1), height y
+    auto u_of = [&](int k, float s) {
+      const float *b = ev[k == k_lo ? 0 : 1];
+      return (s - cv[al]) / (b[al] - cv[al]);
+    };
+    auto pos = [&](int k, float u, float side, float y, float out[3]) {
+      const float *b = ev[k == k_lo ? 0 : 1];
+      out[al] = cv[al] + u * (b[al] - cv[al]);
+      out[ac] = cv[ac] + u * (b[ac] - cv[ac]) + side * w;
+      out[1] = y;
+    };
+    const int c = (g_.view_index == 0 || g_.view_index == 2) ? 0 : 1;
+    static const int kFaceNorm[4] = {1, 0, 3, 2};
+    static const float kUp[3] = {0.0f, 1.0f, 0.0f};
+    // a vertical quad (four points, texture (s, t) each) facing neighbour `toward`, in both windings; skipped when the camera is on
+    // its other side (neighbours 0 / 1 are -z / +z, 2 / 3 are -x / +x; control 22 draws it anyway)
+    auto wall = [&](const float p[4][3], const float st[4][2], int toward) {
+      const float cam = camera_side(toward < 2 ? 2 : 0), dir = (toward & 1) ? 1.0f : -1.0f;
+      if (cam * dir < 0.0f && g_negctl_terrain_render != 22) return;
+      gl_.bind_texture(gl::kTexture2D, g_.fence_texture0);
+      for (int pass = 0; pass < 2; ++pass) {
+        gl_.begin(gl::kTriangleFan);
+        gl_.normal3fv(g_.side_normals[kFaceNorm[toward]][c]);
+        for (int i = 0; i < 4; ++i) {
+          const int j = pass == 0 ? i : 3 - i;
+          gl_.tex_coord2f(st[j][0], st[j][1]);
+          gl_.vertex3fv(p[j]);
+        }
+        gl_.end();
+      }
+    };
+    // the half a piece of the span (s0 < s1) lies in: below the centre the -s half, above it the +s half
+    auto half_of = [&](float s0, float s1) { return 0.5f * (s0 + s1) < cv[al] ? k_lo : k_hi; };
+    auto riser = [&](int j) {   // at cut[j], between what lies before it and after it along s
+      const float before = j == 0 ? line(cut[0]) : tread[j - 1], after = j == nc - 1 ? line(cut[nc - 1]) : tread[j];
+      if (std::fabs(before - after) < eps) return;
+      const float lo = std::min(before, after), hi = std::max(before, after);
+      const int k = j == 0 ? half_of(cut[0], cut[1]) : j == nc - 1 ? half_of(cut[nc - 2], cut[nc - 1])
+                                                                     : half_of(cut[j] - eps, cut[j] + eps);
+      const float u = u_of(k, cut[j]);
+      float p[4][3];
+      pos(k, u, -1.0f, lo, p[0]);
+      pos(k, u, 1.0f, lo, p[1]);
+      pos(k, u, 1.0f, hi, p[2]);
+      pos(k, u, -1.0f, hi, p[3]);
+      const float top = 0.05f + (hi - lo) / 40.0f;
+      const float st[4][2] = {{0.25f, 0.05f}, {0.75f, 0.05f}, {0.75f, top}, {0.25f, top}};
+      wall(p, st, after < before ? k_hi : k_lo);   // it faces its lower side (+s when the ground falls that way)
+    };
+    // tread i over cut[i]..cut[i + 1] and its two sides, in one or two pieces (split at the centre)
+    auto piece = [&](int i, float s0, float s1) {
+      const int k = half_of(s0, s1);
+      const StairHalf &h = stair_half(k);
+      float u0 = u_of(k, s0), u1 = u_of(k, s1);
+      if (u0 > u1) std::swap(u0, u1);
+      const float y = tread[i];
+      gl_.bind_texture(gl::kTexture2D, texture(tex, 0, 0));
+      gl_.begin(gl::kTriangleFan);
+      const float fan_a[4][2] = {{u0, 0}, {u0, 1}, {u1, 1}, {u1, 0}}, fan_b[4][2] = {{u0, 0}, {u1, 0}, {u1, 1}, {u0, 1}};
+      const float (*fan)[2] = h.order_b ? fan_b : fan_a;
+      for (int q = 0; q < 4; ++q) {
+        const float u = fan[q][0];
+        const int side = fan[q][1] != 0.0f ? 1 : 0;
+        float p[3];
+        pos(k, u, side ? 1.0f : -1.0f, y, p);
+        gl_.normal3fv(kUp);
+        gl_.tex_coord2f(h.tc[0][side][0] + u * (h.tc[1][side][0] - h.tc[0][side][0]),
+                        h.tc[0][side][1] + u * (h.tc[1][side][1] - h.tc[0][side][1]));
+        gl_.vertex3fv(p);
+      }
+      gl_.end();
+      const float g0 = line(s0), g1 = line(s1), base = std::min(g0, g1);
+      if (y - base < eps) return;
+      const float ua = u_of(k, s0), ub = u_of(k, s1);
+      for (int side = 0; side < 2; ++side) {
+        const float sd = side ? 1.0f : -1.0f;
+        float p[4][3];
+        pos(k, ua, sd, g0, p[0]);
+        pos(k, ub, sd, g1, p[1]);
+        pos(k, ub, sd, y, p[2]);
+        pos(k, ua, sd, y, p[3]);
+        const float sa = (s0 - ps[0]) / 100.0f, sb = (s1 - ps[0]) / 100.0f;
+        const float st[4][2] = {{sa, 0.05f + (g0 - base) / 40.0f}, {sb, 0.05f + (g1 - base) / 40.0f},
+                                {sb, 0.05f + (y - base) / 40.0f}, {sa, 0.05f + (y - base) / 40.0f}};
+        wall(p, st, al == 2 ? (side ? 3 : 2) : (side ? 1 : 0));
+      }
+    };
+    auto tread_block = [&](int i, bool up) {
+      const float s0 = cut[i], s1 = cut[i + 1], sc = cv[al];
+      if (s0 < sc - eps && sc + eps < s1) {   // across the centre: two pieces, the far one first
+        if (up) { piece(i, s0, sc); piece(i, sc, s1); }
+        else { piece(i, sc, s1); piece(i, s0, sc); }
+      } else {
+        piece(i, s0, s1);
+      }
+    };
+    // far to near: with the camera toward +s the far end is the low s; control 21 reverses it
+    const bool up = (camera_side(al) > 0.0f) != (g_negctl_terrain_render == 21);
+    const int n = nc - 1;
+    for (int q = 0; q < n; ++q) {
+      const int i = up ? q : n - 1 - q;
+      riser(up ? i : i + 1);
+      tread_block(i, up);
+    }
+    riser(up ? n : 0);
   }
 
   // Tile::drawCornerOverlays(mask, type): for an overlay mask 0..15 up to four corner triangles over the face vertices,

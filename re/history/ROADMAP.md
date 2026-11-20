@@ -2218,3 +2218,11 @@ screenshots at all 4 rotations), a stream pair hides the Terrain path band. New 
 <save>.sgx written / read with .sve and .sgw (browser delete removes it; stale entries dropped; the .sve unchanged). Bulldozer on
 either tile removes the pair (+$20,000); undo / redo. Evidence: segments x64 205 / 205; test_p39a_bridges 11 (controls RED);
 save / load tests; drives in English and Spanish (build, Tab, bulldozer, undo / redo, save reloaded with 4 pairs).
+
+## P39A2: stairs on steep paths (2026-11-20; notes log/roadmap/P39/P39A2_notes.md)
+Play switch layPath.stairs (0 in play): a path tile whose path axis rises 3+ levels (the 0x2b steep-slope rule) is stairs,
+computed from heights (nothing saved; terraforming updates it): treads in the path texture with RetainWallA risers, one per
+level, a vertical face drawn only when the camera is on its side (round 2: both windings had let far side walls cover treads at
+rotations 2 / 3); golfers skip the 0x2b complaint there; laying a path tile that is stairs costs x2 ($600 against $300 in the
+app; a terraform charges nothing extra). Evidence: segments x64 205 / 205; test_p39a_stairs 18, terrain_render 522, golfers 68,
+shots 41; controls RED; close-ups at 4 rotations and two zooms. Merged by hand with P39A1 (main.cpp kPlayProfile, play_profile.tsv).

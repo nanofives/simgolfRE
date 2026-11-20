@@ -6578,6 +6578,13 @@ int P6_Cursor(u32 F) {
         int z = G32(GS(unk_005a9cbc));                // ML+0xa441
         G32(GS(unk_005a9cc0)) = z;                    // ML+0xa454
         cc("screenToTile", vx, vy, GS(g_cursorTileX), GS(g_cursorTileY), 0);   // ML+0xa45a screenToTile
+        // development (SG_P39A2_PRICELOG): the tile under the cursor, when it changes, with the cursor point (reads only)
+        static int p39a2_last = -1;
+        const int cx = G32(GS(g_cursorTileX)), cy = G32(GS(g_cursorTileY));
+        if (cx * 4096 + cy != p39a2_last) {
+            p39a2_last = cx * 4096 + cy;
+            P39A2_PriceLog("hover", cx, cy, vx, vy);
+        }
     }
     int vy = FD(0x58);                          // ML+0xa45f
     if (vy >= 0x1f4) return G32((GS(f_w_4c2848) + 12));    // ML+0xa466 / ML+0xa46c -> ML+0xa652
@@ -9700,6 +9707,14 @@ int H2_neg(int v) { return (int)(0u - (u32)v); }
 // / 2; t == 4 costs (5 c + 25) * 200 / 100 with c = [unk_0056a514], free when bit c of [g_freeUnlockMask] is set. canAfford gates
 // all but t == 15; t == 5 needs rateLot >= 50. Per-tool switch ML+0x124e4 (index bytes ML+0x12500). Then the shared
 // build sound, the cash / ledger updates and the points popup. Ends at ML+0x106bc (no register live there).
+// development (P39A2's drives): SG_P39A2_PRICELOG=<file> appends `what x y a b axes_if_laid cash`; nothing when unset, writes no state
+void P39A2_PriceLog(const char *what, int x, int y, int a, int b) {
+    static std::FILE *f = std::getenv("SG_P39A2_PRICELOG") ? std::fopen(std::getenv("SG_P39A2_PRICELOG"), "a") : nullptr;
+    if (!f || x < 0 || y < 0 || x >= WN || y >= WN) return;
+    std::fprintf(f, "%s\t%d\t%d\t%d\t%d\t%d\t%d\n", what, x, y, a, b, path_stairs_axes(ctx, x, y, true), static_cast<int>(G32(GS(g_cash_div100))));
+    std::fflush(f);
+}
+
 void H2_Build(u32 F, int eax) {
     const int ebp = -1;                               // ML+0xfd93
     int ebx, esi, edi, ecx, rec, x, y;
@@ -9727,6 +9742,11 @@ void H2_Build(u32 F, int eax) {
         ebx = (int)(((u32)ecx * 5u + 0x19u) * 200u) / 100;            // ML+0xfe2e..ML+0xfe4a
         if ((1u << ((u32)ecx & 31u)) & GU32(GS(g_freeUnlockMask))) ebx = 0;     // ML+0xfe4c..ML+0xfe5e
     }
+    // P39A2 layPath.stairs at 0: a path tile (tool 0, case 0 below) that is stairs once laid costs twice the path price; canAfford,
+    // the charge, setGrids' refund byte (so bulldozing it refunds what was paid), the ledger, the pointsPopup and the undo journal
+    // all see the doubled ebx. A tile that already carries a path costs nothing (case 0 -> L_f888), as in the original.
+    if (!SG_DEFECT(g_defect_path_stairs) && edi == 0 && esi != ebp && (H2_TW(H2_cell(FD(0x1c), FD(0x24))) & 0x20) == 0)
+        ebx = path_stairs_price(ctx, FD(0x1c), FD(0x24), ebx, true);
     if (esi == ebp) goto L_fc6a;                      // ML+0xfe60 / ML+0xfe62
     if (edi != 0xf) {                                 // ML+0xfe68
         if (cc("canAfford", ebx) == 0) goto L_fc6a;    // ML+0xfe6e canAfford / ML+0xfe78
@@ -9987,6 +10007,7 @@ L_fb4f:
         esi = FD(0x1c);                               // ML+0x1060f
     }
     G32(GS(g_cash_div100)) = G32(GS(g_cash_div100)) - ebx;          // ML+0x10613..ML+0x1061e
+    if (edi == 0) P39A2_PriceLog("charge", FD(0x1c), FD(0x24), ebx, 0);   // development (SG_P39A2_PRICELOG): the path tool's charge
     if (!SG_DEFECT(g_defect_course_undo) && p11_rec >= 0)   // P11D fix 3: the object and what its placement charged
         course_undo_object(ctx, FD(0x1c), FD(0x24), p11_rec, ebx, p11_ledger, p11_free, !p11_replaced);
     if (edi <= 4) {                                   // ML+0x1061b / ML+0x10624
@@ -10077,6 +10098,8 @@ int H2_TerrainSpecial(u32 F, int eax) {
         u32 i = H2_cell(x, y);
         H2_TWL(i) = (u8)(H2_TWL(i) | 0x20);           // ML+0x113e5
         esi = (H2_TT(i) != 0x11) ? 2 : 0xf;           // ML+0x113ed..ML+0x113fe (sub / neg / sbb / and / add)
+        // P39A2 layPath.stairs at 0: a tile that is stairs with its path laid costs twice (refund byte, charge and popup alike)
+        if (!SG_DEFECT(g_defect_path_stairs)) esi = path_stairs_price(ctx, x, y, esi, false);
         cc("setGrids", x, y, 0xa0, esi);              // ML+0x11408 setGrids
         eax = G32(GS(f_w_4c2848));                        // ML+0x1140d
     }
@@ -10538,6 +10561,10 @@ int Ph_0041ecbb(u32 F, const int* in) {
         return kFrame;                                // ML+0xfd30
     }
     // ML+0xfd35
+    // development (P39A2's drives): SG_P39A2_PRICELOG=<file>, one line per world click: the tile, the object tool, its path flag and
+    // stairs answer as if laid (path_stairs_axes), the cash (x 100). Reads only.
+    P39A2_PriceLog("click", FD(0x1c), FD(0x24), G32((GS(f_w_4c2848) + 12)),
+                   (H2_TW(H2_cell(FD(0x1c), FD(0x24))) & 0x20) ? 1 : 0);
     if (cc("tileBlocked", FD(0x1c), FD(0x24)) != 0) return kFrame;   // ML+0xfd3f tileBlocked / ML+0xfd49
     if (GU8(GS(g_ui_569498)) != 0 && !SG_DEFECT(g_defect_msg_dismiss_band)) {
         // P27A fix 6 (mainLoop.messageDismissBand = 0): the press dismisses the message only on its drawn frame. tickMessage draws it

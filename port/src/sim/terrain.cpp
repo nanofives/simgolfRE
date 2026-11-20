@@ -4,6 +4,7 @@
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 
+#include <algorithm>
 #include <utility>
 #include <vector>
 
@@ -830,6 +831,42 @@ int32_t slope_mix(Ctx &ctx, int32_t x, int32_t y, int32_t dir) {
   return add32(mul32(dir_dy(ctx, dir), q), mul32(dir_dx(ctx, dir), p));
 }
 
+// P39A2 layPath.stairs (terrain.h). The sample points are the centres of the tile's four quarters, so both halves slopeY and
+// slopeX choose between are read; the direction pair of an axis is the even direction whose dirDx (x axis) or dirDy (y axis) is
+// non-zero, and |slopeMix| makes the two walking directions alike (slopeMix of the opposite direction is the negative).
+int g_defect_path_stairs = 1;
+int g_negctl_path_stairs = 0;
+int32_t path_stairs_axes(Ctx &ctx, int32_t x, int32_t y, bool assume_path) {
+  if (SG_DEFECT(g_defect_path_stairs)) return 0;
+  const int32_t n = world_n(ctx);
+  auto path = [&](int32_t px, int32_t py) {
+    return px >= 0 && py >= 0 && px < n && py < n && (flags(ctx)(px, py) & (1u << 5)) != 0;
+  };
+  if (x < 0 || y < 0 || x >= n || y >= n) return 0;
+  if (!assume_path && !path(x, y)) return 0;
+  const int32_t need = SG_NEGCTL(g_negctl_path_stairs) == 1 ? 4 : 3;
+  int32_t axes = 0;
+  for (int32_t d = 0; d < 8; d += 2) {
+    const int32_t dx = dir_dx(ctx, d), dy = dir_dy(ctx, d);
+    if ((dx != 0) == (dy != 0)) continue;   // not an orthogonal direction
+    const int32_t bit = dx != 0 ? 1 : 2;
+    if (axes & bit) continue;
+    if (SG_NEGCTL(g_negctl_path_stairs) != 2 && !path(x + dx, y + dy) && !path(x - dx, y - dy)) continue;
+    int32_t rise = 0;
+    for (int32_t q = 0; q < 4; ++q) {
+      const int32_t wx = add32(shl32(x, 10), (q & 1) ? 0x300 : 0x100), wy = add32(shl32(y, 10), (q & 2) ? 0x300 : 0x100);
+      const int32_t s = slope_mix(ctx, wx, wy, d);
+      rise = std::max(rise, s < 0 ? -s : s);
+    }
+    if (rise >= need) axes |= bit;
+  }
+  return axes;
+}
+int32_t path_stairs_price(Ctx &ctx, int32_t x, int32_t y, int32_t price, bool assume_path) {
+  if (SG_DEFECT(g_defect_path_stairs)) return price;
+  return path_stairs_axes(ctx, x, y, assume_path) != 0 ? mul32(price, 2) : price;
+}
+
 void relax_edges(Ctx &ctx, int32_t x, int32_t y) {
   int32_t mx, mn;
   corner_range(ctx, x, y, mx, mn);  // outputs discarded
@@ -966,6 +1003,9 @@ void a_tile_query(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(corner_height_a
 void a_slope_y(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_y(c, S(a, 0), S(a, 1))); }
 void a_slope_x(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_x(c, S(a, 0), S(a, 1))); }
 void a_slope_mix(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(slope_mix(c, S(a, 0), S(a, 1), S(a, 2))); }
+// P39A2 test entries (layPath.stairs): stairs.axes(x, y, assume_path), stairs.price(x, y, price, assume_path)
+void a_stairs_axes(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(path_stairs_axes(c, S(a, 0), S(a, 1), a[2] != 0)); }
+void a_stairs_price(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(path_stairs_price(c, S(a, 0), S(a, 1), S(a, 2), a[3] != 0)); }
 void a_relax_edges(Ctx &c, const uint32_t *a, Ret &) { relax_edges(c, S(a, 0), S(a, 1)); }
 void a_height_at(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(height_at(c, S(a, 0), S(a, 1))); }
 void a_rebuild_heightfield(Ctx &c, const uint32_t *, Ret &) { rebuild_heightfield(c); }
@@ -1003,6 +1043,8 @@ const FuncDef kFuncs[] = {
     {"slopeY", "default", "int", 2, 0, a_slope_y, &g_negctl_slope_y},
     {"slopeX", "default", "int", 2, 0, a_slope_x, &g_negctl_slope_x},
     {"slopeMix", "default", "int", 3, 0, a_slope_mix, &g_negctl_slope_mix},
+    {"stairs.axes", "default", "int", 3, 0, a_stairs_axes, &g_negctl_path_stairs},
+    {"stairs.price", "default", "int", 4, 0, a_stairs_price, &g_negctl_path_stairs},
     {"calcTileWallMask", "default", "void", 2, 0, a_relax_edges, &g_negctl_relax_edges},
     {"heightAt42fa30", "default", "int", 2, 0, a_height_at, &g_negctl_height_at},
     {"rebuildHeightfield", "default", "void", 0, 0, a_rebuild_heightfield, &g_negctl_rebuild_heightfield},
@@ -1022,6 +1064,12 @@ const DefectDef kDefects[] = {
     {"scanTileLine.edgeCellType", "model_defects#5",
      "the scored cell, its four neighbours and the second line's cell are read with no grid test; fixed: a cell outside the "
      "grid has type 0x14", &g_defect_scan_edge_type},
+    {"layPath.stairs", "P39A2",
+     "a path tile on a slope is a plain band over the slope: golfers walking it get the steep-slope thought (0x2b, mood -2) and "
+     "laying it costs the plain path price; fixed: a path tile whose path axis rises 3 or more levels (the 0x2b rule) is stairs, "
+     "computed from the heights (nothing stored): the Terrain draws treads and retaining-wall risers on it, golfers on it skip the "
+     "0x2b thought, and laying a path tile that is stairs costs twice the path price",
+     &g_defect_path_stairs},
 };
 }  // namespace
 

@@ -996,9 +996,12 @@ int updateGolfers() {
             } else {
                 FLAGS(i) |= 0x40000000;                                                 // updateGolfers+0x2b48..updateGolfers+0x2b5e
             }
-            // a thought about the slope (updateGolfers+0x2b64..updateGolfers+0x2bea)
+            // a thought about the slope (updateGolfers+0x2b64..updateGolfers+0x2bea). P39A2 layPath.stairs at 0: not on a stairs tile
+            // (path_stairs_axes of the golfer's tile, terrain.h; 0 at 1, so the test is the original's)
             if (GB(i, (GS(g_golfers) + 33)) != 0x13 && (FLAGS(i) & 0x10000) == 0 && GB(i, (GS(g_golfers) + 133)) != 0x2b &&
                 (GB(i, (GS(g_golfers) + 26)) & 1) == 0 &&
+                (SG_DEFECT(g_defect_path_stairs) ||
+                 path_stairs_axes(ctx, sar32(GD(i, GS(g_golfers)), 10), sar32(GD(i, (GS(g_golfers) + 4)), 10)) == 0) &&
                 kSlopeMix(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)), GC(i, (GS(g_golfers) + 26))) > 2) {     // updateGolfers+0x2b64..updateGolfers+0x2bb9
                 v = kSlopeMix(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)), GC(i, (GS(g_golfers) + 26)));       // updateGolfers+0x2bbf..updateGolfers+0x2bd5
                 kEmitThought(i, 0x2b, v);                                               // updateGolfers+0x2bda..updateGolfers+0x2be2

@@ -100,6 +100,18 @@ int32_t slope_y(Ctx &ctx, int32_t x, int32_t y);
 int32_t slope_x(Ctx &ctx, int32_t x, int32_t y);
 // slopeMix: dirDy[dir] * slopeX + dirDx[dir] * slopeY, both clamped to -1..1 for odd dir.
 int32_t slope_mix(Ctx &ctx, int32_t x, int32_t y, int32_t dir);
+// P39A2 (play switch layPath.stairs, 1 = the original): the stairs axes of tile (x, y), computed from the heights (nothing
+// stored). Bit 0: the x axis, bit 1: the y axis. An axis counts when the tile carries a path (flag bit 1 << 5; assume_path: as if
+// it did, for a tile about to be laid), a path tile lies next to it along that axis (orthogonal neighbour inside the grid), and
+// |slopeMix| along that axis reaches 3 levels at one of the tile's four quarter points (the rise updateGolfers' 0x2b "steep slope"
+// thought tests, > 2, in either walking direction). 0 at layPath.stairs = 1 (no read). Reads the course grids only.
+int32_t path_stairs_axes(Ctx &ctx, int32_t x, int32_t y, bool assume_path = false);
+// the price of laying a path on (x, y): `price` x 2 when the tile is stairs with its path laid (path_stairs_axes), else `price`
+// (always `price` at layPath.stairs = 1). mainLoop's path tool (H2_Build case 0) and terrain tool 0xa0 (H2_TerrainSpecial) use it.
+int32_t path_stairs_price(Ctx &ctx, int32_t x, int32_t y, int32_t price, bool assume_path);
+extern int g_defect_path_stairs;   // layPath.stairs (registered in terrain.cpp kDefects)
+// negative controls of path_stairs_axes: 1 = the threshold is 4 levels, 2 = the path-neighbour test is skipped
+extern int g_negctl_path_stairs;
 // calcTileWallMask: recomputes g_tileWallMask[x][y] from the corner heights against the 4 orthogonal neighbours.
 void relax_edges(Ctx &ctx, int32_t x, int32_t y);
 // heightAt42fa30: terrain height (level - 3) * 16 at world point (x, y), bilinear over the tile's corners.
