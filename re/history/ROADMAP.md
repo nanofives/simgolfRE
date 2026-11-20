@@ -2114,3 +2114,13 @@ segments x64 205 / 205; test_p38d_world_save 11 (152 and 101 round trips equal);
 32, loaders 64; app_replay 5; Win32 build; controls 4 / 4 RED; app drive at 152: save, quit, load from the browser, save again.
 Open: the championship course file (key C) writes nothing at N != 50 but still shows "course saved"; the app at 152 peaked at
 5.7 GB (phase G).
+
+## P38F + P38E: map, camera and buy land at N > 50 (2026-11-19; notes log/roadmap/P38/P38FE_notes.md)
+F5 map: tile positions scale to the same panel area, whole-pixel diamonds rounded up (6 x 3 at 50, 3 x 2 at 101, 2 x 1 at 152);
+hole numbers, lines, walkers, P36A's hole jump and P38H's lot labels follow. Play camera above 50: the owned land plus one lot each
+way, clamped to the world. TRACTS FOR SALE: lots on the scaled map, labels, the hovered lot, acres as the real count. The price
+formula is unchanged (the original's sum is per tile): a fresh 152 lot $171,000 (after 1 / 2 / 3 purchases $336,000 / $683,000 /
+$1,297,000) against $19,000 at 50; a sandbox starts with $100,000. Evidence: segments x64 and Win32 205 / 205; test_routing,
+test_buyland, test_p36a_hole_jump, test_p38h_land_offer, test_p38b_world, test_p38fe_buyland 4 / 4; oracles buyland 13, routing
+14; drives at 152 and 101 at 1920 x 1080 and 2560 x 1351 dpi 120. Dev switches SG_P38E_CREDITS, SG_P38E_CASHKEY (inert unless set).
+Open: the year's finance record keeps the price in 16 bits (wraps after five purchases at 152).

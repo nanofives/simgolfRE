@@ -408,5 +408,5 @@ def test_negctl_reads_red(portlib, mode, what):
 
 def test_every_routing_function_has_a_negctl(portlib):
     mine = {n for n, f in portlib.functions().items() if f.get("module") == "routing"}
-    assert mine == {NAME, "showShortcutsScreen", "showMembershipRoster"}
+    assert mine == {NAME, "showShortcutsScreen", "showMembershipRoster", "p38fMapProject"}  # P38F: port-only (tests)
     assert "showRoutingMapScreen.exitRemapReadsFrame" in portlib.defects()

@@ -392,6 +392,7 @@ int Session(u32 F, int sel) {
             portsim::generate_flat_course(ctx, G32(GS(g_courseIndex)));   // P38B: N > 50 starts flat (phase C: the generator)
         else
             cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result)
+        if (ctx.dev_land_credits > 0) portsim::set_land_offer_credits(ctx, ctx.dev_land_credits);   // P38E development only
         cc("rebuildHeightfield");                             // ML+0x61d rebuildHeightfield()
         int f2 = G32(GS(g_flags));                   // ML+0x622
         G32(GS(g_buildingUnlockLevel)) = menu_neg() == 4 ? 7 : 6;  // ML+0x627

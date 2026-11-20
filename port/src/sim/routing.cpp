@@ -151,8 +151,7 @@ struct MapDraw {
   }
   // mapToScreen456b70 (c3t.cpp): x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - d, d = 1 when g_map822b80[0] != 0, else -1
   void map_to_screen(int32_t a, int32_t b, int32_t &x, int32_t &y) const {
-    x = add32(mul32(add32(a, b), 6), 0x6a);
-    y = add32(sub32(mul32(sub32(b, a), 3), gs.g_map822b80[0] != 0 ? 1 : -1), 0x1b8);
+    map_project(ctx, a, b, gs.g_map822b80[0] != 0 ? 1 : -1, x, y);   // P38F: at N the same panel (world.h)
   }
 
   // the backdrop: only while g_map822b80[0] is 0; modes -1..2 pick their screen, others the course one
@@ -1162,6 +1161,14 @@ int32_t show_membership_roster(Ctx &ctx) {
 }
 
 const FuncDef kFuncs[] = {
+    // P38F (port-only, the tests): the small map's projection of tile (a, b) at the current N, x | y << 16 (g_map822b80[0] as set)
+    {"p38fMapProject", "default", "int", 2, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) {
+       int32_t x, y;
+       map_project(c, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), c.gs().g_map822b80[0] != 0 ? 1 : -1, x, y);
+       r.set_u32((static_cast<uint32_t>(x) & 0xFFFFu) | (static_cast<uint32_t>(y) << 16));
+     },
+     &g_negctl_routing_map},
     {"showMembershipRoster", "default", "int", 0,
      0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(show_membership_roster(c)); }, &g_negctl_roster},
     {"showShortcutsScreen", "default", "int", 0,

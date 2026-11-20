@@ -189,8 +189,7 @@ struct BuyLand {
   }
   // mapToScreen456b70: x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 + (g_map822b80[0] != 0 ? -1 : 1)
   void map_to_screen(int32_t a, int32_t b, int32_t &x, int32_t &y) const {
-    x = add32(mul32(add32(a, b), 6), 0x6a);
-    y = add32(sub32(mul32(sub32(b, a), 3), gs.g_map822b80[0] != 0 ? 1 : -1), 0x1b8);
+    map_project(ctx, a, b, gs.g_map822b80[0] != 0 ? 1 : -1, x, y);   // P38F: at N the same panel (world.h)
   }
   int32_t &frame(int32_t i) {
     if (i < 0 || i >= 42) throw MissingResource{"showBuyLandScreen: a frame word outside the modelled locals (a type byte "

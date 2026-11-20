@@ -30,6 +30,7 @@
 #include "portsim/arith.h"
 #include "portsim/execonst.h"
 #include "portsim/ptr.h"
+#include "portsim/sim/world.h"  // P38F: the diamond at N
 
 namespace portsim {
 
@@ -243,8 +244,10 @@ void b_diamond(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     g.unsup("drawRoutingPoly: a palette colour index");
     return;
   }
-  const int32_t r = mode() == 2 ? 7 : 6;
-  const int32_t pts[8] = {sub32(x, 6), y, x, sub32(y, 3), add32(x, r), y, x, add32(y, 3)};
+  // P38F: the half sizes follow the world (6 x 3 at 50; world.h map_half_w / map_half_h)
+  const int32_t hw = map_half_w(ctx), hh = map_half_h(ctx);
+  const int32_t r = mode() == 2 ? hw + 1 : hw;
+  const int32_t pts[8] = {sub32(x, hw), y, x, sub32(y, hh), add32(x, r), y, x, add32(y, hh)};
   gfxf::fill_convex_poly16(g.root, pts, 4, static_cast<uint16_t>(c & 0xffff));
 }
 

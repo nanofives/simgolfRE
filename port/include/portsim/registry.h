@@ -114,6 +114,7 @@ class Ctx {
   WorldCluster world_clusters[4];
   std::shared_ptr<void> world_side;
   int32_t world_request = 0;  // P38B: the app's --world-size for the next new sandbox course (0 = 50)
+  int32_t dev_land_credits = 0;  // P38E development (the app's SG_P38E_CREDITS): land credits a new sandbox course starts with
 
  private:
   std::unique_ptr<GameState> gs_;  // declared before `mem`, which is built from it

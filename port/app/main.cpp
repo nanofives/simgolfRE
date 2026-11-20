@@ -1448,6 +1448,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2
       if (ok && o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A
       if (ok && o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B
+      if (ok && std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(std::getenv("SG_P38E_CREDITS"));  // P38E development
       if (ok && o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9
       if (ok && o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G
       if (ok && o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B
@@ -1747,6 +1748,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2: why a golfer stands (gfx.h; drawing only)
   if (o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A: the hole advisor panel (gfx.h; drawing only)
   if (o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B: the next new sandbox course's N
+  if (const char *cr = std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(cr);  // P38E development: land credits
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
@@ -1873,6 +1875,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         const int k = portsim::defect_find(sw);
         if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
       }
+    // development (P38E's drives): SG_P38E_CASHKEY=1 gives back the original's '+' cash key (mainLoop.hiddenCheatKeys = 1)
+    if (std::getenv("SG_P38E_CASHKEY") && std::atoi(std::getenv("SG_P38E_CASHKEY")) == 1) {
+      const int k = portsim::defect_find("mainLoop.hiddenCheatKeys");
+      if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+    }
     // development (P38B's corner shots): SG_P38B_CAMFULL=1 puts mainLoop.cameraBoundByZoom back to the original's 1 (the camera
     // clamped to 0 .. N - 1 per axis, not to the land): the for-sale corners of a large world can be looked at
     if (std::getenv("SG_P38B_CAMFULL") && std::atoi(std::getenv("SG_P38B_CAMFULL")) == 1) {

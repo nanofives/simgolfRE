@@ -93,6 +93,28 @@ inline void grid_fill_tail(Ctx &c, uint32_t grid, int32_t elem_bytes, uint32_t p
   for (int32_t i = 0; i < grid_tail(c, elem_bytes); ++i) c.mem.store<uint8_t>(at + static_cast<uint32_t>(i), static_cast<uint8_t>(pattern >> (8 * i)));
 }
 
+// ---- P38F: the small map (the F5 routing map and the TRACTS FOR SALE map: routing.cpp / buyland.cpp mapToScreen456b70)
+// At 50 the original's projection: x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - adj, tile diamonds of half sizes 6 x 3. At N != 50
+// the same panel area: x = 0x6a + round(300 (a + b) / N), y = 0x1b8 + round(150 (b - a) / N) - adj, and diamonds of half sizes
+// ceil(300 / N) x ceil(150 / N) (2 x 1 at 152, 3 x 2 at 101: whole pixels, a tile's diamond never leaves a gap to the next).
+namespace detail {
+inline int32_t round_div(int64_t num, int64_t den) {   // nearest, halves up; den > 0
+  const int64_t q = (2 * num + den) / (2 * den);
+  return static_cast<int32_t>(2 * num + den < 0 && (2 * num + den) % (2 * den) != 0 ? q - 1 : q);
+}
+}  // namespace detail
+inline void map_project(const Ctx &c, int32_t a, int32_t b, int32_t adj, int32_t &x, int32_t &y) {
+  if (c.world_n == kWorldOriginal) {
+    x = add32(mul32(add32(a, b), 6), 0x6a);
+    y = add32(sub32(mul32(sub32(b, a), 3), adj), 0x1b8);
+    return;
+  }
+  x = 0x6a + detail::round_div(int64_t{300} * (int64_t{a} + b), c.world_n);
+  y = 0x1b8 - adj + detail::round_div(int64_t{150} * (int64_t{b} - a), c.world_n);
+}
+inline int32_t map_half_w(const Ctx &c) { return (300 + c.world_n - 1) / c.world_n; }   // 6 at 50
+inline int32_t map_half_h(const Ctx &c) { return (150 + c.world_n - 1) / c.world_n; }   // 3 at 50
+
 // ---- P38B: the world size changes (world.cpp)
 // world_resize: N = 50 drops the side storage (the GameState grids again); another N (>= 50, (N - 2) % 3 == 0 for equal lots,
 // <= 256) maps zeroed side blocks for every grid, the path ring and the walker posts, and tells an attached TerrainApi

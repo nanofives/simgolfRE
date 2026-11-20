@@ -454,6 +454,15 @@ CameraRange camera_range(Ctx &ctx) {
         y1 = y > y1 ? y : y1;
       }
   if (x1 < 0) return r;
+  // P38E: at N != 50 the box grows one land lot ((N - 2) / 3 tiles) each way inside the world, so the land for sale beside the
+  // owned square can be looked at and bought (50 unchanged: the land alone)
+  if (world_n(ctx) != kWorldOriginal) {
+    const int32_t L = world_lot(ctx), hi = world_last(ctx);
+    x0 = x0 - L < 0 ? 0 : x0 - L;
+    y0 = y0 - L < 0 ? 0 : y0 - L;
+    x1 = x1 + L > hi ? hi : x1 + L;
+    y1 = y1 + L > hi ? hi : y1 + L;
+  }
   const int32_t Vw = view_width(ctx);
   // P34A: each margin moves g_camera_bound_extra_pct of the way from P31A's margin to the view's middle on its axis
   auto wider = [](int32_t margin, int32_t half) { return margin + (half - margin) * g_camera_bound_extra_pct / 100; };
