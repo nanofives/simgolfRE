@@ -179,6 +179,160 @@ int32_t deserialize_course(Ctx &c, IoFile &f, int32_t mode) {
   return r;
 }
 
+// ------------------------------------------------------------------------------------------------ P38D: the world save
+// A course larger than 50 x 50 (P38B's --world-size N, side storage) is saved in a port-only file next to the .sve files: the
+// same name with the extension kWorldExt, never a .sve, so the original and the load browser's `*.sve` pattern never take one
+// for a saved game. Layout (little-endian):
+//   +0x00 kWorldMagic (8 bytes), +0x08 version (kWorldVersion), +0x0c N, +0x10 the prefix size (kWorldPrefix), +0x14 the
+//   header size (0x64), +0x18 the number of walker-post entries that follow the body (0, or 2 per walker when N > 127),
+//   +0x1c the camera tile x (gCameraTileX), +0x20 the camera tile y (gCameraTileY), +0x24 0;
+//   +0x28 the 0x64-byte header the .sve starts with (the same text: the browser reads an autosave's title from it);
+//   the body: serializeCourse's field list in its order (saveload_fields.inc), each world grid at N (grid_entries at N times
+//   the entry size, read from / written to its side block), every other field as in the .sve, then the flag-gated tail;
+//   the walker posts (int16 per axis, walker order) when the side table holds them (world.h walker_post);
+//   kWorldEnd (8 bytes).
+// The Terrain object and its vertex arrays are not in the file: load_game rebuilds them from the grids as it does for a .sve
+// (rebuildHeightfield, rebuildTileCoverage, markTileKind11, refreshTerrain -> rebuildTerrainGrid), after world_resize made the
+// object at N. A name has one file: saving it as one kind deletes the other kind's file of the same name (an autosave slot or
+// While_Browsing changes kind with the world size), and a load of `<name>.sve` that finds none reads `<name>` + kWorldExt.
+// Saves at N = 50 are the original's .sve, byte for byte (the deletion of a same-named world file aside, a file the original
+// never has).
+constexpr char kWorldMagic[8] = {'S', 'G', 'P', 'W', 'O', 'R', 'L', 'D'};
+constexpr char kWorldEnd[8] = {'S', 'G', 'P', 'W', 'E', 'N', 'D', 0};
+constexpr const char *kWorldExt = kWorldSaveExt;
+constexpr uint32_t kWorldVersion = 1, kWorldPrefix = 0x28, kWorldHeader = 0x64;
+constexpr int32_t kWalkerCount = static_cast<int32_t>(sizeof(GameState::g_walkers) / sizeof(Walker));
+int g_negctl_world_save = 0;   // 1 = the grids written at the 50 extent from the GameState (P38B's 50 x 50 save), 2 = the walker
+                               // posts not read back, 3 = a load does not set N (the grids read at the current size), 4 = the
+                               // saved camera not restored
+
+std::string lower_ascii(std::string s) {
+  for (char &ch : s)
+    if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
+  return s;
+}
+bool ends_with_ci(const std::string &s, const std::string &tail) {
+  return s.size() >= tail.size() && lower_ascii(s.substr(s.size() - tail.size())) == lower_ascii(tail);
+}
+// `path` with its trailing extension `from` replaced by `to` (empty when it does not end in `from`)
+std::string swap_ext(const std::string &path, const std::string &from, const std::string &to) {
+  return ends_with_ci(path, from) ? path.substr(0, path.size() - from.size()) + to : std::string();
+}
+// the save extension of the original's data (".sve": f_strpool_4c3ee0 + 0x64, saveGame's suffix)
+std::string sve_ext(Ctx &c) { return read_str(c.mem, state_va(c, &GameState::f_strpool_4c3ee0) + 0x64); }
+
+// One field of the table that is a world grid: its block at the current N (va, bytes). The table's ranges are whole grids
+// (saveload_fields.inc); a range naming part of a grid would not scale and is refused.
+template <class M, size_t K> bool grid_field(Ctx &c, const SaveField &f, M (GameState::*m)[K], uint32_t &va, uint32_t &n) {
+  const uint32_t off = static_cast<uint32_t>(reinterpret_cast<const uint8_t *>(&(c.gs().*m)[0]) - c.bytes());
+  if (f.off < off || f.off >= off + static_cast<uint32_t>(sizeof(M) * K)) return false;
+  if (f.off != off || f.n != static_cast<uint32_t>(sizeof(M) * K)) throw MissingResource{"world save: a field covers part of a grid"};
+  va = grid_va(c, m);
+  n = static_cast<uint32_t>(grid_entries<K>(c)) * static_cast<uint32_t>(sizeof(M));
+  return true;
+}
+bool world_grid_field(Ctx &c, const SaveField &f, uint32_t &va, uint32_t &n) {
+#define SG_W(m) if (grid_field(c, f, &GameState::m, va, n)) return true
+  SG_W(g_cornerCache); SG_W(g_tilePathCost); SG_W(g_tileFlags); SG_W(g_ballStopCount); SG_W(g_tileTypeSaved);
+  SG_W(g_tileLevel); SG_W(g_tileScreenX); SG_W(g_tileScreenY); SG_W(g_tileWallMask); SG_W(g_tileVariant);
+  SG_W(g_tileMoodDown); SG_W(g_tileType); SG_W(tile_anim_frame); SG_W(g_tileBuildCode); SG_W(g_pathGrid);
+  SG_W(g_tileRefund); SG_W(g_cornerLevel); SG_W(g_tileMoodUp); SG_W(g_tileShadeA); SG_W(g_tileShadeB);
+#undef SG_W
+  return false;
+}
+
+// field_io for the world file: a world grid at N through its side block, any other field as field_io
+int32_t world_field_io(Ctx &c, IoFile &f, const SaveField &fld, int32_t mode) {
+  uint32_t va = 0, n = 0;
+  if (SG_NEGCTL(g_negctl_world_save) == 1 || !world_grid_field(c, fld, va, n)) return field_io(c, f, fld, mode);
+  uint8_t *host = c.mem.at(va, n, true);
+  if (mode != 0) {
+    const int32_t k = f.open && !f.for_write ? static_cast<int32_t>(std::min<size_t>(n, f.data.size() - f.pos)) : -1;
+    if (k > 0) {
+      std::memcpy(host, f.data.data() + f.pos, static_cast<size_t>(k));
+      f.pos += static_cast<size_t>(k);
+    }
+    return k;
+  }
+  return f.write(host, n);
+}
+
+// serializeCourse's order and tail tests over the world file (save 0 / load non-zero), then the walker posts
+int32_t serialize_world(Ctx &c, IoFile &f, int32_t mode) {
+  GameState &gs = c.gs();
+  gs.g_saveIoRead = mode;
+  for (const SaveField &fld : kSerializeFields) world_field_io(c, f, fld, mode);
+  int32_t r = static_cast<int32_t>(gs.g_flags);
+  if ((gs.g_flags & 0x40000000u) != 0) r = world_field_io(c, f, k_ser_flag30, mode);
+  if ((gs.g_flags & 0x200000u) != 0) {
+    world_field_io(c, f, k_ser_flag21_a, mode);
+    r = world_field_io(c, f, k_ser_flag21_b, mode);
+  }
+  return r;
+}
+
+void put_u32(std::vector<uint8_t> &v, uint32_t x) {
+  for (int k = 0; k < 4; ++k) v.push_back(static_cast<uint8_t>(x >> (8 * k)));
+}
+uint32_t get_u32(const std::vector<uint8_t> &v, size_t at) {
+  uint32_t x = 0;
+  for (int k = 0; k < 4; ++k) x |= static_cast<uint32_t>(at + k < v.size() ? v[at + k] : 0) << (8 * k);
+  return x;
+}
+bool is_world_file(const IoFile &f) {
+  return f.open && !f.for_write && f.data.size() >= kWorldPrefix && std::memcmp(f.data.data(), kWorldMagic, 8) == 0;
+}
+// the walker posts the side table holds (N > 127): every walker's x then y
+uint32_t world_post_entries(Ctx &c) { return c.world_n > 127 ? 2u * static_cast<uint32_t>(kWalkerCount) : 0u; }
+
+// the world file's prefix (save): magic, version, N, sizes
+void write_world_prefix(Ctx &c, IoFile &f) {
+  std::vector<uint8_t> p(kWorldMagic, kWorldMagic + 8);
+  put_u32(p, kWorldVersion);
+  put_u32(p, static_cast<uint32_t>(c.world_n));
+  put_u32(p, kWorldPrefix);
+  put_u32(p, kWorldHeader);
+  put_u32(p, world_post_entries(c));
+  put_u32(p, static_cast<uint32_t>(c.gs().gCameraTileX));
+  put_u32(p, static_cast<uint32_t>(c.gs().gCameraTileY));
+  put_u32(p, 0);
+  f.write(p.data(), static_cast<uint32_t>(p.size()));
+}
+void write_world_tail(Ctx &c, IoFile &f) {
+  std::vector<uint8_t> t;
+  for (int32_t w = 0; w < kWalkerCount && world_post_entries(c) != 0; ++w)
+    for (int axis = 0; axis < 2; ++axis) {
+      const uint16_t v = static_cast<uint16_t>(static_cast<int16_t>(walker_post(c, w, axis)));
+      t.push_back(static_cast<uint8_t>(v));
+      t.push_back(static_cast<uint8_t>(v >> 8));
+    }
+  t.insert(t.end(), kWorldEnd, kWorldEnd + 8);
+  f.write(t.data(), static_cast<uint32_t>(t.size()));
+}
+// the prefix's N when the file is a world save this port reads (its version, sizes and an N world_size_ok takes), else 0
+int32_t world_file_n(const IoFile &f) {
+  if (!is_world_file(f)) return 0;
+  const int32_t n = static_cast<int32_t>(get_u32(f.data, 0xC));
+  if (get_u32(f.data, 8) != kWorldVersion || get_u32(f.data, 0x10) != kWorldPrefix || get_u32(f.data, 0x14) != kWorldHeader) return 0;
+  if (!world_size_ok(n) || get_u32(f.data, 0x18) != (n > 127 ? 2u * static_cast<uint32_t>(kWalkerCount) : 0u)) return 0;
+  return n;
+}
+void read_world_tail(Ctx &c, IoFile &f) {
+  const uint32_t entries = get_u32(f.data, 0x18);
+  for (uint32_t k = 0; k < entries && f.pos + 2 <= f.data.size(); ++k, f.pos += 2) {
+    const int16_t v = static_cast<int16_t>(f.data[f.pos] | (f.data[f.pos + 1] << 8));
+    if (SG_NEGCTL(g_negctl_world_save) != 2) set_walker_post(c, static_cast<int32_t>(k / 2), static_cast<int>(k % 2), v);
+  }
+}
+
+// After a save of `path` (one kind): the same name's file of the other kind is deleted, so a name has one file.
+void drop_other_kind(Ctx &c, const std::string &path, bool world) {
+  if (c.files_ptr == nullptr) return;
+  const std::string ext = sve_ext(c);
+  const std::string other = world ? swap_ext(path, kWorldExt, ext) : swap_ext(path, ext, kWorldExt);
+  if (!other.empty() && c.files().exists(other)) c.files().remove(other);
+}
+
 Ret peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) { return cm::call_peer(ctx, name, args); }
 // a drawing / backend callee: skipped when no module registers it (a test can still record it by name)
 Ret peer_optional(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
@@ -215,7 +369,15 @@ int32_t save_game(Ctx &ctx, uint32_t name) {
   vstrcpy(ctx.mem, text, dirs + 0x6C);
   cat_host(ctx, text, given);
   if (mode != 2) vstrcat(ctx.mem, text, dirs + 0x64);
-  IoFile f = open_for_write(ctx, read_str(ctx.mem, text));
+  // P38D: a world larger than 50 goes to the world file of the same name (the path in g_textBuffer stays the original's)
+  const bool world = world_n(ctx) != kWorldOriginal;
+  std::string path = read_str(ctx.mem, text);
+  if (world) {
+    const std::string w = swap_ext(path, sve_ext(ctx), kWorldExt);
+    path = w.empty() ? path + kWorldExt : w;
+  }
+  IoFile f = open_for_write(ctx, path);
+  if (world) write_world_prefix(ctx, f);
   vstrcpy(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c52bc));
   append_course_title(ctx, 0);
   vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c528c) + 0x2C);
@@ -228,9 +390,16 @@ int32_t save_game(Ctx &ctx, uint32_t name) {
   vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c3f70));
   if (mode != 1) peer(ctx, "appendDate", {u32(gs.g_date)});
   f.write(ctx.mem.at(text, 0x64), mode == 3 ? 0x63u : 0x64u);
-  serialize_course(ctx, f, 0);
+  if (world) {
+    serialize_world(ctx, f, 0);
+    write_world_tail(ctx, f);
+  } else {
+    serialize_course(ctx, f, 0);
+  }
   if (mode == 4 && f.data.size() > 0x1000) f.data[0x1000] ^= 1;   // a body byte of the file only (the state is untouched)
-  return f.close(ctx);
+  const int32_t r = f.close(ctx);
+  if (r == 0) drop_other_kind(ctx, path, world);  // P38D: one file per name
+  return r;
 }
 
 // ------------------------------------------------------------------------------------------------ loadGame
@@ -256,13 +425,34 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   const uint32_t course_pool = state_va(ctx, &GameState::f_strpool_4c52c0);
   vstrcpy(ctx.mem, text, championship != 0 ? course_pool + 0x68 : dirs + 0x6C);
   cat_host(ctx, text, given);
-  IoFile f = open_for_read(ctx, read_str(ctx.mem, text));
+  const std::string path = read_str(ctx.mem, text);
+  IoFile f = open_for_read(ctx, path);
+  // P38D: `<name>.sve` saved last as a world file (While_Browsing, an autosave slot) is read from `<name>` + kWorldExt
+  if (!f.open && championship == 0 && ctx.files_ptr != nullptr) {
+    const std::string w = swap_ext(path, sve_ext(ctx), kWorldExt);
+    if (!w.empty() && ctx.files().exists(w)) f = open_for_read(ctx, w);
+  }
+  const int32_t world = championship == 0 ? world_file_n(f) : 0;
   ctx.mem.store<uint8_t>(text, 0);
+  if (is_world_file(f) && championship == 0) {
+    if (world == 0) {   // P38D: a world file of another version or size: nothing is read
+      f.close(ctx);
+      return -1;
+    }
+    f.pos = kWorldPrefix;
+  }
   f.read(ctx, text, 0x64);
   if (championship != 0 && mode != 7) f.read(ctx, text, 0x64);
   if (header_only != 0 && mode != 3) return f.close(ctx);
-  if (world_n(ctx) != kWorldOriginal) world_resize(ctx, kWorldOriginal);  // P38B: a .sve holds the 50 x 50 world
-  serialize_course(ctx, f, mode == 8 ? 0 : 1);
+  if (world != 0) {
+    // P38D: the world file sets N before anything reads a grid (the side storage and the Terrain object at N, zeroed)
+    if (SG_NEGCTL(g_negctl_world_save) != 3) world_resize(ctx, world);
+    serialize_world(ctx, f, mode == 8 ? 0 : 1);
+    read_world_tail(ctx, f);
+  } else {
+    if (world_n(ctx) != kWorldOriginal) world_resize(ctx, kWorldOriginal);  // P38B: a .sve holds the 50 x 50 world
+    serialize_course(ctx, f, mode == 8 ? 0 : 1);
+  }
   f.close(ctx);
   course_undo_reset(ctx);  // P11D: the loaded course's tiles are not the journal's (mainLoop.courseUndo = 0 only)
   gs.g_flags = (((gs.g_flags & 0xFFFFFFF3u) | (mode == 1 ? 0u : (flags0 & 4u))) | (mode == 2 ? 0u : 0x40000000u));
@@ -274,6 +464,13 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   peer(ctx, "rebuildTileCoverage", {});
   peer(ctx, "markTileKind11", {});
   if (finish == 0) return 0;
+  // P38D: a world file puts the camera back where it was saved (a .sve keeps the running game's camera, as the original does:
+  // at 50 the course is in view either way, a larger world would open over land far from it). Not for the browser's previews
+  // (finish 0 above).
+  if (world != 0 && SG_NEGCTL(g_negctl_world_save) != 4) {
+    gs.gCameraTileX = static_cast<int32_t>(get_u32(f.data, 0x1C));
+    gs.gCameraTileY = static_cast<int32_t>(get_u32(f.data, 0x20));
+  }
   const std::string browsing = read_str(ctx.mem, course_pool + 0x54);
   if (given != browsing || mode == 4) show_loading(ctx, course_pool + 0x44);
   peer(ctx, "applyCourseType", {u32(static_cast<int32_t>(static_cast<int8_t>(gs.g_courseType)))});
@@ -326,6 +523,9 @@ int32_t load_course(Ctx &ctx, int32_t mode) {
 int32_t save_course(Ctx &ctx) {
   const int mode = SG_NEGCTL(g_negctl_save_course);
   GameState &gs = ctx.gs();
+  // P38D: championship courses stay 50 x 50 (Mariano, 2026-11-19): a larger world writes no course file (the result of an
+  // _open that failed)
+  if (world_n(ctx) != kWorldOriginal) return -1;
   const uint32_t text = text_va(ctx);
   const uint32_t course_pool = state_va(ctx, &GameState::f_strpool_4c52c0);
   const std::string path = read_str(ctx.mem, text);   // the frame copy
@@ -399,7 +599,13 @@ int32_t save_game_dialog(Ctx &ctx) {
   vstrcpy(ctx.mem, text, dirs + 0x6C);
   cat_host(ctx, text, name);
   vstrcat(ctx.mem, text, dirs + 0x64);
-  if (file_exists(ctx, text) != 0 && mode != 2) {
+  // P38D: the name's world file counts as the file too (the save replaces either kind)
+  const auto world_twin = [&]() {
+    if (ctx.files_ptr == nullptr) return false;
+    const std::string w = swap_ext(read_str(ctx.mem, text), sve_ext(ctx), kWorldExt);
+    return !w.empty() && ctx.files().exists(w);
+  };
+  if ((file_exists(ctx, text) != 0 || world_twin()) && mode != 2) {
     // text = name + the overwrite question
     ctx.mem.store<uint8_t>(text, 0);
     cat_host(ctx, text, name);
@@ -1340,6 +1546,13 @@ void a_prompt_and_save_file(Ctx &c, const uint32_t *a, Ret &r) {
 void a_browser(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(load_game_browser_screen(c, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1])));
 }
+// P38D test entries: a walker's post (world.h walker_post: the int16 side table when N > 127) read and written, port-only
+void a_world_post(Ctx &c, const uint32_t *a, Ret &r) {
+  r.set_i32(walker_post(c, static_cast<int32_t>(a[0]), static_cast<int>(a[1] & 1)));
+}
+void a_set_world_post(Ctx &c, const uint32_t *a, Ret &) {
+  set_walker_post(c, static_cast<int32_t>(a[0]), static_cast<int>(a[1] & 1), static_cast<int32_t>(a[2]));
+}
 
 const FuncDef kFuncs[] = {
     {"loadTopScores", "default", "int", 0, 0, a_load_top_scores, &g_negctl_load_top_scores},
@@ -1358,6 +1571,9 @@ const FuncDef kFuncs[] = {
     {"courseActionMenu", "default", "int", 1, 0, a_course_action_menu, &g_negctl_course_action_menu},
     {"saveload.setScript", "default", "void", 1, 0, a_set_script, nullptr},
     {"saveload.clearScript", "default", "void", 0, 0, a_clear_script, nullptr},
+    // P38D: the world save's controls (g_negctl_world_save) hang on its post accessor
+    {"saveload.worldPost", "default", "int", 2, 0, a_world_post, &g_negctl_world_save},
+    {"saveload.setWorldPost", "default", "void", 3, 0, a_set_world_post, nullptr},
 };
 }  // namespace
 

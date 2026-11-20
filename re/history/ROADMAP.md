@@ -2104,3 +2104,13 @@ lot bought, a hole at (150, 150), a golfer walking there; control RED); 1080 dri
 At 152: tick rate holds at ~10.5 / s, sim per tick 2.2-4.2x (the per-tile frame pass over 23,104 tiles: phase G), paint 76 / 36 /s
 while scrolling. Not yet right at 152: the F5 map's diamonds overflow (F), the play camera follows the owned land (F), the
 buy-land screen not opened (E), saving writes 50 x 50 grids (D), 101 untested.
+
+## P38D: saving and loading a course larger than 50 (2026-11-19; notes log/roadmap/P38/P38D_notes.md)
+A course at N != 50 saves as `<name>.sgw` (magic, version, N, the .sve's field list with every grid at N, walker posts above
+127, the camera); saves at 50 stay byte-identical .sve files. A load reads either kind by its magic and sets N before any grid is
+read; a name keeps one file (asking for <name>.sve reads the .sgw when only it exists: While_Browsing, autosaves); the browser
+lists both. A finished .sgw load restores the saved camera (a .sve keeps the running game's camera, as the original). Evidence:
+segments x64 205 / 205; test_p38d_world_save 11 (152 and 101 round trips equal); oracles saveload 48, browser 26, save_dialogs
+32, loaders 64; app_replay 5; Win32 build; controls 4 / 4 RED; app drive at 152: save, quit, load from the browser, save again.
+Open: the championship course file (key C) writes nothing at N != 50 but still shows "course saved"; the app at 152 peaked at
+5.7 GB (phase G).

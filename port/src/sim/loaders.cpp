@@ -12,6 +12,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/course.h"
+#include "portsim/sim/saveload.h"  // P38D: kWorldSaveExt
 
 #include "commands_internal.h"
 
@@ -60,11 +61,39 @@ void write_str(const Memory &m, uint32_t dst, const std::string &s) {
 }  // namespace
 
 // ------------------------------------------------------------------------------------------------ listMatchingFiles
+namespace {
+// P38D (saveload.cpp, the world save): a pattern ending in the save extension (f_strpool_4c3ee0 + 0x64, ".sve": the load
+// browser's `Saved Games\*.sve`) also lists the world saves of that directory (the same pattern with ".sgw"), in the order the
+// files layer lists the whole directory (name order, or the play profile's newest first), so both kinds interleave as one list.
+// With no world save there the listing is the original's.
+std::vector<DirEntry> with_world_saves(Ctx &ctx, const std::string &pat) {
+  std::vector<DirEntry> plain = ctx.files().list(pat);
+  const std::string ext = read_str(ctx.mem, state_va(ctx, &GameState::f_strpool_4c3ee0) + 0x64);
+  auto lower = [](std::string s) {
+    for (char &ch : s)
+      if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
+    return s;
+  };
+  if (ext.empty() || pat.size() < ext.size() || lower(pat.substr(pat.size() - ext.size())) != lower(ext)) return plain;
+  const std::string wpat = pat.substr(0, pat.size() - ext.size()) + kWorldSaveExt;
+  if (ctx.files().list(wpat).empty()) return plain;
+  std::string dir, comp, wcomp;
+  GameFiles::split_pattern(pat, dir, comp);
+  GameFiles::split_pattern(wpat, dir, wcomp);
+  const size_t slash = pat.find_last_of("/\\");
+  std::vector<DirEntry> all = ctx.files().list(slash == std::string::npos ? std::string("*") : pat.substr(0, slash + 1) + "*");
+  std::vector<DirEntry> out;
+  for (DirEntry &e : all)
+    if (GameFiles::wildcard_match(comp, e.name) || GameFiles::wildcard_match(wcomp, e.name)) out.push_back(std::move(e));
+  return out;
+}
+}  // namespace
+
 int32_t list_matching_files(Ctx &ctx, uint32_t pattern, uint32_t require, uint32_t exclude) {
   const int mode = SG_NEGCTL(g_negctl_list_matching_files);
   const uint32_t table = state_va(ctx, &GameState::g_fileNames);
   std::memset(ctx.gs().g_fileNames, 0, sizeof(ctx.gs().g_fileNames));
-  const std::vector<DirEntry> entries = ctx.files().list(read_str(ctx.mem, pattern));
+  const std::vector<DirEntry> entries = with_world_saves(ctx, read_str(ctx.mem, pattern));
   if (entries.empty()) return 0;  // FindFirstFileA: INVALID_HANDLE_VALUE
   const std::string req = read_str(ctx.mem, require), exc = read_str(ctx.mem, exclude);
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c8a28);

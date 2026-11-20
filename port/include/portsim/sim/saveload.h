@@ -18,6 +18,11 @@
 
 namespace portsim {
 
+// P38D: the extension of the port's world save (a course larger than 50 x 50; saveload.cpp "the world save"): save_game writes
+// `<name>.sgw` instead of `<name>.sve` while the world size is not 50, load_game reads either (by the file's magic), and
+// listMatchingFiles adds them to the load browser's `*.sve` listing.
+constexpr char kWorldSaveExt[] = ".sgw";
+
 // saveGame (re/analysis/save/0040b4a0): path = the saved-games directory + `name` + ".sve" built in g_textBuffer; opens it
 // for writing (g_saveFd), builds the 0x64-byte header line (course title, day of the month, date: appendCourseTitle and
 // appendDate are called through the registry) in g_textBuffer, writes those 0x64 bytes and serializeCourse(0)'s save
