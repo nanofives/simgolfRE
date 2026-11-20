@@ -139,6 +139,9 @@
 //   P37A: --hole-advice on|off (default on; SG_APP_P37=off: off) the Hole Stats screen gets the hole advisor panel under its art:
 //   the magazine awards' progress, the score band, the skills and hole type, fun and complaints, variety, money (holeadvice.h,
 //   gfx.h gfx_set_hole_advice; drawing only; re/roadmap/P37_HOLE_ADVISOR.md)
+//   P39C: --green-highlight on|off (default on; SG_APP_P39=off: off) while the player aims, the blinking marker on the cup tile
+//   becomes an outline of the cup's whole green over its slope, in the same blink (greenline.h; drawing only; log/roadmap/P39/
+//   P39C_notes.md)
 //   P38B: --world-size N (play profile only; default 50; N with (N - 2) % 3 == 0, 50 .. 254) a NEW course of the main menu (career
 //   or sandbox) and a career's next course start on an N x N world, made by generateRandomCourse at N (P38C); loads, challenges and
 //   championships stay 50 (world.h world_resize; re/roadmap/P38_LARGE_MAPS.md phase B). P38W: without it each world map record's
@@ -431,6 +434,7 @@
 #include "portsim/sim/world.h"  // P38B: --world-size
 #include "portsim/sim/live.h"
 #include "portsim/sim/shots.h"  // P32D item 7: shot_margin_set
+#include "portsim/sim/greenline.h"  // P39C: green_highlight_set
 #include "portsim/sim/perf.h"  // P12A fix 1: perf_now_ns (the camera slide's clock)
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
@@ -684,6 +688,7 @@ struct Options {
   bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
   bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
+  bool green_highlight = true;     // P39C: --green-highlight on|off (SG_APP_P39=off: off)
   int world_size = 50;             // P38B: --world-size N (play profile only)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
   bool list_wheel = true;          // P32C item 6: --list-wheel on|off (SG_APP_P32=off: off)
@@ -1754,6 +1759,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B: the next new sandbox course's N
   if (const char *cr = std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(cr);  // P38E development: land credits
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
+  portsim::green_highlight_set(o.green_highlight);  // P39C: the green's outline while aiming (greenline.h; drawing only)
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)
@@ -2532,6 +2538,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        std::to_string(o.sharp_notes ? 1 : 0) + "}";  // P35G items 9 and 11
   s += ",\"p36b\":{\"wait_reasons\":" + std::to_string(o.wait_reasons ? 1 : 0) + "}";  // P36B part 2
   s += ",\"p37a\":{\"hole_advice\":" + std::to_string(o.hole_advice ? 1 : 0) + "}";  // P37A
+  s += ",\"p39c\":{\"green_highlight\":" + std::to_string(o.green_highlight ? 1 : 0) + "}";  // P39C
   s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
   {  // P23D fix 1: the grid's frames (kept = the world picture left as it was, drawn = restored and drawn, mismatch = a kept frame
@@ -3964,6 +3971,11 @@ bool parse(int argc, char **argv, Options &o) {
       o.world_size = static_cast<int>(n);
       continue;
     }
+    if (a == "--green-highlight") {  // P39C (before the chain too: C1061)
+      if (!val(v) || (v != "on" && v != "off")) return false;
+      o.green_highlight = v == "on";
+      continue;
+    }
     if (a == "--hole-advice") {  // P37A (before the chain too)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.hole_advice = v == "on";
@@ -4558,6 +4570,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hole_jump = o.wait_reasons = false;  // P36A, P36B part 2
   if (const char *ep = std::getenv("SG_APP_P37"))  // P37: the hole advisor off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.hole_advice = false;  // P37A
+  if (const char *ep = std::getenv("SG_APP_P39"))  // P39: the course building and play features off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.green_highlight = false;  // P39C
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win

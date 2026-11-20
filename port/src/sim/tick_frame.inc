@@ -964,11 +964,16 @@ void P1_flag200(u32 F, int ebp, int ebx) {
 // [g_playerGolfer] (stride 0x100) whose g_golfers+0x21 byte equals the tile's low 5 flag bits, Sprite_draw of g_sprite5423e8
 // (only while flag 4 of the date's low byte or flag 4 of g_flags is set); then an enqueued cell 0x185 / 0x189 + [g_courseType].
 // edi = [F+0x14], eax = [F+0xc] = flag word & 0x1f.
+// P39C (greenline.h, the app option --green-highlight): with the option on and an outline for hole h (the cup on a green), the
+// cup-tile sprite is not drawn; P39C_GreenOutline draws the green's outline after the sprite queue instead. Off: false, the
+// original's draw.
+bool P39C_OutlineReplacesMarker(int h) { return green_highlight_on() && !green_outline(ctx, h).edges.empty(); }
 void P1_flag80(u32 F, int edi, int eax) {
     if (G32(GS(g_panelListMode)) == 3) {                                                    // ML+0x2981
         int ecx = G32(GS(g_playerGolfer));                                                 // ML+0x2983
         if (ecx != -1 && G8((GS(g_golfers) + 33) + (ecx << 8)) == eax                        // ML+0x298c, ML+0x299a
-            && ((GU8(GS(g_date)) & 4) != 0 || (GU8(GS(g_flags)) & 4) != 0)) {       // ML+0x29a3, ML+0x29ac
+            && ((GU8(GS(g_date)) & 4) != 0 || (GU8(GS(g_flags)) & 4) != 0)       // ML+0x29a3, ML+0x29ac
+            && !P39C_OutlineReplacesMarker(eax)) {   // P39C (--green-highlight): the green's outline instead (P39C_GreenOutline)
             tc("Sprite_draw", GS(g_sprite5423e8), Root(), G32(GS(g_tileStep4c2840)) + FD(0x28) - 0x14, FD(0x2c) + FD(0x40) - 0xa,
                G32(GS(g_color16Lut)), 0);                                                // ML+0x29de Sprite_draw
         }
@@ -5320,6 +5325,24 @@ void P4_holeHud(u32 F) {
     cc("drawCenteredText2", (GS(f_strpool_4c64a8) + 16), FD(0xd8), FD(0xd0) - ebx, (int)0x80007FFF);         // drawCenteredText2 ML+0x802a
 }
 
+// P39C (re/roadmap/P39_COURSE_FEATURES.md, log/roadmap/P39/P39C_notes.md; app option --green-highlight, RENDER-ONLY): while the
+// original would blink P1_flag80's marker on the player's cup tile (g_panelListMode == 3, the player's golfer +0x21 hole, the
+// date / g_flags bit 2 blink), the whole green of that cup is outlined: greenline.h's tiles and sides, each side projected with
+// worldToScreen inside its tile and drawn with drawMapLine (a black shadow, then the line), after the sprite queue next to the
+// terrain tool's marks and in their GfxWideLineScope, so a wide window draws the outline whole past the frame's columns.
+// Nothing here writes the GameState; with the option off nothing is called.
+void P39C_GreenOutline() {
+    if (!green_highlight_on()) return;
+    const int h = green_highlight_hole(ctx);
+    if (h <= 0 || !green_highlight_blink(ctx)) return;
+    const GreenOutline &o = green_outline(ctx, h);
+    if (o.edges.empty()) return;   // no green at the cup: P1_flag80 drew the original's marker
+    GfxWideLineScope marks_scope(ctx, kGfxWideMarks);
+    green_outline_lines(ctx, o, [&](int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t col, int32_t w, int32_t al) {
+        cc("drawMapLine", x1, y1, x2, y2, (int)col, w, al);
+    });
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // entry: ML+0x6287..ML+0x8032, the phases in the original's order; falls through to ML+0x8032.
 void Ph_00415847(u32 F) {
@@ -5331,7 +5354,8 @@ void Ph_00415847(u32 F) {
     P4_queueAndSelection(F);    // ML+0x65ad..ML+0x667a
     P4_objectLabels(F);         // ML+0x667a..ML+0x6902
     P4_holeGrid(F);             // ML+0x6902..ML+0x6d45
-    P4_ballLabel(F);            // ML+0x6d45..ML+0x7278
+    P39C_GreenOutline();        // P39C (--green-highlight): the player's green outlined while aiming (no original code)
+    P4_ballLabel(F);           // ML+0x6d45..ML+0x7278
     P4_golfers(F);              // ML+0x7278..ML+0x7888
     P4_walkers(F);              // ML+0x7888..ML+0x7cb7
     P4_holeHud(F);              // ML+0x7cb7..ML+0x8032

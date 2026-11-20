@@ -2182,3 +2182,11 @@ fairway / tee / green path tiles; TF_FLOOD_REACHED and income untouched; GameSta
 x64 205 / 205; test_p39b_paths 6, test_terrain_state 501, test_terrain_render 522, test_terrain 75, test_profiles 21; controls
 2 / 2 RED; before / after at 1920 x 1080 and 2560 x 1351 dpi 120 on his save. test_terrain_live not judged (references lost
 2026-11-18). play_profile.tsv merged by hand (P38W2 had added its row).
+
+## P39C: the whole green outlined while aiming (2026-11-20; notes log/roadmap/P39/P39C_notes.md)
+App option --green-highlight (off under SG_APP_P39=off): P1_flag80's blinking cup-tile marker on the player's hole while aiming is
+replaced by an outline of the whole green (8-connected flood from the cup through green tiles, two touching greens split by the
+nearer cup; edges whose neighbour is not green, projected with worldToScreen so it follows the slope, drawMapLine in the wide
+marks scope, the same blink), module greenline (cached per hole). Drawing only. Evidence: segments x64 205 / 205 (option off);
+test_p39c_green_highlight (tile set, edges, the drop record unchanged off, no GameState write; control RED); looks at 1920 x 1080
+dpi 96 / 120 on a flat and a sloped green. The outline draws over sprites (wide window); 2560 x 1351 not possible on LIVING-PC.
