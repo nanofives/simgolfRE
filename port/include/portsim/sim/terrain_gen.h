@@ -26,8 +26,15 @@ namespace portsim {
 // Throws MissingResource when the base type is read from the original's uninitialised stack slot (course type 4 or
 // outside 0..4, unless n >= 8 with the flag clear), and NoReturn when a search loop has no candidate left (the original
 // spins forever there). spawnWalker (child 3.3) is called through the registry.
+// P38C: at N != 50 (play only: the app's --world-size) the same sections with the counts of scattered things scaled by the
+// area, the map-spanning lengths by the side, the clubhouse window centred at N / 2 and the owned square in 50's proportion
+// (owned_border); bilinearSample's lattice does not wrap at 16 cells and heightBlend's course type 1 falloff band is 16 N / 50.
+// At 50 every path is the original's (log/roadmap/P38/P38C_notes.md).
 int32_t generate_random_course(Ctx &ctx, int32_t n);
-// P38B (port-only): a flat course at the current N for the app's --world-size (terrain_gen.cpp has the description)
+// P38C: section M's border count at the current N for the acres byte (count50 at 50, round(count50 * N / 50) otherwise)
+int32_t owned_border(const Ctx &ctx, int32_t acres);
+// P38B (port-only): a flat course at the current N (terrain_gen.cpp has the description); since P38C the app's --world-size
+// courses come from generate_random_course, and this one serves the headless tests that want a flat N x N course
 int32_t generate_flat_course(Ctx &ctx, int32_t n);
 
 }  // namespace portsim

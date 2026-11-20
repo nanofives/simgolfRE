@@ -21,7 +21,8 @@ namespace {
 //   generateRandomCourse  1 = camera y = clubhouse column - 3, 2 = the border sweep (setting != 2) skips its third
 //                         clearTile (the far column), 3 = the corner-level fill stops at 50 x 50 (row / column 50 kept),
 //                         4 = placementBound 0 on location 4 still stamps the object at the last draw, 5 = placementBound 0
-//                         on locations 5, 6, 8, 12, 13, 15 still runs the object pass
+//                         on locations 5, 6, 8, 12, 13, 15 still runs the object pass; P38C (only at N != 50): 6 = the
+//                         counts of scattered things not scaled by the area, 7 = the lengths not scaled by the side
 int g_negctl_generate = 0;
 int g_negctl_flat_course = 0;  // P38B generateFlatCourse: 1 = the owned square not scaled by N / 50
 
@@ -92,7 +93,38 @@ template <class F> bool miss_placement(int32_t &misses, F any_candidate) {
   if (SG_DEFECT(g_defect_placement_bound)) throw NoReturn{"generateRandomCourse"};
   return true;
 }
+
+// P38C (log/roadmap/P38/P38C_notes.md): the generator at N != 50. Lengths that span the map (a river's band, the island's
+// shape, the desert falloff, the windows of the location features) scale with the side, counts of scattered things (blob
+// tiles, obstacle tiles, location objects, the difficulty objects, the patch grid) with the area, so a lake, a forest or a
+// patch keeps its natural size and there are more of them. Both are the identity at 50, and every N = 50 path below is the
+// original's own expression.
+int32_t side_len(const Ctx &ctx, int32_t v) {
+  if (SG_NEGCTL(g_negctl_generate) == 7) return v;   // negctl 7: lengths not scaled
+  return (v * world_n(ctx) + kWorldOriginal / 2) / kWorldOriginal;
+}
+int32_t area_count(const Ctx &ctx, int32_t c) {
+  if (world_n(ctx) == kWorldOriginal || SG_NEGCTL(g_negctl_generate) == 6) return c;   // negctl 6: counts not scaled
+  const int32_t tiles50 = static_cast<int32_t>(kGridTiles);  // 2500
+  return (c * world_n(ctx) * world_n(ctx) + tiles50 / 2) / tiles50;
+}
 }  // namespace
+
+// Section M's `count` (the rows cleared on each side of the owned square): at 50 the original's loop (c from 0x19 down while
+// c * c * 4 > acres * 10, count = 0x19 - c); at N the sweep radius is N / 2 and the owned square keeps the 50 proportion:
+// round(count50 * N / 50) (P38B's flat course and P38C's generator; Mariano's pick, 2026-11-19).
+int32_t owned_border(const Ctx &ctx, int32_t acres) {
+  int32_t count50 = 0;
+  {
+    const int32_t e5 = acres * 10;
+    int32_t c = 0x19;
+    do {
+      ++count50;
+      --c;
+    } while (c * c * 4 > e5);
+  }
+  return (count50 * world_n(ctx) + kWorldOriginal / 2) / kWorldOriginal;
+}
 
 int32_t generate_random_course(Ctx &ctx, int32_t n) {
   GameState &g = ctx.gs();
@@ -119,7 +151,17 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   const auto and_hi = [&](int32_t idx, uint8_t m) { hi(idx).set(static_cast<uint8_t>(hi(idx).get() & m)); };
   const auto lv = [&](int32_t off) { return level + off; };
   const auto add_lv = [&](int32_t off, int d) { lv(off).set(static_cast<uint8_t>(lv(off).get() + d)); };
-  const int32_t N = world_n(ctx);  // P38A: the grid side (50); the walk counts, ranges and look constants stay the original's (phase C)
+  const int32_t N = world_n(ctx);  // P38A: the grid side (50)
+  // P38C: N != 50 (the app's --world-size, play only): counts by the area, lengths by the side, the original's off-grid reads
+  // and writes never taken (the side storage has no neighbour grid there). At 50 every expression below is the original's.
+  const bool big = N != kWorldOriginal;
+  const auto len = [&](int32_t v) { return side_len(ctx, v); };
+  const auto many = [&](int32_t c) { return area_count(ctx, c); };
+  // the island's (setting 2) cleared edge of row / column v: clamp(|v - 0x19|, 8, 0x32) + rest at 50 (rest = count - 0xc +
+  // the jitter), at N clamp(|v - N / 2|, 8 N / 50, N) + rest with the 0xc also scaled
+  const auto island_edge = [&](int32_t v, int32_t rest, int32_t jitter) {
+    return clamp(abs32(v - N / 2), len(8), N) + rest + jitter;
+  };
   const auto cell = [&](int32_t x, int32_t y) { return add32(mul32(x, N), y); };
   const auto corner = [&](int32_t x, int32_t y) { return add32(mul32(x, world_v(ctx)), y); };
   const auto dx = [&](int32_t k) { return dir_dx[k & 7]; };
@@ -198,7 +240,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       const int32_t ct = course_type();
       if (u32(ct) <= 4) {
         switch (ct) {
-          case 0: t = (c >= 0x19 ? 1 : 0) + 0xD; if (c0 == 9) t = 0xE; break;
+          case 0: t = (c >= N / 2 ? 1 : 0) + 0xD; if (c0 == 9) t = 0xE; break;   // 0x19 = N / 2: the east half
           case 1: t = ((~p & 1) | 6) << 1; break;
           case 2: t = (p & 1) ? (((p & 2) | 0x18) >> 1) : 0xE; break;
           case 3: t = ((p & 1) ? 6 : 0) + 5; break;
@@ -217,10 +259,13 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         c = add32(c, rnd(3) - 1);
       }
       total = add32(total, cnt);
-      if (total > 0x4E2) break;
+      if (total > many(0x4E2)) break;   // P38C: half the area (0x4e2 of 2500 tiles)
       ++p;
       limit += 0x9C4;
-      if (!(limit < 0xAFC8)) break;
+      if (!(limit < 0xAFC8)) {
+        if (!big) break;
+        limit = 5000;   // P38C: the sizes of 50's 16 blobs again (natural size, more blobs) until half the area is walked
+      }
     }
   }
 
@@ -229,9 +274,9 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     const int32_t rivers = setting() == 2 ? 0 : 1;
     int32_t bestk = 0;  // the original's slot is always written before it is read (sampleHeight < 999)
     for (p = 0; p < rivers; ++p) {
-      const int32_t r0 = rnd(0x10);
+      const int32_t r0 = rnd(len(0x10));  // P38C: the start band scales with the side (rows N / 3 .. N / 3 + 16 N / 50)
       int32_t col = world_last(ctx);  // the east edge (0x31)
-      const int32_t base = (5 * p + 5) * 10;
+      const int32_t base = big ? mul32(N, p + 1) : (5 * p + 5) * 10;   // (5 p + 5) 10 = 50 (p + 1)
       int32_t row = add32(base / 3, r0);  // imul 0x55555556: the quotient toward zero
       int32_t prevk = 0;
       while (row >= 0 && row <= world_last(ctx)) {
@@ -245,14 +290,14 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         int32_t best = 999, bestc = c1;
         int32_t nrow = add32(rnd(2) != 0 ? 1 : -1, row);
         const int32_t idx2 = cell(nrow, c1);
-        const bool idx2_off = !SG_DEFECT(g_defect_river_outside) && !(nrow >= 0 && nrow < N && c1 >= 0 && c1 < N);  // P28A
+        const bool idx2_off = (big || !SG_DEFECT(g_defect_river_outside)) && !(nrow >= 0 && nrow < N && c1 >= 0 && c1 < N);  // P28A
         if (!idx2_off && ty(idx2) != 0x11 && height_blend(ctx, nrow, c1) == 3) {
           set_type(idx2, p == 0 ? ((~shl32(add32(nrow, c1), 1) & 4) | 8) : 0xC);
           if (g.g_courseType == 1) set_type(idx2, 0xA);
         }
         for (int32_t k = -2; k <= 2; k += 2) {
           const int32_t er = add32(dx(k), row), ec = add32(dy(k), col);
-          if (p != 0 && er >= 0x30) continue;
+          if (p != 0 && er >= N - 2) continue;   // 0x30
           const int32_t h = sample_height(ctx, shl32(er, 7), shl32(ec, 7));
           if (h >= best) continue;
           best = h;
@@ -268,7 +313,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         }
         prevk = bestk;
         // row may be -1 or N (50) and col -1 here: read outside the grid (model_defects#6); P28A: at 0 leave without the read
-        if (!SG_DEFECT(g_defect_river_outside) && !(row >= 0 && row < N && col >= 0 && col < N)) break;
+        if ((big || !SG_DEFECT(g_defect_river_outside)) && !(row >= 0 && row < N && col >= 0 && col < N)) break;
         if (ty(cell(row, col)) == 0x11) break;
         if (col < 0) break;
       }
@@ -277,7 +322,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
 
   // ---- E: the west shore (setting 1)
   if (setting() == 1) {
-    int32_t width = 5;
+    int32_t width = len(5);   // P38C: the sea's band (2..12 columns at 50) scales with the side; the row-to-row step does not
     for (p = 0; p < world_tiles(ctx); p += N) {  // every row's first `width` columns (0x9c4, 0x32 = N * N, N)
       for (int32_t s = 0; s < width; ++s) {
         const int32_t ix = p + s;
@@ -291,10 +336,10 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         if (s == 0) set_type(p, 0x14);
       }
       width = width + rnd(5) - 2;
-      if (width > 1) {
-        if (width > 0xC) --width;
+      if (width > len(2) - 1) {   // 1
+        if (width > len(0xC)) --width;
       } else {
-        width = 2;
+        width = len(2);
       }
     }
   }
@@ -310,9 +355,13 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   // ---- G: 24 patch walks
   {
     int32_t t = 0;
-    for (p = 0; p < 0x18; ++p) {
-      int32_t x = rnd(4) + ((p & 3) * 50 >> 2) + 4;
-      int32_t y = rnd(4) + ((p >> 2) * 50 >> 2) + 4;
+    // P38C: at 50 a 4 x 6 grid of spots 12.5 tiles apart (the last 8 lie past column 49 and land one row down, a single
+    // tile each); at N a kx x kx grid at the same spacing, every spot on the map (kx = 4 N / 50 rounded: 8 at 101, 12 at 152)
+    const int32_t kx = big ? (4 * N + kWorldOriginal / 2) / kWorldOriginal : 4;
+    const int32_t patches = big && SG_NEGCTL(g_negctl_generate) != 6 ? kx * kx : 0x18;
+    for (p = 0; p < patches; ++p) {
+      int32_t x = rnd(4) + ((p % kx) * kWorldOriginal >> 2) + 4;   // p & 3
+      int32_t y = rnd(4) + ((p / kx) * kWorldOriginal >> 2) + 4;   // p >> 2
       const int32_t ct = course_type();
       if (u32(ct) <= 4) {
         const uint8_t l = lv(corner(x, y)).get();
@@ -327,7 +376,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       bool water = false;
       const int32_t d = g.g_difficulty;
       if (d >= 2 && rnd(8 / (d - 1)) == 0) water = true;
-      if (water || p == 0) t = 0x12;
+      if (water || p == 0 || (big && p % 16 == 0)) t = 0x12;   // P38C: one sure pond per 16 patches (50 has 16 on the map)
       if (c0 == 2 && (t == 8 || t == 0x12)) t = 0xC;
       int32_t steps = 0;
       for (;;) {
@@ -351,8 +400,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
 
   // ---- H: 16 pairs of Random::range(0x2a) whose 0x100 marks are cleared at once, type 0x10 -> 0xd
   for (int32_t k = 0; k < 16; ++k) {
-    const int32_t s = rnd(0x2A);
-    const int32_t r = rnd(0x2A);
+    const int32_t s = rnd(N - 8);   // 0x2a
+    const int32_t r = rnd(N - 8);
     or_word(s + N * r + (4 * N + 4), 0x100);  // tile (r + 4, s + 4): 204 = 4 * 50 + 4
   }
   for (int32_t k = 0; k < world_tiles(ctx); ++k) {
@@ -367,26 +416,27 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       const int8_t t = ty(cell(x, y));
       if (t == 0x15 || t == 0x16 || t == 4 || t == 0x12) return false;
       if (t == (g.g_courseType != 1 ? 0xA : 0xB)) return false;
-      return !(t == 0x11 && y <= 6);
+      return !(t == 0x11 && y <= len(6));   // P38C: the sea's columns scale (section E)
     };
     int32_t m = 0, misses = 0;
+    const int32_t target = many(mul32(sub32(4, g.g_difficulty), 9));   // P38C: by the area
     do {
-      const int32_t x = rnd(0x2E) + 2;
-      const int32_t y = rnd(0x2E) + 2;
+      const int32_t x = rnd(N - 4) + 2;   // 0x2e
+      const int32_t y = rnd(N - 4) + 2;   // 0x2e
       if (qualifies(x, y)) {
         or_word(cell(x, y), 0x100);
         ++m;
         misses = 0;
       } else {
         miss(misses, [&] {
-          if (!(m < mul32(sub32(4, g.g_difficulty), 9))) return true;  // the loop ends anyway
-          for (int32_t a = 2; a < 0x30; ++a)
-            for (int32_t b = 2; b < 0x30; ++b)
+          if (!(m < target)) return true;  // the loop ends anyway
+          for (int32_t a = 2; a < N - 2; ++a)
+            for (int32_t b = 2; b < N - 2; ++b)
               if (qualifies(a, b)) return true;
           return false;
         });
       }
-    } while (m < mul32(sub32(4, g.g_difficulty), 9));
+    } while (m < target);
   }
 
   // ---- J: level smoothing next to water (rows and columns 0..N: one past the grid, model_defects#6)
@@ -395,7 +445,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     static const int8_t kCol[5] = {-1, -1, 0, 0, -1};
     for (int32_t x = 0; x <= N; ++x) {
       for (int32_t y = 0; y <= N; ++y) {
-        const bool sm_fix = !SG_DEFECT(g_defect_smoothing_outside);  // P28A: type 0x14 outside the grid
+        const bool sm_fix = big || !SG_DEFECT(g_defect_smoothing_outside);  // P28A: type 0x14 outside the grid
         const int8_t a0 = sm_fix && (x >= N || y >= N) ? 0x14 : ty(cell(x, y));
         if (a0 != 0x11 && a0 != 0x12) continue;
         for (int32_t k = 0; k < 4; ++k) {
@@ -420,33 +470,29 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
   {
     const int32_t side = (state_arr(ctx, &GameState::f_tab_buildItems_4c26b0) + 15).field(&F_BuildItem::b10).get();
     const auto ok = [&](int32_t x, int32_t y) { return ty(cell(x, y)) == s10 && eval_placement_area(ctx, x, y, side, 0xF) != -1; };
+    const int32_t club_lo = N / 2 - 10;
     int32_t misses = 0;
     for (;;) {
-      cx = rnd(0x11) + 0xF;
-      cy = rnd(0x11) + 0xF;
+      cx = rnd(0x11) + club_lo;   // P38C: the 17 x 17 window centred at N / 2 (0xf = 25 - 10)
+      cy = rnd(0x11) + club_lo;
       if (ok(cx, cy)) break;
       if (miss_bounded(misses, [&] {
-            for (int32_t a = 0xF; a < 0x20; ++a)
-              for (int32_t b = 0xF; b < 0x20; ++b)
+            for (int32_t a = club_lo; a < club_lo + 0x11; ++a)
+              for (int32_t b = club_lo; b < club_lo + 0x11; ++b)
                 if (ok(a, b)) return true;
             return false;
           })) {
-        cx = 0x17;
-        cy = 0x17;
+        cx = club_lo + 8;   // the window centre (0x17)
+        cy = club_lo + 8;
         break;
       }
     }
     if (!SG_DEFECT(g_defect_feature_outside)) {  // P24E: keep the clubhouse and its free feature inside the border sweep
       // the sweep of section M: `count` from the acres; setting 2 clears an island edge of clamp(|x - 25|, 8, 50) + count
       // - 12 + Random::range(3) cells per row / column (the worst case, 2, is taken: the draw comes later)
-      int32_t count = 0;
-      for (int32_t c = 0x19, e5 = rec.field(&CourseRecord::acres).get() * 10;;) {
-        ++count;
-        --c;
-        if (!(c * c * 4 > e5)) break;
-      }
+      const int32_t count = owned_border(ctx, rec.field(&CourseRecord::acres).get());   // P38C: at N (count50 at 50)
       const int8_t set = setting();
-      const auto island_lim = [&](int32_t v) { return clamp(abs32(v - 0x19), 8, 0x32) + count - 0xC + 2; };
+      const auto island_lim = [&](int32_t v) { return island_edge(v, count - len(0xC), big ? len(3) - 1 : 2); };
       const auto cleared = [&](int32_t r, int32_t c) {
         if (r < 0 || r >= N || c < 0 || c >= N) return true;
         if (set == 2) return r < island_lim(c) || r > N - 1 - island_lim(c) || c < island_lim(r) || c > N - 1 - island_lim(r);
@@ -473,8 +519,8 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       };
       if (!fits(cx, cy)) {
         int32_t best = -1, bx = cx, by = cy;
-        for (int32_t a = 0xF; a < 0x20; ++a)
-          for (int32_t b = 0xF; b < 0x20; ++b) {
+        for (int32_t a = club_lo; a < club_lo + 0x11; ++a)
+          for (int32_t b = club_lo; b < club_lo + 0x11; ++b) {
             const int32_t d = abs32(a - cx) + abs32(b - cy);
             if ((best < 0 || d < best) && ok(a, b) && fits(a, b)) {
               best = d;
@@ -516,12 +562,12 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           int32_t s2, d2, misses = 0;
           bool gave_up = false;
           for (;;) {
-            s2 = rnd(0x28) + 5;
-            d2 = rnd(0x28) + 5;
+            s2 = rnd(N - 10) + 5;   // 0x28
+            d2 = rnd(N - 10) + 5;   // 0x28
             if (eval_placement_area(ctx, s2, d2, 2, 4) != -1) break;
             if (miss_placement(misses, [&] {
-                  for (int32_t a = 5; a < 0x2D; ++a)
-                    for (int32_t b = 5; b < 0x2D; ++b)
+                  for (int32_t a = 5; a < N - 5; ++a)
+                    for (int32_t b = 5; b < N - 5; ++b)
                       if (eval_placement_area(ctx, a, b, 2, 4) != -1) return true;
                   return false;
                 })) {
@@ -535,12 +581,12 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       }
       case 7:
         for (int32_t k = 0; k < 2; ++k) {
-          const int32_t rr = rnd(0xA);
-          const int32_t x = (k != 0 ? rr : -rr) + 0x19;
+          const int32_t rr = rnd(len(0xA));   // P38C: the band around the middle row scales with the side
+          const int32_t x = (k != 0 ? rr : -rr) + N / 2;   // 0x19
           int32_t y = 0;
           for (;;) {
             const int8_t t = ty(cell(x, y));
-            if ((t == 0x11 || t == 0x14) && y < 0x30) {
+            if ((t == 0x11 || t == 0x14) && y < N - 2) {   // 0x30
               ++y;
               continue;
             }
@@ -552,19 +598,19 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         }
         break;
       case 1:
-        if (sub32(8, g.g_difficulty) > 0) {
+        if (many(sub32(8, g.g_difficulty)) > 0) {   // P38C: the object counts by the area
           int32_t done = 0;
           do {
             int32_t ix, misses = 0;
             bool gave_up = false;
             for (;;) {
-              const int32_t s = rnd(0x1E) + 0xA;
-              const int32_t c = rnd(0x1E);
+              const int32_t s = rnd(len(0x1E)) + len(0xA);   // P38C: the window (rows 10..39, columns 0..29) by the side
+              const int32_t c = rnd(len(0x1E));
               ix = cell(s, c);
               if (ty(ix) == 0x11) break;
               if (miss_bounded(misses, [&] {
-                    for (int32_t a = 0xA; a < 0x28; ++a)
-                      for (int32_t b = 0; b < 0x1E; ++b)
+                    for (int32_t a = len(0xA); a < len(0xA) + len(0x1E); ++a)
+                      for (int32_t b = 0; b < len(0x1E); ++b)
                         if (ty(cell(a, b)) == 0x11) return true;
                     return false;
                   })) {
@@ -575,7 +621,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
             if (gave_up) break;  // no type-0x11 cell in the window: the remaining features of this kind are skipped
             or_word(ix, 0x100);
             ++done;
-          } while (done < sub32(8, g.g_difficulty));
+          } while (done < many(sub32(8, g.g_difficulty)));
         }
         break;
       case 5: case 6: case 8: case 12: case 13: case 15: {
@@ -583,12 +629,12 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           int32_t misses = 0;
           bool gave_up = false;
           for (;;) {
-            const int32_t s3 = rnd(0x28) + 3;
-            const int32_t d3 = rnd(0x28) + 3;
+            const int32_t s3 = rnd(N - 10) + 3;   // 0x28
+            const int32_t d3 = rnd(N - 10) + 3;   // 0x28
             if (eval_placement_area(ctx, s3, d3, 5, 0xF) != -1) break;
             if (miss_placement(misses, [&] {
-                  for (int32_t a = 3; a < 0x2B; ++a)
-                    for (int32_t b = 3; b < 0x2B; ++b)
+                  for (int32_t a = 3; a < N - 7; ++a)
+                    for (int32_t b = 3; b < N - 7; ++b)
                       if (eval_placement_area(ctx, a, b, 5, 0xF) != -1) return true;
                   return false;
                 })) {
@@ -599,12 +645,12 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           if (gave_up && mode != 5) break;  // no site accepted: the feature (its objects) is skipped
         }
         int32_t p3 = 0;
-        if (sub32(8, g.g_difficulty) > 0) {
+        if (many(sub32(8, g.g_difficulty)) > 0) {   // P38C: the object counts by the area
           do {
             rnd(7);
             rnd(7);
-            const int32_t x = rnd(0x28) + 5;
-            const int32_t y = rnd(0x28) + 5;
+            const int32_t x = rnd(N - 10) + 5;   // 0x28
+            const int32_t y = rnd(N - 10) + 5;   // 0x28
             do {  // one pass; `break` = the next object
               if (eval_placement_area(ctx, x - 1, y - 1, 3, 7) == -1) break;
               const int32_t ix = cell(x, y);
@@ -696,7 +742,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
               }
             } while (false);
             ++p3;
-          } while (p3 < sub32(8, g.g_difficulty));
+          } while (p3 < many(sub32(8, g.g_difficulty)));
         }
         break;
       }
@@ -710,12 +756,12 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         };
         int32_t done = 0, misses = 0;
         do {
-          const int32_t s = rnd(0x2E) + 2;
-          const int32_t d = rnd(0x2E) + 2;
+          const int32_t s = rnd(N - 4) + 2;   // 0x2e
+          const int32_t d = rnd(N - 4) + 2;   // 0x2e
           if (!qualifies(s, d)) {
             miss(misses, [&] {
-              for (int32_t a = 2; a < 0x30; ++a)
-                for (int32_t b = 2; b < 0x30; ++b)
+              for (int32_t a = 2; a < N - 2; ++a)
+                for (int32_t b = 2; b < N - 2; ++b)
                   if (qualifies(a, b)) return true;
               return false;
             });
@@ -727,7 +773,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           if (c0 == 0) set_type(ix, 0xB);
           else set_type(ix, 4);  // c0 == 0xa (the 0xd / 0xf arms of this chain are unreachable here)
           ++done;
-        } while (done < 0x10);
+        } while (done < many(0x10));   // P38C: by the area
         break;
       }
       default:  // 3: no feature
@@ -742,13 +788,13 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       do {
         int32_t s, d, ix, misses = 0;
         for (;;) {
-          s = rnd(0x27) + 5;
-          d = rnd(0x27) + 5;
+          s = rnd(N - 11) + 5;   // 0x27
+          d = rnd(N - 11) + 5;   // 0x27
           ix = cell(s, d);
           if (ty(ix) == s10) break;
           miss(misses, [&] {
-            for (int32_t a = 5; a < 0x2C; ++a)
-              for (int32_t b = 5; b < 0x2C; ++b)
+            for (int32_t a = 5; a < N - 6; ++a)
+              for (int32_t b = 5; b < N - 6; ++b)
                 if (ty(cell(a, b)) == s10) return true;
             return false;
           });
@@ -762,7 +808,7 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         if (g.g_courseType == 1)
           for (int32_t k = 0; k < 8; ++k) set_type(add32(add32(mul32(add32(dx(k), s), N), dy(k)), d), 0xB);
         ++p4;
-      } while (p4 < g.g_difficulty);
+      } while (p4 < many(g.g_difficulty));   // P38C: by the area
     }
   }
 
@@ -773,22 +819,19 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
     set_walker_post(ctx, w, 0, leaving.field(&HoleRecord::tee_x).get());
     set_walker_post(ctx, w, 1, leaving.field(&HoleRecord::tee_y).get());
   }
-  int32_t count = 0;
-  {
-    const int32_t e5 = rec.field(&CourseRecord::acres).get() * 10;
-    int32_t c = 0x19;
-    do {
-      ++count;
-      --c;
-    } while (c * c * 4 > e5);
-  }
+  int32_t count = owned_border(ctx, rec.field(&CourseRecord::acres).get());   // P38C: the sweep radius N / 2, 50's proportion
   const int8_t kind = rec.field(&CourseRecord::setting).get();
   for (int32_t k = 0; k < world_tiles(ctx); ++k) (grid_arr(ctx, &GameState::g_tileTypeSaved) + k).set(ty(k));
   if (kind == 2) {
-    count -= 0xC;
+    count -= len(0xC);
+    int32_t walk = len(3) / 2;
     for (int32_t x = 0; x < N; ++x) {
-      const int32_t jitter = rnd(3);
-      const int32_t lim = clamp(abs32(x - 0x19), 8, 0x32) + count + jitter;  // the island's shape: phase C
+      int32_t jitter = rnd(3);
+      if (big) {   // P38C: the jitter walks (one draw a row as at 50) within 0 .. 3 N / 50 - 1, so the coast's bumps scale too
+        walk = clamp(walk + jitter - 1, 0, len(3) - 1);
+        jitter = walk;
+      }
+      const int32_t lim = island_edge(x, count, jitter);  // P38C: the island's shape scaled with the side
       for (int32_t a = 0, b = world_last(ctx); a < lim; ++a, --b) {
         clear_tile(ctx, a, x);
         clear_tile(ctx, x, a);

@@ -22,7 +22,7 @@ namespace {
 //   pushTripleEntry          1 = capacity 0xff
 //   setGrids                 1 = b also into g_tileBuildCode's neighbour (y + 1)
 //   floodMark                1 = neighbour test 0x20 only
-//   bilinearSample           1 = floor division (sar 5)
+//   bilinearSample           1 = floor division (sar 5); P38C (N != 50 only): 2 = the lattice wraps at 16 cells (the original's)
 //   clearTile                1 = setting 2 keeps the flags
 //   canStep                  1 = neighbour walk byte not tested, 2 = neighbour flag mask 0x100 only (BLIND: no vector has
 //                              a neighbour with flag 0x20 alone)
@@ -36,7 +36,8 @@ namespace {
 //   propagateMinTileLevel    1 = minimum not followed (each neighbour compared with the start height)
 //   raiseFromNeighbours      1 = sameByte ignored
 //   spreadShade              1 = divisor approxDistance + 1
-//   heightBlend              1 = lower clamp bound 2 + (difficulty != 0)
+//   heightBlend              1 = lower clamp bound 2 + (difficulty != 0); P38C (N != 50 only): 2 = the course type 1 falloff
+//                            band stays 16 columns
 //   golferShotReach          1 = toward_zero36 clamped to 2
 //   markTileKind11           1 = variant 1 instead of 2
 //   spreadAllShade           1 = total capped at 0x6d5
@@ -198,8 +199,39 @@ void flood_mark(Ctx &ctx, int32_t x, int32_t y) {
   }
 }
 
+namespace {
+// P38C (log/roadmap/P38/P38C_notes.md): the noise lattice at N != 50. g_sampleGrid holds 16 x 16 cells (row and column 16 copy 0)
+// and bilinearSample wraps its cell index at 16, so the relief repeats every 16 cells: 256 tiles for heightBlend's first octave
+// at relief 0 / 1 (sampleHeight's x << 6 >> 2 = 16 units a tile, 256 a cell), 128 for its second, and 128 / 64 at relief 2
+// (x << 7): a 152 map shows the same band twice. At N != 50 the lattice does not wrap: a cell (i, j) with i and j below 16
+// is the original's (i & 15, j & 15) (so cell -1 is still 15 and the map's first 16 cells look as at 50), any other cell
+// takes the value of a base cell picked by a fixed integer hash of (i, j). Every value is one of the 256 genNoise drew, so the
+// heights keep the original's distribution and hill size, the map is the same for the same seed, and nothing new is stored:
+// a save holds g_sampleGrid, so day-0 heightBlend calls after a load and the mainLoop's sampleHeight calls agree.
+int32_t noise_cell(const Ptr<int8_t> &g, int32_t i, int32_t j) {
+  if (i < 16 && j < 16) return g[(i & 0xF) * 19 + (j & 0xF)];
+  uint32_t h = u32(i) * 0x9E3779B1u ^ u32(j) * 0x85EBCA77u;
+  h ^= h >> 16;
+  h *= 0x7FEB352Du;
+  h ^= h >> 15;
+  h *= 0x846CA68Bu;
+  h ^= h >> 16;
+  return g[static_cast<int32_t>((h >> 4) & 0xF) * 19 + static_cast<int32_t>(h & 0xF)];
+}
+}  // namespace
+
 int32_t bilinear_sample(Ctx &ctx, int32_t a, int32_t b) {
   const int32_t ca = sub32(a, 0x80), cb = sub32(b, 0x80);
+  if (world_n(ctx) != kWorldOriginal && SG_NEGCTL(g_negctl_bilinear) != 2) {   // P38C: the lattice without the wrap
+    const int32_t ix = sar32(ca, 8), iy = sar32(cb, 8);
+    const int32_t fx = sar32(ca, 3) & 0x1F, fy = sar32(cb, 3) & 0x1F;
+    const int32_t ifx = 0x20 - fx, ify = 0x20 - fy;
+    const Ptr<int8_t> g = state_arr(ctx, &GameState::g_sampleGrid);
+    const int32_t c00 = noise_cell(g, ix, iy), c01 = noise_cell(g, ix, iy + 1), c10 = noise_cell(g, ix + 1, iy),
+                  c11 = noise_cell(g, ix + 1, iy + 1);
+    const int32_t sum = c01 * ifx * fy + c10 * ify * fx + c00 * ifx * ify + c11 * fy * fx;
+    return SG_NEGCTL(g_negctl_bilinear) == 1 ? sar32(sum, 5) : sum / 32;
+  }
   const int32_t ix = sar32(ca, 8) & 0xF, iy = sar32(cb, 8) & 0xF;
   const int32_t fx = sar32(ca, 3) & 0x1F, fy = sar32(cb, 3) & 0x1F;
   const int32_t ifx = 0x20 - fx, ify = 0x20 - fy;
@@ -496,7 +528,13 @@ int32_t height_blend_body(Ctx &ctx, int32_t x, int32_t y) {
   const int32_t sh = c.field(&CourseRecord::relief).get() == 2 ? 7 : 6;
   int32_t h = sample_height(ctx, shl32(x, sh), shl32(y, sh));
   const int32_t d = g.g_heightRelief;
-  if (c.field(&CourseRecord::course_type).get() == 1 && y < 16) h = add32(h, mul32(16 - y, d) / -6);
+  if (world_n(ctx) != kWorldOriginal && SG_NEGCTL(g_negctl_height_blend) != 2) {
+    // P38C: the course type 1 falloff toward column 0 over 16 N / 50 columns with the original's depth at column 0 (16 d / 6)
+    const int32_t band = (16 * world_n(ctx) + kWorldOriginal / 2) / kWorldOriginal;
+    if (c.field(&CourseRecord::course_type).get() == 1 && y < band) h = add32(h, mul32(mul32(band - y, d), 16) / band / -6);
+  } else if (c.field(&CourseRecord::course_type).get() == 1 && y < 16) {
+    h = add32(h, mul32(16 - y, d) / -6);
+  }
   const int32_t lo = (g.g_difficulty != 0 ? 1 : 0) + (SG_NEGCTL(g_negctl_height_blend) == 1 ? 2 : 3);
   return clamp(add32(div32(h, d), 1), lo, 15);
 }

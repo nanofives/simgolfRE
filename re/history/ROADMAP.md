@@ -2140,3 +2140,13 @@ Memory::at remembers 4 mappings, rebuildHeightfield caches per tile (46 -> 11.6 
 gap fixed: the terrain renderer read a list field at a 50-sized offset (at N != 50 edge scrolling dropped render passes).
 After: 152 at 1920 x 1080 sim 17 / 19 / 26 ms, paint 120 / 88 / 121, peak 1.42 GB; at 2560 x 1351 dpi 120 sim 21.5 / 26.4 / 31.7,
 peak 1.62 GB; 50 got faster too (5.7 / 6.0 / 6.9 from 10.4 / 11.9 / 14.2). Segments x64 and Win32 205 / 205.
+
+## P38C: terrain generation at large sizes (2026-11-20; notes log/roadmap/P38/P38C_notes.md)
+A course at N != 50 comes from the real generator (play, N != 50 only; 50 byte-identical): scattered features (blobs, obstacles,
+location and difficulty objects, patches) grow with the area (same size, more of them), map-spanning ones (river band, west sea,
+island shape, location windows, desert falloff) with the side; the clubhouse window centred at N / 2; the owned square keeps
+50's share of the side (56-57 % at 50, 101 and 152). Relief noise: the period scaled (no octave added): at 152 hilly no column
+band repeats (24 before); the first 15 noise cells equal 50's, nothing new stored. Evidence: segments x64 and Win32 205 / 205;
+test_p38c_terrain 14 (all 16 locations at 101 and 152: borders, clubhouse on owned dry land, same seed same map, .sgw round
+trip); oracles terrain_gen 116, terrain 134 (3 pre-existing failures); controls 4 / 4 RED at 152, inert at 50; 19 app drives.
+Open: widest zoom at 152 ticks at 4-9 / s (default zoom unaffected); g_heightRelief not saved (as in the original).

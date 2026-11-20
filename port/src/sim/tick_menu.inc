@@ -388,10 +388,7 @@ int Session(u32 F, int sel) {
         GU8(GS(g_courseType)) = GU8((GS(g_courseTable) + 32) + (r + (menu_neg() == 3 ? 1 : 0)) * 46); // ML+0x5f5..ML+0x604 byte[g_courseTable+0x20 + result*46] (edx=r*23, *2)
         cc("loadWorldAssets");                             // ML+0x609 loadWorldAssets()
         if (want_n != WN) portsim::world_resize(ctx, want_n);   // P38B: the new sandbox course's world (after the course menu)
-        if (WN != portsim::kWorldOriginal)
-            portsim::generate_flat_course(ctx, G32(GS(g_courseIndex)));   // P38B: N > 50 starts flat (phase C: the generator)
-        else
-            cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result)
+        cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result) (P38C: at any N)
         if (ctx.dev_land_credits > 0) portsim::set_land_offer_credits(ctx, ctx.dev_land_credits);   // P38E development only
         cc("rebuildHeightfield");                             // ML+0x61d rebuildHeightfield()
         int f2 = G32(GS(g_flags));                   // ML+0x622

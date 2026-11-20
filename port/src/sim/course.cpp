@@ -801,10 +801,7 @@ void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
     const int32_t r = mode == 1 ? row + 1 : row;
     finance_other_note(ctx, r, gs.g_cash_div100, (state_arr(ctx, &GameState::g_financeYears) + r).field(&FinanceYear::other).get());
   }
-  if (world_n(ctx) != kWorldOriginal)
-    generate_flat_course(ctx, chosen);   // P38FE2: the next course of a career at N != 50 starts flat as the first did (P38B)
-  else
-    call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);
+  call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);   // P38C: at any N (P38FE2 made N != 50 flat until phase C)
   call_peer_or(ctx, "rebuildHeightfield", {}, true);
   gs.g_date = date;
   call_peer_or(ctx, "applyCourseType", {u32(int32_t(gs.g_courseType))}, true);
