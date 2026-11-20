@@ -103,6 +103,18 @@ inline int32_t world_cash(const Ctx &c, int32_t cash50) {
   const int64_t q = (v + 2304 * 5) / (2304 * 10);         // 2304 = 48^2
   return static_cast<int32_t>(q * 10);
 }
+// P38W: the same rule at a given N (a course record's own size on the world map): v * ((N - 2) / 48)^2 to the nearest 10 units
+inline int32_t world_amount_at(int32_t v50, int32_t n) {
+  if (n == kWorldOriginal) return v50;
+  const int64_t b = n - 2;
+  return static_cast<int32_t>((int64_t{v50} * b * b + 2304 * 5) / (2304 * 10) * 10);
+}
+// P38W: acres at N, the 50-size acres * (N / 50)^2 to the nearest acre: P38C's generator keeps 50's share of the side for the owned
+// square, so the owned land grows with N^2 (log/roadmap/P38/P38W_notes.md: within 3.4 % of 50's acres-to-owned-tiles ratio)
+inline int32_t world_acres_at(int32_t a50, int32_t n) {
+  if (n == kWorldOriginal) return a50;
+  return static_cast<int32_t>((int64_t{a50} * n * n + 1250) / 2500);
+}
 
 // ---- P38F: the small map (the F5 routing map and the TRACTS FOR SALE map: routing.cpp / buyland.cpp mapToScreen456b70)
 // At 50 the original's projection: x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - adj, tile diamonds of half sizes 6 x 3. At N != 50

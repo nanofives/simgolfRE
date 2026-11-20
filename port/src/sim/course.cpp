@@ -5,6 +5,7 @@
 #include "landoffer.h"   // P38FE2: finance_other_note
 #include "portsim/sim/world.h"
 #include "portsim/sim/course.h"
+#include "worldsizes.h"   // P38W
 
 #include <cmath>
 #include <cstring>
@@ -452,6 +453,7 @@ void seed_course_table(Ctx &ctx) {
     }
     fill(counter, id);
   }
+  seed_record_world_sizes(ctx);   // P38W (worldsizes.h): the records' world sizes (nothing at courseActionMenu.worldSizes = 1)
 }
 
 // ------------------------------------------------------------------------------------------------ scenario intro
@@ -801,6 +803,9 @@ void switch_to_course_chosen(Ctx &ctx, int32_t chosen) {
     const int32_t r = mode == 1 ? row + 1 : row;
     finance_other_note(ctx, r, gs.g_cash_div100, (state_arr(ctx, &GameState::g_financeYears) + r).field(&FinanceYear::other).get());
   }
+  // P38W (worldsizes.h): the next course starts at the world size of the record bought (the app's --world-size overrides it)
+  if (world_sizes_on() && ctx.world_request == 0 && record_world_n(ctx, chosen) != world_n(ctx))
+    world_resize(ctx, record_world_n(ctx, chosen));
   call_peer_or(ctx, "generateRandomCourse", {u32(chosen)}, true);   // P38C: at any N (P38FE2 made N != 50 flat until phase C)
   call_peer_or(ctx, "rebuildHeightfield", {}, true);
   gs.g_date = date;

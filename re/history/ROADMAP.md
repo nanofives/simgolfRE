@@ -2150,3 +2150,13 @@ band repeats (24 before); the first 15 noise cells equal 50's, nothing new store
 test_p38c_terrain 14 (all 16 locations at 101 and 152: borders, clubhouse on owned dry land, same seed same map, .sgw round
 trip); oracles terrain_gen 116, terrain 134 (3 pre-existing failures); controls 4 / 4 RED at 152, inert at 50; 19 app drives.
 Open: widest zoom at 152 ticks at 4-9 / s (default zoom unaffected); g_heightRelief not saved (as in the original).
+
+## P38W: the world map offers sizes per site (2026-11-20; notes log/roadmap/P38/P38W_notes.md)
+Mariano: "ofrecer en el mapa del mundo diversos tamaños por default con los nuevos tamaños incluidos"; his picks: fixed sizes per
+site, the career's next course takes the bought record's size, the sandbox too. Play switch courseActionMenu.worldSizes (0 in
+play): seedCourseTable makes records 0..7 size 50, 8..11 101, 12..15 152 (no extra draws), stored in record byte +0x29 (code 0 =
+50, else N = 3 code + 2; whole-image scan: the original never addresses +0x29..0x2b). Sized sites show their side as a badge;
+prices scale by ((N - 2) / 48)^2 (pins and the purchase check use it; sandbox keeps the 50 price), acres by (N / 50)^2 (measured
+against P38C's generated owned land: -3.5..+2.7 %). A new game and switchToCourse resize to the record's size before P38C's
+generator. `--world-size` overrides for tests. Evidence: segments x64 and Win32 205 / 205; test_p38w_world_sizes 9; 18 gates incl.
+oracles course_menu / saveload; drives 1920 x 1080 and 2560 x 1351 dpi 120, English and Spanish.

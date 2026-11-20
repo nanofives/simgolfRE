@@ -24,6 +24,7 @@
 #include "portsim/sim/text.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_reset
+#include "worldsizes.h"  // P38W
 
 namespace portsim {
 
@@ -1059,6 +1060,24 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
   return 0;
 }
 
+// ------------------------------------------------------------------------------------------------ P38W world sizes
+int g_defect_world_sizes = 1;   // courseActionMenu.worldSizes (worldsizes.h)
+
+int32_t record_world_n(Ctx &ctx, int32_t c) {
+  if (!world_sizes_on() || c < 0 || c > 16) return kWorldOriginal;
+  const uint32_t va = state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c) + kRecordWorldSize;
+  return world_n_of_code(ctx.mem.load<uint8_t>(va));
+}
+
+void seed_record_world_sizes(Ctx &ctx) {
+  if (!world_sizes_on()) return;
+  for (int32_t c = 0; c < 16; ++c) {   // records 0..7 Standard, 8..11 Large, 12..15 Huge (the dearer tiers: tierPrice)
+    const int32_t n = c >= 12 ? 152 : c >= 8 ? 101 : kWorldOriginal;
+    ctx.mem.store<uint8_t>(state_va(ctx, &GameState::g_courseTable) + 0x2Eu * static_cast<uint32_t>(c) + kRecordWorldSize,
+                           world_code_of_n(n));
+  }
+}
+
 // ------------------------------------------------------------------------------------------------ tierPrice
 // tierPrice (re/analysis/economy/0046f1d0): the price of a course tier 0..15 from a jump table, 500 for any other value (the
 // range test is unsigned, so negative tiers too); the original's v * 100 / 100 leaves these values unchanged.
@@ -1092,6 +1111,8 @@ void gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
 }
 constexpr uint32_t kBlack = 0x80000000u, kLabel = 0x80002108u;
+constexpr int32_t kBadgeX = 0x19, kBadgeY = 0x2C;   // P38W: the size badge, under the site icon's centre (+0x19, +0x19)
+constexpr uint32_t kBadge = 0x80007FFFu;          // P38W: white
 }  // namespace
 
 // The world map where the player picks, buys, saves or loads a course (re/analysis/ui/0046f550; c3fw.cpp's transcription).
@@ -1121,6 +1142,12 @@ int32_t course_action_menu(Ctx &ctx) {
   auto put_item = [&](int32_t v) {   // _itoa(v, number buffer, 10) appended to the text buffer
     vstrcat(ctx.mem, text, crt_itoa10(ctx, v, number_buf));
   };
+  // P38W (worldsizes.h; all three are the original's at courseActionMenu.worldSizes = 1 or for a 50 x 50 record): the record's
+  // acres and price at its world size, and the price the purchase tests and takes (the sandbox's stays the 50-size one: its cash
+  // is a placeholder the course start resets)
+  auto acres_of = [&](int32_t c) { return world_acres_at(rec_byte(ctx, c, 1), record_world_n(ctx, c)); };
+  auto price_of = [&](int32_t c) { return world_amount_at(tier_price(c), record_world_n(ctx, c)); };
+  auto cost_of = [&](int32_t c) { return (gs.g_flags & 0x1000000u) != 0 ? tier_price(c) : price_of(c); };
   // drawing (phase 5): the root surface, the three fonts, the frame's Surface array (8) and Image
   const uint32_t root = gs.f_stateptr_4c1570[0];
   const uint32_t f_large = state_va(ctx, &GameState::g_font51b360), f_small = state_va(ctx, &GameState::g_fontRef_519fd8),
@@ -1173,7 +1200,7 @@ int32_t course_action_menu(Ctx &ctx) {
       const bool open = rec_byte(ctx, c, 6) == 0xFF;
       {  // the site's plate: 1 when the price is within the cash, 0 when not or bought; the nearest plate is drawn wide (state
          // 2) when it can be bought, else the wide plate of its kind goes under the small one
-        int32_t st = (gs.g_cash_div100 >= tier_price(c) && open) ? 1 : 0;
+        int32_t st = (gs.g_cash_div100 >= cost_of(c) && open) ? 1 : 0;
         if (k == nearest) {
           if (st == 0) gx(ctx, "Image_draw", {plates + 0x58 + u32(kind) * 0xB0, root, u32(x), u32(y), 0});
           else st = 2;
@@ -1187,7 +1214,7 @@ int32_t course_action_menu(Ctx &ctx) {
       gx(ctx, "drawCenteredText", {text, u32(x + 0x68), u32(y + 0x10), kBlack});
       if (k == nearest && open) {
         vstrcpy(ctx.mem, text, p4e3fbc + 0xC);
-        put_item(rec_byte(ctx, c, 1));
+        put_item(acres_of(c));
         vstrcat(ctx.mem, text, p4e3fbc);
         const int32_t b1 = ctx.mem.load<int8_t>(d + 0x40);
         if (b1 == 0) vstrcat(ctx.mem, text, p4e3fa4);
@@ -1207,15 +1234,15 @@ int32_t course_action_menu(Ctx &ctx) {
         gx(ctx, "drawCenteredText", {text, u32(x + 0x6A), u32(y + 0x28), kLabel});
         ctx.mem.store<uint8_t>(text, 0);
         vstrcat(ctx.mem, text, p4e3f3c + 0xC);
-        peer(ctx, "appendNumber", {u32(mul32(tier_price(c), 100))});
+        peer(ctx, "appendNumber", {u32(mul32(price_of(c), 100))});
         vstrcat(ctx.mem, text, p4c4944);
         if ((gs.g_flags & 0x1000000u) == 0) gx(ctx, "drawCenteredText", {text, u32(x + 0x68), u32(y + 0x32), kLabel});
         ctx.mem.store<uint8_t>(text, 0);
       } else {
         ctx.mem.store<uint8_t>(text, 0);
-        put_item(rec_byte(ctx, c, 1));
+        put_item(acres_of(c));
         vstrcat(ctx.mem, text, p4e3f3c);
-        peer(ctx, "appendNumber", {u32(mul32(tier_price(c), 100))});
+        peer(ctx, "appendNumber", {u32(mul32(price_of(c), 100))});
         const uint8_t y6 = rec_byte(ctx, c, 6);
         if (y6 != 0xFF) {
           ctx.mem.store<uint8_t>(text, 0);
@@ -1231,7 +1258,7 @@ int32_t course_action_menu(Ctx &ctx) {
       gx(ctx, "text.box", {0});  // P24D
       {  // the map pin: 2 bought, 1 affordable, 0 not, 3 the nearest site while bit 3 of the blink counter is set; its arrow
          // quadrant (4..7) from the definition's point against (0xc8, 0x12c), drawn at the point and again at the plate's end
-        int32_t ms = gs.g_cash_div100 >= tier_price(c) ? 1 : 0;
+        int32_t ms = gs.g_cash_div100 >= cost_of(c) ? 1 : 0;
         if (!open) ms = 2;
         if (mod16 == k && (blink & 8) != 0) ms = 3;
         const int32_t dx = ctx.mem.load<int16_t>(d + 0x3A), dy = ctx.mem.load<int16_t>(d + 0x3C);
@@ -1247,6 +1274,13 @@ int32_t course_action_menu(Ctx &ctx) {
         const uint32_t e = u32(ms + v * 4);
         gx(ctx, "Surface_stretchBlit", {plates + e * 0x2C, masks + e * 0x2C, root, u32(px), u32(py), 0});
         gx(ctx, "Surface_stretchBlit", {plates + e * 0x2C, masks + e * 0x2C, root, u32(x + 0xA0), u32(y + 0xA), 0});
+      }
+      // P38W: the record's size on the site's icon (the small font, drawing only: the text buffer is written only for a backend)
+      if (const int32_t n = record_world_n(ctx, c); n != kWorldOriginal && g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+        gx(ctx, "setDrawTarget", {root, f_small, 0, 0, 0});
+        ctx.mem.store<uint8_t>(text, 0);
+        put_item(n);
+        gx(ctx, "drawCenteredText", {text, u32(x + kBadgeX), u32(y + kBadgeY), kBadge});
       }
     }
 
@@ -1347,7 +1381,7 @@ int32_t course_action_menu(Ctx &ctx) {
     vstrcpy(ctx.mem, text, p4e3e7c + 0x60);
     vstrcat(ctx.mem, text, p4e3e7c + 0x40);
     const int32_t cheat = gs.g_buildingUnlockLevel == 0x11 ? 1 : 0;
-    if (gs.g_cash_div100 < tier_price(c) && cheat == 0) {
+    if (gs.g_cash_div100 < cost_of(c) && cheat == 0) {
       peer(ctx, "drawWindow", {0xC8, 0xC8, 0x80006000u, u32(-2)});
       gx(ctx, "Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
       cm::pump_and_redraw(ctx, cheat, "courseActionMenu");
@@ -1357,7 +1391,7 @@ int32_t course_action_menu(Ctx &ctx) {
     vstrcat(ctx.mem, text, table + u32(mul32(c, 0x2E)));
     vstrcat(ctx.mem, text, p4c4e60);
     vstrcpy(ctx.mem, text, p4e3e7c + 0x14);
-    gs.g_cash_div100 = sub32(gs.g_cash_div100, tier_price(c));
+    gs.g_cash_div100 = sub32(gs.g_cash_div100, cost_of(c));
     gs.g_amenityUnlockMask |= 1u << ((u32(c) + (mode == 2 ? 1u : 0u)) & 31u);
     const int32_t sound = static_cast<int8_t>(rec_byte(ctx, c, 4));
     if (sound == 0) {
@@ -1577,6 +1611,15 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_saveload = {"saveload", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+// P38W: the module's play switch (re/port/play_profile.tsv)
+const DefectDef kDefects[] = {
+    {"courseActionMenu.worldSizes", "P38W",
+     "every course of the world map is 50 x 50; fixed: each course record carries a world size (records 0..7 50, 8..11 101, "
+     "12..15 152, in record byte +0x29, which the original never addresses), the map shows it with acres scaled by (N / 50)^2 "
+     "and price by ((N - 2) / 48)^2, and the new course and a career's next course start at it",
+     &g_defect_world_sizes},
+};
+extern const ModuleDef kModule_saveload = {"saveload", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                           sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

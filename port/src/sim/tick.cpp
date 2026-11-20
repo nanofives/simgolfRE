@@ -50,6 +50,7 @@
 #include "portsim/sim/terrain_gen.h"  // P38B: generate_flat_course (tick_menu.inc)
 #include "golfer_wait.h"  // P36B
 #include "landoffer.h"    // P38H (tick_frame.inc, the land popup)
+#include "worldsizes.h"   // P38W (tick_menu.inc, the new course)
 
 namespace portsim {
 extern int g_defect_corner_level_clamp;  // terrain_course.cpp (D21)

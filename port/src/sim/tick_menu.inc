@@ -363,7 +363,7 @@ int Session(u32 F, int sel) {
     G32((GS(g_rootInput) + 52)) = -1;                            // ML+0x559
     // P38B: the challenge / championship and the load paths play the original's 50 x 50 world; only a new sandbox course takes
     // the app's --world-size (ctx.world_request, play profile)
-    const int32_t want_n = (flags & 0x4000000) == 0 && G32(GS(g_difficulty)) != 6 && ctx.world_request != 0 ? ctx.world_request
+    int32_t want_n = (flags & 0x4000000) == 0 && G32(GS(g_difficulty)) != 6 && ctx.world_request != 0 ? ctx.world_request
                                                                                                           : portsim::kWorldOriginal;
     if (want_n != WN && (want_n == portsim::kWorldOriginal)) portsim::world_resize(ctx, want_n);
     if (flags & 0x4000000) {                        // ML+0x554 test eax,4000000; ML+0x563 je (the championship flag)
@@ -386,6 +386,9 @@ int Session(u32 F, int sel) {
         if (r == -1)                                // ML+0x5ef je ML+0x11875
             return sMenu;
         GU8(GS(g_courseType)) = GU8((GS(g_courseTable) + 32) + (r + (menu_neg() == 3 ? 1 : 0)) * 46); // ML+0x5f5..ML+0x604 byte[g_courseTable+0x20 + result*46] (edx=r*23, *2)
+        // P38W (worldsizes.h): the course starts at the world size of the record bought, unless the app's --world-size asked one
+        const bool sized_by_record = portsim::world_sizes_on() && ctx.world_request == 0;
+        if (sized_by_record) want_n = portsim::record_world_n(ctx, r);
         cc("loadWorldAssets");                             // ML+0x609 loadWorldAssets()
         if (want_n != WN) portsim::world_resize(ctx, want_n);   // P38B: the new sandbox course's world (after the course menu)
         cc("generateRandomCourse", G32(GS(g_courseIndex)));            // ML+0x615 generateRandomCourse(result) (P38C: at any N)
@@ -399,7 +402,8 @@ int Session(u32 F, int sel) {
             G32(GS(g_amenityUnlockMask)) = 0x3FFF;               // ML+0x64c
         }
         // P38FE2: at N != 50 the start cash (the career's 0x3e8 or the sandbox's 0x2710 above) scales with the world (world.h)
-        if (WN != portsim::kWorldOriginal) G32(GS(g_cash_div100)) = portsim::world_cash(ctx, G32(GS(g_cash_div100)));
+        if (WN != portsim::kWorldOriginal && !(sized_by_record && (f2 & 0x1000000) == 0))   // P38W: priced at its size already
+            G32(GS(g_cash_div100)) = portsim::world_cash(ctx, G32(GS(g_cash_div100)));
         GU16((GS(g_financeYears) + 14)) = static_cast<u16>(cash_word(G32(GS(g_cash_div100))));  // ML+0x656..ML+0x65d
         portsim::finance_other_note(ctx, 0, G32(GS(g_cash_div100)), G16(GS(g_financeYears) + 14));   // P38FE2 (switch at 0 only) (D23 switch) (mov dx,[g_cash_div100]; mov [g_financeYears+0xe],dx)
         return sFrame;                              // ML+0x664 falls into FramePreamble

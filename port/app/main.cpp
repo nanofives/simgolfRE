@@ -139,9 +139,10 @@
 //   P37A: --hole-advice on|off (default on; SG_APP_P37=off: off) the Hole Stats screen gets the hole advisor panel under its art:
 //   the magazine awards' progress, the score band, the skills and hole type, fun and complaints, variety, money (holeadvice.h,
 //   gfx.h gfx_set_hole_advice; drawing only; re/roadmap/P37_HOLE_ADVISOR.md)
-//   P38B: --world-size N (play profile only; default 50; N with (N - 2) % 3 == 0, 50 .. 254) a NEW sandbox course starts on an
-//   N x N world (a flat course until phase C: terrain_gen.h generate_flat_course); loads, challenges and championships stay 50
-//   (world.h world_resize; re/roadmap/P38_LARGE_MAPS.md phase B)
+//   P38B: --world-size N (play profile only; default 50; N with (N - 2) % 3 == 0, 50 .. 254) a NEW course of the main menu (career
+//   or sandbox) and a career's next course start on an N x N world, made by generateRandomCourse at N (P38C); loads, challenges and
+//   championships stay 50 (world.h world_resize; re/roadmap/P38_LARGE_MAPS.md phase B). P38W: without it each world map record's
+//   own size is used (worldsizes.h, play switch courseActionMenu.worldSizes); with it N overrides them (tests, development)
 //   P35D fix 2: --edge-backdrop on|off (default on; SG_APP_P35=off: off; the world layer) past the land's edge the course view shows
 //   a dark blue-grey backdrop, RGB555 (5, 6, 8), instead of black: the world layer's root is filled with it before its terrain
 //   passes, so the slid pictures, the last paint and the ground cache carry it too; screens without terrain keep their black
@@ -1038,6 +1039,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.landOfferOnce", 0},             // P38H: I.M.Picky's approval = 2 land credits, bought later from the routing map
     {"showBuyLandScreen.lotLabelLeftover", 0}, // P38H: the lot number at the lot's for-sale tile nearest its centre on the map
     {"showBuyLandScreen.financeOtherNarrow", 0}, // P38FE2: the finance report shows land purchases beyond 16 bits
+    {"courseActionMenu.worldSizes", 0},          // P38W: the world map's courses carry their sizes (50 / 101 / 152)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
