@@ -2226,3 +2226,4 @@ level, a vertical face drawn only when the camera is on its side (round 2: both 
 rotations 2 / 3); golfers skip the 0x2b complaint there; laying a path tile that is stairs costs x2 ($600 against $300 in the
 app; a terraform charges nothing extra). Evidence: segments x64 205 / 205; test_p39a_stairs 18, terrain_render 522, golfers 68,
 shots 41; controls RED; close-ups at 4 rotations and two zooms. Merged by hand with P39A1 (main.cpp kPlayProfile, play_profile.tsv).
+- Published 2026-11-20: P39A1 + P39A2 in 925e368f (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-925e368f.
