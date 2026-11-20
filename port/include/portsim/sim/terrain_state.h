@@ -172,6 +172,12 @@ void tile_set_path_flag_for_type(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int
 void tile_elevate_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner);
 void tile_lower_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner);
 void tile_lay_path(Ctx &ctx, uint32_t tile, bool on, int32_t dir);
+// P39B play switch layPath.underEveryType (registered in terrain_dll.cpp; 1 = the original). At 1 setPathFlagForType, layPath,
+// resetFaceTextures (tee / pot bunker) and enterType7 clear a tile's path-draw byte (+0x20a) on tee, green, fairway, firm fairway, sand, pot bunker and the large building
+// type (setPathFlagForType also on water and out of bounds), so a path there is not drawn. At 0 only tee and green tiles (and
+// water / out of bounds in setPathFlagForType, as before) clear it: the path is drawn on every other type and under buildings, and
+// stops at a tee's or green's edge (the neighbours' bands end at the shared edge). Drawing only: has_path / connected unchanged.
+extern int g_defect_path_under_every_type;
 void tile_set_wall(Ctx &ctx, uint32_t tile, int32_t side, int32_t height, uint8_t on);
 void terrain_set_view_angle(TerrainGlobals &g, float angle);
 void terrain_reset_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain);

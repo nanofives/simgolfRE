@@ -7,6 +7,7 @@
 #define PORTSIM_SIM_TERRAIN_H
 
 #include <cstdint>
+#include <vector>
 
 #include "portsim/registry.h"
 #include "portsim/sim/world.h"  // P38A: the grid widths (world_n, world_v)
@@ -51,6 +52,11 @@ uint32_t propagate_type11(Ctx &ctx, int32_t x, int32_t y);  // returns the origi
 // rebuildTileCoverage: clears flag bit 0x40 everywhere, flood-marks from the clubhouse footprint (placed object 0),
 // then recomputes bit 0x40 of every placed object's flags byte.
 void rebuild_tile_coverage(Ctx &ctx);
+// P39B (play switch layPath.underEveryType, terrain_dll.cpp): the texture-only flood. reach[x * N + y] = 1 for every tile the
+// clubhouse flood of rebuildTileCoverage would mark, except that it also spreads out of a tile whose type's walk byte is <= 0
+// (tee, green, fairway, firm fairway) when that tile carries a path (flag bit 1 << 5). Seeds, the spreading mask (bits 1 << 5 /
+// 1 << 10), the 4 orthogonal directions and the grid bound are floodMark's. Reads the course grids only; writes nothing else.
+void path_texture_reach(Ctx &ctx, std::vector<uint8_t> &reach, bool cross_paths = true);   // false: floodMark's spreading (negative control)
 // propagateMinTileLevel / raiseFromNeighbours: g_tileLevel[x][y] lowered (raised) to the lowest (highest) qualifying
 // orthogonal neighbour of the same type; 1 when it changed.
 int32_t relax_tile(Ctx &ctx, int32_t x, int32_t y);

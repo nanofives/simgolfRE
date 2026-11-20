@@ -49,6 +49,7 @@ namespace {
 //  20 layPath ignores its direction flag                           21 setViewAngle maps 90 to quadrant 2
 //  22 the exported resetTerrain does nothing
 //  23 (S3.10b) the object view's one-byte stores are dropped (judges that the replays run through the view)
+//  24 (P39B) at layPath.underEveryType = 0 a fairway (type 2) still clears the path-draw byte
 int32_t g_negctl = 0;
 
 // ---- the object view (roadmap S3.10b, U-1388) ----
@@ -908,9 +909,14 @@ void tile_blend_face_textures(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_
 
 void tile_reblend_neighbourhood(Ctx &ctx, TerrainGlobals &g, uint32_t tile) { reblend_neighbourhood(ctx, g, tile_p(ctx, tile)); }
 
+// P39B layPath.underEveryType at 0: the only types whose path-draw byte is cleared (tee 0, green 1)
+inline bool p39b_on() { return g_defect_path_under_every_type == 0; }
+inline bool p39b_clears(int32_t type) { return type == 0 || type == 1 || (type == 2 && g_negctl == 24); }
+
 void tile_reset_face_textures(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
   const TileP t = tile_p(ctx, tile);
-  if (t.field(&TerrainTile::has_path).get()) t.field(&TerrainTile::draw_path).set(0);
+  // P39B layPath.underEveryType at 0: only a tee (setTypeId's case 0) clears it here, a pot bunker (case 9) keeps the path drawn
+  if (t.field(&TerrainTile::has_path).get() && (!p39b_on() || p39b_clears(t_type(t)))) t.field(&TerrainTile::draw_path).set(0);
   const int32_t n = t.field(&TerrainTile::face_count).get();
   if (t_type(t) == 0) {
     for (int32_t i = 0; i < n; ++i) (t.field(&TerrainTile::face) + i).field(&TerrainFace::texture).set(tex_slot(g, 0, t_rot(t), 0));
@@ -1091,7 +1097,7 @@ void enter_type6(Ctx &ctx, TerrainGlobals &g, const TileP &t) {
   reblend_neighbourhood(ctx, g, t);
 }
 void enter_type7(Ctx &ctx, TerrainGlobals &g, const TileP &t) {
-  t.field(&TerrainTile::draw_path).set(0);
+  if (!p39b_on()) t.field(&TerrainTile::draw_path).set(0);   // P39B: at 0 sand keeps the path drawn
   type_walk(ctx, g, t, 7, -13.0f, -13.0f);
   dirty_neighbourhood(ctx, t, g_negctl == 18 ? -1 : 7);
   reblend_neighbourhood(ctx, g, t);
@@ -1100,7 +1106,8 @@ void set_path_flag_for_type(Ctx &ctx, TerrainGlobals &g, const TileP &t, int32_t
   if (t.field(&TerrainTile::has_path).get()) {
     const bool clear = type == 0x14 || type == 0x11 || (type == 0x16 && g_negctl != 15) || type == 0 || type == 2 || type == 1 ||
                        type == 3 || type == 7 || type == 9;
-    t.field(&TerrainTile::draw_path).set(clear ? 0 : 1);
+    const bool clear_p39b = type == 0x14 || type == 0x11 || p39b_clears(type);   // P39B: water and out of bounds as before
+    t.field(&TerrainTile::draw_path).set((p39b_on() ? clear_p39b : clear) ? 0 : 1);
   }
   reblend_neighbourhood(ctx, g, t);
 }
@@ -1150,7 +1157,7 @@ void tile_lay_path(Ctx &ctx, uint32_t tile, bool on, int32_t dir) {
     t.field(&TerrainTile::has_path).set(1);
     if (dir && g_negctl != 20) t.field(&TerrainTile::connected).set(1);
     const int32_t ty = t_type(ctx, tile);
-    const bool clear = ty == 0x16 || ty == 0 || ty == 2 || ty == 1 || ty == 3 || ty == 7 || ty == 9;
+    const bool clear = p39b_on() ? p39b_clears(ty) : (ty == 0x16 || ty == 0 || ty == 2 || ty == 1 || ty == 3 || ty == 7 || ty == 9);
     t.field(&TerrainTile::draw_path).set(clear ? 0 : 1);
   } else {
     t.field(&TerrainTile::has_path).set(0);

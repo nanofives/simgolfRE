@@ -2173,3 +2173,12 @@ owned land at the record's size matches the shown acres within about 4 % (coast 
 price = acres x $1,250 (only records 0 and 1 affordable at a career start); sandbox shows its real all-but-border figure. Records
 from older saves keep P38W pricing. Evidence: segments x64 and Win32 205 / 205; test_p38w_world_sizes 18, test_p38c_terrain +4;
 drives at 1920 x 1080 and 2560 x 1351 dpi 120, English and Spanish, one career course bought at each size.
+
+## P39B: paths under every element with the clubhouse look (2026-11-20; notes log/roadmap/P39/P39B_notes.md)
+Play switch layPath.underEveryType (0 in play): the path draws on every tile type except tee / green (it stops at their edge and
+resumes after; water and out of bounds keep the original rule, bridges are P39A); a 4th hiding site found by the test
+(resetFaceTextures) hides only on tees at 0. The paved texture 0x21 comes from a texture-only clubhouse flood that also crosses
+fairway / tee / green path tiles; TF_FLOOD_REACHED and income untouched; GameState byte-identical at 1 and 0. Evidence: segments
+x64 205 / 205; test_p39b_paths 6, test_terrain_state 501, test_terrain_render 522, test_terrain 75, test_profiles 21; controls
+2 / 2 RED; before / after at 1920 x 1080 and 2560 x 1351 dpi 120 on his save. test_terrain_live not judged (references lost
+2026-11-18). play_profile.tsv merged by hand (P38W2 had added its row).

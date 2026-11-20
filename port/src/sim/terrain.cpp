@@ -428,6 +428,34 @@ void rebuild_tile_coverage(Ctx &ctx) {
   }
 }
 
+void path_texture_reach(Ctx &ctx, std::vector<uint8_t> &reach, bool cross_paths) {
+  const int32_t N = world_n(ctx);
+  reach.assign(static_cast<size_t>(N) * static_cast<size_t>(N), 0);
+  const Ptr<PlacedObject> o0 = placed(ctx, 0);
+  const int32_t px = o0.field(&PlacedObject::x).get(), py = o0.field(&PlacedObject::y).get();  // the clubhouse's tile
+  const int32_t w = item_size(ctx, 15);
+  const Grid<uint16_t> fl = flags(ctx);
+  const uint16_t spread = (1u << 5) | (1u << 10);   // floodMark's neighbour mask (path, building footprint)
+  std::vector<std::pair<int32_t, int32_t>> todo;
+  for (int32_t row = px; row < add32(px, w); ++row)
+    for (int32_t col = py; col < add32(py, w); ++col)
+      if (on_grid(ctx, row, col) && (fl(row, col) & spread)) todo.emplace_back(row, col);
+  while (!todo.empty()) {
+    const auto [x, y] = todo.back();
+    todo.pop_back();
+    uint8_t &here = reach[static_cast<size_t>(x) * static_cast<size_t>(N) + static_cast<size_t>(y)];
+    if (here) continue;
+    here = 1;
+    if (walk_of(ctx, types(ctx)(x, y)) <= 0 && !(cross_paths && (fl(x, y) & (1u << 5)))) continue;   // floodMark stops; a path crosses
+    for (int32_t k = 0; k < 8; k += 2) {
+      const int32_t nx = add32(dir_dx(ctx, k), x), ny = add32(dir_dy(ctx, k), y);
+      if (!on_grid(ctx, nx, ny)) continue;
+      if ((fl(nx, ny) & spread) && !reach[static_cast<size_t>(nx) * static_cast<size_t>(N) + static_cast<size_t>(ny)])
+        todo.emplace_back(nx, ny);
+    }
+  }
+}
+
 int32_t relax_tile(Ctx &ctx, int32_t x, int32_t y) {
   int32_t lowered = 0;
   const Ptr<int8_t> here = levels(ctx).cell(x, y);

@@ -1040,6 +1040,7 @@ const ProfileMember kPlayProfile[] = {
     {"showBuyLandScreen.lotLabelLeftover", 0}, // P38H: the lot number at the lot's for-sale tile nearest its centre on the map
     {"showBuyLandScreen.financeOtherNarrow", 0}, // P38FE2: the finance report shows land purchases beyond 16 bits
     {"courseActionMenu.worldSizes", 0},          // P38W: the world map's courses carry their sizes (50 / 101 / 152)
+    {"layPath.underEveryType", 0},               // P39B: paths drawn under every element but tees / greens, paved from the clubhouse
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
@@ -1878,6 +1879,11 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
         const int k = portsim::defect_find(sw);
         if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
       }
+    // development (P39B's drives): SG_P39B_PATHS=0 puts layPath.underEveryType back to the original's 1 for this run (before / after)
+    if (std::getenv("SG_P39B_PATHS") && std::atoi(std::getenv("SG_P39B_PATHS")) == 0) {
+      const int k = portsim::defect_find("layPath.underEveryType");
+      if (k >= 0) *portsim::defect_at(k, nullptr)->flag = 1;
+    }
     // development (P38E's drives): SG_P38E_CASHKEY=1 gives back the original's '+' cash key (mainLoop.hiddenCheatKeys = 1)
     if (std::getenv("SG_P38E_CASHKEY") && std::atoi(std::getenv("SG_P38E_CASHKEY")) == 1) {
       const int k = portsim::defect_find("mainLoop.hiddenCheatKeys");

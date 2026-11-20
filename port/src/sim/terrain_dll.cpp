@@ -4,12 +4,14 @@
 // reading reference); no original address or code. applyTileVariation and applyTileWalls (backend-gfx rows that no
 // stage-B child owns) are ported here because rebuildTileData calls them.
 #include <map>
+#include <vector>
 
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_live.h"
+#include "portsim/sim/terrain_state.h"  // P39B: g_defect_path_under_every_type
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
@@ -19,7 +21,7 @@ namespace portsim {
 namespace {
 // Negative controls: mode 0 is the correct body.
 //   applyCourseType      1 = walkable types get collar group 3 instead of 4
-//   togglePath           1 = the connected-path re-path sweep skipped
+//   togglePath           1 = the connected-path re-path sweep skipped, 2 = (P39B) the texture flood does not cross path tiles
 //   rebuildTerrainGrid   1 = corners raised one step short
 //   applyTileElevation   1 = lowering always through lowerCorner (no blocked-neighbour test)
 //   initTerrain          1 = the version flag never set
@@ -68,6 +70,36 @@ Ptr<uint8_t> need_path_render(Ctx &c) { return state_arr(c, &GameState::g_terrai
 uint8_t flag_lo(Ctx &c, int32_t x, int32_t y) {
   return (grid_arr(c, &GameState::g_tileFlags) + tile_index(c, x, y)).as<uint8_t>().get();
 }
+
+// P39B layPath.underEveryType (play switch, 1 = the original; the Terrain-state half is in terrain_state.cpp). The flag-0x40 argument
+// of layPath / updatePath picks a path tile's texture (0x21 paved where set, 0x20 otherwise: Tile::drawPaths). The original hands it
+// TF_FLOOD_REACHED (bit 1 << 6, rebuildTileCoverage's clubhouse flood), which stops at every tee / green / fairway / firm fairway
+// tile (walk byte <= 0), so a path past a fairway takes the dirt texture. At 0 the Terrain is handed bit 1 << 6 when TF_FLOOD_REACHED
+// is set OR the texture-only flood path_texture_reach (terrain.h; it crosses path tiles of those types) reaches the tile. The flag
+// word itself, which decides which buildings are joined to the clubhouse (income), is never written. The flood is computed once per
+// outer call (rebuildTileData, rebuildTerrainGrid, togglePath) from the grids as they are at that moment.
+thread_local const std::vector<uint8_t> *t_path_reach = nullptr;
+struct PathReachScope {
+  std::vector<uint8_t> reach;
+  bool owner = false;
+  explicit PathReachScope(Ctx &ctx) {
+    if (SG_DEFECT(g_defect_path_under_every_type) || t_path_reach) return;
+    path_texture_reach(ctx, reach, SG_NEGCTL(g_negctl_toggle_path) != 2);
+    t_path_reach = &reach;
+    owner = true;
+  }
+  ~PathReachScope() {
+    if (owner) t_path_reach = nullptr;
+  }
+  PathReachScope(const PathReachScope &) = delete;
+  PathReachScope &operator=(const PathReachScope &) = delete;
+};
+// the texture argument for tile (x, y): flag bit 1 << 6, or (switch at 0) the texture flood's answer as that bit
+int32_t path_tex(Ctx &c, int32_t x, int32_t y) {
+  const int32_t f = flag_lo(c, x, y) & (1 << 6);
+  if (f || !t_path_reach || x < 0 || y < 0 || x >= world_n(c) || y >= world_n(c)) return f;
+  return (*t_path_reach)[static_cast<size_t>(x) * static_cast<size_t>(world_n(c)) + static_cast<size_t>(y)] ? (1 << 6) : 0;
+}
 // the collar table passCollarInfo receives (applyCourseType, initTerrain): each type's collar group, 4 for every walkable
 // type other than 5 and 7 when the course type is 1
 void collar_table(Ctx &ctx, int32_t table[23], bool wrong) {
@@ -95,6 +127,7 @@ bool has_terrain_api(Ctx &ctx) { return apis().count(&ctx) != 0; }
 // the ball, golfers, walkers, the hover text and saves see what the original sees). RENDER-ONLY: only the type value passed to
 // Terrain::setType, and the compare against the Terrain tile's type before it, change.
 int g_defect_marina_anchor_land = 1;
+int g_defect_path_under_every_type = 1;   // P39B layPath.underEveryType (terrain_state.h; path_tex above)
 int32_t terrain_tile_type(Ctx &ctx, int32_t x, int32_t y) { return terrain_draw_type(ctx, x, y, tile_type(ctx, x, y)); }
 int32_t terrain_draw_type(Ctx &ctx, int32_t x, int32_t y, int32_t t) {
   if (SG_DEFECT(g_defect_marina_anchor_land) || t != 0x16) return t;
@@ -124,7 +157,7 @@ void update_all_paths(Ctx &ctx) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   for (int32_t xx = 0; xx < world_n(ctx); ++xx)
     for (int32_t yy = 0; yy < world_n(ctx); ++yy)
-      if (tile_flag20(ctx, xx, yy) != 0) api().update_path(terrain_self(ctx), xx, yy, flag_lo(ctx, xx, yy) & 0x40);
+      if (tile_flag20(ctx, xx, yy) != 0) api().update_path(terrain_self(ctx), xx, yy, path_tex(ctx, xx, yy));  // P39B: flag_lo & 0x40 at 1
   need_path_render(ctx).set(1);
 }
 }  // namespace
@@ -132,10 +165,11 @@ void update_all_paths(Ctx &ctx) {
 int32_t toggle_path(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   const uint32_t self = terrain_self(ctx);
+  const PathReachScope reach(ctx);   // P39B: nothing at layPath.underEveryType = 1
   if (tile_flag20(ctx, x, y) != 0) {
     if (!(api().has_path(self, tile) & 0xFF)) {
-      if (flag_lo(ctx, x, y) & 0x40) update_all_paths(ctx);
-      const int32_t b40 = flag_lo(ctx, x, y) & 0x40;
+      if (path_tex(ctx, x, y)) update_all_paths(ctx);   // P39B: flag_lo & 0x40 at 1
+      const int32_t b40 = path_tex(ctx, x, y);
       const int32_t f = tile_flag20(ctx, x, y);
       return i32((api().lay_path(self, tile, f, b40) & ~0xFFu) | 1u);
     }
@@ -145,7 +179,7 @@ int32_t toggle_path(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
   const uint32_t hp = api().has_path(self, tile);
   if (!(hp & 0xFF)) return i32(hp & ~0xFFu);
   if ((api().has_connected_path(self, x, y) & 0xFF) && SG_NEGCTL(g_negctl_toggle_path) != 1) update_all_paths(ctx);
-  const int32_t b40 = flag_lo(ctx, x, y) & 0x40;
+  const int32_t b40 = path_tex(ctx, x, y);   // P39B: flag_lo & 0x40 at 1
   const int32_t f2 = tile_flag20(ctx, x, y);
   return i32((api().lay_path(self, tile, f2, b40) & ~0xFFu) | 1u);
 }
@@ -153,6 +187,7 @@ int32_t toggle_path(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
 int32_t rebuild_terrain_grid(Ctx &ctx) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   const uint32_t self = terrain_self(ctx);
+  const PathReachScope reach(ctx);   // P39B: nothing at layPath.underEveryType = 1
   for (int32_t x = world_last(ctx); x >= 0; --x) {
     api().pump_input();
     for (int32_t y = world_last(ctx); y >= 0; --y) {
@@ -194,7 +229,7 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
       r = tile_flag20(ctx, x, y);
       if (!r) continue;
       const uint32_t tile = tile_at_va(ctx, x, y);
-      const int32_t f40 = flag_lo(ctx, x, y) & 0x40;
+      const int32_t f40 = path_tex(ctx, x, y);   // P39B: flag_lo & 0x40 at 1
       const int32_t f20 = tile_flag20(ctx, x, y);
       r = i32(api().lay_path(self, tile, f20, f40));
     }
@@ -340,6 +375,7 @@ void rebuild_tile_data(Ctx &ctx, int32_t x0, int32_t y0) { rebuild_tile_data_imp
 
 namespace {
 void rebuild_tile_data_impl(Ctx &ctx, int32_t x0, int32_t y0, bool whole) {
+  const PathReachScope reach(ctx);   // P39B: one texture flood for every togglePath of the pass (nothing at the switch's 1)
   // P11A: zoom 8 (mainLoop.zoomInStopsAt4 = 0, the only way it arrives) takes zoom 4's 13: 4 / 8 = 0 would start at the camera's
   // own row and column and leave the tiles above and left of it out
   const int32_t zq = ctx.gs().g_zoomScale > 4 ? 4 : ctx.gs().g_zoomScale;
@@ -561,6 +597,12 @@ const DefectDef kDefects[] = {
      "Terrain draws as grass under the pier; fixed: the Terrain is handed water for that tile (render-only, the course grids "
      "keep the building type)",
      &g_defect_marina_anchor_land},
+    {"layPath.underEveryType", "P39B",
+     "a path is not drawn on tee, green, fairway, firm fairway, sand, pot bunker and large-building tiles, and the paved texture "
+     "of a path joined to the clubhouse stops at the first tee / green / fairway tile it crosses; fixed: the path is drawn on "
+     "every type except tee and green (it stops at their edge) and the paved texture follows the path across them (drawing "
+     "only: the flood that joins buildings to the clubhouse is unchanged)",
+     &g_defect_path_under_every_type},
 };
 }  // namespace
 
