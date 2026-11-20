@@ -452,6 +452,7 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
       const int32_t v = rng_range(ctx, r == 5 ? (mode == 1 ? 5 : 4) : r == 6 ? 7 : 8);
       gs.g_panelState[4] = v;
       gs.g_panelState[0] = v;
+      if (r == 9 && crossings_on()) crossings_set_style(ctx, v);   // P39A1: the two-tile item builds the style last shown
       return v;
     }
     case 7:
@@ -473,6 +474,7 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
     const int32_t sel = gs.g_panelState[0];
     if (sel != -1 || m == 4) {
       gs.g_panelState[4] = sel;
+      if (m == 0x13 && sel >= 0 && sel < kBridgeStyles && crossings_on()) crossings_set_style(ctx, sel);   // P39A1
       return sel;
     }
   }

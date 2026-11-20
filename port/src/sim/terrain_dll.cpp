@@ -15,6 +15,7 @@
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/perf.h"  // P38G: p38g_off (development A/B)
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
+#include "crossings.h"  // P39A1: no path band under a two-tile bridge's stream tile
 
 namespace portsim {
 
@@ -152,12 +153,19 @@ int32_t apply_course_type(Ctx &ctx, int32_t arg) {
 }
 
 namespace {
+// P39A1 (play switch scenicBridge.twoTile = 0): a stream tile (0x0a) under a two-tile bridge keeps its path bit for the walkers and
+// the game, but Terrain lays no path band there (the deck is drawn over it); every other tile reads tileFlag20 as before
+int32_t laid_flag20(Ctx &ctx, int32_t x, int32_t y) {
+  const int32_t f = tile_flag20(ctx, x, y);
+  if (f == 0 || !crossings_on() || tile_type(ctx, x, y) != 0x0A || crossing_at(ctx, x, y) < 0) return f;
+  return 0;
+}
 // every tile with tileFlag20 is re-pathed, then the path-render byte is set
 void update_all_paths(Ctx &ctx) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   for (int32_t xx = 0; xx < world_n(ctx); ++xx)
     for (int32_t yy = 0; yy < world_n(ctx); ++yy)
-      if (tile_flag20(ctx, xx, yy) != 0) api().update_path(terrain_self(ctx), xx, yy, path_tex(ctx, xx, yy));  // P39B: flag_lo & 0x40 at 1
+      if (laid_flag20(ctx, xx, yy) != 0) api().update_path(terrain_self(ctx), xx, yy, path_tex(ctx, xx, yy));  // P39B: flag_lo & 0x40 at 1
   need_path_render(ctx).set(1);
 }
 }  // namespace
@@ -166,21 +174,21 @@ int32_t toggle_path(Ctx &ctx, uint32_t tile, int32_t x, int32_t y) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   const uint32_t self = terrain_self(ctx);
   const PathReachScope reach(ctx);   // P39B: nothing at layPath.underEveryType = 1
-  if (tile_flag20(ctx, x, y) != 0) {
+  if (laid_flag20(ctx, x, y) != 0) {
     if (!(api().has_path(self, tile) & 0xFF)) {
       if (path_tex(ctx, x, y)) update_all_paths(ctx);   // P39B: flag_lo & 0x40 at 1
       const int32_t b40 = path_tex(ctx, x, y);
-      const int32_t f = tile_flag20(ctx, x, y);
+      const int32_t f = laid_flag20(ctx, x, y);
       return i32((api().lay_path(self, tile, f, b40) & ~0xFFu) | 1u);
     }
   }
-  const int32_t f = tile_flag20(ctx, x, y);
+  const int32_t f = laid_flag20(ctx, x, y);
   if (f != 0) return i32(u32(f) & ~0xFFu);
   const uint32_t hp = api().has_path(self, tile);
   if (!(hp & 0xFF)) return i32(hp & ~0xFFu);
   if ((api().has_connected_path(self, x, y) & 0xFF) && SG_NEGCTL(g_negctl_toggle_path) != 1) update_all_paths(ctx);
   const int32_t b40 = path_tex(ctx, x, y);   // P39B: flag_lo & 0x40 at 1
-  const int32_t f2 = tile_flag20(ctx, x, y);
+  const int32_t f2 = laid_flag20(ctx, x, y);
   return i32((api().lay_path(self, tile, f2, b40) & ~0xFFu) | 1u);
 }
 
@@ -226,11 +234,11 @@ int32_t rebuild_terrain_grid(Ctx &ctx) {
   int32_t r = 0;
   for (int32_t x = world_last(ctx); x >= 0; --x)
     for (int32_t y = world_last(ctx); y >= 0; --y) {
-      r = tile_flag20(ctx, x, y);
+      r = laid_flag20(ctx, x, y);
       if (!r) continue;
       const uint32_t tile = tile_at_va(ctx, x, y);
       const int32_t f40 = path_tex(ctx, x, y);   // P39B: flag_lo & 0x40 at 1
-      const int32_t f20 = tile_flag20(ctx, x, y);
+      const int32_t f20 = laid_flag20(ctx, x, y);
       r = i32(api().lay_path(self, tile, f20, f40));
     }
   return r;

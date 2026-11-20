@@ -52,6 +52,7 @@
 #include "landoffer.h"    // P38H (tick_frame.inc, the land popup)
 #include "portsim/sim/greenline.h"  // P39C (tick_frame.inc P1_flag80 / P39C_GreenOutline: the green outline while aiming)
 #include "worldsizes.h"   // P38W (tick_menu.inc, the new course)
+#include "crossings.h"    // P39A1 (tick_frame.inc: the two-tile bridge's build, redo, preview and art)
 
 namespace portsim {
 extern int g_defect_corner_level_clamp;  // terrain_course.cpp (D21)

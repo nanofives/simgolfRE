@@ -11,6 +11,7 @@
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_reset
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
+#include "crossings.h"  // P39A1: crossings_clear
 
 namespace portsim {
 
@@ -84,6 +85,7 @@ int32_t build_golfer_bio_text(Ctx &ctx) {
   fill_dwords(ctx, grid_va(ctx, &GameState::g_tileBuildCode), grid_dwords(ctx, 1), 0xFFFFFFFFu);
   grid_fill_tail(ctx, grid_va(ctx, &GameState::g_tileBuildCode), 1, 0xFFFFFFFFu);  // P38B: odd N
   course_undo_reset(ctx);  // P11D: a new course, no edit to undo (mainLoop.courseUndo = 0 only)
+  crossings_clear(ctx);    // P39A1: a new course has no two-tile bridge
   fill_dwords(ctx, va(&GameState::g_bestRounds), 0xA, 0);
   fill_dwords(ctx, va(&GameState::g_holePoints), 0x72, 0xFFFFFFFFu);
   ctx.mem.store<uint16_t>(va(&GameState::g_skillMaskBlock) + 8, 0);

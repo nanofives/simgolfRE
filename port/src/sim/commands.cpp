@@ -22,6 +22,7 @@
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_press
 #include "landoffer.h"   // P38FE2: finance_other_add / finance_other_shown
+#include "crossings.h"   // P39A1: the bridge row's two-tile item (commands_layout.inc, commands_panels.inc)
 
 namespace portsim {
 

@@ -59,6 +59,7 @@
 #include "portsim/sim/lang.h"  // P26B item 3: lang::tr
 #include "golfer_wait.h"  // P36B part 2
 #include "holeadvice.h"   // P37A
+#include "crossings.h"    // P39A1: the bridge row's two-tile item
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/util.h"
@@ -1560,8 +1561,17 @@ int32_t amenity_row(Gfx &g, Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_
     }
     int32_t a8 = add32(i, p5);
     if (p11 & (1u << (static_cast<uint32_t>(i) & 31u))) a8 |= 0x400;
-    const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(id)), p6, a8};
-    gfxs::add_sprite(g, ctx, v);
+    if (p2 == 0x226 && i == kBridgeStyles) {
+      // P39A1: the two-tile item: the current style's bridge twice, at a smaller scale, one tile apart along a screen axis
+      const int32_t c2 = static_cast<int32_t>(cm::call_peer(ctx, "cellAt", {static_cast<uint32_t>(0x226 + (crossings_style(ctx) & 7)), 0, 1}).eax);
+      const int32_t v1[8] = {sub32(px, 6), add32(py, 4), 0, p9, p9, c2, 3, a8};
+      const int32_t v2[8] = {add32(px, 6), sub32(py, 4), 0, p9, p9, c2, 3, a8};
+      gfxs::add_sprite(g, ctx, v1);
+      gfxs::add_sprite(g, ctx, v2);
+    } else {
+      const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(id)), p6, a8};
+      gfxs::add_sprite(g, ctx, v);
+    }
     // P25B: a bridge's art covers its whole tile (the bridges row, p2 0x226), so the hovered bridge itself takes the picked cell's blue, lightened
     if (lit_hover && p2 == 0x226) draw_scaled_blend(g, ctx, picked_cell, kRowHoverBridge, kRowHoverBridgeLift, "drawAmenityRow.hover");
     if (p2 == 0x1a9) {
@@ -1627,6 +1637,10 @@ void amenities_panel(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
   else if (M == 4 && mask != 0) {   // roadmap S3.7: the hovered row's two drawPanelBackdrop lines
     const int32_t row = amenity_row(g, ctx, 0, 0x168, 0xe, 1, 0x64, -4, a, b, -1, mask, 0);
     if (row != -1) gfxt::amenities_row_tip(g, ctx, row, a, b);
+  }
+  else if (M == 0x13 && crossings_on()) {   // P39A1: the row with the two-tile item, and its name over the hovered item
+    const int32_t row = amenity_row(g, ctx, -0x10, 0x226, kBridgeStyles + 1, 1, 0xa9, 4, a, b, 0x28, 0, 0);
+    if (row == kBridgeStyles) gfxt::two_tile_bridge_tip(g, ctx, a, b);
   }
   else if (M == 0x13) amenity_row(g, ctx, -0x10, 0x226, 8, 1, 0xa9, 4, a, b, 0x28, 0, 0);
   else if (M == 2) amenity_row(g, ctx, 0xd, 0x1a3, 5, 0, 0x2d, -6, a, b, 0x28, 0, 0);

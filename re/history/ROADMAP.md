@@ -2209,3 +2209,12 @@ P39C outline stops blinking and widens while snapped). Evidence: segments x64 20
 test_shots, test_golfers_p36b, test_defects_p28 / p6a, test_p39c; a GIF and stills of the aim sweep. play_profile.tsv merged by
 hand (P38W3's row kept).
 - Published 2026-11-20: P39D in 16e2fc22 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-16e2fc22.
+
+## P39A1: the two-tile scenic bridge (2026-11-20; notes log/roadmap/P39/P39A1_notes.md)
+Play switch scenicBridge.twoTile (0 in play): a ninth item in the bridge row builds a pair of water or stream tiles with land at
+both ends (Tab turns the axis), cost 2 x the one-tile price ($20,000); water tiles get the original's 0x120 | style, stream tiles
+the path bit; drawn as one scenic frame at 2x over both tiles (sorted at the back tile; chosen over one frame per tile from
+screenshots at all 4 rotations), a stream pair hides the Terrain path band. New module crossings (Ctx::crossings) with a sidecar
+<save>.sgx written / read with .sve and .sgw (browser delete removes it; stale entries dropped; the .sve unchanged). Bulldozer on
+either tile removes the pair (+$20,000); undo / redo. Evidence: segments x64 205 / 205; test_p39a_bridges 11 (controls RED);
+save / load tests; drives in English and Spanish (build, Tab, bulldozer, undo / redo, save reloaded with 4 pairs).

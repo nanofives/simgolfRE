@@ -15,6 +15,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
+#include "crossings.h"  // P39A1: t_crossings_in_undo
 
 namespace portsim {
 
@@ -316,7 +317,9 @@ void course_undo(Ctx &ctx) {
       refused = true;
       continue;
     }
+    t_crossings_in_undo = true;   // P39A1: each tile of a two-tile bridge has its own entry (no cascade to the other)
     call_peer(ctx, "demolishObject", {u32(e.x), u32(e.y), 0});
+    t_crossings_in_undo = false;
     const int32_t i = tile_index(ctx, e.x, e.y);
     grid_ref(ctx, &GameState::g_tileBuildCode, i) = e.code_old;
     grid_ref(ctx, &GameState::g_tileRefund, i) = e.refund_old;

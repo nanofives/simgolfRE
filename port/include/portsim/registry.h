@@ -105,6 +105,8 @@ class Ctx {
   std::shared_ptr<void> lowio;
   // P8B: the view block's host memory (bridge.h view_map; empty until mapped)
   std::shared_ptr<void> view;
+  // P39A1: the course's two-tile bridges (crossings.cpp State; empty until the first use)
+  std::shared_ptr<void> crossings;
   // P38A: the world's tiles a side (portsim/sim/world.h; the original's 50)
   int32_t world_n = 50;
   // P38B: the side storage of N != 50 (world.h world_resize): grid g's element 0 sits at clusters[k].va + (offset of g in the

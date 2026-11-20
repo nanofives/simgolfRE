@@ -1943,6 +1943,15 @@ void amenities_row_tip(Gfx &g, Ctx &ctx, int32_t r, int32_t a, int32_t b) {
   backdrop(g, ctx, pool(ctx, GSO(f_strpool_4c80d0, kTitle[r & 3])), a, sub32(b, 2));
 }
 
+// P39A1 (play switch scenicBridge.twoTile = 0): the bridge row's two-tile item, hovered: its name (port text, translated) and its
+// price as amenities_row_tip writes a landmark's (the name, the pool text 0x2c of f_strpool_4c528c, the dollars): twice the one-tile
+// bridge's word f_tab_buildItems_4c26b0 + 0x12 of tool 0x13, in hundreds of dollars like g_cash_div100
+void two_tile_bridge_tip(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
+  const int32_t each = ctx.mem.load<int16_t>(state_va(ctx, &GameState::f_tab_buildItems_4c26b0) + 0x12u + 20u * 0x13u);
+  const std::string text = lang::tr("Two-tile Scenic Bridge") + pool(ctx, GSO(f_strpool_4c528c, 0x2c)) + std::to_string(mul32(mul32(each, 2), 100));
+  backdrop(g, ctx, text, a, sub32(b, 0xc));
+}
+
 // drawStringRightAt(this, text, x, y, len) (c3df.cpp DrawString_re): a NULL text, no base font or n = min(strlen, len) <= 0
 // draws nothing; drawRichText(text, x - drawMarkupRun(text, n), y, n) in the target's state-0 colours (Widget_setQuad).
 // Roadmap S3.13: the only drawStringRightAt body (the results family's, S2.11, measured the run with the provider's plain

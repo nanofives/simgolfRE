@@ -24,6 +24,7 @@
 #include "portsim/sim/text.h"
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_reset
+#include "crossings.h"  // P39A1: the two-tile bridges' sidecar
 #include "worldsizes.h"  // P38W
 
 namespace portsim {
@@ -400,6 +401,7 @@ int32_t save_game(Ctx &ctx, uint32_t name) {
   if (mode == 4 && f.data.size() > 0x1000) f.data[0x1000] ^= 1;   // a body byte of the file only (the state is untouched)
   const int32_t r = f.close(ctx);
   if (r == 0) drop_other_kind(ctx, path, world);  // P38D: one file per name
+  if (r == 0) crossings_after_save(ctx, path);   // P39A1: the two-tile bridges' sidecar (play switch scenicBridge.twoTile = 0)
   return r;
 }
 
@@ -456,6 +458,8 @@ int32_t load_game(Ctx &ctx, uint32_t name, int32_t finish, int32_t header_only, 
   }
   f.close(ctx);
   course_undo_reset(ctx);  // P11D: the loaded course's tiles are not the journal's (mainLoop.courseUndo = 0 only)
+  if (championship == 0) crossings_after_load(ctx, path);   // P39A1: the sidecar of `<name>` (.sve or world file alike)
+  else crossings_clear(ctx);
   gs.g_flags = (((gs.g_flags & 0xFFFFFFF3u) | (mode == 1 ? 0u : (flags0 & 4u))) | (mode == 2 ? 0u : 0x40000000u));
   if (!SG_DEFECT(g_defect_cheat_mark_kept)) gs.g_flags &= ~(1u << 29);  // P35E item 10: the file's cash mark is not kept
   gs.g_panelListMode = 0;
@@ -501,6 +505,7 @@ int32_t load_course(Ctx &ctx, int32_t mode) {
   if (world_n(ctx) != kWorldOriginal) world_resize(ctx, kWorldOriginal);  // P38B: a course file holds the 50 x 50 world
   deserialize_course(ctx, f, 1);
   course_undo_reset(ctx);  // P11D (mainLoop.courseUndo = 0 only)
+  crossings_clear(ctx);    // P39A1: a course file keeps no two-tile bridges
   // eight trailing bytes are read over the frame's path slot and the position asked (_tell): no state
   f.pos = std::min(f.pos + 8, f.data.size());
   int32_t r = f.close(ctx);
@@ -999,6 +1004,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       vstrcat(ctx.mem, text, victim);
       if (mode == 7) vstrcpy(ctx.mem, text, name_at(ctx, add32(sel, 1)));
       ctx.files().remove(read_str(ctx.mem, text));
+      if (championship == 0) crossings_after_delete(ctx, read_str(ctx.mem, text));   // P39A1: its sidecar goes with it
       continue;
     }
 

@@ -1048,6 +1048,7 @@ const ProfileMember kPlayProfile[] = {
     {"showBuyLandScreen.lotPricePerTile", 0},    // P38W3: TRACTS FOR SALE lots at $1,250 an acre (the world map's scale)
     {"layPath.underEveryType", 0},               // P39B: paths drawn under every element but tees / greens, paved from the clubhouse
     {"mainLoop.aimHalfTileLattice", 0},          // P39D: free shot aiming (the shot flies to the point under the cursor), snap to the cup
+    {"scenicBridge.twoTile", 0},                 // P39A1: the bridge row's two-tile scenic bridge over water and streams
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control
