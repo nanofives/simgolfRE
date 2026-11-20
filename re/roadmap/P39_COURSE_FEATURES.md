@@ -64,3 +64,20 @@ he wants to aim putts too; bridges over streams too, and the cost.
   a slope is too steep, stairs. Needs its own survey (path over slopes, the steep-slope thoughts 0xa / 0x2b, height limits, art
   for stairs: none known) before its design.
 Order: P39B and P39C in parallel now, then P39D, then the P39A survey and design.
+
+## P39A survey (2026-11-20): bridges over water, streams and height gaps, stairs
+- Heights: g_cornerLevel (N+1)^2 bytes, levels 3..15 (18 in play), one level = 16 / 1024 of a tile. Neighbours share vertices, so
+  real cliffs exist only at flattened types (water, pot bunker lowered; tees, buildings raised: the retaining wall art).
+  The path tool never tests height; paths drape over the mesh; walking has no height term; cliffs are walkable.
+- "Must I walk up this steep slope?" (0x2b, mood -2): an orthogonal step rising 3+ levels on the golfer's half tile; paths do
+  not exempt it. 0x0a ("Must I walk through ...") is about the terrain type, not slope.
+- Streams (type 0x0a, "ravine") are not lowered; a path over one draws as a plain band; the scenic bridge refuses them only by
+  its type test (== 0x11).
+- Art: every bridge flic is one tile wide (SCENICgen03..10, the per-theme boardwalk set, DESBridgeScenic loaded but unused);
+  no stairs / steps / ramp art exists: stairs are composed in the 3D renderer (path-texture treads + retaining-wall risers).
+- Design: (a) two-tile scenic bridge on water / stream, pair in a port side table, drawn before P1_flag20's neighbour test;
+  (b1) stairs COMPUTED from heights (a path tile rising 3+ levels along its path axis), no save change, golfers skip 0x2b on
+  stairs; (b2) gap bridges built by the path tool across 1-2 tiles at least 3 levels below both banks, deck at bank height
+  (walkers drawn at the deck), side table entry; wider gaps: stairs down and up. Storage: a sidecar file next to the .sve (the
+  original then shows a boardwalk / plain path) or a .sgw section (version 2). New module crossings.cpp (bridge.cpp is taken).
+- Sizes: (a) M (L with per-rotation tuning), (b1) M, (b2) L, storage S-M.
