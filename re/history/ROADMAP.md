@@ -2296,3 +2296,4 @@ the selection diamond, P38H's ball) stay art. The presenter renders each UI scen
 canvas). 4K cost measured back to back: game theme 66-70 fps against 74-76 off. Re-runs of slate 1080 and game 4K clean (0 GPU / CPU
 differences in 181 paints). Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 58. Open: the message window not seen live (its
 frame drawers swap like the popups, which are); a 1-2 px palette-edge GPU / CPU difference in 11 of 947 paints, not attributed.
+- Published 2026-11-21: P40C in 76d88860 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-76d88860.
