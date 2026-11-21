@@ -693,6 +693,37 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
   return 1;
 }
 
+int32_t level_height_px(Ctx &ctx, int32_t level) {
+  const GameState &gs = ctx.gs();
+  const int32_t px = mul32(mul32(sub32(level, 3), gs.f_w_4c2e00[0]), gs.g_zoomScale) / 4;
+  return gs.unk_005a9cc0 != 0 ? mul32(px, 2) : px;
+}
+int32_t world_height_px(Ctx &ctx, int32_t wx, int32_t wy) {
+  GameState &gs = ctx.gs();
+  const int32_t tx = sar32(wx, 10), ty = sar32(wy, 10);
+  if (tx < 0 || ty < 0 || tx >= world_n(ctx) || ty >= world_n(ctx)) return 0;
+  const int32_t cell = tile_index(ctx, tx, ty);
+  const int8_t type = grid_arr(ctx, &GameState::g_tileType)[cell];
+  const uint32_t f = (state_arr(ctx, &GameState::g_tileTypeAttrs) + type).field(&TileTypeAttr::flags).get();
+  const int32_t S = gs.f_w_4c2e00[0], Z = gs.g_zoomScale;
+  int32_t px = 0;
+  if (f & 8) {
+    px = 0;
+  } else if (f & 2) {
+    px = mul32(mul32(sub32(corner_range_min(ctx, tx, ty), 3), S), Z) / 4;
+  } else if (f & 4) {
+    px = mul32(mul32(grid_arr(ctx, &GameState::g_tileLevel)[cell] - 3, S), Z) / 4;
+  } else {
+    const int32_t c5 = corner_heights(ctx, tx, ty, 5, 1) - 3, c7 = corner_heights(ctx, tx, ty, 7, 1) - 3;
+    const int32_t c1 = corner_heights(ctx, tx, ty, 1, 1) - 3, c3 = corner_heights(ctx, tx, ty, 3, 1) - 3;
+    const int32_t dx = sub32(wx, shl32(tx, 10)), dy = sub32(wy, shl32(ty, 10));
+    const int32_t b = add32(mul32(add32(mul32(sub32(0x400, dx), c7), mul32(dx, c1)), sub32(0x400, dy)),
+                            mul32(add32(mul32(sub32(0x400, dx), c5), mul32(dx, c3)), dy));
+    px = (mul32(mul32(b, S), Z) / 1024) / 1024 / 4;
+  }
+  return gs.unk_005a9cc0 != 0 ? mul32(px, 2) : px;
+}
+
 // ------------------------------------------------------------------------------------------------ playSoundAt
 int32_t play_sound_at_with(Ctx &ctx, int32_t sound, int32_t wx, int32_t wy, int32_t field34, const SoundAtCalls &calls) {
   GameState &gs = ctx.gs();

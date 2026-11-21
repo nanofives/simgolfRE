@@ -871,11 +871,70 @@ void P39A1_Art(const Crossing &c, int part, int px, int py, int lift, bool previ
     const int mx = (px + ox) / 2, my = (py + oy) / 2;
     cc(fn, mx, my, preview ? my : std::min(py, oy) - lift, 0x28, 0x28, cell, 8, flags);
 }
-// P1_tile's play branch for a path tile: true when (x, y) is a tile of a two-tile bridge (its art drawn here, P1_flag20 skipped)
+// ---- P39A3 (play switch layPath.gapBridge = 0, crossings.h): a gap bridge's deck, drawn at the deck level (gap_deck_lift: the deck
+// level's height minus the ground's at the tile centre, as worldToScreen applies them), so the deck spans the gap at bank height.
+// SG_P39A3_DECK (development, read once) picks the art: 0 = the boardwalk's straight pieces (cells 0x1ff, P1_flag20's path-on-water
+// pair of half pieces, frame by the screen axis as P1_flag20's mask bits 0 / 2 pick it; default), 1 = the scenic bridge frame of the
+// style on each tile, 2 = one scenic frame over the whole span (twice the size for a span of 2, from the tile in front, as P39A1).
+// development (P39A3's drives): SG_P39A3_LIFTLOG=<file> appends `golfer sx sy lift` for every golfer drawn on a gap bridge (lift != 0);
+// nothing when unset, writes no state
+void P39A3_LiftLog(int golfer, int sx, int sy, int lift) {
+    static std::FILE *f = std::getenv("SG_P39A3_LIFTLOG") ? std::fopen(std::getenv("SG_P39A3_LIFTLOG"), "a") : nullptr;
+    if (!f || lift == 0) return;
+    std::fprintf(f, "%d\t%d\t%d\t%d\n", golfer, sx, sy, lift);
+    std::fflush(f);
+}
+int P39A3_DeckMode() {
+    static const int mode = std::getenv("SG_P39A3_DECK") ? std::atoi(std::getenv("SG_P39A3_DECK")) : 0;
+    return mode;
+}
+void P39A3_GapArt(u32 F, int x, int y, const Crossing &c, int part) {
+    const int lift = gap_deck_lift(ctx, (x << 10) + 0x200, (y << 10) + 0x200);
+    const int px = FD(0x50), py = FD(0x44) - lift;
+    const int sel = P39A1_Frame(c);
+    const int mode = P39A3_DeckMode();
+    if (mode == 1 || (mode == 2 && c.span == 1)) {
+        const int cell = cc("cellAt", 0x226 + (c.style & 7), 0, sel);
+        G32(GS(unk_005a9cc8)) = cell;
+        cc("enqueueSprite", px, py, py - FD(0x40), 0x28, 0x28, cell, 4, 0xa9);
+        return;
+    }
+    if (mode == 2) {
+        const int other = 1 - part;
+        const int ox0 = c.x + other * crossing_dx(c), oy0 = c.y + other * crossing_dy(c);
+        int ox = 0, oy = 0;
+        const bool seen = P39A1_TilePoint(ox0, oy0, ox, oy);
+        oy -= gap_deck_lift(ctx, (ox0 << 10) + 0x200, (oy0 << 10) + 0x200);
+        if (seen && (oy > py || (oy == py && other == 1))) return;   // the other tile draws it
+        if (!seen) ox = px, oy = py;
+        const int cell = cc("cellAt", 0x226 + (c.style & 7), 0, sel);
+        G32(GS(unk_005a9cc8)) = cell;
+        cc("enqueueSprite", (px + ox) / 2, (py + oy) / 2, std::min(py, oy) - FD(0x40), 0x28, 0x28, cell, 8, 0xa9);
+        return;
+    }
+    // the boardwalk's straight run (P1_flag20 ML+0x25ed..ML+0x26b1 with the mask's bits 0 / 2 standing for the deck's axis)
+    int cell = cc("cellAt", 0x1ff, 0, sel);
+    G32(GS(unk_005a9cc8)) = cell;
+    const int z = G32(GS(g_tileStep4c2840));
+    const int hs = FD(0x40) / 2;
+    const int ex = sel ? -(z / 2) : z / 2;
+    cc("enqueueSprite", ex + px, py - hs, py - hs, 0x3c, 0x3c, cell, 4, 0x4e);
+    cell = cc("cellAt", 0x1ff, 0, sel + 2);
+    G32(GS(unk_005a9cc8)) = cell;
+    cc("enqueueSprite", px - ex, hs + py, py - FD(0x40), 0x3c, 0x3c, cell, 4, 0x4e);
+}
+// P1_tile's play branch for a path tile: true when (x, y) is a tile of a two-tile bridge (its art drawn here, P1_flag20 skipped);
+// P39A3: or of a gap bridge (its deck)
 bool P39A1_TileArt(u32 F, int x, int y) {
     int part = 0;
     const int i = crossing_at(ctx, x, y, &part);
     if (i < 0) return false;
+    if (crossings_list(ctx)[static_cast<size_t>(i)].type == kCrossingGap) {
+        if (!gap_bridges_on()) return false;
+        P39A3_GapArt(F, x, y, crossings_list(ctx)[static_cast<size_t>(i)], part);
+        return true;
+    }
+    if (!crossings_on()) return false;
     P39A1_Art(crossings_list(ctx)[static_cast<size_t>(i)], part, FD(0x50), FD(0x44), FD(0x40), false);
     return true;
 }
@@ -1215,8 +1274,8 @@ void P1_tile(u32 F, int ebp, int ebx) {
     // ML+0x2354: [F+0xc] = flag word (upper half of eax kept: mov ax, word)
     eax = (int)(((u32)eax & 0xFFFF0000u) | GU16(GV(g_tileFlags) + FD(0x14) * 2));      // ML+0x2354, ML+0x2358
     FD(0xc) = eax;                                                                 // ML+0x2362
-    if ((eax & 0x20) != 0 && crossings_on() && P39A1_TileArt(F, ebp, ebx)) {
-        // P39A1: a two-tile bridge's tile (its art drawn by P39A1_TileArt instead of P1_flag20 / P1_flag200)
+    if ((eax & 0x20) != 0 && crossings_any_on() && P39A1_TileArt(F, ebp, ebx)) {
+        // P39A1: a two-tile bridge's tile (its art drawn by P39A1_TileArt instead of P1_flag20 / P1_flag200); P39A3: a gap deck
     } else if ((eax & 0x20) != 0) {                                                // ML+0x2360 test al, 0x20; ML+0x2366
         int a48 = (int)(s8)dl * 48;                                                // ML+0x236c..ML+0x2372
         FD(0x10) = a48;                                                            // ML+0x2375
@@ -4145,6 +4204,13 @@ stk[--sp] = (int)(edx); // ML+0x5db8  push edx
 stk[--sp] = (int)(eax); // ML+0x5db9  push eax
 eax = cc("worldToScreen", stk[sp+0], stk[sp+1], stk[sp+2], stk[sp+3], stk[sp+4]); // worldToScreen  ML+0x5dba
 sp += 5; // ML+0x5dbf  add esp, 0x14  (caller stack cleanup)
+// P39A3 layPath.gapBridge at 0 (drawing only): a golfer on a gap bridge stands on the deck (crossings.h gap_deck_lift, 0 off a gap
+// bridge and at 1); the ball's projection below (ML+0x5ff1) keeps the ground
+if (eax != 0 && gap_bridges_on()) {
+    const int lift = gap_deck_lift(ctx, G32(ebp + GS(g_golfers)), G32(ebp + (GS(g_golfers) + 4)));
+    P39A3_LiftLog(static_cast<int>(ebp >> 8), FD(0x88), FD(0x70), lift);
+    FD(0x70) = FD(0x70) - lift;
+}
 // ML+0x5dc2  test eax, eax
 if (((eax)) == 0) goto La_41557f; // ML+0x5dc4  je ML+0x5fbf
 ecx = FD(0x88); // ML+0x5dca  mov ecx, dword ptr [F+0x88]
@@ -9489,8 +9555,11 @@ void P11_Redo(u32 F) {
     const int tool0 = G32(GS(f_w_4c2848)), tool3 = G32((GS(f_w_4c2848) + 12)), button = G32((GS(g_rootInput) + 16));
     course_redo_begin(ctx, press);
     const int variant = G32(GS(unk_0056a514));
+    t_gap_auto_yes = true;   // P39A3: a gap bridge of the step is built again without the question
     for (size_t k = 0; k < items.size(); ++k) {
         const CourseRedoItem &it = items[k];
+        // P39A3: a tile of a gap bridge an earlier tile of this step built again (its click would lay a path at the path price)
+        if (gap_bridges_on() && crossing_gap_at(ctx, it.x, it.y) >= 0) continue;
         // P39A1: a two-tile bridge's step holds its two tiles in build order. The first is rebuilt along the axis to the second
         // (both tiles, the whole price); the second is not clicked again (its click would run H2_Build's canAfford on the
         // price after the pair's charge, whose refusal opens the game's modal message)
@@ -9519,6 +9588,7 @@ void P11_Redo(u32 F) {
         if (pair) ++k;   // P39A1: the pair's second tile was built with the first
     }
     t_crossings_redo_axis = -1;
+    t_gap_auto_yes = false;
     course_redo_end(ctx);
     G32(GS(f_w_4c2848)) = tool0;
     G32((GS(f_w_4c2848) + 12)) = tool3;
@@ -9742,6 +9812,11 @@ void H2_Build(u32 F, int eax) {
         ebx = (int)(((u32)ecx * 5u + 0x19u) * 200u) / 100;            // ML+0xfe2e..ML+0xfe4a
         if ((1u << ((u32)ecx & 31u)) & GU32(GS(g_freeUnlockMask))) ebx = 0;     // ML+0xfe4c..ML+0xfe5e
     }
+    // P39A3 layPath.gapBridge at 0: the Pathway about to lay a path next to (or in) a gap of 1 or 2 tiles asks first (crossings.cpp
+    // gap_try: the game's yes / no popup with the price); on yes the bridge is built and charged; when it holds this tile itself
+    // nothing more is laid here, else the path on this tile follows as before (its own price, canAfford and charge below)
+    if (gap_bridges_on() && edi == 0 && (H2_TW(H2_cell(FD(0x1c), FD(0x24))) & 0x20) == 0 && gap_try(ctx, FD(0x1c), FD(0x24)) == 2)
+        return;
     // P39A2 layPath.stairs at 0: a path tile (tool 0, case 0 below) that is stairs once laid costs twice the path price; canAfford,
     // the charge, setGrids' refund byte (so bulldozing it refunds what was paid), the ledger, the pointsPopup and the undo journal
     // all see the doubled ebx. A tile that already carries a path costs nothing (case 0 -> L_f888), as in the original.
@@ -10096,6 +10171,8 @@ int H2_TerrainSpecial(u32 F, int eax) {
     if (eax == 0xa0) {                                // ML+0x113cd / ML+0x113d2
         int x = FD(0x1c), y = FD(0x24);
         u32 i = H2_cell(x, y);
+        // P39A3 layPath.gapBridge at 0: the gap question first (as for the Pathway); a bridge holding this tile ends the click here
+        if (gap_bridges_on() && (H2_TWL(i) & 0x20) == 0 && gap_try(ctx, x, y) == 2) return H2_Rebuild(F);
         H2_TWL(i) = (u8)(H2_TWL(i) | 0x20);           // ML+0x113e5
         esi = (H2_TT(i) != 0x11) ? 2 : 0xf;           // ML+0x113ed..ML+0x113fe (sub / neg / sbb / and / add)
         // P39A2 layPath.stairs at 0: a tile that is stairs with its path laid costs twice (refund byte, charge and popup alike)

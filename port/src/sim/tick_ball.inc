@@ -96,6 +96,9 @@ void drawWalkers() {
             const int vis = kWorldToScreen(*vp<int>(R), *vp<int>(R + 4),
                                            &FI(0x1c), &FI(0x18), 0);                    // drawWalkers+0x1c9
             if (!BR(0, vis != 0) && BR(0, G<int>((GS(f_w_4c2e00) + 16)) != k)) goto next;
+            // P39A3 layPath.gapBridge at 0 (drawing only): a walker on a gap bridge stands on the deck (crossings.h gap_deck_lift;
+            // 0 off a gap bridge and at 1)
+            if (gap_bridges_on()) FI(0x18) = FI(0x18) - gap_deck_lift(ctx, *vp<int>(R), *vp<int>(R + 4));
             *vp<int>(R + 8) = FI(0x1c);                                  // drawWalkers+0x1f4
             *vp<int>(R + 0xc) = FI(0x18);                                // drawWalkers+0x1f7
             const int dir = (G<int>(GS(g_cameraRot)) - R[0x16] - 2) & 7;                     // drawWalkers+0x1ee..drawWalkers+0x212

@@ -32,6 +32,11 @@ int32_t world_to_screen(Ctx &ctx, int32_t wx, int32_t wy, int32_t &sx, int32_t &
 // it for its last call on this thread. This returns that exact (ex, ey) when the last call was for (wx, wy), returned 1 and gave
 // (sx, sy); false otherwise. Nothing the simulation reads changes; no call is added.
 bool world_to_screen_exact(int32_t wx, int32_t wy, int32_t sx, int32_t sy, double &ex, double &ey);
+// P39A3 (drawing only): the pixels world_to_screen raises (wx, wy) by for the ground's height (the same type branches: none for
+// TTA_HEIGHT_3, the cornerRange min for TTA_LEVEL_MIN, g_tileLevel for TTA_LEVEL_MAX, else cornerHeights 5 / 7 / 1 / 3, bilinear),
+// times 2 with the doubling word; and the pixels a point at height level `level` is raised by in the same view
+int32_t world_height_px(Ctx &ctx, int32_t wx, int32_t wy);
+int32_t level_height_px(Ctx &ctx, int32_t level);
 
 // playSoundAt (the simulation part; no audio): projects (wx, wy) with margin 0; off screen with field34 != -1 returns 0;
 // field34 == -1 (on or off screen) clamps the point to 0..799 / 0..599 and plays with field34 0; on screen otherwise applies

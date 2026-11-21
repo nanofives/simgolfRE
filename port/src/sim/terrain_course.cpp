@@ -412,7 +412,7 @@ int32_t demolish_object(Ctx &ctx, int32_t x, int32_t y) {
       if ((s & 0x7F) == 0x10) call_peer(ctx, "placeHabitat", {u32(x), u32(y), 4});
       const uint8_t b = code.get() & 0x7F;
       if (b == 0x13) w.set(static_cast<uint16_t>(w.get() & 0xFFDF));
-      if (b == 0x13 && crossings_on()) crossings_on_demolish(ctx, x, y);   // P39A1: a two-tile bridge goes as a whole
+      if (b == 0x13 && crossings_any_on()) crossings_on_demolish(ctx, x, y);   // P39A1 / P39A3: a bridge goes as a whole
       if (b == 1) wh.set(static_cast<uint8_t>(wh.get() & 0xFD));
       else if (b == 0) w.set(static_cast<uint16_t>(w.get() & 0xFFDF));
       else if (w.get() & 0x1000) w.set(static_cast<uint16_t>(w.get() & 0xEFFF));

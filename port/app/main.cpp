@@ -1050,6 +1050,7 @@ const ProfileMember kPlayProfile[] = {
     {"mainLoop.aimHalfTileLattice", 0},          // P39D: free shot aiming (the shot flies to the point under the cursor), snap to the cup
     {"scenicBridge.twoTile", 0},                 // P39A1: the bridge row's two-tile scenic bridge over water and streams
     {"layPath.stairs", 0},                       // P39A2: a path tile rising 3+ levels along its path is stairs (drawn, no 0x2b thought, x2 price)
+    {"layPath.gapBridge", 0},                    // P39A3: the path tool asks to bridge a 1-2 tile gap 3+ levels deep (deck at bank height)
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

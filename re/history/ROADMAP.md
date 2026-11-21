@@ -2227,3 +2227,12 @@ rotations 2 / 3); golfers skip the 0x2b complaint there; laying a path tile that
 app; a terraform charges nothing extra). Evidence: segments x64 205 / 205; test_p39a_stairs 18, terrain_render 522, golfers 68,
 shots 41; controls RED; close-ups at 4 rotations and two zooms. Merged by hand with P39A1 (main.cpp kPlayProfile, play_profile.tsv).
 - Published 2026-11-20: P39A1 + P39A2 in 925e368f (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-925e368f.
+
+## P39A3: gap bridges built by the path tool after a question (2026-11-20; notes log/roadmap/P39/P39A3_notes.md)
+Play switch layPath.gapBridge (0 in play): laying a path into a 1-2 tile gap whose LOWEST corner is 3+ levels below both banks
+(Mariano: dry valleys too; water channels, pot bunkers and raised banks as well) asks "Build a bridge across this gap for $N?" in
+the game's yes / no popup (its own translated options); yes builds a boardwalk deck (his pick) at bank height in the crossings
+table (sidecar version 2; version 1 loads), golfers and staff on it drawn at deck height (the ball keeps the ground), no 0x2b
+complaint and no stairs on the deck; a no is not asked again for that gap; price $20,000 + $1,000 per level per tile; bulldozer,
+undo / redo. Gaps 3+ tiles wide: no question. Evidence: segments x64 205 / 205; test_p39a_gap 26 (controls RED); bridges / stairs
+/ golfers / save tests; drives on a water ravine and a dry valley, English and Spanish, golfers crossing at two rotations.

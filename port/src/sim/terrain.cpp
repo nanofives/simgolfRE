@@ -13,6 +13,7 @@
 #include "portsim/sim/util.h"
 #include "portsim/sim/bridge.h"  // P11D: course_undo_note
 #include "portsim/sim/world.h"  // P38A: grid bases and the world size
+#include "crossings.h"  // P39A3: gap bridges are no stairs (path_stairs_axes)
 
 namespace portsim {
 
@@ -839,10 +840,14 @@ int g_negctl_path_stairs = 0;
 int32_t path_stairs_axes(Ctx &ctx, int32_t x, int32_t y, bool assume_path) {
   if (SG_DEFECT(g_defect_path_stairs)) return 0;
   const int32_t n = world_n(ctx);
+  // P39A3 layPath.gapBridge at 0: a gap bridge's tiles are a deck, not a path on the ground: never stairs, and no path neighbour
+  // for the bank beside them
+  const bool gaps = gap_bridges_on();
   auto path = [&](int32_t px, int32_t py) {
-    return px >= 0 && py >= 0 && px < n && py < n && (flags(ctx)(px, py) & (1u << 5)) != 0;
+    return px >= 0 && py >= 0 && px < n && py < n && (flags(ctx)(px, py) & (1u << 5)) != 0 && !(gaps && crossing_gap_at(ctx, px, py) >= 0);
   };
   if (x < 0 || y < 0 || x >= n || y >= n) return 0;
+  if (gaps && crossing_gap_at(ctx, x, y) >= 0) return 0;
   if (!assume_path && !path(x, y)) return 0;
   const int32_t need = SG_NEGCTL(g_negctl_path_stairs) == 1 ? 4 : 3;
   int32_t axes = 0;

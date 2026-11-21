@@ -227,7 +227,8 @@ def test_sidecar_round_trip(portlib, n):
     # buffer's earlier contents (the save path), so the comparison skips them as test_p38d_world_save does
     h = 0 if n == 50 else 0x28
     assert len(raw0) == len(raw1) and raw0[:h] == raw1[:h] and raw0[h + 0x64:] == raw1[h + 0x64:]
-    assert side0[:4] == b"SGXB" and struct.unpack_from("<III", side0, 4) == (1, n, 2) and len(side0) == 16 + 2 * 8
+    # P39A3: version 2, 12 bytes an entry (type, span, deck, extra after the P39A1 fields)
+    assert side0[:4] == b"SGXB" and struct.unpack_from("<III", side0, 4) == (2, n, 2) and len(side0) == 16 + 2 * 12
     assert _load_table(portlib, n, 0, raw0, side0) == EXPECT
     assert _load_table(portlib, n, 1, raw0, side0) == [], "the switch at 1 read the sidecar"
     assert _load_table(portlib, n, 0, raw0, None) == []

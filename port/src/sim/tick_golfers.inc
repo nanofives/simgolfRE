@@ -1002,6 +1002,9 @@ int updateGolfers() {
                 (GB(i, (GS(g_golfers) + 26)) & 1) == 0 &&
                 (SG_DEFECT(g_defect_path_stairs) ||
                  path_stairs_axes(ctx, sar32(GD(i, GS(g_golfers)), 10), sar32(GD(i, (GS(g_golfers) + 4)), 10)) == 0) &&
+                // P39A3 layPath.gapBridge at 0: not on a gap bridge's deck (crossings.h; the test is skipped at 1)
+                (!gap_bridges_on() ||
+                 crossing_gap_at(ctx, sar32(GD(i, GS(g_golfers)), 10), sar32(GD(i, (GS(g_golfers) + 4)), 10)) < 0) &&
                 kSlopeMix(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)), GC(i, (GS(g_golfers) + 26))) > 2) {     // updateGolfers+0x2b64..updateGolfers+0x2bb9
                 v = kSlopeMix(GD(i, GS(g_golfers)), GD(i, (GS(g_golfers) + 4)), GC(i, (GS(g_golfers) + 26)));       // updateGolfers+0x2bbf..updateGolfers+0x2bd5
                 kEmitThought(i, 0x2b, v);                                               // updateGolfers+0x2bda..updateGolfers+0x2be2

@@ -157,8 +157,10 @@ namespace {
 // the game, but Terrain lays no path band there (the deck is drawn over it); every other tile reads tileFlag20 as before
 int32_t laid_flag20(Ctx &ctx, int32_t x, int32_t y) {
   const int32_t f = tile_flag20(ctx, x, y);
-  if (f == 0 || !crossings_on() || tile_type(ctx, x, y) != 0x0A || crossing_at(ctx, x, y) < 0) return f;
-  return 0;
+  if (f == 0) return f;
+  if (crossings_on() && tile_type(ctx, x, y) == 0x0A && crossing_at(ctx, x, y) >= 0) return 0;
+  if (gap_bridges_on() && crossing_gap_at(ctx, x, y) >= 0) return 0;   // P39A3: a gap bridge's tiles: the deck is drawn instead
+  return f;
 }
 // every tile with tileFlag20 is re-pathed, then the path-render byte is set
 void update_all_paths(Ctx &ctx) {
