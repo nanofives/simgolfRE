@@ -2278,3 +2278,12 @@ art. Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 48 (per-cell art 
 every report screen off vs game at 1080 and 4K (log/roadmap/P40/compare_b).
 - P40B default: --ui-theme game for players (Mariano 2026-11-21: "Yes, game theme on"); SG_APP_P40=off in port/test/conftest.py keeps the tests on the original art.
 - Published 2026-11-21: P40B (game theme on) in 004acba5 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK with the theme on), LAN + GitHub release port-2026-11-21-004acba5.
+
+## P39A4: bridge length button and three-arch pairs (2026-11-21; notes log/roadmap/P39/P39A4_notes.md)
+Mariano: "a button to the side of that panel ... switch the selected bridge into one or two tiles long (one for every existing
+option)", then the art: not 2x bigger (his words) and, of the mocks, the three-arch look. P39A1's ninth item replaced by a 1 / 2 tile
+button beside the bridge row (game art and font, tip "Bridge length: 1 tile, 10000" / "2 tiles, 20000", Spanish); at 2 every one of
+the 8 styles builds its own pair ($20,000); pairs drawn as three 1x frames (one per tile, one half way), arches behind anyone on the
+deck; the setting lasts the session; redo keeps the style; the sidecar already held the style. Evidence on 40bf9b35: segments x64
+205 / 205; test_p39a_bridges 18 (controls 8 / 9 RED), gap 26, stairs 26, p40 48, profiles, static; EN / ES drives, all 8 styles at 4
+rotations (P39A4_sheet.png).

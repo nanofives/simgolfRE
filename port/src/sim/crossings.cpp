@@ -12,6 +12,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/bridge.h"    // points_popup
 #include "portsim/sim/terrain.h"   // corner_heights
+#include "portsim/sim/util.h"      // approx_distance
 #include "portsim/sim/world.h"
 
 namespace portsim {
@@ -20,12 +21,14 @@ int g_defect_two_tile_bridge = 1;
 int g_defect_gap_bridge = 1;
 thread_local bool t_crossings_in_undo = false;
 thread_local int32_t t_crossings_redo_axis = -1;
+thread_local bool t_crossings_in_redo = false;
 thread_local bool t_gap_auto_yes = false;
 
 namespace {
 // Negative controls (every crossings.* entry shares the word): 1 = the land test at the ends skipped, 2 = the sidecar not read back,
 // 3 = the partner not demolished; P39A3: 4 = a gap 2 levels deep is enough, 5 = a gap bridge's extra is not paid back, 6 = the
-// question's answer ignored (always yes), 7 = no deck lift (walkers and the deck drawn at the ground)
+// question's answer ignored (always yes), 7 = no deck lift (walkers and the deck drawn at the ground); P39A4: 8 = the length
+// button ignored (the row always builds one tile), 9 = a pair built in the test entries' style instead of the clicked item's
 int g_negctl_crossings = 0;
 
 constexpr int8_t kWater = 0x11, kStream = 0x0A;
@@ -38,6 +41,7 @@ constexpr const char *kSidecarExt = ".sgx";
 struct State {
   std::vector<Crossing> list;
   int32_t style = 0;
+  bool two = false;        // P39A4: the bridge length button (true: two tiles)
   bool declined = false;   // P39A3: the gap the player last answered no to (not asked again until another gap is asked)
   Crossing declined_gap;
   int32_t forced_answer = -1;   // P39A3 test entry crossings.gapAnswer: -1 the popup asks, 0 yes, 1 no
@@ -132,6 +136,10 @@ bool crossing_choose(Ctx &ctx, int32_t x, int32_t y, int32_t prefer_axis, Crossi
 }
 
 void crossing_build(Ctx &ctx, const Crossing &c, int32_t price_each) {
+  // P39A4: the journal notes both tiles (setGrids) with the variant word kTwoTileItem + style (crossings.h), put back after
+  GameState &gs = ctx.gs();
+  const int32_t variant = gs.unk_0056a514;
+  gs.unk_0056a514 = kTwoTileItem + (c.style & 7);
   for (int32_t p = 0; p < 2; ++p) {
     const int32_t x = tile_x(c, p), y = tile_y(c, p);
     uint16_t &w = flags_at(ctx, x, y);
@@ -139,6 +147,7 @@ void crossing_build(Ctx &ctx, const Crossing &c, int32_t price_each) {
     else w = static_cast<uint16_t>(static_cast<uint32_t>(c.style & 7) | (w & 0xE7F8u) | (1u << 8) | (1u << 5));  // H2_Build case 5's bits
     peer(ctx, "setGrids", {static_cast<uint32_t>(x), static_cast<uint32_t>(y), kBridgeCode, static_cast<uint32_t>(price_each)});
   }
+  gs.unk_0056a514 = variant;
   crossing_add(ctx, c);
 }
 
@@ -156,6 +165,29 @@ void crossings_clear(Ctx &ctx) {
 }
 int32_t crossings_style(Ctx &ctx) { return state(ctx).style; }
 void crossings_set_style(Ctx &ctx, int32_t style) { state(ctx).style = style & 7; }
+bool crossings_two_mode(Ctx &ctx) { return state(ctx).two; }
+void crossings_set_two_mode(Ctx &ctx, bool two) { state(ctx).two = two; }
+bool crossings_length_button_hit(Ctx &ctx, int32_t x, int32_t y) {
+  if (!crossings_on() || ctx.gs().f_w_4c2848[3] != kScenicBridgeTool) return false;
+  return approx_distance(sub32(x, kLengthButtonX), mul32(sub32(y, kLengthButtonY), 2)) < 0x14;
+}
+int32_t crossing_pair_style(Ctx &ctx, int32_t variant) {
+  if (!crossings_on()) return -1;
+  if (variant >= kTwoTileItem && variant < kTwoTileItem + kBridgeStyles) return variant - kTwoTileItem;
+  if (variant >= 0 && variant < kBridgeStyles && state(ctx).two && !t_crossings_in_redo && SG_NEGCTL(g_negctl_crossings) != 8)
+    return variant;
+  return -1;
+}
+int32_t crossing_click(Ctx &ctx, int32_t x, int32_t y, int32_t style, int32_t each) {
+  Crossing c;
+  const bool fit = t_crossings_redo_axis >= 0 ? crossing_fit(ctx, x, y, t_crossings_redo_axis, c) && c.x == x && c.y == y
+                                              : crossing_choose(ctx, x, y, crossings_pref_axis(ctx), c);
+  if (!fit) return kClickNoFit;
+  if (peer(ctx, "canAfford", {static_cast<uint32_t>(mul32(each, 2))}).eax == 0) return kClickPoor;
+  c.style = static_cast<uint8_t>(SG_NEGCTL(g_negctl_crossings) == 9 ? state(ctx).style & 7 : style & 7);
+  crossing_build(ctx, c, each);
+  return mul32(each, 2);
+}
 int32_t crossings_pref_axis(Ctx &ctx) {
   const GameState &gs = ctx.gs();
   return (gs.g_ui_5a34e4[3] + gs.g_cameraRot / 2) & 1;
@@ -482,6 +514,21 @@ void a_set_style(Ctx &c, const uint32_t *a, Ret &r) {
   crossings_set_style(c, S(a, 0));
   r.set_i32(crossings_style(c));
 }
+// P39A4: crossings.twoMode(v): v 0 / 1 sets the bridge length (one / two tiles), any other value reads it; the length
+void a_two_mode(Ctx &c, const uint32_t *a, Ret &r) {
+  if (a[0] <= 1) crossings_set_two_mode(c, a[0] == 1);
+  r.set_i32(crossings_two_mode(c) ? 1 : 0);
+}
+// crossings.pairStyle(variant): crossing_pair_style
+void a_pair_style(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(crossing_pair_style(c, S(a, 0))); }
+// crossings.click(x, y, variant, each): H2_Build case 5's play branch: -3 when the click builds the original's one-tile bridge
+// (crossing_pair_style -1), else crossing_click with that style (the charge, -1 no fit, -2 refused by canAfford)
+void a_click(Ctx &c, const uint32_t *a, Ret &r) {
+  const int32_t style = crossing_pair_style(c, S(a, 2));
+  r.set_i32(style < 0 ? -3 : crossing_click(c, S(a, 0), S(a, 1), style, S(a, 3)));
+}
+// crossings.button(x, y): crossings_length_button_hit
+void a_button(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(crossings_length_button_hit(c, S(a, 0), S(a, 1)) ? 1 : 0); }
 // crossings.gapFind(x, y): the gap a path laid on (x, y) would bridge (pack_gap), -1 when none
 void a_gap_find(Ctx &c, const uint32_t *a, Ret &r) {
   Crossing x;
@@ -554,13 +601,17 @@ const FuncDef kFuncs[] = {
     {"crossings.deckLift", "default", "int", 2, 0, a_deck_lift, &g_negctl_crossings},
     {"crossings.groundPx", "default", "int", 2, 0, a_ground_px, &g_negctl_crossings},
     {"crossings.levelPx", "default", "int", 1, 0, a_level_px, &g_negctl_crossings},
+    {"crossings.twoMode", "default", "int", 1, 0, a_two_mode, &g_negctl_crossings},
+    {"crossings.pairStyle", "default", "int", 1, 0, a_pair_style, &g_negctl_crossings},
+    {"crossings.click", "default", "int", 4, 0, a_click, &g_negctl_crossings},
+    {"crossings.button", "default", "int", 2, 0, a_button, &g_negctl_crossings},
 };
 // the module's play switches (re/port/play_profile.tsv)
 const DefectDef kDefects[] = {
     {"scenicBridge.twoTile", "P39A1",
-     "the Scenic Bridge covers one water tile, and two side by side draw as a boardwalk; fixed: the bridge row's ninth item builds a "
-     "two-tile scenic bridge over water or stream tiles with land at both ends (twice the price, kept in the port's crossings table "
-     "and a sidecar file next to the save)",
+     "the Scenic Bridge covers one water tile, and two side by side draw as a boardwalk; fixed: a length button beside the bridge row "
+     "switches it to two tiles, where every style builds a two-tile scenic bridge in that style over water or stream tiles with land "
+     "at both ends (twice the price, kept in the port's crossings table and a sidecar file next to the save)",
      &g_defect_two_tile_bridge},
     {"layPath.gapBridge", "P39A3",
      "a path laid across a ravine follows the ground down and up; fixed: the Pathway (or the path terrain tool) next to a gap of 1 or "

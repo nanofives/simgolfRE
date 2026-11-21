@@ -1563,17 +1563,8 @@ int32_t amenity_row(Gfx &g, Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_
     }
     int32_t a8 = add32(i, p5);
     if (p11 & (1u << (static_cast<uint32_t>(i) & 31u))) a8 |= 0x400;
-    if (p2 == 0x226 && i == kBridgeStyles) {
-      // P39A1: the two-tile item: the current style's bridge twice, at a smaller scale, one tile apart along a screen axis
-      const int32_t c2 = static_cast<int32_t>(cm::call_peer(ctx, "cellAt", {static_cast<uint32_t>(0x226 + (crossings_style(ctx) & 7)), 0, 1}).eax);
-      const int32_t v1[8] = {sub32(px, 6), add32(py, 4), 0, p9, p9, c2, 3, a8};
-      const int32_t v2[8] = {add32(px, 6), sub32(py, 4), 0, p9, p9, c2, 3, a8};
-      gfxs::add_sprite(g, ctx, v1);
-      gfxs::add_sprite(g, ctx, v2);
-    } else {
-      const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(id)), p6, a8};
-      gfxs::add_sprite(g, ctx, v);
-    }
+    const int32_t v[8] = {px, py, 0, p9, p9, static_cast<int32_t>(cell(id)), p6, a8};
+    gfxs::add_sprite(g, ctx, v);
     // P25B: a bridge's art covers its whole tile (the bridges row, p2 0x226), so the hovered bridge itself takes the picked cell's blue, lightened
     if (lit_hover && p2 == 0x226) draw_scaled_blend(g, ctx, picked_cell, kRowHoverBridge, kRowHoverBridgeLift, "drawAmenityRow.hover");
     if (p2 == 0x1a9) {
@@ -1598,6 +1589,39 @@ int32_t amenity_row(Gfx &g, Ctx &ctx, int32_t p1, int32_t p2, int32_t p3, int32_
   }
   call(g, ctx, "Display::setScale", {1, 1, 1});   // the display slot 0x9c gets (1, 1, 1) at the end, as in the original
   return hover;
+}
+
+// P39A4 (play switch scenicBridge.twoTile = 0, crossings.h): the bridge length button beside the open bridge row, in the row's own
+// art: its item cell (g_sprites55e930 + 0xb0 + 0x2c k, k 3 plain, the picked cell lightened when hovered as P25B lights a row item)
+// at the button point (kLengthButtonX, kLengthButtonY) - (0x16, 0x14), the row's picked style (g_panelState[4], style 0 when none)
+// as its picture, once at one tile and twice one tile apart along a screen axis at two tiles (the bridge sheet 0x226 + style, frame
+// 1, scale 3: P39A1's two-tile item art), its digit 1 / 2 in the palette tip's font at the cell's lower right, and the hover tip
+// "Bridge length: N tile(s), price"
+void bridge_length_button(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
+  const uint32_t root = g.root_va(ctx);
+  const bool two = crossings_two_mode(ctx);
+  const bool hover = crossings_length_button_hit(ctx, a, b);
+  const int32_t px = kLengthButtonX, py = kLengthButtonY;
+  const uint32_t strip = va(ctx, GSO(g_sprites55e930, 0));
+  const uint32_t cellb[8] = {strip + 0xb0u + 0x2cu * 3u, root, static_cast<uint32_t>(sub32(px, 0x16)), static_cast<uint32_t>(sub32(py, 0x14)), 1, 1, 1, 0};
+  draw_scaled(g, ctx, cellb, 1, 1, 1, 0, "bridgeLengthButton");
+  const uint32_t lit[8] = {strip + 0xb0u + 0x2cu, root, cellb[2], cellb[3], 1, 1, 1, 0};
+  if (hover) draw_scaled_blend(g, ctx, lit, kRowHoverTile, kRowHoverTileLift, "bridgeLengthButton.hover");
+  call(g, ctx, "Display::setScale", {1, 1, 1});
+  const int32_t pick = ctx.gs().g_panelState[4];
+  const int32_t style = pick >= 0 && pick < kBridgeStyles ? pick : 0;
+  const int32_t c = static_cast<int32_t>(cm::call_peer(ctx, "cellAt", {static_cast<uint32_t>(0x226 + style), 0, 1}).eax);
+  if (two) {
+    const int32_t v1[8] = {sub32(px, 9), add32(py, 5), 0, 0x28, 0x28, c, 3, 0xa9};
+    const int32_t v2[8] = {add32(px, 9), sub32(py, 5), 0, 0x28, 0x28, c, 3, 0xa9};
+    gfxs::add_sprite(g, ctx, v1);
+    gfxs::add_sprite(g, ctx, v2);
+  } else {
+    const int32_t v[8] = {px, py, 0, 0x28, 0x28, c, 3, 0xa9};
+    gfxs::add_sprite(g, ctx, v);
+  }
+  gfxt::bridge_length_label(g, ctx, two, add32(px, 0x10), add32(py, 4));
+  if (hover) gfxt::bridge_length_tip(g, ctx, two, a, b);
 }
 
 // drawAmenitiesPanel(a, b) (c3ei.cpp DrawAmenitiesPanel_re), the drawing: Surface_stretchBlit of g_sprites541a18 + 0x84 over
@@ -1640,15 +1664,12 @@ void amenities_panel(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
     const int32_t row = amenity_row(g, ctx, 0, 0x168, 0xe, 1, 0x64, -4, a, b, -1, mask, 0);
     if (row != -1) gfxt::amenities_row_tip(g, ctx, row, a, b);
   }
-  else if (M == 0x13 && crossings_on()) {   // P39A1: the row with the two-tile item, and its name over the hovered item
-    const int32_t row = amenity_row(g, ctx, -0x10, 0x226, kBridgeStyles + 1, 1, 0xa9, 4, a, b, 0x28, 0, 0);
-    if (row == kBridgeStyles) gfxt::two_tile_bridge_tip(g, ctx, a, b);
-  }
   else if (M == 0x13) amenity_row(g, ctx, -0x10, 0x226, 8, 1, 0xa9, 4, a, b, 0x28, 0, 0);
   else if (M == 2) amenity_row(g, ctx, 0xd, 0x1a3, 5, 0, 0x2d, -6, a, b, 0x28, 0, 0);
   else if (M == 0x10) amenity_row(g, ctx, 0x64, 0x12f, 7, 1, 0xb4, 2, a, b, 0x64, 0, 0);
   if (M == 1 || M == 4 || M == 0x13 || M == 2 || M == 0x10) e_image();
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519fd8), 0, 0, 0});
+  if (M == 0x13 && crossings_on()) bridge_length_button(g, ctx, a, b);   // P39A4
   InfoPanelState &ip = info_panel_state(g, ctx);
   if (L != ip.prev) {
     ip.count = 0;

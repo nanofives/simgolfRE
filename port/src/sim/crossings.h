@@ -7,8 +7,9 @@
 // so two scenic bridges side by side lose their art. Removal is the bulldozer's demolishObject: code 0x93 clears bit 0x20 and pays
 // the refund back.
 //
-// Play switch scenicBridge.twoTile (1 = the original: the bridge row holds the 8 one-tile styles). At 0 the row has a ninth item, the
-// two-tile bridge: a click on a water (0x11) or stream (0x0a) tile builds a bridge over two orthogonal tiles, each water or stream,
+// Play switch scenicBridge.twoTile (1 = the original: the bridge row holds the 8 one-tile styles). At 0 (P39A4, replacing P39A1's
+// ninth item) a length button beside the row switches between one tile (the original's bridge) and two tiles, where every style
+// of the row builds the two-tile bridge in that style: a click on a water (0x11) or stream (0x0a) tile builds a bridge over two orthogonal tiles, each water or stream,
 // with land at both ends along its axis. A water tile gets the original's flag bits (0x120 | style), so golfers walk it at path cost,
 // the scenic thought (7) fires and the original reads it as a scenic bridge; a stream tile gets the path bit 0x20 only (no thought:
 // Mariano's pick). Each tile gets the build code 0x93 and the one-tile price as its refund, so the bulldozer and the undo journal
@@ -39,8 +40,15 @@ inline bool gap_bridges_on() { return !SG_DEFECT(g_defect_gap_bridge); }
 inline bool crossings_any_on() { return crossings_on() || gap_bridges_on(); }
 
 constexpr int32_t kScenicBridgeTool = 0x13;   // f_w_4c2848[3]: the Scenic Bridge palette tool
-constexpr int32_t kTwoTileItem = 8;           // the bridge row's ninth item: [unk_0056a514] == 8 with the bridge tool
+// P39A4: the undo journal's variant word of a two-tile bridge's tiles is kTwoTileItem + style (8..15), so a redo rebuilds the pair
+// in its style whatever the length button shows then; [unk_0056a514] itself stays the row's style 0..7 (the original's range: it
+// is one of the globals a save holds)
+constexpr int32_t kTwoTileItem = 8;
 constexpr int32_t kBridgeStyles = 8;          // the one-tile styles 0..7 (sheets 0x226 + style)
+// P39A4: the bridge length button beside the bridge row (800-space centre; the row's last item, style 7, is at (0x282, 0x20f)),
+// hit as the row's items are hit: approxDistance(x - kLengthButtonX, 2 (y - kLengthButtonY)) < 0x14
+constexpr int32_t kLengthButtonX = 0x2df;
+constexpr int32_t kLengthButtonY = 0x208;
 constexpr int32_t kGapLevels = 3;             // the gap's lowest corner is at least this many levels below both bank edges
 constexpr int32_t kGapMaxSpan = 2;            // gaps of 1 or 2 tiles get a bridge; wider ones follow the ground (P39A2's stairs)
 constexpr int32_t kGapLevelCharge = 10;       // the depth charge: units of $100 per level of depth per gap tile ($1,000)
@@ -77,9 +85,25 @@ void crossing_build(Ctx &ctx, const Crossing &c, int32_t price_each);
 void crossing_add(Ctx &ctx, const Crossing &c);
 bool crossing_erase(Ctx &ctx, int32_t index);
 void crossings_clear(Ctx &ctx);
-// the bridge row's last one-tile style (the two-tile item builds with it)
+// the style crossing_fit gives a pair (H2_Build sets the clicked item's style on the pair itself; the test entries set this one)
 int32_t crossings_style(Ctx &ctx);
 void crossings_set_style(Ctx &ctx, int32_t style);
+// P39A4: the bridge length the row builds: false one tile (the original's bridge), true two tiles. Kept for the app session (not
+// saved, not reset by a load or a new course; every session starts at one tile)
+bool crossings_two_mode(Ctx &ctx);
+void crossings_set_two_mode(Ctx &ctx, bool two);
+// P39A4: true when (x, y) is on the bridge length button (the switch at 0 and the bridge row open, f_w_4c2848[3] == 0x13)
+bool crossings_length_button_hit(Ctx &ctx, int32_t x, int32_t y);
+// P39A4: the style of the two-tile bridge a bridge-tool click with [unk_0056a514] == variant builds, -1 for the original's one-tile
+// bridge: a journalled pair (kTwoTileItem + style) always; a row style 0..7 when the length is two tiles, except during a redo
+// (t_crossings_in_redo: a one-tile step stays one tile)
+int32_t crossing_pair_style(Ctx &ctx, int32_t variant);
+extern thread_local bool t_crossings_in_redo;
+// P39A4: a bridge-tool click on (x, y) for a pair of `style` (H2_Build case 5's play branch and the test entry crossings.click):
+// fits the pair (the redo's journalled axis, else the preferred axis first), canAfford(2 x each), builds it; returns the charge
+// (2 x each, H2_Build's tail takes it), kClickNoFit (the refusal sound) or kClickPoor (canAfford refused)
+constexpr int32_t kClickNoFit = -1, kClickPoor = -2;
+int32_t crossing_click(Ctx &ctx, int32_t x, int32_t y, int32_t style, int32_t each);
 // the axis a click prefers: Tab turns it as it turns a building (the orientation word g_ui_5a34e4[3], which Tab adds 1 to), on
 // screen: (orientation + g_cameraRot / 2) & 1, so one Tab swaps the two screen axes at every camera rotation
 int32_t crossings_pref_axis(Ctx &ctx);

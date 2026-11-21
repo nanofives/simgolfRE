@@ -830,9 +830,11 @@ void P1_flag20Rest(u32 F, int ebp, int ebx) {
 // ---- P39A1 (play switch scenicBridge.twoTile = 0, crossings.h): a two-tile bridge's art. The scenic bridge sheets (0x226 + style)
 // hold two frames, one per screen axis: P1_flag20 picks frame 1 when a path neighbour lies in screen direction rot or rot + 4 (its
 // mask bits 0 and 2), so a pair along that screen axis takes frame 1. SG_P39A1_ART (development, read once): 0 = one scenic frame
-// drawn at twice the size over the middle of the two tiles, from the tile in front (default); 1 = a one-tile frame on each tile.
+// drawn at twice the size over the middle of the two tiles, from the tile in front (P39A1's art); 1 = a one-tile frame on each tile;
+// 2 = three one-tile frames along the axis, the two end ones over the tiles and one half way, a bridge lengthened at its own size
+// (P39A4, Mariano's pick: lengthened, not 2x; the default); 3 = the one-tile frame swept along the axis in 1/8-tile steps
 int P39A1_ArtMode() {
-    static const int mode = std::getenv("SG_P39A1_ART") ? std::atoi(std::getenv("SG_P39A1_ART")) : 0;
+    static const int mode = std::getenv("SG_P39A1_ART") ? std::atoi(std::getenv("SG_P39A1_ART")) : 2;
     return mode;
 }
 // the frame of crossing c at the current camera rotation
@@ -868,6 +870,21 @@ void P39A1_Art(const Crossing &c, int part, int px, int py, int lift, bool previ
     }
     // spritePos offsets the anchor by zoom * w * shade / 16: w 0x28 at shade 8 is the one-tile frame's offset doubled, as the frame.
     // Sorted at the back tile (the smaller screen y), so walkers on either tile draw over the deck as on a one-tile bridge.
+    if (P39A1_ArtMode() >= 2) {
+        // P39A4: the bridge lengthened, not scaled: the one-tile frame at its own size repeated along the axis from the back
+        // tile's point to the front tile's, back to front (mode 2, the default: three frames, one on each tile and one half way,
+        // so the end arches stand over the tiles and meet the banks; mode 3: nine frames 1/8 tile apart). The frames sort at the
+        // back tile's back edge (half a tile behind its point, toward the bank behind), rising toward the front by one per frame:
+        // a walker anywhere on either deck tile has a larger key and draws over every arch, one on the bank behind draws under.
+        const int n = P39A1_ArtMode() == 2 ? 3 : 9;
+        const bool p_back = py < oy || (py == oy && part == 0);
+        const int bx = p_back ? px : ox, by = p_back ? py : oy, fx = p_back ? ox : px, fy = p_back ? oy : py;
+        for (int k = 0; k < n; ++k) {
+            const int sx = bx + (fx - bx) * k / (n - 1), sy = by + (fy - by) * k / (n - 1);
+            cc(fn, sx, sy, preview ? sy : by - (fy - by) / 2 - lift - (n - k), 0x28, 0x28, cell, 4, flags);
+        }
+        return;
+    }
     const int mx = (px + ox) / 2, my = (py + oy) / 2;
     cc(fn, mx, my, preview ? my : std::min(py, oy) - lift, 0x28, 0x28, cell, 8, flags);
 }
@@ -938,12 +955,13 @@ bool P39A1_TileArt(u32 F, int x, int y) {
     P39A1_Art(crossings_list(ctx)[static_cast<size_t>(i)], part, FD(0x50), FD(0x44), FD(0x40), false);
     return true;
 }
-// the bridge tool's cursor with the two-tile item: the pair a click builds, drawn as the preview; false when none fits (the
-// one-tile frame of the current style is drawn at the cursor and the caller takes the refusal colour)
-bool P39A1_Preview(u32 F) {
+// the bridge tool's cursor at two tiles (P39A4: in the picked item's `style`): the pair a click builds, drawn as the preview; false
+// when none fits (the one-tile frame of the style is drawn at the cursor and the caller takes the refusal colour)
+bool P39A1_Preview(u32 F, int style) {
     Crossing c;
     const int tx = G32(GS(g_cursorTileX)), ty = G32(GS(g_cursorTileY));
     if (crossing_choose(ctx, tx, ty, crossings_pref_axis(ctx), c)) {
+        c.style = static_cast<uint8_t>(style & 7);   // P39A4: the picked item's style
         int px = 0, py = 0;
         P39A1_TilePoint(c.x, c.y, px, py);
         if (P39A1_ArtMode() == 1) {
@@ -954,7 +972,7 @@ bool P39A1_Preview(u32 F) {
         P39A1_Art(c, 0, px, py, 0, true);
         return true;
     }
-    const int cell = cc("cellAt", 0x226 + (crossings_style(ctx) & 7), 0, 0);
+    const int cell = cc("cellAt", 0x226 + (style & 7), 0, 0);
     G32(GS(unk_005a9cc8)) = cell;
     cc("addSprite", FD(0x60), FD(0x64), FD(0x64), 0x28, 0x28, cell, 4, 0x2a9);
     return false;
@@ -7090,8 +7108,8 @@ L41a517:
     goto L41a58f;                                      // ML+0xaf6c
 
 L41a52e:    // tool 19
-    if (crossings_on() && G32(GS(unk_0056a514)) == kTwoTileItem) {   // P39A1: the two-tile item's preview
-        if (P39A1_Preview(F)) goto L41a594;
+    if (crossing_pair_style(ctx, G32(GS(unk_0056a514))) >= 0) {   // P39A1 / P39A4: a two-tile bridge's preview, in the picked style
+        if (P39A1_Preview(F, crossing_pair_style(ctx, G32(GS(unk_0056a514))))) goto L41a594;
         goto L41a58f;
     }
     {
@@ -9602,6 +9620,7 @@ void P11_Redo(u32 F) {
     course_redo_begin(ctx, press);
     const int variant = G32(GS(unk_0056a514));
     t_gap_auto_yes = true;   // P39A3: a gap bridge of the step is built again without the question
+    t_crossings_in_redo = true;   // P39A4: a one-tile bridge step stays one tile whatever the length button shows
     for (size_t k = 0; k < items.size(); ++k) {
         const CourseRedoItem &it = items[k];
         // P39A3: a tile of a gap bridge an earlier tile of this step built again (its click would lay a path at the path price)
@@ -9611,7 +9630,8 @@ void P11_Redo(u32 F) {
         // price after the pair's charge, whose refusal opens the game's modal message)
         t_crossings_redo_axis = -1;
         bool pair = false;
-        if (crossings_on() && it.tool3 == kScenicBridgeTool && it.variant == kTwoTileItem && k + 1 < items.size()) {
+        if (crossings_on() && it.tool3 == kScenicBridgeTool && it.variant >= kTwoTileItem && it.variant < kTwoTileItem + kBridgeStyles &&
+            k + 1 < items.size()) {
             const CourseRedoItem &nx = items[k + 1];
             if (nx.tool3 == it.tool3 && nx.variant == it.variant && nx.x == it.x + 1 && nx.y == it.y) t_crossings_redo_axis = 0;
             if (nx.tool3 == it.tool3 && nx.variant == it.variant && nx.x == it.x && nx.y == it.y + 1) t_crossings_redo_axis = 1;
@@ -9635,6 +9655,7 @@ void P11_Redo(u32 F) {
     }
     t_crossings_redo_axis = -1;
     t_gap_auto_yes = false;
+    t_crossings_in_redo = false;
     course_redo_end(ctx);
     G32(GS(f_w_4c2848)) = tool0;
     G32((GS(f_w_4c2848) + 12)) = tool3;
@@ -9933,22 +9954,19 @@ void H2_Build(u32 F, int eax) {
     case 5: {   // ML+0x1007a (t == 19)
         x = FD(0x1c);
         esi = FD(0x24);
-        // P39A1 (play switch scenicBridge.twoTile = 0, crossings.h): the bridge row's ninth item builds a two-tile bridge over water
-        // or stream tiles with land at both ends, at twice the one-tile price (each tile keeps the one-tile price as its refund)
-        if (crossings_on() && G32(GS(unk_0056a514)) == kTwoTileItem) {
+        // P39A1 / P39A4 (play switch scenicBridge.twoTile = 0, crossings.h): with the length button at two tiles, every style of the
+        // row builds a two-tile bridge in that style over water or stream tiles with land at both ends, at twice the one-tile price
+        // (each tile keeps the one-tile price as its refund)
+        if (crossing_pair_style(ctx, G32(GS(unk_0056a514))) >= 0) {
             const int each = G16((GS(f_tab_buildItems_4c26b0) + 18) + 20u * (u32)edi);
-            Crossing c;
-            const bool fit = t_crossings_redo_axis >= 0
-                                 ? crossing_fit(ctx, x, esi, t_crossings_redo_axis, c) && c.x == x && c.y == esi
-                                 : crossing_choose(ctx, x, esi, crossings_pref_axis(ctx), c);
-            if (!fit) {
+            const int charge = crossing_click(ctx, x, esi, crossing_pair_style(ctx, G32(GS(unk_0056a514))), each);
+            if (charge == kClickNoFit) {
                 H2_Snd18();
                 ebx = 0;
                 goto L_fab3;
             }
-            if (cc("canAfford", 2 * each) == 0) goto L_fc6a;
-            crossing_build(ctx, c, each);
-            ebx = 2 * each;
+            if (charge == kClickPoor) goto L_fc6a;
+            ebx = charge;
             cc("playSoundAt", 0x107, H2_W(FD(0x1c)), H2_W(FD(0x24)), 0);
             goto L_fab3;
         }

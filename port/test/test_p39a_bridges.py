@@ -16,8 +16,21 @@ Evidence here (headless, the C ABI, the crossings.* test entries over a course f
 - controls (negctl crossings): 1 the land test at the ends skipped, 2 the sidecar not read back, 3 the partner not demolished:
   each reads RED.
 
-The palette item, the build through the bridge tool (H2_Build case 5), the art and the undo are checked in the app drives
-(log/roadmap/P39/P39A1_notes.md, screenshots).
+P39A4 (log/roadmap/P39/P39A4_notes.md): P39A1's ninth row item is replaced by a bridge length button beside the open bridge row;
+at two tiles every style of the row builds the pair in that style. Judged here:
+- the button: crossings.button is the hit test the press and the drawing share (only with the switch at 0 and the bridge row
+  open); clickAmenityPanel on it flips the length and hands back the row's pick unchanged (its caller stores the result in
+  unk_0056a514); with the switch at 1 the same press leaves the length alone;
+- crossings.pairStyle (the rule H2_Build case 5 and the cursor preview use): a row style 0..7 builds a pair only at two tiles, a
+  journalled pair (8 + style) always, nothing at 1;
+- crossings.click (H2_Build case 5's play branch, the same function): every style 0..7 builds its pair in that style (the water
+  tiles' low 3 flag bits, the table entry) and returns the charge 2 x the tool's price word (every style shares it); one tile
+  answers -3 (the original's branch); unk_0056a514 is put back after the build;
+- the sidecar keeps each pair's style (pairs of styles 2 and 6 in one save).
+Controls: 8 (the length button ignored) and 9 (the pair built in the test entries' style) read RED.
+
+The art of the button, the preview, the build through the live bridge tool, undo / redo are checked in the app drives
+(log/roadmap/P39/P39A4_notes.md, screenshots).
 
     ~/bin/py -3.12 -m pytest port/test/test_p39a_bridges.py -q
 """
@@ -129,7 +142,7 @@ def test_fitting_rules(portlib, course):
     assert _fit(st, 31, 24, 0) is None
     # rough is not a bridge tile
     assert _fit(st, 20, 20, 0) is None
-    # the style is the bridge row's last one-tile pick
+    # crossing_fit gives the test entries' style (H2_Build sets the clicked item's style on the pair: test_click_builds_every_style)
     st.call("crossings.setStyle", [5])
     assert _fit(st, 21, 20, 0)["style"] == 5
 
@@ -287,3 +300,147 @@ def test_control_land_ends(portlib, course, mode):
     fits = _fit(st, 31, 20, 0) is not None or _fit(st, 31, 24, 0) is not None
     portlib.negctl(NEGCTL, 0)
     assert fits == (mode == 1)
+
+
+# ---------------------------------------------------------------------------------------------------------------- P39A4
+BUTTON = (0x2DF, 0x208)       # crossings.h kLengthButtonX / Y (800 space)
+LAST_ITEM = (0x282, 0x20F)    # the row's last style (drawAmenityRow's point of item 7 of 8)
+OLD_NINTH = (0x299, 0x1F4)    # P39A1's ninth item
+
+
+def _poke(portlib, st, name, fmt, value, at=0):
+    o = objs(portlib)
+    img = bytearray(st.image())
+    struct.pack_into(fmt, img, o[name][0] + at, value)
+    st.load_image(bytes(img))
+
+
+def _peek(portlib, st, name, fmt, at=0):
+    return struct.unpack_from(fmt, st.image(), objs(portlib)[name][0] + at)[0]
+
+
+def _s32(v):
+    return v - (1 << 32) if v & 0x80000000 else v
+
+
+def _bridge_row(portlib, st, pick=5):
+    """the amenities palette open on the bridge row with style `pick` picked (f_w_4c2848[3] = 0x13, unk_0056a514 = the pick)"""
+    _poke(portlib, st, "f_w_4c2848", "<i", 0x13, 12)
+    _poke(portlib, st, "unk_0056a514", "<i", pick)
+    _poke(portlib, st, "g_buildPanelSlot", "<i", 1)
+
+
+@need_exe
+def test_length_button_hit_and_press(portlib, course):
+    st = course
+    portlib.defect(SWITCH, False)
+    _bridge_row(portlib, st)
+    hit = lambda x, y: st.call("crossings.button", [x, y]).eax  # noqa: E731
+    assert hit(*BUTTON) == 1 and hit(BUTTON[0] + 8, BUTTON[1] + 4) == 1
+    assert hit(*LAST_ITEM) == 0 and hit(*OLD_NINTH) == 0 and hit(BUTTON[0], BUTTON[1] + 0x14) == 0
+    assert st.call("crossings.twoMode", [2]).eax == 0, "a session starts at one tile"
+    for expect in (1, 0, 1):
+        r = _s32(st.call("clickAmenityPanel", list(BUTTON)).eax)
+        assert r == 5, "the press changed the row's pick"
+        assert st.call("crossings.twoMode", [2]).eax == expect
+        assert _peek(portlib, st, "unk_0056a514", "<i") == 5 and _peek(portlib, st, "f_w_4c2848", "<i", 12) == 0x13
+    # another row open (benches, tool 1): no button
+    _poke(portlib, st, "f_w_4c2848", "<i", 1, 12)
+    assert hit(*BUTTON) == 0
+    # the switch at 1: no button, the press leaves the length alone
+    portlib.defect(SWITCH, True)
+    _bridge_row(portlib, st)
+    assert hit(*BUTTON) == 0
+    st.call("clickAmenityPanel", list(BUTTON))
+    assert st.call("crossings.twoMode", [2]).eax == 1
+
+
+@need_exe
+@pytest.mark.parametrize("mode", [0, 8])
+def test_pair_style_rule(portlib, course, mode):
+    st = course
+    portlib.defect(SWITCH, False)
+    ps = lambda v: _s32(st.call("crossings.pairStyle", [v]).eax)  # noqa: E731
+    portlib.negctl(NEGCTL, mode)
+    st.call("crossings.twoMode", [0])
+    one = [ps(v) for v in range(16)]
+    st.call("crossings.twoMode", [1])
+    two = [ps(v) for v in range(16)]
+    portlib.negctl(NEGCTL, 0)
+    ok = one == [-1] * 8 + list(range(8)) and two == list(range(8)) * 2 and ps(-1) == -1 and ps(16) == -1
+    assert ok == (mode == 0), f"control {mode}: two tiles {two}"
+    if mode == 0:
+        portlib.defect(SWITCH, True)
+        assert [ps(v) for v in range(16)] == [-1] * 16
+
+
+# eight water pairs along x, two rows apart: (41, 10 + 2k), (42, 10 + 2k) with rough at both ends
+def _rows(st):
+    for k in range(8):
+        _paint(st, 40, 10 + 2 * k, ["rwwr"])
+
+
+@need_exe
+@pytest.mark.parametrize("mode", [0, 9])
+def test_click_builds_every_style(portlib, course, mode):
+    st = course
+    portlib.defect(SWITCH, False)
+    _rows(st)
+    st.call("crossings.setStyle", [0])
+    st.call("crossings.twoMode", [1])
+    _poke(portlib, st, "g_cash_div100", "<i", 100000)
+    _poke(portlib, st, "unk_0056a514", "<i", 3)
+    portlib.negctl(NEGCTL, mode)
+    charges, styles, bits = [], [], []
+    for s in range(8):
+        charges.append(_s32(st.call("crossings.click", [42, 10 + 2 * s, s, PRICE]).eax))
+        e = _table(st)[-1]
+        styles.append(e["style"])
+        bits.append([_get(st, "g_tileFlags", x, 10 + 2 * s, 2) & 7 for x in (41, 42)])
+    portlib.negctl(NEGCTL, 0)
+    assert charges == [2 * PRICE] * 8, "every style costs twice the bridge tool's price word"
+    assert _peek(portlib, st, "unk_0056a514", "<i") == 3, "the build left the journal's variant in unk_0056a514"
+    ok = styles == list(range(8)) and bits == [[s, s] for s in range(8)]
+    assert ok == (mode == 0), f"control {mode}: styles {styles}"
+
+
+@need_exe
+def test_click_one_tile_and_refusals(portlib, course):
+    st = course
+    portlib.defect(SWITCH, False)
+    _poke(portlib, st, "g_cash_div100", "<i", 100000)
+    st.call("crossings.twoMode", [0])
+    assert _s32(st.call("crossings.click", [21, 20, 4, PRICE]).eax) == -3, "one tile is the original's branch"
+    st.call("crossings.twoMode", [1])
+    assert _s32(st.call("crossings.click", [20, 20, 4, PRICE]).eax) == -1, "rough fitted a pair"
+    # canAfford's refusal (cash below the charge on a course of 3+ holes) opens the game's modal window and waits, so it is not
+    # driven headless; its branch is H2_Build's goto as in P39A1. The charge at exactly the cash is afforded.
+    assert st.call("crossings.count", []).eax == 0 and _get(st, "g_tileBuildCode", 21, 20) == 0xFF
+    _poke(portlib, st, "g_cash_div100", "<i", 2 * PRICE)
+    assert _s32(st.call("crossings.click", [21, 20, 4, PRICE]).eax) == 2 * PRICE
+    # a journalled pair (8 + style) builds at one tile too (the redo)
+    st.call("crossings.twoMode", [0])
+    _poke(portlib, st, "g_cash_div100", "<i", 100000)
+    assert _s32(st.call("crossings.click", [20, 25, 8 + 7, PRICE]).eax) == 2 * PRICE
+    assert [e["style"] for e in _table(st)] == [4, 7]
+
+
+@need_exe
+def test_sidecar_keeps_each_style(portlib):
+    st = _state(portlib, 50)
+    names = Names(st)
+    try:
+        portlib.defect(SWITCH, False)
+        _course(st)
+        _poke(portlib, st, "g_cash_div100", "<i", 100000)
+        st.call("crossings.twoMode", [1])
+        st.call("crossings.click", [21, 20, 2, PRICE])
+        st.call("crossings.click", [20, 25, 6, PRICE])
+        assert _save(st, names, "Styles") == 0
+        raw, side = _saved(st, "Styles", ".sve")
+    finally:
+        st.__exit__(None, None, None)
+    assert side[:4] == b"SGXB" and struct.unpack_from("<III", side, 4) == (2, 50, 2)
+    assert [side[16 + 12 * k + 5] for k in range(2)] == [2, 6]
+    got = _load_table(portlib, 50, 0, raw, side, stem="Styles")
+    assert [(e["x"], e["y"], e["style"]) for e in got] == [(21, 20, 2), (20, 25, 6)]

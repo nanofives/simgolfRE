@@ -36,7 +36,7 @@ int32_t amenity_row_at(Ctx &ctx, int32_t a, int32_t b) {
   int32_t r = -1;
   if (m == 1) r = amenity_row_hit(ctx, -0x54, 0x208, 5, a, b, 0);
   else if (m == 4) r = gs.g_amenityUnlockMask != 0 ? amenity_row_hit(ctx, 0, 0x168, 0xe, a, b, u32(gs.g_amenityUnlockMask)) : -1;
-  else if (m == 0x13) r = amenity_row_hit(ctx, -0x10, 0x226, crossings_on() ? kBridgeStyles + 1 : 8, a, b, 0);   // P39A1: + the two-tile item
+  else if (m == 0x13) r = amenity_row_hit(ctx, -0x10, 0x226, 8, a, b, 0);
   else if (m == 2) r = amenity_row_hit(ctx, 0xd, 0x1a3, mode == 1 ? 6 : 5, a, b, 0);
   else if (m == 0x10) r = amenity_row_hit(ctx, 0x64, 0x12f, 7, a, b, 0);
   return r;

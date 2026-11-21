@@ -452,7 +452,6 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
       const int32_t v = rng_range(ctx, r == 5 ? (mode == 1 ? 5 : 4) : r == 6 ? 7 : 8);
       gs.g_panelState[4] = v;
       gs.g_panelState[0] = v;
-      if (r == 9 && crossings_on()) crossings_set_style(ctx, v);   // P39A1: the two-tile item builds the style last shown
       return v;
     }
     case 7:
@@ -474,7 +473,6 @@ int32_t amenity_action(Ctx &ctx, int32_t r) {
     const int32_t sel = gs.g_panelState[0];
     if (sel != -1 || m == 4) {
       gs.g_panelState[4] = sel;
-      if (m == 0x13 && sel >= 0 && sel < kBridgeStyles && crossings_on()) crossings_set_style(ctx, sel);   // P39A1
       return sel;
     }
   }
@@ -578,6 +576,18 @@ int32_t pick_building(Ctx &ctx, int32_t x, int32_t y) {
 }
 int32_t amenity_row_at(Ctx &ctx, int32_t a, int32_t b);  // commands_layout.inc
 int32_t click_amenity_panel(Ctx &ctx, int32_t x, int32_t y) {
+  // P39A4 (scenicBridge.twoTile = 0, crossings.h): a press on the bridge length button beside the open bridge row switches one /
+  // two tiles; the row's pick is kept (the caller stores the result in unk_0056a514, so it gets the current pick back), with
+  // panelListSelect's list-pick sound 0xfc (a state with no sound bank, headless, throws MissingResource there: the press still
+  // counts, the sound is only feedback)
+  if (crossings_length_button_hit(ctx, x, y)) {
+    crossings_set_two_mode(ctx, !crossings_two_mode(ctx));
+    try {
+      call_optional(ctx, "playSound", {0xfc, 0x50, 0, 0, 0});
+    } catch (const MissingResource &) {
+    }
+    return ctx.gs().unk_0056a514;
+  }
   const int32_t r = pick_amenity(ctx, x, y);
   // P27A fix 7 (clickAmenityPanel.blankPressPicksHovered = 0): a press on no hotspot commits a row item only when one is under the
   // press (amenity_action's fall-through takes g_panelState[0], the last item the hover pass found, whatever the press point)

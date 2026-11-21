@@ -1994,13 +1994,25 @@ void amenities_row_tip(Gfx &g, Ctx &ctx, int32_t r, int32_t a, int32_t b) {
   backdrop(g, ctx, pool(ctx, GSO(f_strpool_4c80d0, kTitle[r & 3])), a, sub32(b, 2));
 }
 
-// P39A1 (play switch scenicBridge.twoTile = 0): the bridge row's two-tile item, hovered: its name (port text, translated) and its
-// price as amenities_row_tip writes a landmark's (the name, the pool text 0x2c of f_strpool_4c528c, the dollars): twice the one-tile
-// bridge's word f_tab_buildItems_4c26b0 + 0x12 of tool 0x13, in hundreds of dollars like g_cash_div100
-void two_tile_bridge_tip(Gfx &g, Ctx &ctx, int32_t a, int32_t b) {
+// P39A4 (play switch scenicBridge.twoTile = 0): the bridge length button, hovered: its line (port text, translated) and the price
+// of a bridge at that length as amenities_row_tip writes a landmark's (the line, the pool text 0x2c of f_strpool_4c528c, the
+// dollars): the one-tile bridge's word f_tab_buildItems_4c26b0 + 0x12 of tool 0x13 (every style alike), twice at two tiles, in
+// hundreds of dollars like g_cash_div100
+void bridge_length_tip(Gfx &g, Ctx &ctx, bool two, int32_t a, int32_t b) {
   const int32_t each = ctx.mem.load<int16_t>(state_va(ctx, &GameState::f_tab_buildItems_4c26b0) + 0x12u + 20u * 0x13u);
-  const std::string text = lang::tr("Two-tile Scenic Bridge") + pool(ctx, GSO(f_strpool_4c528c, 0x2c)) + std::to_string(mul32(mul32(each, 2), 100));
+  const std::string text = lang::tr(two ? "Bridge length: 2 tiles" : "Bridge length: 1 tile") + pool(ctx, GSO(f_strpool_4c528c, 0x2c)) +
+                           std::to_string(mul32(mul32(each, two ? 2 : 1), 100));
   backdrop(g, ctx, text, a, sub32(b, 0xc));
+}
+// P39A4: the button's digit (1 or 2), drawCenteredText in the target's current font (the palette tip's g_fontRef_519fd8): a
+// black pass one pixel down and right (0x80000000, the tip bars' black), then the white one (0x80007fff), so it reads on the cell
+void bridge_length_label(Gfx &g, Ctx &ctx, bool two, int32_t x, int32_t y) {
+  for (int k = 0; k < 2; ++k)
+    with_saved_state(ctx, [&]() {
+      const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+      put_str(ctx, buf, two ? "2" : "1");
+      call(g, ctx, "drawCenteredText", {buf, u(k == 0 ? add32(x, 1) : x), u(k == 0 ? add32(y, 1) : y), k == 0 ? 0x80000000u : 0x80007fffu});
+    });
 }
 
 // drawStringRightAt(this, text, x, y, len) (c3df.cpp DrawString_re): a NULL text, no base font or n = min(strlen, len) <= 0

@@ -72,7 +72,9 @@ void detail_panel_tip(Gfx &g, Ctx &ctx, int32_t hit, int32_t x, int32_t y);
 // drawAmenitiesPanel's dwell tip of item L and its mode-4 hovered building row r, at the cursor (a, b)
 void amenities_tip(Gfx &g, Ctx &ctx, int32_t L, int32_t a, int32_t b);
 void amenities_row_tip(Gfx &g, Ctx &ctx, int32_t r, int32_t a, int32_t b);
-void two_tile_bridge_tip(Gfx &g, Ctx &ctx, int32_t a, int32_t b);   // P39A1: the bridge row's two-tile item
+// P39A4: the bridge length button beside the bridge row: its hover tip and its digit
+void bridge_length_tip(Gfx &g, Ctx &ctx, bool two, int32_t a, int32_t b);
+void bridge_length_label(Gfx &g, Ctx &ctx, bool two, int32_t x, int32_t y);
 
 // P11C (log/roadmap/P11/P11C_notes.md): the hover help. hover_help_line(t) = tile type t's name and short clauses from its live
 // g_tileTypeAttrs record ("" for no type); hover_help_tool = palette tool sel's line above showInfoCursorPanel's tip;
