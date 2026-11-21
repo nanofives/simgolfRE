@@ -126,6 +126,7 @@ class Gfx {
   bool explain_tips = false;  // P32C (gfx.h gfx_set_explain_tips): the cash asterisk, grey names and customize button explained
   bool criteria_tips = false;  // P35G item 9 (gfx.h gfx_set_criteria_tips): the grading page's criteria rows explained
   bool hole_advice = false;   // P37A (gfx.h gfx_set_hole_advice): the hole advisor panel on the Hole Stats screen
+  int32_t ui_pilot = 0;       // P40 (gfx_ui.h gfx_set_ui_pilot): the Hole Stats screen drawn by the `ui` family (0 = off)
   bool wait_reasons = false;  // P36B part 2 (gfx.h gfx_set_wait_reasons): why a golfer stands, in its panel and the list tip
   // P33A item 1 (gfx.h gfx_set_speed_button / gfx_set_quiet_frame): the speed shown on the button (0 = no button); this frame's
   // world is not drawn (quiet_frame); the world drops are being skipped now (quiet_world); the root after the last full world

@@ -39,8 +39,22 @@ struct ScreenDraw {
   uint32_t root() const { return ctx.gs().f_stateptr_4c1570[0]; }
   uint32_t window() const { return state_va(ctx, &GameState::g_rootWindow); }
   uint32_t buf() const { return state_va(ctx, &GameState::g_textBuffer); }
+  // P40 (tests only, holestats.cpp holestats.drawLog*): every call a screen hands the backend, appended as the name's FNV-1a
+  // hash, the argument count and the arguments
+  static std::vector<uint32_t> *&log() {
+    static std::vector<uint32_t> *l = nullptr;
+    return l;
+  }
   void gx(const char *name, std::initializer_list<uint32_t> a) const {
-    if (on) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+    if (!on) return;
+    if (std::vector<uint32_t> *l = log()) {
+      uint32_t h = 2166136261u;
+      for (const char *c = name; *c; ++c) h = (h ^ static_cast<uint8_t>(*c)) * 16777619u;
+      l->push_back(h);
+      l->push_back(static_cast<uint32_t>(a.size()));
+      l->insert(l->end(), a.begin(), a.end());
+    }
+    gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
   }
   // build(): writes the text into g_textBuffer; draw(va): the drawing calls over it. The buffers are restored after.
   template <class Build, class Draw>

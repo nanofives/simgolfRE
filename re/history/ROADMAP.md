@@ -2244,3 +2244,13 @@ level (3.75-unit risers, 12 even treads on a 3-level tile; every stairs vertex i
 and the top tread meets the flat path), the centre vertex a cut too, risers from the retaining wall's plank band; his pick:
 steps drawn from 2 levels (drawing only; the x2 price and the 0x2b rule stay at 3+). Evidence: segments x64 205 / 205;
 test_p39a_stairs 26, terrain_render 522; controls 5 / 5 RED; close-ups before / after.
+
+## P40: UI survey and the procedural Hole Stats pilot (2026-11-21; notes log/roadmap/P40/P40_notes.md, survey P40_survey.md)
+Mariano asked about vectorizing the UI; the agreed plan: procedural drawing for frames / panels / plates / pills / buttons, 9-slice
+for bitmap panels, a pixel-art upscale for icons, a theme. Survey: 103 elements on 148 sheets (P ~45, S ~18, U ~30, K ~10); the
+plug-in point: UI runs redrawn at the window's resolution by the presenter like the P9C text runs. Pilot: --ui-pilot off|game|slate
+(default off): the Hole Stats screen's frame, title plate, pills, value boxes, connectors, score circles, comment box and close
+button as vector shapes, colours measured from the art (0.946 of opaque pixels within 24 levels), new gfx family ui. Evidence:
+segments x64 205 / 205 (off); test_p40_ui_pilot 15 (off = the original's calls on 60 random cases), test_holestats, test_static;
+controls 3 / 3 RED. Open: the GPU path rebuilds UI run tables per frame change (4K 50 vs 44 ms); a few panel edge pixels differ
+by about 4 levels GPU vs CPU. Mariano then chose to roll it out to every report screen (P40B).

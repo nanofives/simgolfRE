@@ -139,6 +139,10 @@
 //   P37A: --hole-advice on|off (default on; SG_APP_P37=off: off) the Hole Stats screen gets the hole advisor panel under its art:
 //   the magazine awards' progress, the score band, the skills and hole type, fun and complaints, variety, money (holeadvice.h,
 //   gfx.h gfx_set_hole_advice; drawing only; re/roadmap/P37_HOLE_ADVISOR.md)
+//   P40: --ui-pilot off|game|slate (default off; `on` = game) the Hole Stats screen's frame, title plate, pills, value boxes,
+//   connectors, score ovals, comment box and close button drawn as vector shapes (gfx_ui.h) instead of the HoleSTAT / OkStates art;
+//   with --text-res native the presenter draws them again at the window's resolution. game = the colours measured from the art,
+//   slate = an alternate theme. Drawing only (log/roadmap/P40/P40_notes.md).
 //   P39C: --green-highlight on|off (default on; SG_APP_P39=off: off) while the player aims, the blinking marker on the cup tile
 //   becomes an outline of the cup's whole green over its slope, in the same blink (greenline.h; drawing only; log/roadmap/P39/
 //   P39C_notes.md)
@@ -430,6 +434,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
 #include "portsim/sim/gfx.h"  // P8B: gfx_back_terrain
+#include "portsim/sim/gfx_ui.h"  // P40: gfx_set_ui_pilot
 #include "portsim/sim/terrain_live.h"  // P35D: terrain_world_set_reach
 #include "portsim/sim/world.h"  // P38B: --world-size
 #include "portsim/sim/live.h"
@@ -688,6 +693,7 @@ struct Options {
   bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
   bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
+  int ui_pilot = 0;                // P40: --ui-pilot off|game|slate (gfx_ui.h UiPilotTheme; default off)
   bool green_highlight = true;     // P39C: --green-highlight on|off (SG_APP_P39=off: off)
   int world_size = 50;             // P38B: --world-size N (play profile only)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
@@ -1461,6 +1467,7 @@ int run_live_trace(const Options &o_in, AppFiles &files, const fs::path &rec) {
       if (ok && o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9
       if (ok && o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2
       if (ok && o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A
+      if (ok && o.ui_pilot) portsim::gfx_set_ui_pilot(*ctx, o.ui_pilot);  // P40
       if (ok && o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B
       if (ok && std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(std::getenv("SG_P38E_CREDITS"));  // P38E development
       if (ok && o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9
@@ -1761,6 +1768,7 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (o.criteria_tips) portsim::gfx_set_criteria_tips(*ctx, true);  // P35G item 9: the grading page's row tips (gfx.h; drawing only)
   if (o.wait_reasons) portsim::gfx_set_wait_reasons(*ctx, true);  // P36B part 2: why a golfer stands (gfx.h; drawing only)
   if (o.hole_advice) portsim::gfx_set_hole_advice(*ctx, true);  // P37A: the hole advisor panel (gfx.h; drawing only)
+  if (o.ui_pilot) portsim::gfx_set_ui_pilot(*ctx, o.ui_pilot);  // P40: the procedural Hole Stats screen (gfx_ui.h; drawing only)
   if (o.profile == "play" && o.world_size != 50) ctx->world_request = o.world_size;  // P38B: the next new sandbox course's N
   if (const char *cr = std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(cr);  // P38E development: land credits
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
@@ -2553,6 +2561,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        std::to_string(o.sharp_notes ? 1 : 0) + "}";  // P35G items 9 and 11
   s += ",\"p36b\":{\"wait_reasons\":" + std::to_string(o.wait_reasons ? 1 : 0) + "}";  // P36B part 2
   s += ",\"p37a\":{\"hole_advice\":" + std::to_string(o.hole_advice ? 1 : 0) + "}";  // P37A
+  s += ",\"p40\":{\"ui_pilot\":" + std::to_string(o.ui_pilot) + "}";  // P40
   s += ",\"p39c\":{\"green_highlight\":" + std::to_string(o.green_highlight ? 1 : 0) + "}";  // P39C
   s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
@@ -3989,6 +3998,11 @@ bool parse(int argc, char **argv, Options &o) {
     if (a == "--green-highlight") {  // P39C (before the chain too: C1061)
       if (!val(v) || (v != "on" && v != "off")) return false;
       o.green_highlight = v == "on";
+      continue;
+    }
+    if (a == "--ui-pilot") {  // P40 (before the chain too)
+      if (!val(v) || (v != "off" && v != "on" && v != "game" && v != "slate")) return false;
+      o.ui_pilot = v == "off" ? 0 : v == "slate" ? 2 : 1;
       continue;
     }
     if (a == "--hole-advice") {  // P37A (before the chain too)

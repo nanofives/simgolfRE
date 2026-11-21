@@ -25,6 +25,8 @@
 // switches the button's hover image. Nothing of it writes the GameState.
 #include "portsim/sim/holestats.h"
 
+#include <algorithm>
+#include <chrono>
 #include <map>
 #include <memory>
 #include <vector>
@@ -34,6 +36,7 @@
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
 #include "gfx_reports.h"
+#include "portsim/sim/gfx_ui.h"
 
 namespace portsim {
 
@@ -43,6 +46,7 @@ namespace {
 //                            clock edges
 //                        2 = g_msgState53df54 is left as it was on the way out
 //                        3 = the histogram's last row collects the scores up to 8 instead of 9
+//                        4 = P40: with --ui-pilot, a row cell's procedural draw one row lower than the art's place
 int g_negctl_holestats = 0;
 
 using cm::G;
@@ -77,6 +81,8 @@ struct HoleStats {
   const gfxr::ScreenDraw d;
   const uint32_t root, font_b, art;   // the drawing target, g_fontRef_821ee8, the HoleSTAT art g_spriteRef_821200
   int32_t hover = 0, button_y = 0, y = 0;
+  // P40 (gfx_ui.h, --ui-pilot): the art draws handed to the `ui` family instead (drawing only; 0 = the original's calls)
+  const int32_t ui;
 
   HoleStats(Ctx &c, int32_t h)
       : ctx(c),
@@ -88,7 +94,24 @@ struct HoleStats {
         d(c),
         root(d.root()),
         font_b(GS(g_fontRef_821ee8)),
-        art(GS(g_spriteRef_821200)) {}
+        art(GS(g_spriteRef_821200)),
+        ui(d.on ? gfx_ui_pilot(c) : kUiPilotOff) {}
+  // P40: the art cell `cell` (+0x58 a row, +0xb0 the foot; its mask at +0x2c) at y, or its procedural piece
+  void cell(uint32_t off, int32_t yy) {
+    if (ui == kUiPilotOff) {
+      d.gx("Surface_stretchBlit", {art + off, art + off + 0x2c, root, 0, u32(yy), 0});
+      return;
+    }
+    const int32_t h = d.cut_h(art + off);
+    if (off == 0) d.gx("p40.hs_head", {u32(yy)});
+    else if (off == 0x58) d.gx("p40.hs_row", {u32(yy + (SG_NEGCTL(g_negctl_holestats) == 4 ? 1 : 0)), u32(h)});
+    else d.gx("p40.hs_foot", {u32(yy), u32(h)});
+  }
+  // the close button (g_spriteRef_820f40, +0x2c its hover image) at (0x23e, by), or its procedural piece
+  void button(int32_t by, bool hov) {
+    if (ui == kUiPilotOff) d.gx("Image_draw", {GS(g_spriteRef_820f40) + (hov ? 0x2cu : 0u), root, 0x23e, u32(by), 0});
+    else d.gx("p40.hs_button", {0x23e, u32(by), hov ? 1u : 0u});
+  }
   // the drawing calls over the text the build just left in g_textBuffer
   void w_draw(int32_t x, int32_t yy, uint32_t s = 0) {
     if (!s) s = text;
@@ -121,7 +144,7 @@ struct HoleStats {
       if (in != (hover != 0)) {
         hover = in ? 1 : 0;
         if (gfx_explain_tips(ctx)) d.gx("p32c.untip", {});   // P32C FIX 3 (gfx_hud.cpp b_modal_tip; drawing only)
-        d.gx("Image_draw", {GS(g_spriteRef_820f40) + (in ? 0x2cu : 0u), root, 0x23e, u32(button_y), 0});
+        button(button_y, in);
         if (gfx_explain_tips(ctx) && in) d.gx("p32c.tip", {0, 0x23e + 0x16, u32(sub32(button_y, 2))});
         d.gx("Window::refreshFull", {d.window(), 0});
       }
@@ -142,7 +165,7 @@ struct HoleStats {
   int32_t build(uint32_t page) {
     const uint32_t pool = GS(f_strpool_4d317c);
     int32_t rounds = r32(0x20);
-    d.gx("Surface_stretchBlit", {art, art + 0x2c, root, 0, 0, 0});
+    cell(0, 0);
     y = d.cut_h(art);
     d.gx("Widget_setQuad", {root, 0x80000000u, 0xffffffffu, 2, 2});
     cm::cpy(ctx, text, pool + 0xf0);
@@ -296,7 +319,7 @@ struct HoleStats {
     // a par byte of 0 shows a banner whose text blinks with bit 9 of the clock: the read is the original's, its value
     // only decides the drawing
     if (G<uint8_t>(ctx, rec) == 0) {
-      d.gx("Surface_stretchBlit", {art + 0x58, art + 0x84, root, 0, u32(y), 0});
+      cell(0x58, y);
       const uint32_t t = clock(kHsClockBanner);
       if ((t & 0x200) != 0) {
         d.gx("Widget_setQuad", {root, 0x80007d08u, 0xffffffffu, 2, 2});
@@ -318,7 +341,7 @@ struct HoleStats {
         }
       if (best == 0) continue;
       if (r32(0x20) == 0) continue;
-      d.gx("Surface_stretchBlit", {art + 0x58, art + 0x84, root, 0, u32(y), 0});
+      cell(0x58, y);
       const int32_t pct = div32(mul32(comment[best_k], 100), r32(0x20));
       clear_text();
       cat_num(pct);
@@ -334,9 +357,9 @@ struct HoleStats {
       y = add32(y, d.cut_h(art + 0x58));
       comment[best_k] = 0;
     }
-    d.gx("Surface_stretchBlit", {art + 0xb0, art + 0xdc, root, 0, u32(y), 0});
+    cell(0xb0, y);
     button_y = add32(y, 8);
-    d.gx("Image_draw", {GS(g_spriteRef_820f40) + (hover != 0 ? 0x2cu : 0u), root, 0x23e, u32(button_y), 0});
+    button(button_y, hover != 0);
     if (gfx_explain_tips(ctx)) {  // P32C FIX 3: the page drawn again: the tip again over the hovered close button
       d.gx("p32c.untip", {});
       if (hover != 0) d.gx("p32c.tip", {0, 0x23e + 0x16, u32(sub32(button_y, 2))});
@@ -479,6 +502,83 @@ void a_clear_script(Ctx &c, const uint32_t *, Ret &) {
 // the registry needs a negative-control variable for every entry; the test entries share one that nothing reads
 int g_negctl_none = 0;
 
+// ---- P40 test entries (port/test/test_p40_ui_pilot.py)
+// holestats.uiPilot(theme): gfx_set_ui_pilot on the attached backend
+void a_ui_pilot(Ctx &c, const uint32_t *a, Ret &) { gfx_set_ui_pilot(c, i32(a[0])); }
+// holestats.drawLogBegin(): record every call ScreenDraw hands the backend; holestats.drawLogTake(va, cap): the words recorded
+// (name hash, count, arguments; gfx_reports.h ScreenDraw::log) copied to va (at most cap), returns their number; recording ends
+std::vector<uint32_t> &draw_log() {
+  static std::vector<uint32_t> v;
+  return v;
+}
+void a_draw_log_begin(Ctx &, const uint32_t *, Ret &) {
+  draw_log().clear();
+  gfxr::ScreenDraw::log() = &draw_log();
+}
+void a_draw_log_take(Ctx &c, const uint32_t *a, Ret &r) {
+  gfxr::ScreenDraw::log() = nullptr;
+  const std::vector<uint32_t> &v = draw_log();
+  const uint32_t n = static_cast<uint32_t>(std::min<size_t>(v.size(), a[1]));
+  for (uint32_t k = 0; k < n; ++k) c.mem.store<uint32_t>(a[0] + 4 * k, v[k]);
+  r.set_u32(static_cast<uint32_t>(v.size()));
+}
+// holestats.uiRender(which, theme, x, y, hov, scale, va, cap): a Hole Stats scene (gfx_ui.h ui_test_scene) rendered at an integer
+// scale over its bounds; va gets w, h, the box's frame origin (x0, y0) and then one word per pixel: red, green, blue
+// (premultiplied, rounded to 8 bits) and the coverage * 255 from the low byte up. Returns the words written (0: too small a cap).
+void a_ui_render(Ctx &c, const uint32_t *a, Ret &r) {
+  UiScene s;
+  r.set_u32(0);
+  if (!ui_test_scene(i32(a[0]), i32(a[1]), i32(a[2]), i32(a[3]), i32(a[4]), s)) return;
+  const int32_t k = std::max<int32_t>(1, i32(a[5]));
+  float fx0, fy0, fx1, fy1;
+  ui_bounds(s, fx0, fy0, fx1, fy1);
+  const int32_t x0 = static_cast<int32_t>(fx0), y0 = static_cast<int32_t>(fy0);
+  const int32_t w = (static_cast<int32_t>(fx1 + 0.999f) - x0) * k, h = (static_cast<int32_t>(fy1 + 0.999f) - y0) * k;
+  if (w <= 0 || h <= 0 || static_cast<uint64_t>(w) * static_cast<uint64_t>(h) + 4u > a[7]) return;
+  std::vector<float> prem;
+  ui_render(s, k, k, 0.0, 0.0, x0 * k, y0 * k, w, h, prem);
+  c.mem.store<uint32_t>(a[6], u32(w));
+  c.mem.store<uint32_t>(a[6] + 4, u32(h));
+  c.mem.store<uint32_t>(a[6] + 8, u32(x0));
+  c.mem.store<uint32_t>(a[6] + 12, u32(y0));
+  for (size_t i = 0; i < static_cast<size_t>(w) * static_cast<size_t>(h); ++i) {
+    uint32_t word = 0;
+    for (int ch = 0; ch < 4; ++ch) {
+      const float v = ch == 3 ? prem[4 * i + 3] * 255.f : prem[4 * i + static_cast<size_t>(ch)];
+      const int32_t q = std::max(0, std::min(255, static_cast<int32_t>(v + 0.5f)));
+      word |= static_cast<uint32_t>(q) << (8 * ch);
+    }
+    c.mem.store<uint32_t>(a[6] + 16 + 4 * static_cast<uint32_t>(i), word);
+  }
+  r.set_u32(static_cast<uint32_t>(4 + static_cast<size_t>(w) * static_cast<size_t>(h)));
+}
+// holestats.uiTime(which, theme, scale_x1000, reps): the mean wall time of ui_render of a scene over its bounds at scale / 1000, in
+// microseconds (a measurement for the notes; the presenter renders a run once per frame change and keeps it)
+void a_ui_time(Ctx &, const uint32_t *a, Ret &r) {
+  UiScene s;
+  r.set_u32(0);
+  if (!ui_test_scene(i32(a[0]), i32(a[1]), 574, 300, 0, s)) return;
+  const double k = std::max<uint32_t>(1u, a[2]) / 1000.0;
+  float fx0, fy0, fx1, fy1;
+  ui_bounds(s, fx0, fy0, fx1, fy1);
+  const int32_t x0 = static_cast<int32_t>(fx0 * k), y0 = static_cast<int32_t>(fy0 * k);
+  const int32_t w = static_cast<int32_t>(fx1 * k) + 1 - x0, h = static_cast<int32_t>(fy1 * k) + 1 - y0;
+  std::vector<float> prem;
+  const uint32_t reps = std::max<uint32_t>(1u, a[3]);
+  const auto t0 = std::chrono::steady_clock::now();
+  for (uint32_t i = 0; i < reps; ++i) ui_render(s, k, k, 0.0, 0.0, x0, y0, w, h, prem);
+  const auto us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
+  r.set_u32(static_cast<uint32_t>(us / reps));
+}
+// holestats.uiCodec(which, theme): 1 when the scene survives ui_encode / ui_decode unchanged (its encoding again equal)
+void a_ui_codec(Ctx &, const uint32_t *a, Ret &r) {
+  UiScene s, t;
+  r.set_u32(0);
+  if (!ui_test_scene(i32(a[0]), i32(a[1]), 574, 300, 1, s)) return;
+  const std::string e = ui_encode(s);
+  r.set_u32(ui_decode(e, t) && ui_encode(t) == e ? 1u : 0u);
+}
+
 const FuncDef kFuncs[] = {
     {"showHoleStatsScreen", "default", "void", 1, 0,
      [](Ctx &c, const uint32_t *a, Ret &) { show_hole_stats_screen(c, i32(a[0])); }, &g_negctl_holestats},
@@ -486,6 +586,12 @@ const FuncDef kFuncs[] = {
     {"holestats.consumed", "default", "int", 0, 0, a_consumed, &g_negctl_none},
     {"holestats.cursorReads", "default", "int", 0, 0, a_cursor_reads, &g_negctl_none},
     {"holestats.clearScript", "default", "void", 0, 0, a_clear_script, &g_negctl_none},
+    {"holestats.uiPilot", "default", "void", 1, 0, a_ui_pilot, &g_negctl_none},
+    {"holestats.drawLogBegin", "default", "void", 0, 0, a_draw_log_begin, &g_negctl_none},
+    {"holestats.drawLogTake", "default", "int", 2, 0, a_draw_log_take, &g_negctl_none},
+    {"holestats.uiRender", "default", "int", 8, 0, a_ui_render, &g_negctl_none},
+    {"holestats.uiCodec", "default", "int", 2, 0, a_ui_codec, &g_negctl_none},
+    {"holestats.uiTime", "default", "int", 4, 0, a_ui_time, &g_negctl_none},
 };
 }  // namespace
 

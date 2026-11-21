@@ -2,6 +2,7 @@
 #include "textres.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstring>
 #include <map>
@@ -21,6 +22,7 @@
 #endif
 
 #include "present.h"  // rgb555_to_bgra
+#include "portsim/sim/gfx_ui.h"  // P40: UI runs
 
 namespace portapp {
 
@@ -34,6 +36,73 @@ int32_t first_client(int32_t l, int32_t n_client, int32_t n_log) {
   return static_cast<int32_t>(num >= 0 ? (num + n_log - 1) / n_log : -((-num) / n_log));
 }
 int32_t floor_div(int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); }
+
+// P40 (portsim/sim/gfx_ui.h): a UI run's scene rendered at the content rectangle's scale over the scene's whole client box (its
+// 800-space bounds mapped as TextRaster::prep maps a run's box). The render is kept per scene, viewport, offset and canvas, so the
+// runs of one scene (a screen that redraws its panel every page: each redraw is a run over the pixels it changed) share one
+// render, and a paint whose frame is unchanged renders nothing. `bx0..by1` = the run's own client box inside it.
+struct UiRender {
+  int32_t x0 = 0, y0 = 0, w = 0, h = 0;
+  std::vector<float> prem;
+  // the frame pixels the scene covers at scale 1 (what the root drawing wrote; the HUD layer holds exactly those): the window's
+  // pixels are drawn only over them, so the CPU draw and the GPU tables (applied inside the layer) write the same pixels
+  int32_t fx0 = 0, fy0 = 0, fw = 0, fh = 0;
+  std::vector<uint8_t> cover;
+  bool covered(int32_t lx, int32_t ly) const {
+    if (lx < fx0 || ly < fy0 || lx >= fx0 + fw || ly >= fy0 + fh) return false;
+    return cover[static_cast<size_t>(ly - fy0) * static_cast<size_t>(fw) + static_cast<size_t>(lx - fx0)] != 0;
+  }
+};
+struct UiBox {
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+};
+const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, UiBox &rb) {
+  if (vp.client_w <= 0 || vp.client_h <= 0 || r.x1 <= r.x0 || r.y1 <= r.y0) return nullptr;
+  static thread_local std::map<std::string, UiRender> cache;
+  std::string key = r.text;
+  for (int64_t v : {static_cast<int64_t>(vp.origin_x), static_cast<int64_t>(vp.origin_y), static_cast<int64_t>(vp.client_w),
+                    static_cast<int64_t>(vp.client_h), static_cast<int64_t>(dx), static_cast<int64_t>(cw), static_cast<int64_t>(ch)})
+    key.append(reinterpret_cast<const char *>(&v), sizeof v);
+  auto it = cache.find(key);
+  if (it == cache.end()) {
+    portsim::UiScene sc;
+    if (!portsim::ui_decode(r.text, sc)) return nullptr;
+    float fx0, fy0, fx1, fy1;
+    portsim::ui_bounds(sc, fx0, fy0, fx1, fy1);
+    UiRender u;
+    u.x0 = std::max(0, vp.origin_x + dx + first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW));
+    u.y0 = std::max(0, vp.origin_y + first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH));
+    const int32_t x1 = std::min(cw, vp.origin_x + dx + first_client(static_cast<int32_t>(std::ceil(fx1)), vp.client_w, kLogicalW));
+    const int32_t y1 = std::min(ch, vp.origin_y + first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH));
+    u.w = std::max(0, x1 - u.x0);
+    u.h = std::max(0, y1 - u.y0);
+    portsim::ui_render(sc, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH,
+                       static_cast<double>(vp.origin_x + dx), static_cast<double>(vp.origin_y), u.x0, u.y0, u.w, u.h, u.prem);
+    u.fx0 = static_cast<int32_t>(std::floor(fx0));
+    u.fy0 = static_cast<int32_t>(std::floor(fy0));
+    u.fw = std::max(0, static_cast<int32_t>(std::ceil(fx1)) - u.fx0);
+    u.fh = std::max(0, static_cast<int32_t>(std::ceil(fy1)) - u.fy0);
+    std::vector<float> one;
+    portsim::ui_render(sc, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp draw_scene)
+    u.cover.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
+    for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = one[4 * i + 3] > 0.f ? 1 : 0;
+    if (cache.size() > 32) cache.clear();
+    it = cache.emplace(key, std::move(u)).first;
+  }
+  const UiRender &u = it->second;
+  rb.x0 = std::max(u.x0, vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW));
+  rb.y0 = std::max(u.y0, vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH));
+  rb.x1 = std::min(u.x0 + u.w, vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW));
+  rb.y1 = std::min(u.y0 + u.h, vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH));
+  return &u;
+}
+// whether client pixel (x, y) of the box shows the run: its 800-space pixel (the presenter's floor mapping) visible and covered by
+// the scale-1 drawing
+bool ui_visible(const portsim::GfxTextRun &r, const UiRender &u, bool layered, const Viewport &vp, int32_t dx, int32_t x, int32_t y) {
+  const int32_t ly = floor_div(static_cast<int64_t>(y - vp.origin_y) * kLogicalH, vp.client_h);
+  const int32_t lx = floor_div(static_cast<int64_t>(x - vp.origin_x - dx) * kLogicalW, vp.client_w);
+  return u.covered(lx, ly) && r.visible(lx, ly, layered) != 0;
+}
 }  // namespace
 
 #ifdef _WIN32
@@ -295,6 +364,22 @@ void TextRaster::gdi(const portsim::GfxTextRun &r, const Prep &p) {
 
 void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out,
                       int32_t cw, int32_t ch) {
+  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run, its scene over the visible pixels (the same words as table())
+    UiBox b;
+    const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
+    if (!u) return;
+    for (int32_t y = b.y0 - u->y0; y < b.y1 - u->y0; ++y)
+      for (int32_t x = b.x0 - u->x0; x < b.x1 - u->x0; ++x) {
+        const float *p = u->prem.data() + (static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)) * 4u;
+        if (p[3] <= 0.f) continue;
+        const int32_t cx = u->x0 + x, cy = u->y0 + y;
+        if (!ui_visible(r, *u, layered, vp, dx, cx, cy)) continue;
+        uint32_t &o = out[static_cast<size_t>(cy) * static_cast<size_t>(cw) + static_cast<size_t>(cx)];
+        o = rgb555_to_bgra(portsim::ui_over555(p, to555(o)));
+      }
+    ++stats.runs;
+    return;
+  }
 #ifdef _WIN32
   Prep p;
   if (!prep(r, vp, dx, cw, ch, p)) return;
@@ -342,6 +427,79 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
 bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
                        TextTable &t, uint32_t levels) {
   t = TextTable();
+  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run's table: per pixel its premultiplied colour over each grey level
+    UiBox b;
+    const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
+    if (!u) return false;
+    std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;  // premultiplied value -> entry + 1 (0: no ink)
+    std::unordered_multimap<uint64_t, uint32_t> ids;
+    std::vector<uint32_t> idx(static_cast<size_t>(u->w) * static_cast<size_t>(u->h), 0);
+    int32_t ix0 = u->w, ix1 = -1, iy0 = u->h, iy1 = -1;
+    uint16_t e[32];
+    for (int32_t y = b.y0 - u->y0; y < b.y1 - u->y0; ++y)
+      for (int32_t x = b.x0 - u->x0; x < b.x1 - u->x0; ++x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x);
+        const float *p = u->prem.data() + i * 4u;
+        if (p[3] <= 0.f || !ui_visible(r, *u, layered, vp, dx, u->x0 + x, u->y0 + y)) continue;
+        // a pixel whose premultiplied value an earlier pixel had takes that pixel's entry (the 32 words depend on it alone)
+        uint32_t pk[4];
+        std::memcpy(pk, p, sizeof pk);
+        const uint64_t ph = (static_cast<uint64_t>(pk[0]) * 0x9E3779B97F4A7C15ull) ^ (static_cast<uint64_t>(pk[1]) * 0xC2B2AE3D27D4EB4Full) ^
+                            (static_cast<uint64_t>(pk[2]) * 0x165667B19E3779F9ull) ^ (static_cast<uint64_t>(pk[3]) * 0x27D4EB2F165667C5ull);
+        {
+          auto m = memo.find(ph);
+          if (m != memo.end() && std::memcmp(m->second.first.data(), pk, sizeof pk) == 0) {
+            if (m->second.second == 0) continue;
+            idx[i] = m->second.second;
+            ix0 = std::min(ix0, x);
+            ix1 = std::max(ix1, x + 1);
+            iy0 = std::min(iy0, y);
+            iy1 = std::max(iy1, y + 1);
+            continue;
+          }
+        }
+        bool ink = false;
+        uint64_t hsh = 1469598103934665603ull;
+        for (uint32_t L = 0; L < 32; ++L) {
+          const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+          e[L] = L < levels ? portsim::ui_over_level(p, L) : g;
+          ink = ink || e[L] != g;
+          hsh = (hsh ^ e[L]) * 1099511628211ull;
+        }
+        if (!ink) {
+          memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, 0u};
+          continue;
+        }
+        uint32_t k = ~0u;
+        for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
+          if (std::memcmp(t.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
+            k = r2.first->second;
+            break;
+          }
+        if (k == ~0u) {
+          k = static_cast<uint32_t>(t.lut.size() / 32);
+          ids.emplace(hsh, k);
+          t.lut.insert(t.lut.end(), e, e + 32);
+        }
+        idx[i] = k + 1;
+        memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, k + 1};
+        ix0 = std::min(ix0, x);
+        ix1 = std::max(ix1, x + 1);
+        iy0 = std::min(iy0, y);
+        iy1 = std::max(iy1, y + 1);
+      }
+    if (ix1 <= ix0) return true;
+    t.x0 = u->x0 + ix0;
+    t.x1 = u->x0 + ix1;
+    t.y0 = u->y0 + iy0;
+    t.y1 = u->y0 + iy1;
+    const int32_t tw = ix1 - ix0;
+    t.idx.resize(static_cast<size_t>(tw) * static_cast<size_t>(iy1 - iy0));
+    for (int32_t y = iy0; y < iy1; ++y)
+      std::memcpy(t.idx.data() + static_cast<size_t>(y - iy0) * static_cast<size_t>(tw),
+                  idx.data() + static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(ix0), static_cast<size_t>(tw) * 4u);
+    return true;
+  }
 #ifdef _WIN32
   Prep p;
   if (!prep(r, vp, dx, cw, ch, p)) return false;

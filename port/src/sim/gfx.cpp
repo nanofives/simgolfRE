@@ -45,6 +45,7 @@
 #include "portsim/sim/gfx_hud.h"
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
+#include "portsim/sim/gfx_ui.h"  // P40: ui_is_run_face
 #include "portsim/sim/perf.h"  // P10A: the drawing's wall time for the host's profiler
 
 namespace portsim {
@@ -894,6 +895,7 @@ std::vector<GfxTextPeelRun> peel_runs(const std::vector<Gfx::TextCapture::Run> &
     p.y1 = r.info.y1;
     p.before = r.before.data();
     p.after = r.after.data();
+    p.solid = ui_is_run_face(r.info.face);  // P40: a UI run's fill shows whole (no witness rule)
     out.push_back(p);
   }
   return out;
@@ -1678,7 +1680,7 @@ void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::
         const size_t j = static_cast<size_t>(y - r.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - r.x0);
         if (i < img.size() && img[i] == r.after[j]) v[j] = 1;
       }
-    if (witness) {  // P10B fix 3: keep only the pixels near a witness (gfx.h kGfxTextPeelSpread)
+    if (witness && !r.solid) {  // P10B fix 3: keep only the pixels near a witness (gfx.h kGfxTextPeelSpread); P40: not a UI run
       dist.assign(v.size(), 0xff);
       queue.clear();
       for (int32_t y = 0; y < bh; ++y)

@@ -660,6 +660,9 @@ constexpr uint8_t kGfxTextCoverMark = 0xff;
 struct GfxTextPeelRun {
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   const uint16_t *before = nullptr, *after = nullptr;
+  // P40 (gfx_ui.h): a UI run (a filled shape, not glyphs): every box pixel holding its after word shows it; the witness rule
+  // below is for glyphs and would hide the inside of a flat fill farther than kGfxTextPeelSpread from a colour change
+  bool solid = false;
 };
 // P10B fix 3 (gfx_set_text_peel_witness, on by default): a box pixel holding the run's `after` word counts as visible only when it is
 // within kGfxTextPeelSpread steps (8-connected, through such pixels) of a WITNESS: one of them with a 4-neighbour of them whose
