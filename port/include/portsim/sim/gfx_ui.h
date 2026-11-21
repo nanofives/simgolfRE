@@ -137,8 +137,10 @@ bool ui_test_scene(int32_t which, int32_t theme, int32_t x, int32_t y, int32_t h
 // the panel from the cell's opaque pixels as a distance field, each pill / cream box / white row as a fitted rounded
 // rectangle or ellipse (a field when no fit holds) with its dark outline, the dark lines inside as a field, coloured by the
 // theme; `keep` gets the pixels the scene does not draw (pictures, coloured marks: drawn from the art). False for an empty cell.
+// border_only (P40C, the HUD panels: painted slots and shading): only the panel's shape is drawn; every panel pixel farther than
+// 5 pixels from its edge, and every box, line and rim, is kept as art.
 bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
-                   UiScene &out, std::vector<uint8_t> &keep);
+                   UiScene &out, std::vector<uint8_t> &keep, bool border_only = false);
 class Gfx;
 void ui_draw_scene(Gfx &g, Ctx &ctx, const UiScene &s);
 UiScene ui_button_scene(const UiTheme &t, int32_t x, int32_t y, bool hover);

@@ -601,7 +601,8 @@ void a_ui_cell(Ctx &c, const uint32_t *a, Ret &r) {
   for (uint32_t i = 0; i < 256; ++i) pal[i] = c.mem.load<uint16_t>(a[1] + 2 * i);
   UiScene s;
   std::vector<uint8_t> keep;
-  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4])), s, keep)) return;
+  // (P40C: theme | 0x100 = border-only, the HUD panels' mode)
+  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4] & 0xffu)), s, keep, (a[4] & 0x100u) != 0)) return;
   const uint64_t words = static_cast<uint64_t>(w) * h * k * k + 2u + (col.size() + 3) / 4;
   if (words > a[7]) return;
   std::vector<float> prem;

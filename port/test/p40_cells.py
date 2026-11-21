@@ -51,6 +51,19 @@ CELLS = [
     ("route_bottom", "route screens_bottom", None, 0, 0xFD, 0x320, 0x15B),
     ("buy_land", "buy_land", None, 0, 0, 0x320, 0x258),
 ]
+# P40C batch 4: the HUD panels (g_sprites541a18 over g_sprites58b390, loadInterfaceArt; the interface folder)
+HUD_CELLS = [
+    ("hud_terrain", "../BaseTerrainPanel", "../BaseTerrainPanel_A", 0xD8, 0x1E2, 0x248, 0x76),
+    ("hud_building", "../BuildingPanel", "../BuildingPanel_A", 0xD8, 0x1E2, 0x248, 0x76),
+    ("hud_amenities", "../AmenitiesPanel", "../AmenitiesPanel_A", 0xD6, 0x1E2, 0x24A, 0x76),
+    ("hud_member", "../MemberPanel", "../MemberPanel_A", 0xD7, 0x1DA, 0x249, 0x7E),
+    ("hud_action", "../JoeCoolPanel", "../JoeCoolPanel_A", 0xD6, 0x1DA, 0x24A, 0x7E),
+    ("hud_match", "../JoeCoolPanel", "../JoeCoolPanel_A", 0x129, 0x12C, 0x1F7, 0x7A),
+    ("hud_employee", "../EmployeePanel", "../EmployeePanel_A", 0xD7, 0x1DA, 0x249, 0x7E),
+    ("hud_elevation", "../ElevationPanel", "../ElevationPanel_A", 0xD7, 0x1E2, 0x249, 0x76),
+    ("hud_golfer", "../GolferStats", "../GolferStats_A", 0x40, 0x21, 0x192, 0xF4),
+    ("hud_story", "../GolferStats", "../GolferStats_A", 0x40, 0x12C, 0x192, 0x8A),
+]
 
 
 def cell_bytes(sheet, alpha, x, y, w, h):
@@ -80,7 +93,8 @@ def cell_render(lib, cell, theme, scale):
         st.map(IN_VA + 0x800000, pb, readonly=True)
         out = (C.c_uint32 * OUT_CAP)()
         st.map(OUT_VA, out)
-        n = st.call("holestats.uiCell", [IN_VA, IN_VA + 0x800000, IN_VA + 0x400000, w | h << 16, theme, scale, OUT_VA, OUT_CAP]).eax
+        mode = theme | (0x100 if cell[0].startswith("hud_") else 0)   # the HUD panels: border-only (gfx_ui.h)
+        n = st.call("holestats.uiCell", [IN_VA, IN_VA + 0x800000, IN_VA + 0x400000, w | h << 16, mode, scale, OUT_VA, OUT_CAP]).eax
         assert n > 0, cell[0]
         W, H = out[0], out[1]
         raw = bytes(out)
@@ -116,12 +130,13 @@ def main(argv):
     lib = L.Lib(os.environ["SG_PORTSIM_DLL"])
     out = pathlib.Path(argv[0])
     out.mkdir(parents=True, exist_ok=True)
-    for cell in CELLS:
+    for cell in CELLS + HUD_CELLS:
         name = cell[0]
-        g, _, col, msk, rgb = cell_render(lib, cell, 1, 1)
+        g, keep, col, msk, rgb = cell_render(lib, cell, 1, 1)
         s, *_ = cell_render(lib, cell, 2, 1)
         art = np.where(((col != 0xFF) & (msk != 0xFF))[..., None], rgb, 255 * np.array([1.0, 0, 1.0]))
-        row = np.concatenate([art, over_art_alpha(g), over_art_alpha(s)], axis=1)
+        shown = (keep == 1) & (col != 0xFF) & (msk != 0xFF)   # the game draws the kept pixels from the art over the scene
+        row = np.concatenate([art, np.where(shown[..., None], rgb, over_art_alpha(g)), np.where(shown[..., None], rgb, over_art_alpha(s))], axis=1)
         Image.fromarray(row.clip(0, 255).astype(np.uint8)).save(out / f"{name}.png")
         f, n = fidelity(lib, cell)
         print(f"{name}: fidelity {f:.3f} over {n} px")

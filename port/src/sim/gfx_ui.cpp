@@ -1170,7 +1170,7 @@ bool in_rrect(float px, float py, float x0, float y0, float x1, float y1, float 
 }  // namespace
 
 bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
-                   UiScene &out, std::vector<uint8_t> &keep) {
+                   UiScene &out, std::vector<uint8_t> &keep, bool border_only) {
   out = UiScene{};
   out.cx0 = 0;
   out.cy0 = 0;
@@ -1325,6 +1325,34 @@ bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *ma
     fr.shadow_blur = t.shadow_blur;
   }
   out.elems.push_back(fr);
+  if (border_only) {   // P40C: the panel's shape only; its inside (farther than 5 pixels from the edge) stays the art
+    std::vector<uint8_t> outer(n, 0);
+    for (size_t i = 0; i < n; ++i) outer[i] = panel[i] ? 0 : 1;
+    std::vector<float> dist(n, 1e9f);
+    {   // the distance (city block, two passes) from every panel pixel to the nearest non-panel pixel
+      for (int32_t y = 0; y < h; ++y)
+        for (int32_t x = 0; x < w; ++x) {
+          const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+          if (outer[i]) {
+            dist[i] = 0;
+            continue;
+          }
+          if (x == 0 || y == 0) dist[i] = 1;
+          if (x > 0) dist[i] = std::min(dist[i], dist[i - 1] + 1);
+          if (y > 0) dist[i] = std::min(dist[i], dist[i - static_cast<size_t>(w)] + 1);
+        }
+      for (int32_t y = h - 1; y >= 0; --y)
+        for (int32_t x = w - 1; x >= 0; --x) {
+          const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+          if (x == w - 1 || y == h - 1) dist[i] = std::min(dist[i], 1.f);
+          if (x + 1 < w) dist[i] = std::min(dist[i], dist[i + 1] + 1);
+          if (y + 1 < h) dist[i] = std::min(dist[i], dist[i + static_cast<size_t>(w)] + 1);
+        }
+    }
+    for (size_t i = 0; i < n; ++i)
+      if (cls[i] != kNone && (dist[i] > 5.f || (panel[i] && cls[i] != kFrame))) keep[i] = 1;
+    return true;
+  }
   // the boxes: each component of the pill / cream / white classes, with the dark ring around it as its outline
   std::vector<uint8_t> ring_used(n, 0);
   std::vector<UiElem> boxes;
@@ -1472,15 +1500,16 @@ struct CellScene {
   bool ok = false;
 };
 // the scene of a cell pair for a theme, built once (the art does not change while the backend lives)
-const CellScene &cell_scene(Gfx &g, uint32_t cs, uint32_t ms, const Sprite8 &s, const Sprite8 &m, int32_t theme) {
-  static std::map<std::tuple<const Gfx *, uint32_t, uint32_t, int32_t, size_t>, CellScene> cache;
-  const auto key = std::make_tuple(static_cast<const Gfx *>(&g), cs, ms, theme, s.px.size());
+const CellScene &cell_scene(Gfx &g, uint32_t cs, uint32_t ms, const Sprite8 &s, const Sprite8 &m, int32_t theme,
+                            bool border_only = false) {
+  static std::map<std::tuple<const Gfx *, uint32_t, uint32_t, int32_t, size_t, bool>, CellScene> cache;
+  const auto key = std::make_tuple(static_cast<const Gfx *>(&g), cs, ms, theme, s.px.size(), border_only);
   auto it = cache.find(key);
   if (it != cache.end()) return it->second;
   CellScene c;
   std::vector<uint8_t> mk(s.px.size(), 0xff);
   for (size_t i = 0; i < mk.size() && i < m.px.size(); ++i) mk[i] = m.px[i];
-  c.ok = ui_cell_scene(s.px.data(), s.pal.data(), mk.data(), s.w, s.h, ui_theme(theme), c.scene, c.keep);
+  c.ok = ui_cell_scene(s.px.data(), s.pal.data(), mk.data(), s.w, s.h, ui_theme(theme), c.scene, c.keep, border_only);
   if (cache.size() > 256) cache.clear();
   return cache[key] = std::move(c);
 }
@@ -1664,10 +1693,15 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     // bottom 0x5700, line 0x5900) and the Shortcuts page (routing.cpp: 0x5100), whose masks are the colour key + 0x100
     const bool local = (a[0] == gfx_local_key(0x5500) || a[0] == gfx_local_key(0x5700) || a[0] == gfx_local_key(0x5900) ||
                         a[0] == gfx_local_key(0x5100)) && a[1] == a[0] + 0x100u;
-    if (a[2] != g.root_va(ctx) || a[5] != 0 || !(local || (a[1] == a[0] + 0x2cu && report_cell(ctx, a[0])))) return false;
+    // P40C: the HUD panels (loadInterfaceArt: g_sprites541a18 cell k over g_sprites58b390 cell k, k 1..10: the palettes (the radial
+    // menu's base, cell 0, is a painted wheel: kept as art), the member / action / match / employee / elevation panels, the golfer info panel and its story band),
+    // border-only
+    const uint32_t hud_c = state_va(ctx, &GameState::g_sprites541a18), hud_m = state_va(ctx, &GameState::g_sprites58b390);
+    const bool hud = a[0] >= hud_c + 0x2cu && a[0] < hud_c + 11u * 0x2cu && (a[0] - hud_c) % 0x2cu == 0 && a[1] == hud_m + (a[0] - hud_c);
+    if (a[2] != g.root_va(ctx) || a[5] != 0 || !(hud || local || (a[1] == a[0] + 0x2cu && report_cell(ctx, a[0])))) return false;
     auto si = g.sprites.find(a[0]), mi = g.sprites.find(a[1]);
     if (si == g.sprites.end() || mi == g.sprites.end()) return false;
-    const CellScene &c = cell_scene(g, a[0], a[1], si->second, mi->second, theme);
+    const CellScene &c = cell_scene(g, a[0], a[1], si->second, mi->second, theme, hud);
     if (!c.ok) return false;
     const int32_t x = i32(a[3]), y = i32(a[4]);
     ui_draw_scene(g, ctx, moved(c.scene, static_cast<float>(x), static_cast<float>(y)));

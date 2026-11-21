@@ -65,14 +65,18 @@ struct UiRender {
   }
 };
 struct UiBox {
-  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the run's pixels in canvas coordinates (inside the canvas and the render)
+  int32_t ox = 0, oy = 0;                  // P40C: the canvas coordinates of the render's pixel (0, 0)
 };
 const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, UiBox &rb) {
   if (vp.client_w <= 0 || vp.client_h <= 0 || r.x1 <= r.x0 || r.y1 <= r.y0) return nullptr;
+  // P40C: one render per scene and scale, at origin 0: a canvas whose content rectangle starts elsewhere (a patch rectangle's
+  // canvas, a moved layer) sees it moved by whole pixels (the clip and the floor mapping move with it). Before, every canvas
+  // origin rendered the scene again: at 4K every final-patch build re-rendered each UI scene (17-43 ms a build).
   static thread_local std::map<std::string, UiRender> cache;
+  static thread_local size_t cached_px = 0;
   std::string key = r.text;
-  for (int64_t v : {static_cast<int64_t>(vp.origin_x), static_cast<int64_t>(vp.origin_y), static_cast<int64_t>(vp.client_w),
-                    static_cast<int64_t>(vp.client_h), static_cast<int64_t>(dx), static_cast<int64_t>(cw), static_cast<int64_t>(ch)})
+  for (int64_t v : {static_cast<int64_t>(vp.client_w), static_cast<int64_t>(vp.client_h)})
     key.append(reinterpret_cast<const char *>(&v), sizeof v);
   auto it = cache.find(key);
   if (it == cache.end()) {
@@ -81,14 +85,14 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
     float fx0, fy0, fx1, fy1;
     portsim::ui_bounds(sc, fx0, fy0, fx1, fy1);
     UiRender u;
-    u.x0 = std::max(0, vp.origin_x + dx + first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW));
-    u.y0 = std::max(0, vp.origin_y + first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH));
-    const int32_t x1 = std::min(cw, vp.origin_x + dx + first_client(static_cast<int32_t>(std::ceil(fx1)), vp.client_w, kLogicalW));
-    const int32_t y1 = std::min(ch, vp.origin_y + first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH));
+    u.x0 = first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW);   // origin-0 client coordinates
+    u.y0 = first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH);
+    const int32_t x1 = first_client(static_cast<int32_t>(std::ceil(fx1)), vp.client_w, kLogicalW);
+    const int32_t y1 = first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH);
     u.w = std::max(0, x1 - u.x0);
     u.h = std::max(0, y1 - u.y0);
-    portsim::ui_render(sc, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH,
-                       static_cast<double>(vp.origin_x + dx), static_cast<double>(vp.origin_y), u.x0, u.y0, u.w, u.h, u.prem);
+    portsim::ui_render(sc, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH, 0.0, 0.0,
+                       u.x0, u.y0, u.w, u.h, u.prem);
     u.fx0 = static_cast<int32_t>(std::floor(fx0));
     u.fy0 = static_cast<int32_t>(std::floor(fy0));
     u.fw = std::max(0, static_cast<int32_t>(std::ceil(fx1)) - u.fx0);
@@ -141,20 +145,28 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
     }
     u.lxs.resize(static_cast<size_t>(u.w));
     for (int32_t x = 0; x < u.w; ++x)
-      u.lxs[static_cast<size_t>(x)] = floor_div(static_cast<int64_t>(u.x0 + x - vp.origin_x - dx) * kLogicalW, vp.client_w);
+      u.lxs[static_cast<size_t>(x)] = floor_div(static_cast<int64_t>(u.x0 + x) * kLogicalW, vp.client_w);
     u.lys.resize(static_cast<size_t>(u.h));
     for (int32_t y = 0; y < u.h; ++y)
-      u.lys[static_cast<size_t>(y)] = floor_div(static_cast<int64_t>(u.y0 + y - vp.origin_y) * kLogicalH, vp.client_h);
+      u.lys[static_cast<size_t>(y)] = floor_div(static_cast<int64_t>(u.y0 + y) * kLogicalH, vp.client_h);
     u.prem.clear();
     u.prem.shrink_to_fit();
-    if (cache.size() > 32) cache.clear();
+    const size_t px = static_cast<size_t>(u.w) * static_cast<size_t>(u.h);
+    if (cache.size() > 48 || cached_px + px > 60000000u) {   // about 300 MB of entries and indexes at most
+      cache.clear();
+      cached_px = 0;
+    }
+    cached_px += px;
     it = cache.emplace(key, std::move(u)).first;
   }
   const UiRender &u = it->second;
-  rb.x0 = std::max(u.x0, vp.origin_x + dx + first_client(r.x0, vp.client_w, kLogicalW));
-  rb.y0 = std::max(u.y0, vp.origin_y + first_client(r.y0, vp.client_h, kLogicalH));
-  rb.x1 = std::min(u.x0 + u.w, vp.origin_x + dx + first_client(r.x1, vp.client_w, kLogicalW));
-  rb.y1 = std::min(u.y0 + u.h, vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH));
+  const int32_t sx = vp.origin_x + dx, sy = vp.origin_y;   // canvas = origin-0 client + (sx, sy)
+  rb.ox = u.x0 + sx;
+  rb.oy = u.y0 + sy;
+  rb.x0 = std::max(std::max(rb.ox, 0), sx + first_client(r.x0, vp.client_w, kLogicalW));
+  rb.y0 = std::max(std::max(rb.oy, 0), sy + first_client(r.y0, vp.client_h, kLogicalH));
+  rb.x1 = std::min(std::min(rb.ox + u.w, cw), sx + first_client(r.x1, vp.client_w, kLogicalW));
+  rb.y1 = std::min(std::min(rb.oy + u.h, ch), sy + first_client(r.y1, vp.client_h, kLogicalH));
   return &u;
 }
 // whether box pixel (x, y) (render coordinates) shows the run: its frame pixel visible and covered by the scale-1 drawing
@@ -428,11 +440,11 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return;
-    for (int32_t y = b.y0 - u->y0; y < b.y1 - u->y0; ++y)
-      for (int32_t x = b.x0 - u->x0; x < b.x1 - u->x0; ++x) {
+    for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y)
+      for (int32_t x = b.x0 - b.ox; x < b.x1 - b.ox; ++x) {
         const uint32_t e = u->ent[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];
         if (e == 0 || !ui_visible(r, *u, layered, x, y)) continue;
-        uint32_t &o = out[static_cast<size_t>(u->y0 + y) * static_cast<size_t>(cw) + static_cast<size_t>(u->x0 + x)];
+        uint32_t &o = out[static_cast<size_t>(b.oy + y) * static_cast<size_t>(cw) + static_cast<size_t>(b.ox + x)];
         const uint16_t w = to555(o), v = u->over(e - 1, w);
         if (v != w) o = rgb555_to_bgra(v);
       }
@@ -496,9 +508,9 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
     std::vector<uint32_t> remap(u->lut.size() / 32, 0);
     int32_t ix0 = bw, ix1 = -1, iy0 = bh, iy1 = -1;
     for (int32_t y = 0; y < bh; ++y) {
-      const int32_t ry = b.y0 - u->y0 + y;
+      const int32_t ry = b.y0 - b.oy + y;
       for (int32_t x = 0; x < bw; ++x) {
-        const int32_t rx = b.x0 - u->x0 + x;
+        const int32_t rx = b.x0 - b.ox + x;
         const uint32_t e = u->ent[static_cast<size_t>(ry) * static_cast<size_t>(u->w) + static_cast<size_t>(rx)];
         if (e == 0 || !ui_visible(r, *u, layered, rx, ry)) continue;
         uint32_t &m = remap[e - 1];

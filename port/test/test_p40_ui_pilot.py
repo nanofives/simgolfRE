@@ -285,3 +285,21 @@ def test_cell_scene_is_resolution_independent(portlib, name):
     d = np.abs(down - one).max(axis=2)
     print(f"CELLSCALE {name}: mean {d.mean():.3f} p99.5 {np.percentile(d, 99.5):.2f}")
     assert d.mean() < 2.5 and np.percentile(d, 99.5) < 60   # one-pixel rims (thin fields) differ most between 1x and 3x
+
+
+# ------------------------------------------------------------------------------------------------ P40C: the HUD panels (border-only)
+# The panels' outline as the vector shape, the painted inside kept as art (gfx_ui.h ui_cell_scene border_only). FLOOR: the share of
+# the drawn band's pixels matching the art (as above), pinned 0.03 under the 2026-11-21 values.
+HUD_FLOOR = {"hud_terrain": 0.917, "hud_building": 0.864, "hud_amenities": 0.992, "hud_member": 0.864, "hud_action": 0.998, "hud_match": 0.705, "hud_employee": 0.866, "hud_elevation": 0.998, "hud_golfer": 0.833, "hud_story": 0.895}
+
+
+@need_exe
+@pytest.mark.parametrize("cell", PC.HUD_CELLS, ids=[c[0] for c in PC.HUD_CELLS])
+def test_hud_panel_border_matches_the_art(portlib, cell):
+    game, n = PC.fidelity(portlib, cell, 1)
+    _, keep, col, msk, _ = PC.cell_render(portlib, cell, 1, 1)
+    inside = float((keep[(col != 0xFF) & (msk == 0)] == 1).mean())
+    print(f"HUD {cell[0]}: band {game:.3f} over {n} px, kept inside {inside:.2f}")
+    assert n > 500
+    assert game >= HUD_FLOOR[cell[0]] - 0.03, game
+    assert inside > 0.5, "border-only kept less than half of the panel as art"

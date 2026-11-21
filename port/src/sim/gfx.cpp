@@ -1929,6 +1929,7 @@ static void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // above 31 carries into the next field).
 static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
+  if (g.ui_pilot != 0 && ui_swap(g, ctx, "Surface_stretchBlit", a, 6)) return;   // P40C: the HUD panels draw through internal calls
   if (a[2] != g.root_va(ctx) || a[5] != 0) {
     g.unsup("Surface_stretchBlit: a destination other than the root surface or a palette override");
     return;

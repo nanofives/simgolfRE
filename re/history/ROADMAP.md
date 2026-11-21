@@ -2288,3 +2288,11 @@ deck; the setting lasts the session; redo keeps the style; the sidecar already h
 205 / 205; test_p39a_bridges 18 (controls 8 / 9 RED), gap 26, stairs 26, p40 48, profiles, static; EN / ES drives, all 8 styles at 4
 rotations (P39A4_sheet.png).
 - Published 2026-11-21: P39A4 in d70a9535 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-d70a9535.
+
+## P40C: UI batch 4 and the P40B leftovers (2026-11-21; notes log/roadmap/P40/P40_notes.md, P40C section)
+The HUD's painted panels (palettes, member / action / match / employee / elevation / golfer panels) get a vector OUTLINE only (silhouette
+and bevel at native resolution; more than 5 px inside stays art); the radial menu and picture items (number balls, route buttons,
+the selection diamond, P38H's ball) stay art. The presenter renders each UI scene once per scene and scale (was once per patch
+canvas). 4K cost measured back to back: game theme 66-70 fps against 74-76 off. Re-runs of slate 1080 and game 4K clean (0 GPU / CPU
+differences in 181 paints). Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 58. Open: the message window not seen live (its
+frame drawers swap like the popups, which are); a 1-2 px palette-edge GPU / CPU difference in 11 of 947 paints, not attributed.
