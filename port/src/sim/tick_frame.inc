@@ -5487,9 +5487,55 @@ void P39C_GreenOutline() {
     }, snap ? 1 : 0);
 }
 
+// P39C2 (log/roadmap/P39/P39C2_notes.md; app option --green-highlight, RENDER-ONLY): with the outline's conditions (P39C_GreenOutline:
+// the hole the original marks, its blink, or steady while P39D's free aim is snapped to the cup), every tile of the outline's set is
+// filled on the course ground (greenline.h green_fill_quads, terrain_overlay.cpp "P39C.greenFill"), white at green_fill_alpha() / 100.
+// It runs before P4's first draw, while the overlay lines' window is open (after the frame's terrain picture, before
+// renderSpriteQueue), so trees, golfers, flags and every other sprite are drawn over it. A drop handed to the graphics backend only:
+// without one (the tests, the segments) nothing is called; nothing here writes the GameState.
+void P39C2_GreenFill() {
+    if (!green_highlight_on() || green_fill_alpha() <= 0 || g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
+    const int h = green_highlight_hole(ctx);
+    const bool snap = !SG_DEFECT(g_defect_aim_lattice) && ctx.aim_free_snap && ctx.aim_free_g == G32(GS(g_playerGolfer));
+    if (h <= 0 || (!snap && !green_highlight_blink(ctx))) return;
+    const GreenOutline &o = green_outline(ctx, h);
+    if (o.edges.empty()) return;
+    const uint32_t alpha = static_cast<uint32_t>(green_fill_alpha());
+    // development (P39C2's cost): SG_P39C2_LOG=<file> appends the fill's time and quad count every 60 drawn frames
+    static FILE *const dev_log = std::getenv("SG_P39C2_LOG") ? std::fopen(std::getenv("SG_P39C2_LOG"), "a") : nullptr;
+    struct DevTime {
+        FILE *f;
+        int64_t t0;
+        int32_t quads = 0;
+        ~DevTime() {
+            if (!f) return;
+            static int64_t sum = 0, mx = 0, n = 0;
+            const int64_t d = perf_now_ns() - t0;
+            sum += d;
+            mx = std::max(mx, d);
+            if (++n % 60 == 0) {
+                std::fprintf(f, "fill frames %lld mean_us %.1f max_us %.1f quads %d\n", (long long)n, sum / 1000.0 / n, mx / 1000.0, quads);
+                std::fflush(f);
+            }
+        }
+    } dev_time{dev_log, dev_log ? perf_now_ns() : 0};
+    std::vector<int32_t> &q = gfx_green_fill_quads();   // every quad of the frame, then one drop (one world raster sync)
+    q.clear();
+    dev_time.quads = green_fill_quads(ctx, o, [&](const int32_t *xs, const int32_t *ys) {
+        q.insert(q.end(), xs, xs + 4);
+        q.insert(q.end(), ys, ys + 4);
+    });
+    if (dev_time.quads > 0) {
+        const uint32_t a[3] = {static_cast<uint32_t>(dev_time.quads), kGreenLineColour, alpha};
+        gfx_drop(ctx, "P39C.greenFill", a, 3);
+    }
+    q.clear();
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // entry: ML+0x6287..ML+0x8032, the phases in the original's order; falls through to ML+0x8032.
 void Ph_00415847(u32 F) {
+    P39C2_GreenFill();          // P39C2 (--green-highlight): the player's green lit on the ground, under every sprite (no original code)
     { GfxGroundScope ground_scope(ctx); P4_records5736b8(F); }   // ML+0x6287..ML+0x63ae (P23D fix 6: the ground marks)
     P4_flyingBall(F);           // ML+0x63ae..ML+0x6437
     P4_selectedSprite(F);       // ML+0x6437..ML+0x6484

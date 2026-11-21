@@ -28,7 +28,22 @@ struct GreenOutline {
   int32_t hole = 0;
   std::vector<int32_t> tiles;     // flat tile indices x * N + y, ascending
   std::vector<GreenEdge> edges;   // per tile in `tiles` order: sides x-, x+, y-, y+ whose neighbour is not in the set
+  // P39C2_2 (Mariano 2026-11-21: "make the outline follow the greener part of the green"): the putting surface as the Terrain draws
+  // it. Each tile of `tiles` is drawn as 8 triangular faces (the halves of its quadrants), and each face shows its own part of one
+  // of the green's piece textures (PuttingGreenA0001..0005: 0 plain, 1 a square fringe band, 2 a nub in each corner, 3 a rounded
+  // band, 4 bands thickest mid-side), the piece chosen by blendFaceTextures from the edge kinds toward the face's side, the
+  // neighbouring side and the corner's diagonal tile (terrain_state.cpp blend_face_textures: edgeKind, flagCode, idClass). The
+  // tile's bright texels (64 x 64, kGreenPieceMask) are the putting surface; `shape` is its boundary over the set (texel corners
+  // joined, simplified to within a texel: segments in world units, 16 a texel, the surface on their left in x / y order) and
+  // `strips` covers it (x0, y0, x1, y1 rectangles in world units, each inside one tile: rows of a tile with the same texels
+  // merged). Both empty with green_shape_square() (the tile sides and whole tiles are drawn then, as P39C2 did).
+  std::vector<GreenEdge> shape;
+  std::vector<GreenEdge> strips;
 };
+// P39C2_2: true = the outline and the fill follow the tiles' square sides (P39C / P39C2); the development switch SG_P39C2_SQUARE=1
+// and the test entry greenLine.square set it (the "before" pictures)
+bool green_shape_square();
+void green_shape_set_square(bool on);
 
 // the hole the original marks now: the player's golfer +0x21 byte while g_panelListMode == 3 and g_playerGolfer != -1, else 0
 int32_t green_highlight_hole(Ctx &ctx);
@@ -43,6 +58,19 @@ const GreenOutline &green_outline(Ctx &ctx, int32_t hole);
 using GreenLineSink = std::function<void(int32_t, int32_t, int32_t, int32_t, uint32_t, int32_t, int32_t)>;
 // P39D: wider > 0 draws the lines that many pixels wider (the aim's snap to the cup)
 int32_t green_outline_lines(Ctx &ctx, const GreenOutline &o, const GreenLineSink &sink, int32_t wider = 0);
+
+// P39C2 (Mariano 2026-11-21: "readd a highlight on the green area as well, rendered below trees"): the fill of the outline's tiles.
+// One quad per strip of the outline (P39C2_2; one per tile with green_shape_square), its exact corners through worldToScreen's exact
+// projection (the tile's corner heights, bilinear inside it: it follows the slope; quads that meet share their corners), in 1 / 16 of
+// a pixel of the 800 frame, in order around the rectangle; quads wholly past the view are skipped. sink(xs16[4], ys16[4]); returns
+// the number of quads.
+using GreenQuadSink = std::function<void(const int32_t *, const int32_t *)>;
+int32_t green_fill_quads(Ctx &ctx, const GreenOutline &o, const GreenQuadSink &sink);
+// the fill's colour and opacity: white (the marker's light, kGreenLineColour) at green_fill_alpha() / 100 over the ground; the app
+// sets it (default kGreenFillAlpha; 0 = no fill)
+constexpr int32_t kGreenFillAlpha = 40;   // Mariano's pick of the two looks (25 soft, 40 strong), 2026-11-21
+void green_fill_set_alpha(int32_t a100);
+int32_t green_fill_alpha();
 
 // the marker's look: g_sprite5423e8 drawn through the g_color16Lut shade table lightens the cup tile towards white (measured on
 // the presented frame: (148, 206, 99) -> (184, 237, 126), P39C_notes.md); the line is white (555 word 0x7fff) at the terrain

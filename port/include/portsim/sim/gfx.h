@@ -39,6 +39,9 @@ constexpr bool gfx_is_local_key(uint32_t k) { return k >= 0xFFF00000u; }
 // tick.cpp: a drop named `name` called with `a[0..n)`; true when the attached backend handled it (the frame still uses the
 // drop's result). Never throws.
 bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n);
+// P39C2: the frame's green highlight quads for the one "P39C.greenFill" drop (8 words each: x1..x4, y1..y4 in 1 / 16 px of the 800
+// frame); filled by tick on the frame's thread just before the drop, read by the body (terrain_overlay.cpp), which runs inside it
+std::vector<int32_t> &gfx_green_fill_quads();
 // tick.cpp: after gfx_drop, the value the body computed for the frame code (roadmap S3.7: Text_put's width); false when the
 // body set none (the frame keeps the drop's result)
 bool gfx_take_value(Ctx &ctx, int32_t &v);

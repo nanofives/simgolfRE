@@ -93,6 +93,8 @@ void body_draw_minimap_segment(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_set_line_point(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_line_to(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 void body_draw_circle(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
+// P39C2: "P39C.greenFill", a filled ground quad under the sprites (terrain_overlay.cpp)
+void body_green_fill(Gfx &g, Ctx &ctx, const uint32_t *a, int n);
 
 // P23D fix 1 (gfx.h gfx_set_wide_grid): a Widget_fillRect line of mainLoop's grid overlay (root ends x1, y1 .. x2, y2, colour
 // 0x8000RGB555) on the world layer too, while the overlay lines' window is open; touch = the root rectangle line16 could write and

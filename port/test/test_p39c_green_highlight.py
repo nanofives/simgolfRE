@@ -225,6 +225,7 @@ def test_negative_control_four_connected_reference_differs(portlib):
 @need_exe
 def test_lines_follow_world_to_screen_and_slope(portlib):
     st, T, F = _state(portlib, 50)
+    prev_square = st.call("greenLine.square", [1]).eax   # P39C2_2: the tile sides / whole tiles
     try:
         _aim(portlib, st, 1, (11, 10))
         img0 = st.image()
@@ -259,6 +260,68 @@ def test_lines_follow_world_to_screen_and_slope(portlib):
         st.write(o["g_playerGolfer"][0], struct.pack("<i", -1))
         assert _lines(st) == []
     finally:
+        st.call("greenLine.square", [prev_square])
+        _BUF.pop(id(st), None)
+        st.close()
+
+
+def _fill(st):
+    b = _buf(st)
+    cap = 7 * CAP // 8
+    k = st.call("greenLine.fill", [OUT_VA, cap]).eax
+    return [(tuple(b[8 * i:8 * i + 4]), tuple(b[8 * i + 4:8 * i + 8])) for i in range(min(k, cap))], k
+
+
+@need_exe
+def test_fill_quads_are_the_tiles_corners(portlib):
+    """P39C2: greenLine.fill gives one quad per tile of the outline's set on screen, its corners (x, y) in 1 / 16 px around the tile
+    (x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1) within a pixel of worldToScreen's; neighbouring tiles share their corners exactly
+    (no seam), a slope moves them, a camera far away leaves none; no GameState write."""
+    st, T, F = _state(portlib, 50)
+    prev_square = st.call("greenLine.square", [1]).eax   # P39C2_2: the tile sides / whole tiles
+    try:
+        _aim(portlib, st, 1, (11, 10))
+        img0, g0 = st.image(), _grids(st, 50)
+        tiles = _tiles(st, 1)
+        quads, k = _fill(st)
+        assert k == len(quads) == len(tiles) == 17
+        by_tile = dict(zip(tiles, quads))
+        for t, (xs, ys) in by_tile.items():
+            x, y = t // 50, t % 50
+            for (wx, wy), qx, qy in zip([(x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1)], xs, ys):
+                a = _w2s(st, wx << 10, wy << 10)
+                assert abs(qx / 16.0 - _s32(a[0])) <= 1.0 and abs(qy / 16.0 - _s32(a[1])) <= 1.0, (t, wx, wy, qx, qy, a)
+        shared = 0
+        for t, (xs, ys) in by_tile.items():
+            if t + 50 in by_tile:   # (x + 1, y): its corners 0, 3 are this tile's 1, 2
+                xs2, ys2 = by_tile[t + 50]
+                assert (xs2[0], ys2[0], xs2[3], ys2[3]) == (xs[1], ys[1], xs[2], ys[2])
+                shared += 1
+            if t + 1 in by_tile:    # (x, y + 1): its corners 0, 1 are this tile's 3, 2
+                xs2, ys2 = by_tile[t + 1]
+                assert (xs2[0], ys2[0], xs2[1], ys2[1]) == (xs[3], ys[3], xs[2], ys[2])
+                shared += 1
+        assert shared > 0
+        assert st.image() == img0 and _grids(st, 50) == g0, "greenLine.fill wrote the GameState"
+        # a slope: the same tiles, the corners higher on screen where the levels rose
+        lv = bytearray([4]) * (51 * 51)
+        for x in range(51):
+            for y in range(51):
+                lv[x * 51 + y] = min(15, 3 + y // 2)
+        st.mem_write(st.grid_va("g_cornerLevel"), bytes(lv))
+        sq, k2 = _fill(st)
+        assert k2 == len(quads)
+        assert sum(a[1] != b[1] for a, b in zip(sq, quads)) == len(quads)
+        # the camera far from the green: every quad off the view
+        st.write(objs(portlib)["gCameraTileX"][0], struct.pack("<i", 45))
+        st.write(objs(portlib)["gCameraTileY"][0], struct.pack("<i", 45))
+        assert _fill(st)[1] == 0
+        # not aiming: none
+        _aim(portlib, st, 1, (11, 10))
+        st.write(objs(portlib)["g_panelListMode"][0], struct.pack("<i", 2))
+        assert _fill(st)[1] == 0
+    finally:
+        st.call("greenLine.square", [prev_square])
         _BUF.pop(id(st), None)
         st.close()
 
@@ -270,6 +333,254 @@ def test_option_switch(portlib):
         assert prev == 0, "the library default is off (the app sets it)"
         assert st.call("greenLine.option", [0]).eax == 1
         assert st.call("greenLine.option", [0]).eax == 0
+
+
+# ---------------------------------------------------------------------------------------------------- P39C2_2: the putting surface
+# The reference: blendFaceTextures' piece per face (terrain_state.cpp blend_face_textures, edge_kind, flag_code, id_class) and the
+# port's piece masks (greenLine.pieceMask; their source is checked against the texture files below), composed per tile, the strips
+# rebuilt from those masks.
+def _flag_piece(a, b, c):
+    r = (4 if a == 1 else 0x28 if a == 2 else 0) + (1 if b == 1 else 10 if b == 2 else 0) + (2 if c == 1 else 0x14 if c == 2 else 0)
+    table = {0: 0, 1: 0, 2: 0, 10: 0, 0xC: 0, 0x14: 0, 0x15: 0, 3: 2, 0x2B: 2, 4: 4, 0xE: 4, 0x18: 4, 0x22: 4, 5: 3, 7: 3, 0x19: 3,
+             6: 1, 0x10: 1, 0x28: 8, 0x29: 8, 0x2A: 8, 0x3D: 8, 0x32: 7, 0x34: 7, 0x46: 7, 0x3C: 5, 0x1E: 6}
+    return table.get(r, 0)
+
+
+def _collars(portlib, st):
+    img = st.image()
+    off = objs(portlib)["g_tileTypeAttrs"][0]
+    course = struct.unpack_from("<b", img, objs(portlib)["g_courseType"][0])[0]
+    out = []
+    for t in range(23):
+        walk, col = struct.unpack_from("<bxxxb", img, off + 0x30 * t + 0x22)
+        out.append(4 if course == 1 and walk > 0 and t not in (5, 7) else col)
+    return out
+
+
+def _pieces(st):
+    b = _buf(st)
+    masks = []
+    for p in range(5):
+        assert st.call("greenLine.pieceMask", [p, OUT_VA]).eax == 64
+        masks.append([(b[2 * r] & 0xFFFFFFFF) | ((b[2 * r + 1] & 0xFFFFFFFF) << 32) for r in range(64)])
+    return masks
+
+
+def ref_tile_mask(types, n, x, y, collar, masks, use_diag=True):
+    own = types[x * n + y]
+    col = lambda t: collar[t] if 0 <= t < 23 else 0x100 + t  # noqa: E731
+
+    def kind(dx, dy):
+        nx, ny = x + dx, y + dy
+        if not (0 <= nx < n and 0 <= ny < n):
+            return 0
+        t = types[nx * n + ny]
+        return 1 if col(t) != col(own) else 2 if t != own else 0
+    rows = []
+    for r in range(64):
+        qy, dy = (1, 63 - r) if r >= 32 else (0, r)
+        v = 0
+        for c in range(64):
+            qx, dx = (1, 63 - c) if c >= 32 else (0, c)
+            sx, sy = (1 if qx else -1), (1 if qy else -1)
+            ky, kx, kd = kind(0, sy), kind(sx, 0), kind(sx, sy) if use_diag else 0
+            p = _flag_piece(ky, kx, kd) if dy <= dx else _flag_piece(kx, ky, kd)
+            if p > 4 or (masks[p][r] >> c) & 1:
+                v |= 1 << c
+        rows.append(v)
+    return rows
+
+
+def ref_strips(x, y, rows):
+    out, r0 = [], 0
+    for r in range(1, 65):
+        if r < 64 and rows[r] == rows[r0]:
+            continue
+        row, c = rows[r0], 0
+        while c < 64:
+            if not (row >> c) & 1:
+                c += 1
+                continue
+            e = c
+            while e < 64 and (row >> e) & 1:
+                e += 1
+            out.append(((x << 10) + 16 * c, (y << 10) + 16 * r0, (x << 10) + 16 * e, (y << 10) + 16 * r))
+            c = e
+        r0 = r
+    return out
+
+
+def _tile_mask(st, x, y):
+    b = _buf(st)
+    assert st.call("greenLine.tileMask", [x, y, OUT_VA]).eax == 64
+    return [(b[2 * r] & 0xFFFFFFFF) | ((b[2 * r + 1] & 0xFFFFFFFF) << 32) for r in range(64)]
+
+
+def _quad4(st, name, hole):
+    b = _buf(st)
+    k = st.call(name, [hole, OUT_VA, CAP]).eax
+    assert k <= CAP
+    return [tuple(b[4 * i:4 * i + 4]) for i in range(k)]
+
+
+@need_exe
+def test_piece_masks_come_from_the_green_textures(portlib):
+    """kGreenPieceMask = the bright texels of the Terrain's own PuttingGreenA0001..0005.bmp (Parkland, piece p = file p + 1): summed
+    RGB above the midpoint between piece 0's median and piece 3's 5th percentile, then each texel the majority of its 8 images under
+    the square's rotations and mirrors (log/roadmap/P39/P39C2_work/piece_table.py, the generator)"""
+    from port.test import segments as S
+    tex = S.INSTALL / "Data" / "Textures" / "Parkland"
+    if not (tex / "PuttingGreenA0001.bmp").exists():
+        pytest.skip("install textures not present")
+    import numpy as np
+    from PIL import Image
+    lum = [np.asarray(Image.open(tex / f"PuttingGreenA000{k}.bmp").convert("RGB")).astype(int).sum(2) for k in range(1, 6)]
+    t = (np.median(lum[0]) + np.percentile(lum[3], 5)) / 2
+    with new_state(portlib) as st:
+        got = _pieces(st)
+        _BUF.pop(id(st), None)
+    for p in range(5):
+        a = lum[p] > t
+        v = [a, a[:, ::-1], a[::-1, :], a[::-1, ::-1], a.T, a.T[:, ::-1], a.T[::-1, :], a.T[::-1, ::-1]]
+        want = sum(x.astype(int) for x in v) >= 5
+        for r in range(64):
+            assert got[p][r] == sum(1 << c for c in range(64) if want[r, c]), (p, r)
+
+
+@need_exe
+def test_tile_masks_and_strips_equal_reference(portlib):
+    st, T, F = _state(portlib, 50)
+    try:
+        img0 = st.image()
+        collar, masks = _collars(portlib, st), _pieces(st)
+        assert masks[0] == [(1 << 64) - 1] * 64 and masks[3][0] == 0 and masks[3][32] != (1 << 64) - 1
+        for hole in (1, 2, 3, 5):
+            tiles = _tiles(st, hole)
+            want = []
+            for t in tiles:
+                x, y = divmod(t, 50)
+                rows = ref_tile_mask(T, 50, x, y, collar, masks)
+                assert _tile_mask(st, x, y) == rows, f"hole {hole} tile {(x, y)}"
+                want += ref_strips(x, y, rows)
+            assert _quad4(st, "greenLine.strips", hole) == want, f"hole {hole} strips"
+        # the shapes the layout gives: a straight side keeps the fringe band (piece 1), a block's outer corner is rounded (piece 3),
+        # the split between holes 2 and 3 on one green has no band (same type both sides)
+        x, y = 9, 8                                   # hole 1's block corner tile
+        m = _tile_mask(st, x, y)
+        assert not (m[0] & 1) and not (m[3] & (1 << 3)) and (m[32] >> 32) & 1 and not (m[32] & 1)
+        t2 = set(_tiles(st, 2))
+        for t in t2:                                  # tiles of hole 2 whose y + 1 neighbour is hole 3's: lit to their last row
+            if t + 1 in set(_tiles(st, 3)):
+                assert (_tile_mask(st, *divmod(t, 50))[63] >> 32) & 1
+        assert st.image() == img0, "the shape wrote the GameState"
+    finally:
+        _BUF.pop(id(st), None)
+        st.close()
+
+
+@need_exe
+def test_negative_control_reference_without_the_diagonal_differs(portlib):
+    st, T, F = _state(portlib, 50)
+    try:
+        collar, masks = _collars(portlib, st), _pieces(st)
+        differ = sum(_tile_mask(st, *divmod(t, 50)) != ref_tile_mask(T, 50, *divmod(t, 50), collar, masks, use_diag=False)
+                     for t in _tiles(st, 1))
+        assert differ > 0, "the reference without the corner's diagonal tile matched: the test is blind to it"
+    finally:
+        _BUF.pop(id(st), None)
+        st.close()
+
+
+@need_exe
+def test_shape_is_the_lit_boundary(portlib):
+    """greenLine.shape: closed loops (every end is one segment's start and another's end), every vertex on the texel lattice where
+    lit and unlit texels meet, and the loops' area (shoelace, the surface on the left) within 1 % of the lit texels' area"""
+    st, T, F = _state(portlib, 50)
+    try:
+        for hole in (1, 2, 3, 5):
+            tiles = set(_tiles(st, hole))
+            lit = {}
+            for t in tiles:
+                x, y = divmod(t, 50)
+                lit[(x, y)] = _tile_mask(st, x, y)
+            def L_(gx, gy):
+                x, y = gx >> 6, gy >> 6
+                rows = lit.get((x, y))
+                return bool(rows and (rows[gy & 63] >> (gx & 63)) & 1)
+            segs = _quad4(st, "greenLine.shape", hole)
+            assert segs
+            starts = sorted((a, b) for a, b, _, _ in segs)
+            ends = sorted((c, d) for _, _, c, d in segs)
+            assert starts == ends, f"hole {hole}: the shape is not closed"
+            area = 0
+            for x0, y0, x1, y1 in segs:
+                assert x0 % 16 == 0 and y0 % 16 == 0
+                gx, gy = x0 // 16, y0 // 16
+                around = {L_(gx - 1, gy - 1), L_(gx, gy - 1), L_(gx - 1, gy), L_(gx, gy)}
+                assert around == {True, False}, f"hole {hole}: vertex {(x0, y0)} not on the lit boundary"
+                area += x0 * y1 - x1 * y0
+            lit_area = sum(bin(v).count("1") for rows in lit.values() for v in rows) * 256
+            assert abs(area / 2 - lit_area) <= 0.03 * lit_area, (hole, area / 2, lit_area)
+    finally:
+        _BUF.pop(id(st), None)
+        st.close()
+
+
+def _shape_point(tiles, wx, wy, n=50):
+    inn = lambda x, y: 0 <= x < n and 0 <= y < n and x * n + y in tiles  # noqa: E731
+    tx, ty = wx >> 10, wy >> 10
+    if inn(tx, ty):
+        return wx, wy
+    ex, ey = wx & 1023 == 0, wy & 1023 == 0
+    if ex and inn(tx - 1, ty):
+        return wx - 1, wy
+    if ey and inn(tx, ty - 1):
+        return wx, wy - 1
+    if ex and ey and inn(tx - 1, ty - 1):
+        return wx - 1, wy - 1
+    return wx, wy
+
+
+@need_exe
+def test_shape_lines_and_strip_quads_follow_world_to_screen(portlib):
+    st, T, F = _state(portlib, 50)
+    try:
+        _aim(portlib, st, 1, (11, 10))
+        tiles = set(_tiles(st, 1))
+        segs = _quad4(st, "greenLine.shape", 1)
+        strips = _quad4(st, "greenLine.strips", 1)
+        lines = _lines(st)
+        assert len(lines) == len(segs) > 0
+        for (x0, y0, x1, y1), ln in zip(segs, lines):
+            a = _w2s(st, *_shape_point(tiles, x0, y0))
+            b = _w2s(st, *_shape_point(tiles, x1, y1))
+            assert tuple(_s32(v) for v in ln[:4]) == (a[0], a[1], b[0], b[1])
+        quads, k = _fill(st)
+        assert k == len(quads) == len(strips)
+        for (x0, y0, x1, y1), (xs, ys) in zip(strips, quads):
+            for (wx, wy), qx, qy in zip([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], xs, ys):
+                a = _w2s(st, *_shape_point(tiles, wx, wy))
+                assert abs(qx / 16.0 - a[0]) <= 3.0 and abs(qy / 16.0 - a[1]) <= 3.0   # the integer one truncates (bridge.cpp: about 3)
+        # a slope under the green moves every line end and every quad
+        lv = bytearray([4]) * (51 * 51)
+        for x in range(51):
+            for y in range(51):
+                lv[x * 51 + y] = min(15, 3 + y // 2)
+        st.mem_write(st.grid_va("g_cornerLevel"), bytes(lv))
+        assert _quad4(st, "greenLine.shape", 1) == segs, "the shape is in world units: the slope does not change it"
+        sl = _lines(st)
+        assert sum(_s32(a[1]) != _s32(b[1]) for a, b in zip(sl, lines)) == len(lines)
+        sq, k2 = _fill(st)
+        assert k2 == k and sum(a[1] != b[1] for a, b in zip(sq, quads)) == k
+        # the square switch brings the tile sides back (P39C)
+        prev = st.call("greenLine.square", [1]).eax
+        try:
+            assert _quad4(st, "greenLine.shape", 1) == [] and len(_lines(st)) == len(_edges(st, 1))
+        finally:
+            st.call("greenLine.square", [prev])
+    finally:
+        _BUF.pop(id(st), None)
+        st.close()
 
 
 # ---------------------------------------------------------------------------------------------------- the frame run

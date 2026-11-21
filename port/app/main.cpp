@@ -1773,6 +1773,8 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const 
   if (const char *cr = std::getenv("SG_P38E_CREDITS")) ctx->dev_land_credits = std::atoi(cr);  // P38E development: land credits
   portsim::shot_margin_set(o.shot_spread);  // P32D item 7: the shot's margin of error (shots.h; drawing only)
   portsim::green_highlight_set(o.green_highlight);  // P39C: the green's outline while aiming (greenline.h; drawing only)
+  // P39C2 development (Mariano's pick of the fill's intensity): SG_P39C2_FILL=<0..100> sets the fill's opacity in percent
+  if (const char *fa = std::getenv("SG_P39C2_FILL")) portsim::green_fill_set_alpha(std::atoi(fa));
   if (o.photo_banner) portsim::gfx_set_photo_banner(*ctx, true);  // P32A item 9: the pending photo's banner (gfx.h; drawing only)
   if (o.tourney_hold) portsim::gfx_set_tourney_hold(*ctx, true);  // P24G: the start buttons greyed in a tournament (gfx.h; drawing only)
   if (o.row_hover) portsim::gfx_set_row_hover(*ctx, true);  // P25B: the amenity rows' hovered item lit (gfx.h; drawing only)

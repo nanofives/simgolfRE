@@ -511,6 +511,7 @@ const GfxBodyDef kBodies[] = {
     {"terrain.windowPaint", b_window_paint}, {"terrain.pass", b_pass},          {"terrain.blit", b_blit},
     {"terrain.frameBegin", b_frame_begin},   {"terrain.frameEnd", b_frame_end},
     // roadmap S3.8: Terrain::drawLine and the exe drawers over it (terrain_overlay.h)
+    {"P39C.greenFill", overlay::body_green_fill},  // P39C2: the green highlight fill (terrain_overlay.cpp)
     {"drawMapLine", overlay::body_draw_map_line},       {"drawMinimapSegment", overlay::body_draw_minimap_segment},
     {"setLinePoint", overlay::body_set_line_point},     {"lineTo", overlay::body_line_to},
     {"drawCircle", overlay::body_draw_circle},

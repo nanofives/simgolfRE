@@ -33,6 +33,12 @@ namespace portsim {
 
 int g_negctl_terrain_overlay = 0;
 
+// P39C2 (gfx.h): the frame's green highlight quads, one list per thread (the frame's thread fills it, the body reads it)
+std::vector<int32_t> &gfx_green_fill_quads() {
+  thread_local std::vector<int32_t> q;
+  return q;
+}
+
 namespace overlay {
 namespace {
 
@@ -457,6 +463,235 @@ void mirror_line_world(Gfx &g, LiveTerrainWorld &w, const LineGl &gl, int32_t x1
   else lines_into_terrain800(g.root.px, w.terrain800, g.root.w, touch);
 }
 
+// P39C2 (log/roadmap/P39/P39C2_notes.md; the app option --green-highlight): a filled quad on the course ground, drawn while the
+// overlay lines' window is open (after the frame's terrain picture, before renderSpriteQueue), so every sprite is drawn over it. The
+// four 800-space corners (xs, ys, in order around the quad) map to a surface as line_walk's ends do; a pixel is covered when its
+// centre lies inside (edge functions; a shared edge goes to exactly one of the two quads that meet on it: e > 0, or e == 0 on an
+// edge going down or left), alpha a100 / 100, no antialiasing (neighbouring tiles' quads meet without a seam).
+template <class F>
+bool quad_walk(int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, const double *xs, const double *ys, int32_t a100,
+               int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, F &&f) {
+  const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
+  auto wy = [&](double y) { return (gl.flip_y ? y : static_cast<double>(gl.screen_h) - y) * s; };
+  double px[4], py[4];
+  for (int k = 0; k < 4; ++k) {
+    px[k] = ox + xs[k] * kx;
+    py[k] = wy(ys[k]);
+  }
+  double area = 0;
+  for (int k = 0; k < 4; ++k) area += px[k] * py[(k + 1) & 3] - px[(k + 1) & 3] * py[k];
+  if (area == 0.0) return false;
+  const double sg = area > 0 ? 1.0 : -1.0;
+  const double al = clamp01(static_cast<double>(a100) / 100.0);
+  double mnx = px[0], mxx = px[0], mny = py[0], mxy = py[0];
+  for (int k = 1; k < 4; ++k) {
+    mnx = std::min(mnx, px[k]);
+    mxx = std::max(mxx, px[k]);
+    mny = std::min(mny, py[k]);
+    mxy = std::max(mxy, py[k]);
+  }
+  const int32_t x0 = std::max(std::max(0, cx0), static_cast<int32_t>(std::floor(mnx)));
+  const int32_t xe = std::min(std::min(pw, cx1) - 1, static_cast<int32_t>(std::ceil(mxx)));
+  const int32_t y0 = std::max(std::max(0, cy0), static_cast<int32_t>(std::floor(mny)));
+  const int32_t ye = std::min(std::min(ph, cy1) - 1, static_cast<int32_t>(std::ceil(mxy)));
+  auto inside = [&](int32_t x, double qy) {
+    const double qx = x + 0.5;
+    for (int k = 0; k < 4; ++k) {
+      const double ax = px[k], ay = py[k], bx = px[(k + 1) & 3], by = py[(k + 1) & 3];
+      const double dx = bx - ax, dy = by - ay;
+      const double e = sg * (dx * (qy - ay) - dy * (qx - ax));
+      if (e < 0.0 || (e == 0.0 && !(sg * dy > 0.0 || (dy == 0.0 && sg * dx < 0.0)))) return false;
+    }
+    return true;
+  };
+  // the covered pixels of a row are one run (the quad's inside is an intersection of half-planes): its ends are found from the
+  // edges' crossings and then settled with the same per-pixel test, so the set is the per-pixel test's set
+  for (int32_t y = y0; y <= ye; ++y) {
+    const double qy = y + 0.5;
+    double lo = x0 - 1.0, hi = xe + 1.0;
+    for (int k = 0; k < 4; ++k) {
+      const double ax = px[k], ay = py[k], dx = px[(k + 1) & 3] - ax, dy = py[(k + 1) & 3] - ay;
+      // e(qx) = sg * (dx * (qy - ay) - dy * (qx - ax)) >= 0
+      const double c = sg * dx * (qy - ay), m = -sg * dy;   // e = c + m * (qx - ax)
+      if (m == 0.0) {
+        if (c < 0.0) lo = hi + 1.0;
+        continue;
+      }
+      const double t = ax - c / m - 0.5;   // the x where e changes sign (qx = x + 0.5)
+      if (m > 0.0) lo = std::max(lo, t);
+      else hi = std::min(hi, t);
+    }
+    if (lo > hi + 1.0) continue;
+    int32_t a = std::max(x0, static_cast<int32_t>(std::floor(lo)));
+    int32_t b = std::min(xe, static_cast<int32_t>(std::ceil(hi)));
+    while (a <= b && !inside(a, qy)) ++a;
+    if (a > b) continue;
+    while (a > x0 && inside(a - 1, qy)) --a;
+    while (b >= a && !inside(b, qy)) --b;
+    while (b < xe && inside(b + 1, qy)) ++b;
+    const size_t row = static_cast<size_t>(y) * static_cast<size_t>(pw);
+    for (int32_t x = a; x <= b; ++x) f(x, y, row + static_cast<size_t>(x), al);
+  }
+  return true;
+}
+bool quad_px_body(uint16_t *pxd, int32_t pw, int32_t ph, int32_t fw, int32_t ox, const LineGl &gl, const double *xs, const double *ys,
+                  uint32_t colour, int32_t a100, int32_t cx0, int32_t cy0, int32_t cx1, int32_t cy1, LineTouch *touch) {
+  const double cr = clamp01(channel((colour >> 7) & 0xf8u)), cg = clamp01(channel((colour >> 2) & 0xf8u)),
+               cb = clamp01(channel((colour << 3) & 0xf8u));
+  if (touch) {   // the rectangle and its pixels before the call (lines_into_terrain800)
+    const double s = static_cast<double>(ph) / 600.0, kx = static_cast<double>(fw) / 800.0;
+    double mnx = 1e18, mxx = -1e18, mny = 1e18, mxy = -1e18;
+    for (int k = 0; k < 4; ++k) {
+      const double X = ox + xs[k] * kx, Y = (gl.flip_y ? ys[k] : static_cast<double>(gl.screen_h) - ys[k]) * s;
+      mnx = std::min(mnx, X);
+      mxx = std::max(mxx, X);
+      mny = std::min(mny, Y);
+      mxy = std::max(mxy, Y);
+    }
+    touch->x0 = std::max(std::max(0, cx0), static_cast<int32_t>(std::floor(mnx)));
+    touch->xe = std::min(std::min(pw, cx1) - 1, static_cast<int32_t>(std::ceil(mxx)));
+    touch->y0 = std::max(std::max(0, cy0), static_cast<int32_t>(std::floor(mny)));
+    touch->ye = std::min(std::min(ph, cy1) - 1, static_cast<int32_t>(std::ceil(mxy)));
+    touch->before.clear();
+    if (touch->xe >= touch->x0 && touch->ye >= touch->y0)
+      for (int32_t y = touch->y0; y <= touch->ye; ++y)
+        for (int32_t x = touch->x0; x <= touch->xe; ++x)
+          touch->before.push_back(pxd[static_cast<size_t>(y) * static_cast<size_t>(pw) + static_cast<size_t>(x)]);
+  }
+  // one colour and one alpha over the whole quad: line_blend's value depends only on the channel under it and the dither cell, so
+  // it is tabled once per call (the same values, no floating point per pixel)
+  const double al = clamp01(static_cast<double>(a100) / 100.0);
+  // kept per thread for the last colour and alpha (P39C2_2: a green's fill is hundreds of strips in one colour)
+  struct Lut {
+    bool ok = false;
+    uint32_t colour = 0;
+    int32_t a100 = 0;
+    uint16_t v[16][3][32];
+  };
+  thread_local Lut cache;
+  if (!cache.ok || cache.colour != colour || cache.a100 != a100) {
+    for (int cell = 0; cell < 16; ++cell)
+      for (int d = 0; d < 32; ++d) {
+        const int32_t x = cell & 3, y = cell >> 2;
+        cache.v[cell][0][d] = static_cast<uint16_t>(line_blend(cr, al, d, x, y) << 10);
+        cache.v[cell][1][d] = static_cast<uint16_t>(line_blend(cg, al, d, x, y) << 5);
+        cache.v[cell][2][d] = static_cast<uint16_t>(line_blend(cb, al, d, x, y));
+      }
+    cache.ok = true;
+    cache.colour = colour;
+    cache.a100 = a100;
+  }
+  const auto &lut = cache.v;
+  return quad_walk(pw, ph, fw, ox, gl, xs, ys, a100, cx0, cy0, cx1, cy1, [&](int32_t x, int32_t y, size_t at, double) {
+    uint16_t &d = pxd[at];
+    const uint16_t(&t)[3][32] = lut[((y & 3) << 2) | (x & 3)];
+    d = static_cast<uint16_t>(t[0][(d >> 10) & 31] | t[1][(d >> 5) & 31] | t[2][d & 31]);
+  });
+}
+// the body "P39C.greenFill"(count, colour 0x8000RGB555, alpha / 100), the quads in gfx_green_fill_quads() (8 words each: x1 .. x4,
+// y1 .. y4 in 1 / 16 of a pixel of the 800 frame): drawn on the 800 root, and while the overlay lines' window is open on the world
+// layer too (the world raster, its check sample, the world thread as a patch, terrain800 where the root showed the terrain), as
+// mirror_line_world draws a line. One call per frame: the world raster is synced, its generation moved and terrain800 updated once.
+// Drawing only.
+void green_fill_body(Gfx &g, Ctx &ctx, const uint32_t *a, int n) {
+  if (n < 3) return;
+  const std::vector<int32_t> &q = gfx_green_fill_quads();
+  const size_t count = std::min<size_t>(a[0], q.size() / 8);
+  if (count == 0) return;
+  g.ensure_root(ctx);
+  if (mode() == 10) return;
+  const uint32_t ter = ctx.gs().gTerrain;
+  LineGl gl;
+  try {
+    if (ter == 0) throw Fault{0, 0};
+    const Ptr<TerrainObjectHeader> h(ctx.mem, ter);
+    gl.context = h.field(&TerrainObjectHeader::glrc).get() != 0;
+    gl.flip_y = h.field(&TerrainObjectHeader::flip_y).get() != 0;
+    gl.screen_w = h.field(&TerrainObjectHeader::screen_w).get();
+    gl.screen_h = h.field(&TerrainObjectHeader::screen_h).get();
+  } catch (const Fault &) {
+    return;   // no Terrain object: no course picture to draw on
+  }
+  if (!gl.context) return;
+  LiveTerrain *lt = live(g, ctx, "P39C.greenFill");
+  if (!lt) return;
+  const uint32_t colour = a[1];
+  const int32_t a100 = static_cast<int32_t>(a[2]);
+  auto corners = [&](size_t i, double *xs, double *ys) {
+    for (int k = 0; k < 4; ++k) {
+      xs[k] = q[8 * i + k] / 16.0;
+      ys[k] = q[8 * i + 4 + k] / 16.0;
+    }
+  };
+  LiveTerrainWorld *const world = lt->world();
+  const bool mirror = world && world->valid && world->lines_open && world->raster && g.hud.cursor_depth == 0 && mode() != 14;
+  if (mirror) grid_touch(*world);
+  // the root: every quad, the rectangle around them all and its pixels before (lines_into_terrain800, once)
+  LineTouch touch;
+  touch.x0 = g.root.w;
+  touch.y0 = g.root.h;
+  touch.xe = touch.ye = -1;
+  {
+    const double s = static_cast<double>(g.root.h) / 600.0, kx = static_cast<double>(g.root.w) / 800.0;
+    for (size_t i = 0; i < count; ++i) {
+      double xs[4], ys[4];
+      corners(i, xs, ys);
+      for (int k = 0; k < 4; ++k) {
+        const double X = xs[k] * kx, Y = (gl.flip_y ? ys[k] : static_cast<double>(gl.screen_h) - ys[k]) * s;
+        touch.x0 = std::min(touch.x0, static_cast<int32_t>(std::floor(X)));
+        touch.xe = std::max(touch.xe, static_cast<int32_t>(std::ceil(X)));
+        touch.y0 = std::min(touch.y0, static_cast<int32_t>(std::floor(Y)));
+        touch.ye = std::max(touch.ye, static_cast<int32_t>(std::ceil(Y)));
+      }
+    }
+    touch.x0 = std::max(0, touch.x0);
+    touch.y0 = std::max(0, touch.y0);
+    touch.xe = std::min(g.root.w - 1, touch.xe);
+    touch.ye = std::min(g.root.h - 1, touch.ye);
+    if (mirror && touch.xe >= touch.x0 && touch.ye >= touch.y0)
+      for (int32_t y = touch.y0; y <= touch.ye; ++y)
+        for (int32_t x = touch.x0; x <= touch.xe; ++x)
+          touch.before.push_back(g.root.px[static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x)]);
+  }
+  bool drawn = false;
+  for (size_t i = 0; i < count; ++i) {
+    double xs[4], ys[4];
+    corners(i, xs, ys);
+    drawn = quad_px_body(g.root.px.data(), g.root.w, g.root.h, g.root.w, 0, gl, xs, ys, colour, a100, 0, 0, g.root.w, g.root.h,
+                         nullptr) || drawn;
+  }
+  if (!drawn || !mirror) return;
+  // the world layer: one sync of the raster, one generation step, every quad; the check sample and the world thread's patch too
+  LiveTerrainWorld &w = *world;
+  std::vector<uint16_t> &px = w.raster->pixels();
+  if (w.pw <= 0 || w.ph <= 0 || w.fw <= 0 || px.size() != static_cast<size_t>(w.pw) * static_cast<size_t>(w.ph)) return;
+  ++w.gen;
+  std::vector<uint16_t> *const sample = w.rec && w.sample && w.sample->pixels().size() == px.size() ? &w.sample->pixels() : nullptr;
+  for (size_t i = 0; i < count; ++i) {
+    double xs[4], ys[4];
+    corners(i, xs, ys);
+    quad_px_body(px.data(), w.pw, w.ph, w.fw, w.ox, gl, xs, ys, colour, a100, 0, 0, w.pw, w.ph, nullptr);
+    if (!w.rec) continue;
+    if (sample) quad_px_body(sample->data(), w.pw, w.ph, w.fw, w.ox, gl, xs, ys, colour, a100, 0, 0, w.pw, w.ph, nullptr);
+    GfxWorldLine l;
+    l.quad = true;
+    for (int k = 0; k < 4; ++k) {
+      l.qx[k] = xs[k];
+      l.qy[k] = ys[k];
+    }
+    l.colour = colour;
+    l.alpha = a100;
+    l.flip_y = gl.flip_y;
+    l.screen_h = gl.screen_h;
+    l.pw = w.pw;
+    l.ph = w.ph;
+    l.fw = w.fw;
+    l.ox = w.ox;
+    gfx_world_lines_chunk()->push_back(l);
+  }
+  if (w.terrain800.size() == g.root.px.size()) lines_into_terrain800(g.root.px, w.terrain800, g.root.w, touch);
+}
+
 // Terrain::drawLine into the backend's root surface
 void terrain_draw_line(Gfx &g, Ctx &ctx, const char *who, int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t colour,
                        int32_t width, int32_t alpha) {
@@ -777,6 +1012,8 @@ std::vector<CirclePoint> circle_points(Ctx &ctx, int32_t cx, int32_t cy, int32_t
   return out;
 }
 
+// P39C2: the green highlight fill (green_fill_body above)
+void body_green_fill(Gfx &g, Ctx &ctx, const uint32_t *a, int n) { green_fill_body(g, ctx, a, n); }
 void body_draw_map_line(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   terrain_draw_line(g, ctx, "drawMapLine", static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]),
                     static_cast<int32_t>(a[3]), a[4], static_cast<int32_t>(a[5]), static_cast<int32_t>(a[6]));
@@ -995,7 +1232,10 @@ void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines
       gl.flip_y = l.flip_y;
       gl.screen_h = l.screen_h;
       gl.line_width = l.line_width;
-      overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+      if (l.quad)   // P39C2: a ground quad (overlay::body_green_fill)
+        overlay::quad_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.qx, l.qy, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+      else
+        overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
     }
     return;
   }
@@ -1013,8 +1253,7 @@ void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines
     const uint32_t col = static_cast<uint32_t>(p.col.size() / 3);
     for (const uint32_t bits : {(l.colour >> 7) & 0xf8u, (l.colour >> 2) & 0xf8u, (l.colour << 3) & 0xf8u})
       p.col.push_back(overlay::clamp01(overlay::channel(bits)) * 255.0);
-    overlay::line_walk(pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.alpha, 0, 0, pw, ph,
-                       [&](int32_t, int32_t, size_t at, double al) {
+    auto entry = [&](int32_t, int32_t, size_t at, double al) {
       uint8_t &n = layer_of[at];
       if (n == 0) touched.push_back(static_cast<uint32_t>(at));
       if (n == 255) {
@@ -1028,7 +1267,11 @@ void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines
       q.al = al;
       layers[n].push_back(q);
       ++n;
-    });
+    };
+    if (l.quad)   // P39C2: a ground quad (overlay::body_green_fill)
+      overlay::quad_walk(pw, ph, l.fw, l.ox, gl, l.qx, l.qy, l.alpha, 0, 0, pw, ph, entry);
+    else
+      overlay::line_walk(pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.alpha, 0, 0, pw, ph, entry);
   }
   for (const uint32_t a : touched) layer_of[a] = 0;
   touched.clear();
@@ -1039,7 +1282,10 @@ void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines
       gl.flip_y = l.flip_y;
       gl.screen_h = l.screen_h;
       gl.line_width = l.line_width;
-      overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+      if (l.quad)   // P39C2: a ground quad (overlay::body_green_fill)
+        overlay::quad_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.qx, l.qy, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
+      else
+        overlay::line_px_body(px.data(), pw, ph, l.fw, l.ox, gl, l.x1, l.y1, l.x2, l.y2, l.colour, l.alpha, 0, 0, pw, ph, nullptr);
     }
     return;
   }

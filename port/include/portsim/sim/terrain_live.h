@@ -208,6 +208,10 @@ struct GfxWorldLine {
   bool flip_y = true;
   int32_t screen_h = 600;
   int32_t pw = 0, ph = 0, fw = 0, ox = 0;   // the world it was drawn for
+  // P39C2 (terrain_overlay.cpp body_green_fill): a filled ground quad instead of a line: its four 800-space corners, alpha in
+  // hundredths (the `alpha` field), drawn as quad_px_body draws it
+  bool quad = false;
+  double qx[4] = {}, qy[4] = {};
 };
 std::vector<GfxWorldLine> *gfx_world_lines_chunk();
 void world_lines_run(LiveTerrainWorld &w, const std::vector<GfxWorldLine> &lines);
