@@ -2276,3 +2276,4 @@ Finance, SGA, Player Comments, Roster, Best Scores, Histograph, Hire, Tournament
 Land, OK buttons, popups, message frames / tips, course-style frames, the P37 advisor panels; number balls and illustrations kept as
 art. Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 48 (per-cell art match 0.77-1.00); dialog / routing tests; drives of
 every report screen off vs game at 1080 and 4K (log/roadmap/P40/compare_b).
+- P40B default: --ui-theme game for players (Mariano 2026-11-21: "Yes, game theme on"); SG_APP_P40=off in port/test/conftest.py keeps the tests on the original art.

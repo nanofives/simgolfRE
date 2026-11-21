@@ -143,7 +143,7 @@
 //   connectors, score ovals, comment box and close button drawn as vector shapes (gfx_ui.h) instead of the HoleSTAT / OkStates art;
 //   with --text-res native the presenter draws them again at the window's resolution. game = the colours measured from the art,
 //   slate = an alternate theme. Drawing only (log/roadmap/P40/P40_notes.md).
-//   P40B: --ui-theme off|game|slate|<name> (default off; --ui-pilot is its old name, `on` = game). The themes are data
+//   P40B: --ui-theme off|game|slate|<name> (default game since 2026-11-21, SG_APP_P40=off: off; --ui-pilot is its old name, `on` = game). The themes are data
 //   (port/src/sim/ui_themes.inc built in); a ui_themes.ini beside simgolf_port.exe and then one in the data folder replace or add
 //   themes in the same format (stdout says which file was read and any line it refused).
 //   P39C: --green-highlight on|off (default on; SG_APP_P39=off: off) while the player aims, the blinking marker on the cup tile
@@ -697,7 +697,8 @@ struct Options {
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
   bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
   int ui_pilot = 0;                // P40: the theme's index (gfx_ui.h ui_theme_index; 0 = off), resolved from ui_theme_name
-  std::string ui_theme_name = "off";  // P40B: --ui-theme off|game|slate|<name> (alias --ui-pilot; on = game)
+  std::string ui_theme_name = "game";  // P40B: --ui-theme off|game|slate|<name> (alias --ui-pilot; on = game); default game
+                                       // (Mariano 2026-11-21), off under SG_APP_P40=off (port/test/conftest.py)
   bool green_highlight = true;     // P39C: --green-highlight on|off (SG_APP_P39=off: off)
   int world_size = 50;             // P38B: --world-size N (play profile only)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
@@ -4607,6 +4608,8 @@ int main(int argc, char **argv) {
     if (!std::strcmp(ep, "off")) o.hole_advice = false;  // P37A
   if (const char *ep = std::getenv("SG_APP_P39"))  // P39: the course building and play features off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.green_highlight = false;  // P39C
+  if (const char *ep = std::getenv("SG_APP_P40"))  // P40B: the vector UI theme off (port/test/conftest.py); flags win
+    if (!std::strcmp(ep, "off")) o.ui_theme_name = "off";
   if (const char *ep = std::getenv("SG_APP_P30"))  // P30: the play-test leftovers' app changes off (port/test/conftest.py); flags win
     if (!std::strcmp(ep, "off")) o.popup_fit = false;  // P30A item 2
   if (const char *ep = std::getenv("SG_APP_P12"))  // P12: motion at the display's rate off (port/test/conftest.py); flags win
