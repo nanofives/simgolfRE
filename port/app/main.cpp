@@ -143,6 +143,9 @@
 //   connectors, score ovals, comment box and close button drawn as vector shapes (gfx_ui.h) instead of the HoleSTAT / OkStates art;
 //   with --text-res native the presenter draws them again at the window's resolution. game = the colours measured from the art,
 //   slate = an alternate theme. Drawing only (log/roadmap/P40/P40_notes.md).
+//   P40B: --ui-theme off|game|slate|<name> (default off; --ui-pilot is its old name, `on` = game). The themes are data
+//   (port/src/sim/ui_themes.inc built in); a ui_themes.ini beside simgolf_port.exe and then one in the data folder replace or add
+//   themes in the same format (stdout says which file was read and any line it refused).
 //   P39C: --green-highlight on|off (default on; SG_APP_P39=off: off) while the player aims, the blinking marker on the cup tile
 //   becomes an outline of the cup's whole green over its slope, in the same blink (greenline.h; drawing only; log/roadmap/P39/
 //   P39C_notes.md)
@@ -693,7 +696,8 @@ struct Options {
   bool hole_jump = true;           // P36A: --hole-jump on|off (SG_APP_P36=off: off)
   bool wait_reasons = true;        // P36B part 2: --wait-reasons on|off (SG_APP_P36=off: off)
   bool hole_advice = true;         // P37A: --hole-advice on|off (SG_APP_P37=off: off)
-  int ui_pilot = 0;                // P40: --ui-pilot off|game|slate (gfx_ui.h UiPilotTheme; default off)
+  int ui_pilot = 0;                // P40: the theme's index (gfx_ui.h ui_theme_index; 0 = off), resolved from ui_theme_name
+  std::string ui_theme_name = "off";  // P40B: --ui-theme off|game|slate|<name> (alias --ui-pilot; on = game)
   bool green_highlight = true;     // P39C: --green-highlight on|off (SG_APP_P39=off: off)
   int world_size = 50;             // P38B: --world-size N (play profile only)
   int game_speed = 1;              // P33A item 1: --game-speed 1|2|4
@@ -2563,7 +2567,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
        std::to_string(o.sharp_notes ? 1 : 0) + "}";  // P35G items 9 and 11
   s += ",\"p36b\":{\"wait_reasons\":" + std::to_string(o.wait_reasons ? 1 : 0) + "}";  // P36B part 2
   s += ",\"p37a\":{\"hole_advice\":" + std::to_string(o.hole_advice ? 1 : 0) + "}";  // P37A
-  s += ",\"p40\":{\"ui_pilot\":" + std::to_string(o.ui_pilot) + "}";  // P40
+  s += ",\"p40\":{\"ui_pilot\":" + std::to_string(o.ui_pilot) + ",\"ui_theme\":\"" + o.ui_theme_name + "\"}";  // P40, P40B
   s += ",\"p39c\":{\"green_highlight\":" + std::to_string(o.green_highlight ? 1 : 0) + "}";  // P39C
   s += ",\"p33a\":{\"speed_button\":" + std::to_string(o.speed_button ? 1 : 0) + ",\"game_speed\":" + std::to_string(o.game_speed) + "}";
   s += ",\"p22c\":{\"trail_glide\":" + std::to_string(portsim::gfx_trail_glide() ? 1 : 0) + "}";  // P22C fix 3
@@ -4002,9 +4006,9 @@ bool parse(int argc, char **argv, Options &o) {
       o.green_highlight = v == "on";
       continue;
     }
-    if (a == "--ui-pilot") {  // P40 (before the chain too)
-      if (!val(v) || (v != "off" && v != "on" && v != "game" && v != "slate")) return false;
-      o.ui_pilot = v == "off" ? 0 : v == "slate" ? 2 : 1;
+    if (a == "--ui-pilot" || a == "--ui-theme") {  // P40 / P40B (before the chain too; resolved after the theme files load)
+      if (!val(v) || v.empty()) return false;
+      o.ui_theme_name = v == "on" ? "game" : v;
       continue;
     }
     if (a == "--hole-advice") {  // P37A (before the chain too)
@@ -4661,6 +4665,28 @@ int main(int argc, char **argv) {
   // P35A item 6: before any GPU device starts (the preparation thread compiles first)
   if (o.shader_cache && o.gpu) portapp::shader_cache_set_dir((fs::path(files.data_root()) / "shader_cache").string());
   lang_ui().startup(o.install, o.data);  // P24D: the language pack and the remembered language (lang_ui.h)
+  {  // P40B: the theme files over the built-in themes, then --ui-theme's name
+    std::vector<fs::path> where;
+    wchar_t me[MAX_PATH] = {};
+    if (GetModuleFileNameW(nullptr, me, MAX_PATH)) where.push_back(fs::path(me).parent_path() / "ui_themes.ini");
+    where.push_back(fs::path(files.data_root()) / "ui_themes.ini");
+    for (const fs::path &f : where) {
+      std::error_code ec;
+      if (!fs::exists(f, ec)) continue;
+      std::ifstream in(f, std::ios::binary);
+      const std::string text((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+      std::string err;
+      if (portsim::ui_themes_load(text, err)) std::printf("ui themes: read %s\n", f.string().c_str());
+      else std::printf("ui themes: %s refused (%s); the themes before it are kept\n", f.string().c_str(), err.c_str());
+    }
+    o.ui_pilot = o.ui_theme_name == "off" ? 0 : portsim::ui_theme_index(o.ui_theme_name);
+    if (o.ui_theme_name != "off" && o.ui_pilot == 0) {
+      std::string names;
+      for (const std::string &n : portsim::ui_theme_names()) names += " " + n;
+      std::fprintf(stderr, "--ui-theme %s: no such theme (off%s)\n", o.ui_theme_name.c_str(), names.c_str());
+      return 2;
+    }
+  }
   {  // P24D: the redrawn art (SG_LANG_ART=off: none)
     const char *art = std::getenv("SG_LANG_ART");
     if (lang_ui().available.load() && !(art && !std::strcmp(art, "off"))) files.set_lang_overlay(portsim::lang::kSpanish, lang_ui().art_dir);

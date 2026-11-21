@@ -49,6 +49,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "portsim/sim/gfx_text.h"
+#include "portsim/sim/gfx_ui.h"  // P40B: the advisor panel as a UI scene
 
 #include <algorithm>
 #include <array>
@@ -1778,13 +1779,63 @@ void advice_panel(Gfx &g, Ctx &ctx, const std::vector<std::pair<std::string, uin
   const int32_t h = std::min(need_h, max_h);
   y0 = std::max(2, std::min(y0, 600 - 4 - h));
   // the frame, its shadow, the cream box and the title pill
-  Px p{r};
-  p.shadow(x0, y0, x0 + w, y0 + h, 10, 4);
-  p.box(x0, y0, x0 + w, y0 + h, 10, kLav, kOutline, kLavRim, true);
   const int32_t pill_x = x0 + pad + 6, pill_y = y0 + top - pill_h / 2;
   const int32_t cream_y0 = y0 + top, cream_y1 = y0 + h - pad;
-  p.box(x0 + pad, cream_y0, x0 + w - pad, cream_y1, 4, kCream, kCreamEdge, kCreamBevel, true);
-  p.box(pill_x, pill_y, pill_x + title_w + 24, pill_y + pill_h, pill_h / 2, kPill, kOutline, kPill, false);
+  if (const int32_t th = gfx_ui_pilot(ctx)) {
+    // P40B (gfx_ui.h): with a UI theme the frame, the cream box and the title pill as a scene (drawn again at the window's
+    // resolution); the same rectangles and radii as the pixel boxes below
+    const UiTheme &t = ui_theme(th);
+    auto rr = [](float a0, float b0, float a1, float b1, float rad) {
+      UiPrim q;
+      q.kind = kUiRRect;
+      q.x0 = a0;
+      q.y0 = b0;
+      q.x1 = a1;
+      q.y1 = b1;
+      for (int k = 0; k < 4; ++k) q.rx[k] = q.ry[k] = rad;
+      return q;
+    };
+    UiScene sc;
+    UiElem fr;
+    fr.fill_top = fr.fill_bot = t.frame;
+    fr.bevel_w = t.frame_bevel;
+    fr.bevel_light = t.frame_light;
+    fr.bevel_dark = t.frame_dark;
+    fr.shadow = t.shadow;
+    fr.shadow_dx = fr.shadow_dy = t.shadow_d + 1.f;
+    fr.shadow_blur = t.shadow_blur;
+    fr.prims = {rr(static_cast<float>(x0), static_cast<float>(y0), static_cast<float>(x0 + w), static_cast<float>(y0 + h), 10.f)};
+    sc.elems.push_back(fr);
+    UiElem bx;
+    bx.fill_top = bx.fill_bot = t.box;
+    bx.outline = t.box_edge;
+    bx.outline_w = 1.f;
+    bx.bevel_w = 2.f;
+    bx.bevel_dark = 0.12f;
+    bx.inset = 1;
+    bx.prims = {rr(static_cast<float>(x0 + pad), static_cast<float>(cream_y0), static_cast<float>(x0 + w - pad), static_cast<float>(cream_y1), 4.f)};
+    sc.elems.push_back(bx);
+    UiElem pl;
+    pl.fill_top = t.label_top;
+    pl.fill_bot = t.label_bot;
+    pl.gy0 = static_cast<float>(pill_y) + 1.5f;
+    pl.gy1 = static_cast<float>(pill_y) + 6.f;
+    pl.outline = t.pill_outline;
+    pl.outline_w = t.pill_outline_w;
+    pl.bevel_w = t.pill_bevel;
+    pl.bevel_light = 0.25f;
+    pl.bevel_dark = 0.1f;
+    pl.prims = {rr(static_cast<float>(pill_x), static_cast<float>(pill_y), static_cast<float>(pill_x + title_w + 24),
+                   static_cast<float>(pill_y + pill_h), static_cast<float>(pill_h) * 0.5f)};
+    sc.elems.push_back(pl);
+    ui_draw_scene(g, ctx, sc);
+  } else {
+    Px p{r};
+    p.shadow(x0, y0, x0 + w, y0 + h, 10, 4);
+    p.box(x0, y0, x0 + w, y0 + h, 10, kLav, kOutline, kLavRim, true);
+    p.box(x0 + pad, cream_y0, x0 + w - pad, cream_y1, 4, kCream, kCreamEdge, kCreamBevel, true);
+    p.box(pill_x, pill_y, pill_x + title_w + 24, pill_y + pill_h, pill_h / 2, kPill, kOutline, kPill, false);
+  }
   auto text = [&](const std::string &s, int32_t x, int32_t y, uint32_t colour) {
     with_saved_state(ctx, [&]() {
       const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);

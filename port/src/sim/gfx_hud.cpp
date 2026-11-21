@@ -1217,6 +1217,7 @@ void frame_border(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h, 
 // fill != 0, then the border from g_sprites5a53c8 cells 0, 1, 7, 3, 5, 2, 8, 6 over the same cells of g_sprites58b680
 void b_draw_frame_r3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
+  if (g.ui_pilot != 0 && ui_swap(g, ctx, "drawFrameR3", a, 5)) return;   // P40B (gfx_ui.cpp; internal calls skip gfx_drop)
   call(g, ctx, "Display::setScale", {1, 1, 1});
   int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), w = static_cast<int32_t>(a[2]), h = static_cast<int32_t>(a[3]);
   round16(x, w);
@@ -1237,6 +1238,7 @@ void b_draw_frame_r3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // masks g_spriteRef_59d920 + 0x160 s at the same offsets
 void b_draw_frame_s2(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
+  if (g.ui_pilot != 0 && ui_swap(g, ctx, "drawFrameS2", a, 5)) return;   // P40B
   call(g, ctx, "Display::setScale", {1, 1, 1});
   int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), w = static_cast<int32_t>(a[2]), h = static_cast<int32_t>(a[3]);
   round16(x, w);

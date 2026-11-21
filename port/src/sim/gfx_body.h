@@ -352,6 +352,9 @@ class Gfx {
   uint32_t root_va(Ctx &ctx);
 };
 
+// P40B (gfx_ui.cpp): with a UI theme on, a report art cell or an OkStates button drop drawn procedurally; true = drawn
+bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n);
+
 // ------------------------------------------------------------------------------------------------ the family table
 using GfxBody = void (*)(Gfx &g, Ctx &ctx, const uint32_t *a, int n);   // a[0..12): the drop's argument slots, zero-padded
 struct GfxBodyDef {

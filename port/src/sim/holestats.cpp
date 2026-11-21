@@ -570,6 +570,57 @@ void a_ui_time(Ctx &, const uint32_t *a, Ret &r) {
   const auto us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count();
   r.set_u32(static_cast<uint32_t>(us / reps));
 }
+std::string cstr_at(Ctx &c, uint32_t va) {
+  std::string out;
+  for (uint32_t k = 0; k < 0x100000; ++k) {
+    const char ch = static_cast<char>(c.mem.load<uint8_t>(va + k));
+    if (!ch) break;
+    out += ch;
+  }
+  return out;
+}
+// holestats.uiThemeLoad(va): ui_themes_load over the NUL-terminated text at va; the number of themes after it, 0 when refused
+void a_ui_theme_load(Ctx &c, const uint32_t *a, Ret &r) {
+  std::string err;
+  r.set_u32(ui_themes_load(cstr_at(c, a[0]), err) ? static_cast<uint32_t>(ui_theme_names().size()) : 0u);
+}
+// holestats.uiThemeIndex(va): ui_theme_index of the name at va
+void a_ui_theme_index(Ctx &c, const uint32_t *a, Ret &r) { r.set_u32(u32(ui_theme_index(cstr_at(c, a[0])))); }
+// holestats.uiCell(colour_va, pal_va, mask_va, w | h << 16, theme, scale, out_va, cap): ui_cell_scene over a w x h cell (bytes at
+// colour_va / mask_va, 256 RGB555 words at pal_va) rendered at an integer scale over the cell (out: w, h, then one word per pixel as
+// holestats.uiRender, then one byte per cell pixel: 1 where the art is kept). Returns the words written, 0 for an empty cell.
+void a_ui_cell(Ctx &c, const uint32_t *a, Ret &r) {
+  r.set_u32(0);
+  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16), k = std::max<int32_t>(1, i32(a[5]));
+  std::vector<uint8_t> col(static_cast<size_t>(w) * static_cast<size_t>(h)), msk(col.size());
+  std::vector<uint16_t> pal(256);
+  for (size_t i = 0; i < col.size(); ++i) {
+    col[i] = c.mem.load<uint8_t>(a[0] + static_cast<uint32_t>(i));
+    msk[i] = c.mem.load<uint8_t>(a[2] + static_cast<uint32_t>(i));
+  }
+  for (uint32_t i = 0; i < 256; ++i) pal[i] = c.mem.load<uint16_t>(a[1] + 2 * i);
+  UiScene s;
+  std::vector<uint8_t> keep;
+  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4])), s, keep)) return;
+  const uint64_t words = static_cast<uint64_t>(w) * h * k * k + 2u + (col.size() + 3) / 4;
+  if (words > a[7]) return;
+  std::vector<float> prem;
+  ui_render(s, k, k, 0.0, 0.0, 0, 0, w * k, h * k, prem);
+  c.mem.store<uint32_t>(a[6], u32(w * k));
+  c.mem.store<uint32_t>(a[6] + 4, u32(h * k));
+  const size_t np = static_cast<size_t>(w * k) * static_cast<size_t>(h * k);
+  for (size_t i = 0; i < np; ++i) {
+    uint32_t word = 0;
+    for (int ch = 0; ch < 4; ++ch) {
+      const float v = ch == 3 ? prem[4 * i + 3] * 255.f : prem[4 * i + static_cast<size_t>(ch)];
+      word |= static_cast<uint32_t>(std::max(0, std::min(255, static_cast<int32_t>(v + 0.5f)))) << (8 * ch);
+    }
+    c.mem.store<uint32_t>(a[6] + 8 + 4 * static_cast<uint32_t>(i), word);
+  }
+  const uint32_t kb = a[6] + 8 + 4 * static_cast<uint32_t>(np);
+  for (size_t i = 0; i < keep.size(); ++i) c.mem.store<uint8_t>(kb + static_cast<uint32_t>(i), keep[i]);
+  r.set_u32(static_cast<uint32_t>(words));
+}
 // holestats.uiCodec(which, theme): 1 when the scene survives ui_encode / ui_decode unchanged (its encoding again equal)
 void a_ui_codec(Ctx &, const uint32_t *a, Ret &r) {
   UiScene s, t;
@@ -592,6 +643,9 @@ const FuncDef kFuncs[] = {
     {"holestats.uiRender", "default", "int", 8, 0, a_ui_render, &g_negctl_none},
     {"holestats.uiCodec", "default", "int", 2, 0, a_ui_codec, &g_negctl_none},
     {"holestats.uiTime", "default", "int", 4, 0, a_ui_time, &g_negctl_none},
+    {"holestats.uiThemeLoad", "default", "int", 1, 0, a_ui_theme_load, &g_negctl_none},
+    {"holestats.uiThemeIndex", "default", "int", 1, 0, a_ui_theme_index, &g_negctl_none},
+    {"holestats.uiCell", "default", "int", 8, 0, a_ui_cell, &g_negctl_none},
 };
 }  // namespace
 

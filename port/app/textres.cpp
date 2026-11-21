@@ -48,6 +48,17 @@ struct UiRender {
   // pixels are drawn only over them, so the CPU draw and the GPU tables (applied inside the layer) write the same pixels
   int32_t fx0 = 0, fy0 = 0, fw = 0, fh = 0;
   std::vector<uint8_t> cover;
+  // P40B: per client pixel of the box its table entry + 1 (0: the scene changes no 5-bit word there at any level), the entries'
+  // 32 words each (the scene's premultiplied colour over grey level L, gfx_ui.h ui_over_level), and per client column / row its
+  // frame column / row (the presenter's floor mapping). Made once per scene and viewport; a run's table is the masked part of it.
+  std::vector<uint32_t> ent;
+  std::vector<uint16_t> lut;
+  std::vector<int32_t> lxs, lys;
+  // the word at entry e over word w, per channel from its level (what the GPU's text_runs computes)
+  uint16_t over(uint32_t e, uint16_t word) const {
+    const uint16_t *l = lut.data() + static_cast<size_t>(e) * 32u;
+    return static_cast<uint16_t>((l[(word >> 10) & 31] & 0x7c00u) | (l[(word >> 5) & 31] & 0x03e0u) | (l[word & 31] & 0x001fu));
+  }
   bool covered(int32_t lx, int32_t ly) const {
     if (lx < fx0 || ly < fy0 || lx >= fx0 + fw || ly >= fy0 + fh) return false;
     return cover[static_cast<size_t>(ly - fy0) * static_cast<size_t>(fw) + static_cast<size_t>(lx - fx0)] != 0;
@@ -86,6 +97,56 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
     portsim::ui_render(sc, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp draw_scene)
     u.cover.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
     for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = one[4 * i + 3] > 0.f ? 1 : 0;
+    // the entries: pixels of one premultiplied value share one (memo), entries of equal words are one (ids)
+    u.ent.assign(static_cast<size_t>(u.w) * static_cast<size_t>(u.h), 0);
+    std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;
+    std::unordered_multimap<uint64_t, uint32_t> ids;
+    uint16_t e[32];
+    for (size_t i = 0; i < u.ent.size(); ++i) {
+      const float *q = u.prem.data() + i * 4u;
+      if (q[3] <= 0.f) continue;
+      uint32_t pk[4];
+      std::memcpy(pk, q, sizeof pk);
+      const uint64_t ph = (static_cast<uint64_t>(pk[0]) * 0x9E3779B97F4A7C15ull) ^ (static_cast<uint64_t>(pk[1]) * 0xC2B2AE3D27D4EB4Full) ^
+                          (static_cast<uint64_t>(pk[2]) * 0x165667B19E3779F9ull) ^ (static_cast<uint64_t>(pk[3]) * 0x27D4EB2F165667C5ull);
+      auto m = memo.find(ph);
+      if (m != memo.end() && std::memcmp(m->second.first.data(), pk, sizeof pk) == 0) {
+        u.ent[i] = m->second.second;
+        continue;
+      }
+      bool ink = false;
+      uint64_t hsh = 1469598103934665603ull;
+      for (uint32_t L = 0; L < 32; ++L) {
+        e[L] = portsim::ui_over_level(q, L);
+        ink = ink || e[L] != static_cast<uint16_t>(L | (L << 5) | (L << 10));
+        hsh = (hsh ^ e[L]) * 1099511628211ull;
+      }
+      uint32_t k1 = 0;
+      if (ink) {
+        uint32_t k = ~0u;
+        for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
+          if (std::memcmp(u.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
+            k = r2.first->second;
+            break;
+          }
+        if (k == ~0u) {
+          k = static_cast<uint32_t>(u.lut.size() / 32);
+          ids.emplace(hsh, k);
+          u.lut.insert(u.lut.end(), e, e + 32);
+        }
+        k1 = k + 1;
+      }
+      memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, k1};
+      u.ent[i] = k1;
+    }
+    u.lxs.resize(static_cast<size_t>(u.w));
+    for (int32_t x = 0; x < u.w; ++x)
+      u.lxs[static_cast<size_t>(x)] = floor_div(static_cast<int64_t>(u.x0 + x - vp.origin_x - dx) * kLogicalW, vp.client_w);
+    u.lys.resize(static_cast<size_t>(u.h));
+    for (int32_t y = 0; y < u.h; ++y)
+      u.lys[static_cast<size_t>(y)] = floor_div(static_cast<int64_t>(u.y0 + y - vp.origin_y) * kLogicalH, vp.client_h);
+    u.prem.clear();
+    u.prem.shrink_to_fit();
     if (cache.size() > 32) cache.clear();
     it = cache.emplace(key, std::move(u)).first;
   }
@@ -96,11 +157,9 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
   rb.y1 = std::min(u.y0 + u.h, vp.origin_y + first_client(r.y1, vp.client_h, kLogicalH));
   return &u;
 }
-// whether client pixel (x, y) of the box shows the run: its 800-space pixel (the presenter's floor mapping) visible and covered by
-// the scale-1 drawing
-bool ui_visible(const portsim::GfxTextRun &r, const UiRender &u, bool layered, const Viewport &vp, int32_t dx, int32_t x, int32_t y) {
-  const int32_t ly = floor_div(static_cast<int64_t>(y - vp.origin_y) * kLogicalH, vp.client_h);
-  const int32_t lx = floor_div(static_cast<int64_t>(x - vp.origin_x - dx) * kLogicalW, vp.client_w);
+// whether box pixel (x, y) (render coordinates) shows the run: its frame pixel visible and covered by the scale-1 drawing
+bool ui_visible(const portsim::GfxTextRun &r, const UiRender &u, bool layered, int32_t x, int32_t y) {
+  const int32_t lx = u.lxs[static_cast<size_t>(x)], ly = u.lys[static_cast<size_t>(y)];
   return u.covered(lx, ly) && r.visible(lx, ly, layered) != 0;
 }
 }  // namespace
@@ -364,18 +423,18 @@ void TextRaster::gdi(const portsim::GfxTextRun &r, const Prep &p) {
 
 void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out,
                       int32_t cw, int32_t ch) {
-  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run, its scene over the visible pixels (the same words as table())
+  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run: its entry over each visible pixel's word, written where it changes the
+    // word (P40B: exactly the GPU's text_runs, so SG_P14_VERIFY compares equal words)
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return;
     for (int32_t y = b.y0 - u->y0; y < b.y1 - u->y0; ++y)
       for (int32_t x = b.x0 - u->x0; x < b.x1 - u->x0; ++x) {
-        const float *p = u->prem.data() + (static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)) * 4u;
-        if (p[3] <= 0.f) continue;
-        const int32_t cx = u->x0 + x, cy = u->y0 + y;
-        if (!ui_visible(r, *u, layered, vp, dx, cx, cy)) continue;
-        uint32_t &o = out[static_cast<size_t>(cy) * static_cast<size_t>(cw) + static_cast<size_t>(cx)];
-        o = rgb555_to_bgra(portsim::ui_over555(p, to555(o)));
+        const uint32_t e = u->ent[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];
+        if (e == 0 || !ui_visible(r, *u, layered, x, y)) continue;
+        uint32_t &o = out[static_cast<size_t>(u->y0 + y) * static_cast<size_t>(cw) + static_cast<size_t>(u->x0 + x)];
+        const uint16_t w = to555(o), v = u->over(e - 1, w);
+        if (v != w) o = rgb555_to_bgra(v);
       }
     ++stats.runs;
     return;
@@ -427,77 +486,46 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
 bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
                        TextTable &t, uint32_t levels) {
   t = TextTable();
-  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run's table: per pixel its premultiplied colour over each grey level
+  if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run's table: the scene's entries over the run's visible pixels (P40B: the
+    // entries are the scene's, made once per scene and viewport; only the ones the run uses are copied)
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return false;
-    std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;  // premultiplied value -> entry + 1 (0: no ink)
-    std::unordered_multimap<uint64_t, uint32_t> ids;
-    std::vector<uint32_t> idx(static_cast<size_t>(u->w) * static_cast<size_t>(u->h), 0);
-    int32_t ix0 = u->w, ix1 = -1, iy0 = u->h, iy1 = -1;
-    uint16_t e[32];
-    for (int32_t y = b.y0 - u->y0; y < b.y1 - u->y0; ++y)
-      for (int32_t x = b.x0 - u->x0; x < b.x1 - u->x0; ++x) {
-        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x);
-        const float *p = u->prem.data() + i * 4u;
-        if (p[3] <= 0.f || !ui_visible(r, *u, layered, vp, dx, u->x0 + x, u->y0 + y)) continue;
-        // a pixel whose premultiplied value an earlier pixel had takes that pixel's entry (the 32 words depend on it alone)
-        uint32_t pk[4];
-        std::memcpy(pk, p, sizeof pk);
-        const uint64_t ph = (static_cast<uint64_t>(pk[0]) * 0x9E3779B97F4A7C15ull) ^ (static_cast<uint64_t>(pk[1]) * 0xC2B2AE3D27D4EB4Full) ^
-                            (static_cast<uint64_t>(pk[2]) * 0x165667B19E3779F9ull) ^ (static_cast<uint64_t>(pk[3]) * 0x27D4EB2F165667C5ull);
-        {
-          auto m = memo.find(ph);
-          if (m != memo.end() && std::memcmp(m->second.first.data(), pk, sizeof pk) == 0) {
-            if (m->second.second == 0) continue;
-            idx[i] = m->second.second;
-            ix0 = std::min(ix0, x);
-            ix1 = std::max(ix1, x + 1);
-            iy0 = std::min(iy0, y);
-            iy1 = std::max(iy1, y + 1);
-            continue;
-          }
+    const int32_t bw = std::max(0, b.x1 - b.x0), bh = std::max(0, b.y1 - b.y0);
+    std::vector<uint32_t> idx(static_cast<size_t>(bw) * static_cast<size_t>(bh), 0);
+    std::vector<uint32_t> remap(u->lut.size() / 32, 0);
+    int32_t ix0 = bw, ix1 = -1, iy0 = bh, iy1 = -1;
+    for (int32_t y = 0; y < bh; ++y) {
+      const int32_t ry = b.y0 - u->y0 + y;
+      for (int32_t x = 0; x < bw; ++x) {
+        const int32_t rx = b.x0 - u->x0 + x;
+        const uint32_t e = u->ent[static_cast<size_t>(ry) * static_cast<size_t>(u->w) + static_cast<size_t>(rx)];
+        if (e == 0 || !ui_visible(r, *u, layered, rx, ry)) continue;
+        uint32_t &m = remap[e - 1];
+        if (m == 0) {
+          const uint16_t *src = u->lut.data() + static_cast<size_t>(e - 1) * 32u;
+          const size_t at = t.lut.size();
+          t.lut.insert(t.lut.end(), src, src + 32);
+          for (uint32_t L = levels; L < 32; ++L) t.lut[at + L] = static_cast<uint16_t>(L | (L << 5) | (L << 10));
+          m = static_cast<uint32_t>(at / 32) + 1;
         }
-        bool ink = false;
-        uint64_t hsh = 1469598103934665603ull;
-        for (uint32_t L = 0; L < 32; ++L) {
-          const uint16_t g = static_cast<uint16_t>(L | (L << 5) | (L << 10));
-          e[L] = L < levels ? portsim::ui_over_level(p, L) : g;
-          ink = ink || e[L] != g;
-          hsh = (hsh ^ e[L]) * 1099511628211ull;
-        }
-        if (!ink) {
-          memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, 0u};
-          continue;
-        }
-        uint32_t k = ~0u;
-        for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
-          if (std::memcmp(t.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
-            k = r2.first->second;
-            break;
-          }
-        if (k == ~0u) {
-          k = static_cast<uint32_t>(t.lut.size() / 32);
-          ids.emplace(hsh, k);
-          t.lut.insert(t.lut.end(), e, e + 32);
-        }
-        idx[i] = k + 1;
-        memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, k + 1};
+        idx[static_cast<size_t>(y) * static_cast<size_t>(bw) + static_cast<size_t>(x)] = m;
         ix0 = std::min(ix0, x);
         ix1 = std::max(ix1, x + 1);
         iy0 = std::min(iy0, y);
         iy1 = std::max(iy1, y + 1);
       }
+    }
     if (ix1 <= ix0) return true;
-    t.x0 = u->x0 + ix0;
-    t.x1 = u->x0 + ix1;
-    t.y0 = u->y0 + iy0;
-    t.y1 = u->y0 + iy1;
+    t.x0 = b.x0 + ix0;
+    t.x1 = b.x0 + ix1;
+    t.y0 = b.y0 + iy0;
+    t.y1 = b.y0 + iy1;
     const int32_t tw = ix1 - ix0;
     t.idx.resize(static_cast<size_t>(tw) * static_cast<size_t>(iy1 - iy0));
     for (int32_t y = iy0; y < iy1; ++y)
       std::memcpy(t.idx.data() + static_cast<size_t>(y - iy0) * static_cast<size_t>(tw),
-                  idx.data() + static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(ix0), static_cast<size_t>(tw) * 4u);
+                  idx.data() + static_cast<size_t>(y) * static_cast<size_t>(bw) + static_cast<size_t>(ix0), static_cast<size_t>(tw) * 4u);
     return true;
   }
 #ifdef _WIN32

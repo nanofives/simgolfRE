@@ -260,6 +260,7 @@ void b_fill_window_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 void b_win_fill_rect(Gfx &g, Ctx &ctx, const uint32_t *a, int) { win_fill(g, ctx, a[0], a + 1, "Win_fillRect"); }
 
 void b_blit_panel(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g.ui_pilot != 0 && ui_swap(g, ctx, "blitPanel", a, 5)) return;   // P40B (gfx_ui.cpp; internal calls skip gfx_drop)
   gfxf::blit_panel(g, ctx, static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]),
                    static_cast<int32_t>(a[3]), static_cast<int32_t>(a[4]));
 }

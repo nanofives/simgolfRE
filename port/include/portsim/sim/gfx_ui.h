@@ -31,7 +31,7 @@ class Ctx;
 // --ui-pilot off|game|slate (app main.cpp; default off): the Hole Stats screen's frame, title plate, label pills, value boxes,
 // connectors, score ovals, comment box and close button drawn by the `ui` family instead of the HoleSTAT / OkStates art.
 // Drawing only: the GameState is never written. Off: showHoleStatsScreen makes exactly the calls it made before P40.
-enum UiPilotTheme : int32_t { kUiPilotOff = 0, kUiPilotGame = 1, kUiPilotSlate = 2 };
+enum UiPilotTheme : int32_t { kUiPilotOff = 0, kUiPilotGame = 1, kUiPilotSlate = 2 };  // the built-in themes' indexes
 void gfx_set_ui_pilot(Ctx &ctx, int32_t theme);
 int32_t gfx_ui_pilot(Ctx &ctx);
 
@@ -39,7 +39,7 @@ int32_t gfx_ui_pilot(Ctx &ctx);
 struct UiRgba {
   float r = 0, g = 0, b = 0, a = 0;  // channels 0..255, alpha 0..1
 };
-enum UiPrimKind : uint8_t { kUiRRect = 0, kUiEllipse = 1, kUiSegment = 2 };
+enum UiPrimKind : uint8_t { kUiRRect = 0, kUiEllipse = 1, kUiSegment = 2, kUiField = 3 };
 struct UiPrim {
   uint8_t kind = kUiRRect;
   float x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the box (rounded rectangle, ellipse) or the segment's two ends
@@ -47,6 +47,9 @@ struct UiPrim {
   float ry[4] = {0, 0, 0, 0};
   float w = 0;                           // a segment's width
   float bulge = 0;                       // a rounded rectangle's top edge raised by this much at its middle (a parabola)
+  // P40B kUiField: a signed distance grid (ui_field_put) over the frame pixels [x0, x1) x [y0, y1), one value per pixel centre,
+  // frame pixels, negative inside; sampled bilinearly. Made at run time from the user's art (gfx_ui.cpp), never stored.
+  uint64_t field = 0;
 };
 struct UiElem {
   std::vector<UiPrim> prims;  // their union
@@ -67,6 +70,18 @@ struct UiScene {
   float cx0 = 0, cy0 = 0, cx1 = 800, cy1 = 600;  // the clip (800-space; rows and columns of whole frame pixels)
   std::vector<UiElem> elems;                     // painted in order
 };
+
+// P40B: the distance grids of kUiField primitives, kept for the process (a scene names one by its id; the presenter of the same
+// process reads it). put returns the id (a hash of the grid; the same grid gives the same id), get nullptr for an unknown id.
+struct UiField {
+  int32_t w = 0, h = 0;
+  std::vector<float> d;
+};
+uint64_t ui_field_put(int32_t w, int32_t h, std::vector<float> d);
+const UiField *ui_field_get(uint64_t id);
+// the signed distance grid of a w x h coverage mask (1 inside): exact distances between pixel centres, minus / plus half a pixel
+// at the edge, smoothed by one 3 x 3 pass; `pad` pixels of outside added on every side (the grid is (w + 2 pad) x (h + 2 pad))
+std::vector<float> ui_field_from_mask(const std::vector<uint8_t> &mask, int32_t w, int32_t h, int32_t pad);
 
 // the run's face marking a UI run (gfx.h GfxTextRun::face)
 constexpr const char *kUiRunFace = "\x01p40ui";
@@ -90,23 +105,43 @@ void ui_bounds(const UiScene &s, float &x0, float &y0, float &x1, float &y1);
 
 // ---------------------------------------------------------------------------------------------------------- the themes
 struct UiTheme {
-  UiRgba frame, frame_rim, frame_shade, frame_outline;  // the panel
+  std::string name;
+  UiRgba frame;                                         // the panel
   float frame_bevel = 0, frame_light = 0, frame_dark = 0;
   UiRgba shadow;                                        // the panel's drop shadow
   float shadow_d = 0, shadow_blur = 0;
-  UiRgba plate, plate_edge, plate_inner;                // the title plate (sunken cream)
+  UiRgba plate, plate_edge;                             // the title plate (sunken cream)
   UiRgba label_top, label_bot, value_top, value_bot;   // the pills: labels (raised) and values (sunken)
   UiRgba pill_outline;
   float pill_outline_w = 0, pill_bevel = 0;
+  float art_colours = 0;   // P40B: 1 = a report cell's regions take the art's own median colours (the game theme), 0 = the theme's
   UiRgba line;                                          // the connectors
   float line_w = 0;
-  UiRgba box, box_edge;                                 // the comment box
-  UiRgba well, ball_top, ball_bot, ball_hover_top, ball_hover_bot, gloss, check;  // the close button
+  UiRgba box, box_edge;                                 // the comment box and its surround
+  UiRgba row, grid;                                     // P40B: white table rows, grid lines
+  UiRgba ring, ring_outline, well, ball_top, ball_bot, ball_hover_top, ball_hover_bot, gloss, check;  // the close button
 };
+// P40B: the themes are data (port/src/sim/ui_themes.inc, built in; the app adds ui_themes.ini over them with ui_themes_load). Index 0
+// is "off"; 1 = the first theme (game), 2 = slate, then any the file adds. ui_theme(k) for an unknown k gives the first theme.
 const UiTheme &ui_theme(int32_t theme);
+// parse `text` (the ui_themes.inc format) over the current themes: a section replaces or adds a theme. False with `err` (line and
+// reason) on a malformed line; the themes are then left as they were.
+bool ui_themes_load(const std::string &text, std::string &err);
+int32_t ui_theme_index(const std::string &name);   // 0 for "off" or an unknown name
+std::vector<std::string> ui_theme_names();
 // the Hole Stats scenes for the tests (gfx_ui.cpp): which 0 the head, 1 a row at y, 2 the foot at y, 3 the button at (x, y),
 // h = its hover look
 bool ui_test_scene(int32_t which, int32_t theme, int32_t x, int32_t y, int32_t h, UiScene &out);
+// P40B (gfx_ui.cpp): with a theme on, the backend draws the report screens' art cells and their OK buttons procedurally.
+// ui_cell_scene builds a cell's scene from the user's art (the colour cell, its mask cell; relative to the cell's top-left):
+// the panel from the cell's opaque pixels as a distance field, each pill / cream box / white row as a fitted rounded
+// rectangle or ellipse (a field when no fit holds) with its dark outline, the dark lines inside as a field, coloured by the
+// theme; `keep` gets the pixels the scene does not draw (pictures, coloured marks: drawn from the art). False for an empty cell.
+bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
+                   UiScene &out, std::vector<uint8_t> &keep);
+class Gfx;
+void ui_draw_scene(Gfx &g, Ctx &ctx, const UiScene &s);
+UiScene ui_button_scene(const UiTheme &t, int32_t x, int32_t y, bool hover);
 
 }  // namespace portsim
 

@@ -2582,6 +2582,14 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
     ++g->quiet_drops;
     return false;
   }
+  if (g->ui_pilot != 0) {  // P40B (gfx_ui.cpp): the report art and OK buttons drawn by the UI theme
+    uint32_t args[12] = {};
+    for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
+    if (ui_swap(*g, ctx, name, args, n)) {
+      ++g->handled[name];
+      return true;
+    }
+  }
   if (GfxBody body = gfxb::find_body(name)) {
     const PerfGfxScope perf_scope;  // P10A (perf.h kPerfGfx)
     ++g->handled[name];

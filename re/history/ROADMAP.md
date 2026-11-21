@@ -2266,3 +2266,13 @@ log/roadmap/P39/P39C2_work/piece_table.py), the outline its simplified edge, the
 Evidence: segments x64 205 / 205 (option off); test_p39c_green_highlight 13 (table vs textures, masks vs a Python copy of the rule,
 closed loops, slope); fill 0.46 ms / frame mean; before / after on flat and sloped greens.
 - Published 2026-11-21: P39C2 in b6fd4037 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-b6fd4037.
+
+## P40B batch 1-3: the procedural UI on every report screen (2026-11-21; notes log/roadmap/P40/P40_notes.md, section P40B)
+--ui-theme off|game|slate|<name> (--ui-pilot alias; default off). The GPU items fixed (UI tables once per scene and viewport, 4K
+table cost per frame change 300 -> 26 ms; the CPU draw writes exactly what the GPU does, SG_P14_VERIFY clean). Themes as data
+(ui_themes.inc built in, ui_themes.ini override). One run-time cell engine (gfx_ui.cpp) turns the player's own art cells into vector
+scenes (panels as distance fields, boxes / pills fitted, rims as fields, pictures kept as art), swapped at dispatch: Course Report,
+Finance, SGA, Player Comments, Roster, Best Scores, Histograph, Hire, Tournament results, End of Year, Shortcuts, Routing map, Buy
+Land, OK buttons, popups, message frames / tips, course-style frames, the P37 advisor panels; number balls and illustrations kept as
+art. Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 48 (per-cell art match 0.77-1.00); dialog / routing tests; drives of
+every report screen off vs game at 1080 and 4K (log/roadmap/P40/compare_b).

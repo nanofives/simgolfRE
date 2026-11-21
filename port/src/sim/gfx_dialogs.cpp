@@ -164,6 +164,7 @@ void round16(int32_t &pos, int32_t &size) {
 
 void b_draw_panel_s2(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
+  if (g.ui_pilot != 0 && ui_swap(g, ctx, "drawPanelS2", a, 5)) return;   // P40B (gfx_ui.cpp; internal calls skip gfx_drop)
   int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), w = static_cast<int32_t>(a[2]),
           h = static_cast<int32_t>(a[3]);
   call_body(g, ctx, "Display::setScale", {1, 1, 1});

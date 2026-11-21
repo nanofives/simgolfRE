@@ -227,3 +227,61 @@ def test_game_theme_matches_the_art(portlib):
     assert n > 50000
     assert share >= FIDELITY_FLOOR, share
     assert alt < 0.5, f"the slate control matches the art ({alt})"
+
+
+# ------------------------------------------------------------------------------------------------ P40B: themes as data
+def _theme_call(lib, entry, text):
+    with lib.state() as st:
+        buf = C.create_string_buffer(text.encode() + b"\0")
+        st.map(OUT_VA, buf, readonly=True)
+        return st.call(entry, [OUT_VA]).eax
+
+
+def test_builtin_themes_load(portlib):
+    """ui_themes.inc parses: game is theme 1, slate theme 2 (the indexes --ui-theme and the tests use)"""
+    assert _theme_call(portlib, "holestats.uiThemeIndex", "game") == 1
+    assert _theme_call(portlib, "holestats.uiThemeIndex", "slate") == 2
+    assert _theme_call(portlib, "holestats.uiThemeIndex", "nosuch") == 0
+
+
+def test_theme_file_adds_and_refuses(portlib):
+    """a section adds a theme (from game, or its base); a malformed line refuses the whole text"""
+    n = _theme_call(portlib, "holestats.uiThemeLoad", "[p40b_test]\nbase = slate\nframe = 10 20 30\n")
+    assert n >= 3 and _theme_call(portlib, "holestats.uiThemeIndex", "p40b_test") == n
+    assert _theme_call(portlib, "holestats.uiThemeLoad", "[bad]\nframe = 1 2\n") == 0
+    assert _theme_call(portlib, "holestats.uiThemeLoad", "[bad2]\nnot_a_key = 1\n") == 0
+    assert _theme_call(portlib, "holestats.uiThemeIndex", "bad") == 0
+
+
+# ------------------------------------------------------------------------------------------------ P40B: the report art cells
+# (gfx_ui.cpp ui_cell_scene over the cells of port/test/p40_cells.py). FLOOR: the share of the art's opaque pixels the game
+# theme's 1x render matches (24 levels, 1 px of offset; the art's own colours, art_colours = 1), pinned 0.03 under the values
+# measured on 2026-11-21 after batch 3 (log/roadmap/P40/cells_fidelity.txt). Control: the slate theme on the same cell reads at least 0.1 lower.
+from port.test import p40_cells as PC  # noqa: E402
+
+CELL_FLOOR = {"finance": 0.866, "course_head": 0.983, "course_row": 0.800, "course_subtotal": 0.881, "course_foot": 0.973, "sga": 0.907, "comments_head": 0.833, "comments_row": 0.937, "comments_foot": 0.942, "roster": 0.857, "lowscore_head": 0.898, "lowscore_row": 0.937, "lowscore_foot": 0.943, "histograph": 0.951, "hire": 0.942, "tour_head": 0.932, "tour_b1": 0.839, "tour_b2": 0.897, "tour_b3": 0.935, "tour_end1": 1.000, "tour_end2": 0.926, "eoy_top": 0.946, "eoy_bottom": 0.868, "eoy_line": 0.924, "shortcuts": 0.879, "route_course": 0.772, "route_bottom": 0.947, "buy_land": 0.843}
+
+
+@need_exe
+@pytest.mark.parametrize("cell", PC.CELLS, ids=[c[0] for c in PC.CELLS])
+def test_cell_scene_matches_the_art(portlib, cell):
+    game, n = PC.fidelity(portlib, cell, 1)
+    slate, _ = PC.fidelity(portlib, cell, 2)
+    print(f"CELL {cell[0]}: game {game:.3f} slate {slate:.3f} over {n} px")
+    assert n > 1000
+    assert game >= CELL_FLOOR[cell[0]] - 0.03, game
+    if not cell[0].endswith(("_row", "_line")):   # a row band or line strip is almost all cream box, which slate keeps light: blind
+        assert slate <= game - 0.1, f"the slate control matches the art as well ({slate:.3f})"
+
+
+@need_exe
+@pytest.mark.parametrize("name", ["finance", "course_foot", "lowscore_head"])
+def test_cell_scene_is_resolution_independent(portlib, name):
+    cell = next(c for c in PC.CELLS if c[0] == name)
+    one, *_ = PC.cell_render(portlib, cell, 1, 1)
+    three, *_ = PC.cell_render(portlib, cell, 1, 3)
+    h, w = one.shape[:2]
+    down = three[:3 * h, :3 * w].reshape(h, 3, w, 3, 4).mean(axis=(1, 3))
+    d = np.abs(down - one).max(axis=2)
+    print(f"CELLSCALE {name}: mean {d.mean():.3f} p99.5 {np.percentile(d, 99.5):.2f}")
+    assert d.mean() < 2.5 and np.percentile(d, 99.5) < 60   # one-pixel rims (thin fields) differ most between 1x and 3x
