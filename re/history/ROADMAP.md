@@ -2265,3 +2265,4 @@ the bright putting surface: greenline.cpp rebuilds each green tile's 64 x 64 bri
 log/roadmap/P39/P39C2_work/piece_table.py), the outline its simplified edge, the fill its row strips, both through worldToScreen.
 Evidence: segments x64 205 / 205 (option off); test_p39c_green_highlight 13 (table vs textures, masks vs a Python copy of the rule,
 closed loops, slope); fill 0.46 ms / frame mean; before / after on flat and sloped greens.
+- Published 2026-11-21: P39C2 in b6fd4037 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-b6fd4037.
