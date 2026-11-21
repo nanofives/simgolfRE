@@ -2236,3 +2236,4 @@ table (sidecar version 2; version 1 loads), golfers and staff on it drawn at dec
 complaint and no stairs on the deck; a no is not asked again for that gap; price $20,000 + $1,000 per level per tile; bulldozer,
 undo / redo. Gaps 3+ tiles wide: no question. Evidence: segments x64 205 / 205; test_p39a_gap 26 (controls RED); bridges / stairs
 / golfers / save tests; drives on a water ravine and a dry valley, English and Spanish, golfers crossing at two rotations.
+- Published 2026-11-20: P39A3 in 7ae5aa7f (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-7ae5aa7f. Round P39 DONE (A1, A2, A3, B, C, D).
