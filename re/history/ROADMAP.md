@@ -2254,3 +2254,4 @@ button as vector shapes, colours measured from the art (0.946 of opaque pixels w
 segments x64 205 / 205 (off); test_p40_ui_pilot 15 (off = the original's calls on 60 random cases), test_holestats, test_static;
 controls 3 / 3 RED. Open: the GPU path rebuilds UI run tables per frame change (4K 50 vs 44 ms); a few panel edge pixels differ
 by about 4 levels GPU vs CPU. Mariano then chose to roll it out to every report screen (P40B).
+- Published 2026-11-21: P39A2b (+ the P40 pilot, off by default) in 0de99f7e (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-0de99f7e.
