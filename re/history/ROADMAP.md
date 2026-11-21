@@ -2287,3 +2287,4 @@ the 8 styles builds its own pair ($20,000); pairs drawn as three 1x frames (one 
 deck; the setting lasts the session; redo keeps the style; the sidecar already held the style. Evidence on 40bf9b35: segments x64
 205 / 205; test_p39a_bridges 18 (controls 8 / 9 RED), gap 26, stairs 26, p40 48, profiles, static; EN / ES drives, all 8 styles at 4
 rotations (P39A4_sheet.png).
+- Published 2026-11-21: P39A4 in d70a9535 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-d70a9535.
