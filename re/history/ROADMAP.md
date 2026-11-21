@@ -2237,3 +2237,10 @@ complaint and no stairs on the deck; a no is not asked again for that gap; price
 undo / redo. Gaps 3+ tiles wide: no question. Evidence: segments x64 205 / 205; test_p39a_gap 26 (controls RED); bridges / stairs
 / golfers / save tests; drives on a water ravine and a dry valley, English and Spanish, golfers crossing at two rotations.
 - Published 2026-11-20: P39A3 in 7ae5aa7f (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-20-7ae5aa7f. Round P39 DONE (A1, A2, A3, B, C, D).
+
+## P39A2b: a fine staircase (2026-11-21; notes log/roadmap/P39/P39A2b_notes.md)
+Mariano: "slopped pathway look like it has some big slopes instead of a small dented many steps staircase". 4 steps per height
+level (3.75-unit risers, 12 even treads on a 3-level tile; every stairs vertex is a multiple of half a level, so steps stay whole
+and the top tread meets the flat path), the centre vertex a cut too, risers from the retaining wall's plank band; his pick:
+steps drawn from 2 levels (drawing only; the x2 price and the 0x2b rule stay at 3+). Evidence: segments x64 205 / 205;
+test_p39a_stairs 26, terrain_render 522; controls 5 / 5 RED; close-ups before / after.

@@ -14,11 +14,15 @@ the tile's four quarter points (the 0x2b "Must I walk up this steep slope?" test
 - the thought: one updateGolfers call (mood5_fixture/00) with a walking golfer on a path tile of a ramp rising 3 levels in its
   walking direction emits 0x2b at 1 and not at 0;
 - the drawing (terrain_render.cpp draw_paths, the Terrain path pass of corpus g3, cov_b_paths): with the sim grids making one path
-  tile stairs and the Terrain vertices on the same ramp, the tile's bands along the axis become one tread per level crossed (flat,
-  on the level lattice, path texture) with retaining-wall risers, at every view; every other tile's calls are unchanged, and at 1 the
-  stream equals the run without the ramp's stairs.
+  tile stairs and the Terrain vertices on the same ramp, the tile's bands along the axis become four low treads per level crossed
+  (P39A2b: a riser of a quarter level, 12 on a 3-level tile; flat, on the riser lattice, evenly spaced, the top one level with the
+  path beyond the span; path texture) with retaining-wall risers, at every view; every other tile's calls are unchanged, and at 1
+  the stream equals the run without the ramp's stairs.
 Negative controls: stairs.axes mode 1 (4 levels) and mode 2 (no path-axis test) read RED on the reference; terrain_render 20 (one
-tread per span), 21 (steps drawn near to far) and 22 (faces turned away from the camera drawn too) read RED on the drawing checks.
+tread per span), 21 (steps drawn near to far), 22 (faces turned away from the camera drawn too) and 23 (P39A2's one step per
+level) read RED on the drawing checks.
+- the drawing from 2 levels (P39A2b, Mariano's pick): a path tile rising 2 levels is no sim stairs (stairs.axes 0: no x2 price, no
+  thought change) but is drawn as 8 low treads (3.75 .. 30); control terrain_render 24 (only the sim's stairs drawn) leaves the band.
 
     ~/bin/py -3.12 -m pytest port/test/test_p39a_stairs.py -q
 """
@@ -317,6 +321,8 @@ def test_golfer_on_stairs_skips_the_steep_slope_thought(portlib):
 # (a path along x) and (37, 19) (a path along y) are put on a ramp of 3 levels: the Terrain vertices and the sim's corner levels
 PASSES = {0: "i002_paths_pathupd", 1: "i003_paths_pathupd", 2: "i004_paths_pathupd", 3: "i005_paths_pathupd"}
 STEP = 15.0                      # the corner step one Terrain level adds (TerrainGlobals::corner_step, elevate / lowerCorner)
+RISE = STEP / 4                  # P39A2b: terrain_render.cpp kStairStepsPerLevel = 4 low steps a level
+TREADS = [round(RISE * i, 3) for i in range(1, 13)]   # a 3-level tile: 12 treads, 3.75 .. 45
 TX, TY = (34, 17), (37, 19)      # a straight x run tile and a straight y run tile (path neighbours on that axis only)
 TILES, TS = 0x3A4, 0x248
 
@@ -353,9 +359,9 @@ def _fans(lines):
     return out
 
 
-def _render(portlib, view, stairs_on, ramp="x", negctl=0):
-    """the pass's call lines with the ramp under TX (ramp "x") or TY ("y") or none (None): the Terrain vertices and the sim grids;
-    returns (lines, info)"""
+def _render(portlib, view, stairs_on, ramp="x", negctl=0, levels=3):
+    """the pass's call lines with the ramp of `levels` levels under TX (ramp "x") or TY ("y") or none (None): the Terrain vertices
+    and the sim grids; returns (lines, info)"""
     from port.test import glcorpus as G
     G.bind(portlib.dll)
     snap = G.Snap(G.CORPUS / "g3", PASSES[view])
@@ -382,12 +388,12 @@ def _render(portlib, view, stairs_on, ramp="x", negctl=0):
             x, y = TX                                # the corners of tile (x, y): lattice columns x, x + 1, rows y - 1, y
             for lx in range(x + 1, n + 1):
                 for ly in (y - 1, y):
-                    lv[lx * v + ly] = 7
+                    lv[lx * v + ly] = 4 + levels
         elif ramp == "y":
             x2, y2 = TY
             for ly in range(y2, n + 1):              # tile (x2, y2): rows y2 - 1 (low), y2 (high)
                 for lx in (x2, x2 + 1):
-                    lv[lx * v + ly] = 7
+                    lv[lx * v + ly] = 4 + levels
         if ramp:
 
             def setv(tx, ty, fn):                    # the 3 x 3 vertices of a tile: index tx * 3 + i + (ty * 3 + j) * row
@@ -401,12 +407,12 @@ def _render(portlib, view, stairs_on, ramp="x", negctl=0):
                 info["base"][(tx, ty)] = h0
                 if along == 0:
                     setv(tx - 1, ty, lambda i, j, h0=h0: h0)
-                    setv(tx, ty, lambda i, j, h0=h0: h0 + 22.5 * i)
-                    setv(tx + 1, ty, lambda i, j, h0=h0: h0 + 45.0)
+                    setv(tx, ty, lambda i, j, h0=h0: h0 + levels * STEP / 2 * i)
+                    setv(tx + 1, ty, lambda i, j, h0=h0: h0 + levels * STEP)
                 else:
                     setv(tx, ty - 1, lambda i, j, h0=h0: h0)
-                    setv(tx, ty, lambda i, j, h0=h0: h0 + 22.5 * j)
-                    setv(tx, ty + 1, lambda i, j, h0=h0: h0 + 45.0)
+                    setv(tx, ty, lambda i, j, h0=h0: h0 + levels * STEP / 2 * j)
+                    setv(tx, ty + 1, lambda i, j, h0=h0: h0 + levels * STEP)
         st.mem_write(st.grid_va("g_cornerLevel"), bytes(lv))
         st.mem_write(st.grid_va("g_cornerCache"), bytes(8 * n * n))
         if stairs_on:
@@ -462,7 +468,7 @@ def _near(p, t, row_al):
 @need_exe
 @pytest.mark.parametrize("axis", ["x", "y"])
 @pytest.mark.parametrize("view", [0, 1, 2, 3])
-def test_stairs_drawn_one_step_per_level(portlib, view, axis):
+def test_stairs_drawn_four_low_steps_per_level(portlib, view, axis):
     _need_g3()
     off, _ = _render(portlib, view, False, axis)
     on, info = _render(portlib, view, True, axis)
@@ -480,19 +486,28 @@ def test_stairs_drawn_one_step_per_level(portlib, view, axis):
         h0 = info["base"][t]
         mine = [f for f in treads if all(_near(p, t, al) for p in f[3])]
         heights = sorted({round(f[3][0][1] - h0, 3) for f in mine})
-        assert heights == [15.0, 30.0, 45.0], (t, heights)        # three treads for three levels, on the lattice
+        assert heights == TREADS, (t, heights)        # twelve low treads for three levels, on the riser lattice, the top one at
+        assert len(mine) == len(TREADS), len(mine)    # the path beyond (base + 45): no partial first / last step, no tread split
         for f in mine:
             assert len({round(p[1], 3) for p in f[3]}) == 1, f[3]  # flat
+        # evenly spaced along the axis: every tread is 100 / 12 long (the tile's 100 split by its 12 risers)
+        lens = sorted(round(max(p[al] for p in f[3]) - min(p[al] for p in f[3]), 2) for f in mine)
+        assert lens[0] > 8.32 and lens[-1] < 8.35, lens
         # the treads go far to near: along the axis, the camera's side last (view 0: camera toward -x and +z)
         cam = (-1 if view in (0, 1) else 1) if al == 0 else (1 if view in (0, 3) else -1)
         mids = [sum(p[al] for p in f[3]) / 4 for f in mine]
         assert all(cam * (b - a) >= -1e-3 for a, b in zip(mids, mids[1:])), (t, view, mids)
-        # the risers face the low side (-x / -z: the ramp rises toward +x / +z): three of one level each (the low edge and two inside),
-        # vertical, sent in both windings, when the camera is on the low side; none from the high side (a face turned away is not
-        # drawn: with no depth test it covered the treads)
+        # the risers face the low side (-x / -z: the ramp rises toward +x / +z): twelve of a quarter level each (the low edge and
+        # eleven inside), vertical, sent in both windings, when the camera is on the low side; none from the high side (a face turned
+        # away is not drawn: with no depth test it covered the treads)
         rs = [f for f in walls if all(_near(p, t, al) for p in f[3]) and len({round(p[al], 3) for p in f[3]}) == 1]
         hs = sorted(round(max(p[1] for p in f[3]) - min(p[1] for p in f[3]), 3) for f in rs)
-        assert hs == ([STEP] * 6 if cam < 0 else []), (t, view, hs)
+        assert hs == ([RISE] * 24 if cam < 0 else []), (t, view, hs)
+        # the side walls stay within one riser of the ground line (trimmed to the steps)
+        ac0 = 2 - al
+        side_h = [max(p[1] for p in f[3]) - min(p[1] for p in f[3]) for f in walls
+                  if all(_near(p, t, al) for p in f[3]) and len({round(p[ac0], 3) for p in f[3]}) == 1]
+        assert side_h and max(side_h) <= RISE + 1e-3, max(side_h)
         # the side walls: only on the camera's side across the axis
         ac = 2 - al
         cam_ac = (1 if view in (0, 3) else -1) if ac == 2 else (-1 if view in (0, 1) else 1)
@@ -513,7 +528,11 @@ def test_stairs_drawing_controls_read_red(portlib, view):
     on20, info = _render(portlib, view, True, negctl=20)
     treads, _ = _steps(_fans(on20), info)
     hs = sorted({round(f[3][0][1] - info["base"][TX], 3) for f in treads if all(_near(p, TX, 0) for p in f[3])})
-    assert hs != [15.0, 30.0, 45.0], hs          # one tread per span: RED of test_stairs_drawn_one_step_per_level
+    assert hs != TREADS, hs          # one tread per span: RED of test_stairs_drawn_four_low_steps_per_level
+    on23, info = _render(portlib, view, True, negctl=23)
+    treads, _ = _steps(_fans(on23), info)
+    hs = sorted({round(f[3][0][1] - info["base"][TX], 3) for f in treads if all(_near(p, TX, 0) for p in f[3])})
+    assert hs == [15.0, 30.0, 45.0] and hs != TREADS, hs   # P39A2's one step per level: RED of the twelve-tread check
     on21, info = _render(portlib, view, True, negctl=21)
     treads, _ = _steps(_fans(on21), info)
     mine = [f for f in treads if all(_near(p, TX, 0) for p in f[3])]
@@ -524,7 +543,36 @@ def test_stairs_drawing_controls_read_red(portlib, view):
     on22, info = _render(portlib, view, True, negctl=22)
     _t, walls = _steps(_fans(on22), info)
     rs = [f for f in walls if all(_near(p, TX, 0) for p in f[3]) and len({round(p[0], 3) for p in f[3]}) == 1]
-    assert len(rs) == 6, len(rs)   # every riser, whatever the camera side
+    assert len(rs) == 24, len(rs)   # every riser, whatever the camera side
     on, info = _render(portlib, view, True)
     _t, walls0 = _steps(_fans(on), info)
     assert len(walls) > len(walls0), (len(walls), len(walls0))
+
+
+@need_exe
+@pytest.mark.parametrize("axis", ["x", "y"])
+@pytest.mark.parametrize("view", [0, 1, 2, 3])
+def test_two_level_slope_drawn_as_steps(portlib, view, axis):
+    """P39A2b: a 2-level path slope is drawn as steps (drawing only: stairs.axes stays 0, so price and thought are the original's)"""
+    _need_g3()
+    t, al = (TX, 0) if axis == "x" else (TY, 2)
+    off, _ = _render(portlib, view, False, axis, levels=2)
+    on, info = _render(portlib, view, True, axis, levels=2)
+    assert info["axes"][t] == 0, info["axes"]                 # no sim stairs at 2 levels
+    treads, walls = _steps(_fans(on), info)
+    mine = [f for f in treads if all(_near(p, t, al) for p in f[3])]
+    heights = sorted({round(f[3][0][1] - info["base"][t], 3) for f in mine})
+    assert heights == [round(RISE * i, 3) for i in range(1, 9)], heights   # 8 low treads, the top one level with the path beyond
+    assert len(mine) == 8, len(mine)
+    lens = sorted(round(max(p[al] for p in f[3]) - min(p[al] for p in f[3]), 2) for f in mine)
+    assert lens[0] > 12.49 and lens[-1] < 12.51, lens         # 100 / 8, evenly spaced
+    assert not [f for f in _fans(on) if f[0] in info["path_tex"] and f[3] and all(_near(p, t, 0) for p in f[3])
+                and len({round(p[1], 3) for p in f[3]}) > 1]   # no sloped band left
+    # at 1 the original band; control 24 (only the sim's stairs drawn) keeps the band too: RED of the tread check
+    band = [f for f in _fans(off) if f[0] in info["path_tex"] and f[3] and all(_near(p, t, 0) for p in f[3])]
+    assert band and all(len({round(p[1], 3) for p in f[3]}) > 1 for f in band)
+    on24, info24 = _render(portlib, view, True, axis, negctl=24, levels=2)
+    t24, _w = _steps(_fans(on24), info24)
+    assert not [f for f in t24 if all(_near(p, t, al) for p in f[3]) and len({round(p[1], 3) for p in f[3]}) == 1]   # no flat tread
+    assert [f for f in _fans(on24) if f[0] in info24["path_tex"] and f[3] and all(_near(p, t, 0) for p in f[3])
+            and len({round(p[1], 3) for p in f[3]}) > 1]

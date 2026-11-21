@@ -9,10 +9,14 @@
 // list with Tile::render and clear it. Reading reference re/match/terrain_localrender.cpp, terrain_drawtile.cpp,
 // terrain_strip.cpp, terrain_pathrender.cpp; evidence: kind-3 / kind-4 / kind-1 passes of the GL corpora
 // (port/test/test_terrain_render.py).
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS   // P39A2b: the development switch SG_P39A2B_STEPS uses getenv
+#endif
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
@@ -45,7 +49,26 @@ namespace {
 //  20 a stairs span is one tread (not one step per level; P39A2, layPath.stairs = 0 only)
 //  21 a stairs span is drawn near to far (P39A2, layPath.stairs = 0 only)
 //  22 a stairs face turned away from the camera is drawn too (P39A2's first version: it covered the treads)
+//  23 stairs take one step per level (P39A2's coarse lattice; P39A2b draws kStairStepsPerLevel per level)
+//  24 only the sim's stairs (3+ levels) are drawn as steps (P39A2b draws spans of kStairDrawLevels and more)
 int32_t g_negctl_terrain_render = 0;
+
+// P39A2b: the stairs' steps per Terrain level (the riser = corner step / this). Every vertex a path line runs through sits on a
+// multiple of half a level (corner_move: an edge midpoint is the mean of two corners, the centre the mean of two opposite corners;
+// stairs tiles exclude the sand / water offsets), so 2, 4 or 8 give whole steps from end to end; 4 = a riser of 3.75 with the
+// corner step 15.0, 12 treads of 8.3 on a tile rising 3 levels. Development: SG_P39A2B_STEPS=<1..16> for one run (density drives).
+constexpr int32_t kStairStepsPerLevel = 4;
+// P39A2b: a path span rising this many levels or more is drawn as steps (stairs_halves); the sim's stairs stay at 3
+constexpr int32_t kStairDrawLevels = 2;
+int32_t stair_steps_per_level() {
+  if (g_negctl_terrain_render == 23) return 1;
+  static const int32_t dev = [] {
+    const char *e = std::getenv("SG_P39A2B_STEPS");
+    const int32_t v = e ? std::atoi(e) : 0;
+    return v >= 1 && v <= 16 ? v : 0;
+  }();
+  return dev != 0 ? dev : kStairStepsPerLevel;
+}
 int32_t g_cull_margin = 0;   // P8B: terrain_render_set_cull_margin
 int32_t g_world_reach = 0, g_world_cull_y = 0;   // P35D: terrain_render_set_world_reach
 
@@ -746,11 +769,33 @@ class Renderer {
   // which halves of tile t are drawn as stairs: a half whose band is drawn (the neighbour has a path), on a stairs axis, rising at
   // least a quarter level between its two vertices (a flat half of a stairs tile keeps its band)
   void stairs_halves(uint32_t t, bool n0, bool n1, bool n2, bool n3, bool out[4]) {
-    const int32_t axes = path_stairs_axes(c_, tile_x(t), tile_y(t));
-    if (axes == 0) return;
+    int32_t axes = path_stairs_axes(c_, tile_x(t), tile_y(t));
     const bool on[4] = {n0, n1, n2, n3};
     const float step = g_.corner_step > 0.0f ? g_.corner_step : 15.0f;
     const float hc = vert(fv(t, 0, 2))[1];
+    // P39A2b (Mariano's pick, 2026-11-21): an axis whose drawn span rises at least kStairDrawLevels (2) from edge to edge (a lone
+    // half: twice its rise) is drawn as steps too, so a stairs run continues as steps over the 2-level ramps at its ends instead of
+    // turning into a slope. Drawing only: the sim's stairs (x2 price, no 0x2b thought) stay path_stairs_axes' 3 levels, and the
+    // 0x2b test needs more than 2 anyway. 1 level was tried and refused (stray risers on the bend tiles at a run's ends).
+    // Development: SG_P39A2B_GENTLE=0 draws only the sim's stairs for one run (before shots), =1 / =2 that threshold;
+    // control 24 = only the sim's stairs.
+    static const int32_t gentle_env = [] {
+      const char *e = std::getenv("SG_P39A2B_GENTLE");
+      const int32_t v = e ? std::atoi(e) : kStairDrawLevels;
+      return v >= 0 && v <= 2 ? v : kStairDrawLevels;
+    }();
+    const int32_t gentle = g_negctl_terrain_render == 24 ? 0 : gentle_env;
+    if (gentle != 0) {
+      for (int a = 0; a < 2; ++a) {   // a 0: halves 0 / 1 (y, bit 1 << 1); a 1: halves 2 / 3 (x, bit 1 << 0)
+        const int k0 = 2 * a, k1 = k0 + 1, bit = a == 0 ? 2 : 1;
+        if ((axes & bit) || !(on[k0] || on[k1])) continue;
+        const float h0 = on[k0] ? vert(fv(t, stair_half(k0).face, stair_half(k0).vtx))[1] : hc;
+        const float h1 = on[k1] ? vert(fv(t, stair_half(k1).face, stair_half(k1).vtx))[1] : hc;
+        const float rise = std::fabs(h1 - h0) * ((on[k0] && on[k1]) ? 1.0f : 2.0f);
+        if (rise >= static_cast<float>(gentle) * step - 0.01f * step) axes |= bit;
+      }
+    }
+    if (axes == 0) return;
     for (int k = 0; k < 4; ++k) {
       if (!on[k] || (axes & (k < 2 ? 2 : 1)) == 0) continue;
       const float he = vert(fv(t, stair_half(k).face, stair_half(k).vtx))[1];
@@ -770,8 +815,10 @@ class Renderer {
   }
   // One axis as steps, along GL axis `al` (2: halves 0 / 1, the y axis; 0: halves 2 / 3, the x axis), from the end of the stairs
   // half on the low side (or the centre) to the end of the one on the high side (or the centre). The span's centre line (edge
-  // vertex, centre vertex, edge vertex) is cut where it crosses a level (a multiple of the corner step, the height one Terrain level
-  // adds: elevate / lowerCorner), so a tile's rise gives one step per level and neighbouring stairs meet on the same lattice. Each
+  // vertex, centre vertex, edge vertex) is cut where it crosses a riser height (a multiple of the corner step, the height one Terrain
+  // level adds: elevate / lowerCorner, divided by stair_steps_per_level: P39A2b, 4 low steps per level; P39A2 cut at every level and
+  // the steps read as big slopes), so neighbouring stairs meet on the same lattice and, the line's vertices being on it, every
+  // step is whole and the first / last tread is level with the path beyond the span's ends. Each
   // piece is a flat tread at the highest point of its piece of the line (never under the slope), in the path texture with the
   // band's texture coordinates of the half it lies in (split at the centre); a riser in the retaining-wall texture (0x22,
   // RetainWallA) where two treads, or a tread and the span's end, differ; both sides of each tread closed down to the line with the
@@ -785,7 +832,9 @@ class Renderer {
     const int k_lo = al == 2 ? 0 : 2, k_hi = k_lo + 1;   // the half toward -s and the one toward +s (s = the GL coordinate al)
     const float *cv = vert(fv(t, 0, 2));
     const float *ev[2] = {vert(fv(t, stair_half(k_lo).face, stair_half(k_lo).vtx)), vert(fv(t, stair_half(k_hi).face, stair_half(k_hi).vtx))};
-    const float step = g_.corner_step > 0.0f ? g_.corner_step : 15.0f, eps = 0.01f * step;
+    // P39A2b: the lattice is the riser (the corner step / stair_steps_per_level), not the level: many low steps
+    const float step = (g_.corner_step > 0.0f ? g_.corner_step : 15.0f) / static_cast<float>(stair_steps_per_level());
+    const float eps = 0.01f * step;
     // the line: up to three points by rising s
     float ps[3], ph[3];
     int np = 0;
@@ -797,8 +846,8 @@ class Renderer {
         if (s <= ps[i + 1] || i + 2 == np) return ph[i] + (ph[i + 1] - ph[i]) * (s - ps[i]) / (ps[i + 1] - ps[i]);
       return ph[0];
     };
-    // the cuts: the span's ends and every level the line crosses inside a segment
-    constexpr int kMax = 64;
+    // the cuts: the span's ends, every riser height the line crosses inside a segment, and the centre when it is on the lattice
+    constexpr int kMax = 512;   // P39A2b: room for 16 steps a level on the steepest tile (was 64 at one a level)
     float cut[kMax];
     int nc = 0;
     cut[nc++] = ps[0];
@@ -813,6 +862,12 @@ class Renderer {
       }
       if (h1 < h0) std::reverse(seg, seg + ns);   // by rising s
       for (int j = 0; j < ns && nc < kMax - 2; ++j) cut[nc++] = seg[j];
+      // P39A2b: the centre vertex is a cut when it lies on the lattice (with 4 steps a level it does: a multiple of half a level);
+      // without it the two treads beside it merged into one of double length
+      const float hv = ph[i + 1];
+      if (i + 2 < np && g_negctl_terrain_render != 20 && nc < kMax - 2 &&
+          std::fabs(hv - std::round(hv / step) * step) < eps)
+        cut[nc++] = ps[i + 1];
     }
     cut[nc++] = ps[np - 1];
     float tread[kMax];
@@ -835,6 +890,9 @@ class Renderer {
     const int c = (g_.view_index == 0 || g_.view_index == 2) ? 0 : 1;
     static const int kFaceNorm[4] = {1, 0, 3, 2};
     static const float kUp[3] = {0.0f, 1.0f, 0.0f};
+    // P39A2b: where the risers and side walls start in the wall texture (t): the planks above its moss; P39A2's 0.05 sat in the
+    // grass strip along the texture's bottom edge, and a low riser showed as a green line
+    constexpr float kWallT0 = 0.62f;
     // a vertical quad (four points, texture (s, t) each) facing neighbour `toward`, in both windings; skipped when the camera is on
     // its other side (neighbours 0 / 1 are -z / +z, 2 / 3 are -x / +x; control 22 draws it anyway)
     auto wall = [&](const float p[4][3], const float st[4][2], int toward) {
@@ -866,8 +924,8 @@ class Renderer {
       pos(k, u, 1.0f, lo, p[1]);
       pos(k, u, 1.0f, hi, p[2]);
       pos(k, u, -1.0f, hi, p[3]);
-      const float top = 0.05f + (hi - lo) / 40.0f;
-      const float st[4][2] = {{0.25f, 0.05f}, {0.75f, 0.05f}, {0.75f, top}, {0.25f, top}};
+      const float top = kWallT0 + (hi - lo) / 40.0f;
+      const float st[4][2] = {{0.25f, kWallT0}, {0.75f, kWallT0}, {0.75f, top}, {0.25f, top}};
       wall(p, st, after < before ? k_hi : k_lo);   // it faces its lower side (+s when the ground falls that way)
     };
     // tread i over cut[i]..cut[i + 1] and its two sides, in one or two pieces (split at the centre)
@@ -903,8 +961,8 @@ class Renderer {
         pos(k, ub, sd, y, p[2]);
         pos(k, ua, sd, y, p[3]);
         const float sa = (s0 - ps[0]) / 100.0f, sb = (s1 - ps[0]) / 100.0f;
-        const float st[4][2] = {{sa, 0.05f + (g0 - base) / 40.0f}, {sb, 0.05f + (g1 - base) / 40.0f},
-                                {sb, 0.05f + (y - base) / 40.0f}, {sa, 0.05f + (y - base) / 40.0f}};
+        const float st[4][2] = {{sa, kWallT0 + (g0 - base) / 40.0f}, {sb, kWallT0 + (g1 - base) / 40.0f},
+                                {sb, kWallT0 + (y - base) / 40.0f}, {sa, kWallT0 + (y - base) / 40.0f}};
         wall(p, st, al == 2 ? (side ? 3 : 2) : (side ? 1 : 0));
       }
     };
