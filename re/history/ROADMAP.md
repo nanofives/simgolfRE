@@ -2310,3 +2310,17 @@ shading under the sharp edge); Hole Stats and the OK button through it. Result: 
 Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 104 (45 per-element floors); a colour-bug control fails 8 / 8; live 4K drives
 of 11 screens, 0 GPU / CPU mismatches.
 - Published 2026-11-22: P40D in 85483255 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release, after Mariano approved the screenshots.
+
+## P40E: holes in the UI and shapes that were not clear (2026-11-22; notes log/roadmap/P40/P40E_notes_section.md)
+Mariano on P40D (85483255): dots inside the UI panels where the game behind shows through, and elements without clear shapes. Cause of
+the dots (reproduced live at 4K, absent with the theme off and with --text-res frame): the pixels the theme kept as art were blitted
+after the panel's window-resolution run; the publisher peels a run off the frame back to the world and the presenter scales that frame
+bilinearly, so every kept pixel (and every pixel the game drew over a panel later, a tool tile) mixed the world into its window pixels
+and the run was not drawn there. Fixes: the kept pixels are part of the scene (nothing drawn after the run), and a UI run's peel gives the
+world back only at its antialiased silhouette (its opaque inside stays in the frame). Shapes: inside the kept art, flat colour zones of 16
+pixels or more (slots, rims, discs, rings, check marks, squares, balls, the HUD panels' grounds) became vector regions with the art's
+antialiasing as subpixel edges; small detail (icon and logo lettering) stays the art's pixels. p40_pixcmp.py gained an opacity check (the
+presenter's peel and bilinear canvas modelled, the game drawing over panels, scales 1 / 1.8 / 3.6 / 2108 : 600): P40D 532,329 hole window
+pixels in 43 / 45 elements at 3.6, P40E 0 at every scale; controls gfx.family.ui 4 (P40D's draw) and 5 (the full peel) read red. Colour
+target at 1x 45 / 45. Live drives (camera moved between two shots of each screen, mask from a --text-res frame drive): HUD / popup / message at 4K 7,164 / 6,174 / 7,823 world pixels with P40D's draw, 0 / 0 / 0 with P40E; GPU against CPU 366 paints, 0 bad.
+Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 157; app selftests p9c / p9b 10 / 10.
