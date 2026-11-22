@@ -529,14 +529,16 @@ void a_ui_render(Ctx &c, const uint32_t *a, Ret &r) {
   UiScene s;
   r.set_u32(0);
   if (!ui_test_scene(i32(a[0]), i32(a[1]), i32(a[2]), i32(a[3]), i32(a[4]), s)) return;
-  const int32_t k = std::max<int32_t>(1, i32(a[5]));
+  // (P40D: a scale of 1000 or more is in thousandths, for the window scales 1.8 / 3.6 of log/roadmap/P40/pixcmp)
+  const double k = a[5] >= 1000u ? a[5] / 1000.0 : static_cast<double>(std::max<int32_t>(1, i32(a[5])));
   float fx0, fy0, fx1, fy1;
   ui_bounds(s, fx0, fy0, fx1, fy1);
   const int32_t x0 = static_cast<int32_t>(fx0), y0 = static_cast<int32_t>(fy0);
-  const int32_t w = (static_cast<int32_t>(fx1 + 0.999f) - x0) * k, h = (static_cast<int32_t>(fy1 + 0.999f) - y0) * k;
+  const int32_t w = static_cast<int32_t>(std::ceil((static_cast<int32_t>(fx1 + 0.999f) - x0) * k - 1e-6));
+  const int32_t h = static_cast<int32_t>(std::ceil((static_cast<int32_t>(fy1 + 0.999f) - y0) * k - 1e-6));
   if (w <= 0 || h <= 0 || static_cast<uint64_t>(w) * static_cast<uint64_t>(h) + 4u > a[7]) return;
   std::vector<float> prem;
-  ui_render(s, k, k, 0.0, 0.0, x0 * k, y0 * k, w, h, prem);
+  ui_render(s, k, k, -x0 * k, -y0 * k, 0, 0, w, h, prem);
   c.mem.store<uint32_t>(a[6], u32(w));
   c.mem.store<uint32_t>(a[6] + 4, u32(h));
   c.mem.store<uint32_t>(a[6] + 8, u32(x0));
@@ -591,7 +593,10 @@ void a_ui_theme_index(Ctx &c, const uint32_t *a, Ret &r) { r.set_u32(u32(ui_them
 // holestats.uiRender, then one byte per cell pixel: 1 where the art is kept). Returns the words written, 0 for an empty cell.
 void a_ui_cell(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_u32(0);
-  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16), k = std::max<int32_t>(1, i32(a[5]));
+  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16);
+  // (P40D: a scale of 1000 or more is in thousandths, as holestats.uiRender)
+  const double k = a[5] >= 1000u ? a[5] / 1000.0 : static_cast<double>(std::max<int32_t>(1, i32(a[5])));
+  const int32_t W = static_cast<int32_t>(std::ceil(w * k - 1e-6)), H = static_cast<int32_t>(std::ceil(h * k - 1e-6));
   std::vector<uint8_t> col(static_cast<size_t>(w) * static_cast<size_t>(h)), msk(col.size());
   std::vector<uint16_t> pal(256);
   for (size_t i = 0; i < col.size(); ++i) {
@@ -603,13 +608,13 @@ void a_ui_cell(Ctx &c, const uint32_t *a, Ret &r) {
   std::vector<uint8_t> keep;
   // (P40C: theme | 0x100 = border-only, the HUD panels' mode)
   if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4] & 0xffu)), s, keep, (a[4] & 0x100u) != 0)) return;
-  const uint64_t words = static_cast<uint64_t>(w) * h * k * k + 2u + (col.size() + 3) / 4;
+  const uint64_t words = static_cast<uint64_t>(W) * static_cast<uint64_t>(H) + 2u + (col.size() + 3) / 4;
   if (words > a[7]) return;
   std::vector<float> prem;
-  ui_render(s, k, k, 0.0, 0.0, 0, 0, w * k, h * k, prem);
-  c.mem.store<uint32_t>(a[6], u32(w * k));
-  c.mem.store<uint32_t>(a[6] + 4, u32(h * k));
-  const size_t np = static_cast<size_t>(w * k) * static_cast<size_t>(h * k);
+  ui_render(s, k, k, 0.0, 0.0, 0, 0, W, H, prem);
+  c.mem.store<uint32_t>(a[6], u32(W));
+  c.mem.store<uint32_t>(a[6] + 4, u32(H));
+  const size_t np = static_cast<size_t>(W) * static_cast<size_t>(H);
   for (size_t i = 0; i < np; ++i) {
     uint32_t word = 0;
     for (int ch = 0; ch < 4; ++ch) {
@@ -621,6 +626,61 @@ void a_ui_cell(Ctx &c, const uint32_t *a, Ret &r) {
   const uint32_t kb = a[6] + 8 + 4 * static_cast<uint32_t>(np);
   for (size_t i = 0; i < keep.size(); ++i) c.mem.store<uint8_t>(kb + static_cast<uint32_t>(i), keep[i]);
   r.set_u32(static_cast<uint32_t>(words));
+}
+// holestats.uiTune(k, v_x1000): gfx_ui.h ui_tune(k, v / 1000); returns the previous value * 1000 (P40D: the pixel comparison's sweeps)
+void a_ui_tune(Ctx &, const uint32_t *a, Ret &r) {
+  r.set_u32(u32(static_cast<int32_t>(std::lround(ui_tune(i32(a[0]), static_cast<float>(i32(a[1])) / 1000.f) * 1000.f))));
+}
+// holestats.uiCellInfo(colour_va, pal_va, mask_va, w | h << 16, theme, out_va, cap): ui_cell_scene over a cell as holestats.uiCell; out
+// gets the element count, then per element: the first primitive's kind, the colour grid's step (0 without a grid) and its node count
+// (columns | rows << 16). Returns the words written (0 for an empty cell or too small a cap).
+void a_ui_cell_info(Ctx &c, const uint32_t *a, Ret &r) {
+  r.set_u32(0);
+  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16);
+  std::vector<uint8_t> col(static_cast<size_t>(w) * static_cast<size_t>(h)), msk(col.size());
+  std::vector<uint16_t> pal(256);
+  for (size_t i = 0; i < col.size(); ++i) {
+    col[i] = c.mem.load<uint8_t>(a[0] + static_cast<uint32_t>(i));
+    msk[i] = c.mem.load<uint8_t>(a[2] + static_cast<uint32_t>(i));
+  }
+  for (uint32_t i = 0; i < 256; ++i) pal[i] = c.mem.load<uint16_t>(a[1] + 2 * i);
+  UiScene s;
+  std::vector<uint8_t> keep;
+  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4] & 0xffu)), s, keep, (a[4] & 0x100u) != 0)) return;
+  const uint32_t words = 1u + 3u * static_cast<uint32_t>(s.elems.size());
+  if (words > a[6]) return;
+  c.mem.store<uint32_t>(a[5], static_cast<uint32_t>(s.elems.size()));
+  for (size_t k = 0; k < s.elems.size(); ++k) {
+    const UiElem &e = s.elems[k];
+    const UiTex *t = e.tex ? ui_tex_get(e.tex) : nullptr;
+    const uint32_t b = a[5] + 4u + 12u * static_cast<uint32_t>(k);
+    c.mem.store<uint32_t>(b, e.prims.empty() ? 0xffu : e.prims[0].kind);
+    c.mem.store<uint32_t>(b + 4, t ? static_cast<uint32_t>(e.tex_step) : 0u);
+    c.mem.store<uint32_t>(b + 8, t ? (static_cast<uint32_t>(t->w) | static_cast<uint32_t>(t->h) << 16) : 0u);
+  }
+  r.set_u32(words);
+}
+// holestats.uiCellTime(colour_va, pal_va, mask_va, w | h << 16, theme, scale_x1000): the wall time of ui_render over the whole cell at
+// scale / 1000 in microseconds (the scene built first, not timed; P40D: the presenter's cost of one cell scene at the window's scale)
+void a_ui_cell_time(Ctx &c, const uint32_t *a, Ret &r) {
+  r.set_u32(0);
+  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16);
+  std::vector<uint8_t> col(static_cast<size_t>(w) * static_cast<size_t>(h)), msk(col.size());
+  std::vector<uint16_t> pal(256);
+  for (size_t i = 0; i < col.size(); ++i) {
+    col[i] = c.mem.load<uint8_t>(a[0] + static_cast<uint32_t>(i));
+    msk[i] = c.mem.load<uint8_t>(a[2] + static_cast<uint32_t>(i));
+  }
+  for (uint32_t i = 0; i < 256; ++i) pal[i] = c.mem.load<uint16_t>(a[1] + 2 * i);
+  UiScene s;
+  std::vector<uint8_t> keep;
+  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4] & 0xffu)), s, keep, (a[4] & 0x100u) != 0)) return;
+  const double k = std::max<uint32_t>(1u, a[5]) / 1000.0;
+  const int32_t W = static_cast<int32_t>(std::ceil(w * k - 1e-6)), H = static_cast<int32_t>(std::ceil(h * k - 1e-6));
+  std::vector<float> prem;
+  const auto t0 = std::chrono::steady_clock::now();
+  ui_render(s, k, k, 0.0, 0.0, 0, 0, W, H, prem);
+  r.set_u32(static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count()));
 }
 // holestats.uiCodec(which, theme): 1 when the scene survives ui_encode / ui_decode unchanged (its encoding again equal)
 void a_ui_codec(Ctx &, const uint32_t *a, Ret &r) {
@@ -647,6 +707,9 @@ const FuncDef kFuncs[] = {
     {"holestats.uiThemeLoad", "default", "int", 1, 0, a_ui_theme_load, &g_negctl_none},
     {"holestats.uiThemeIndex", "default", "int", 1, 0, a_ui_theme_index, &g_negctl_none},
     {"holestats.uiCell", "default", "int", 8, 0, a_ui_cell, &g_negctl_none},
+    {"holestats.uiTune", "default", "int", 2, 0, a_ui_tune, &g_negctl_none},
+    {"holestats.uiCellInfo", "default", "int", 7, 0, a_ui_cell_info, &g_negctl_none},
+    {"holestats.uiCellTime", "default", "int", 6, 0, a_ui_cell_time, &g_negctl_none},
 };
 }  // namespace
 

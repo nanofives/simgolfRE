@@ -65,6 +65,11 @@ struct UiElem {
   float shadow_dx = 0, shadow_dy = 0, shadow_blur = 0;
   UiRgba gloss;               // a soft spot (radial falloff) inside the shape
   float gloss_cx = 0, gloss_cy = 0, gloss_r = 0;
+  // P40D: a colour grid (ui_tex_put) in place of the gradient: node (i, j) is the colour at the frame point
+  // (tex_x0 + (i + 0.5) tex_step, tex_y0 + (j + 0.5) tex_step), sampled bilinearly (clamped at the grid's border). Made at run time
+  // from the user's art (the game theme's report cells), never stored.
+  uint64_t tex = 0;
+  float tex_x0 = 0, tex_y0 = 0, tex_step = 1;
 };
 struct UiScene {
   float cx0 = 0, cy0 = 0, cx1 = 800, cy1 = 600;  // the clip (800-space; rows and columns of whole frame pixels)
@@ -82,6 +87,20 @@ const UiField *ui_field_get(uint64_t id);
 // the signed distance grid of a w x h coverage mask (1 inside): exact distances between pixel centres, minus / plus half a pixel
 // at the edge, smoothed by one 3 x 3 pass; `pad` pixels of outside added on every side (the grid is (w + 2 pad) x (h + 2 pad))
 std::vector<float> ui_field_from_mask(const std::vector<uint8_t> &mask, int32_t w, int32_t h, int32_t pad);
+
+// P40D: the colour grids of UiElem::tex, kept for the process like the fields (rgb: 3 bytes per node, rows top-down)
+struct UiTex {
+  int32_t w = 0, h = 0;
+  std::vector<uint8_t> rgb;
+};
+uint64_t ui_tex_put(int32_t w, int32_t h, std::vector<uint8_t> rgb);
+const UiTex *ui_tex_get(uint64_t id);
+// P40D: tuning numbers of the game theme's cell engine (log/roadmap/P40/P40_notes.md, P40D), set by the tests' holestats.uiTune:
+// 0 the edge margin (a field's value at its own pixel centres is at most -margin inside and at least +margin outside: 0.5 = the
+// scale-1 render repeats the art's pixel coverage exactly), 1 the largest colour grid step tried, 2 the field smoothing (1 = one
+// 3 x 3 pass, 0 = none). ui_tune returns the previous value; an unknown index does nothing.
+float ui_tune(int32_t k, float v);
+float ui_tune_get(int32_t k);
 
 // the run's face marking a UI run (gfx.h GfxTextRun::face)
 constexpr const char *kUiRunFace = "\x01p40ui";
@@ -139,6 +158,9 @@ bool ui_test_scene(int32_t which, int32_t theme, int32_t x, int32_t y, int32_t h
 // theme; `keep` gets the pixels the scene does not draw (pictures, coloured marks: drawn from the art). False for an empty cell.
 // border_only (P40C, the HUD panels: painted slots and shading): only the panel's shape is drawn; every panel pixel farther than
 // 5 pixels from its edge, and every box, line and rim, is kept as art.
+// P40D: a theme with art_colours (game) takes the art-fitted engine instead (gfx_ui.cpp cell_scene_art): one region per class
+// component, each a field (or a rounded rectangle when its pixels are one) with the art's coverage at its pixel centres and a colour
+// grid fitted to the art, so the scale-1 render repeats the art (port/test/p40_pixcmp.py measures it at 1x, 1080 and 4K).
 bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
                    UiScene &out, std::vector<uint8_t> &keep, bool border_only = false);
 class Gfx;

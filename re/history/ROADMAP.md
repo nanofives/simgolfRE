@@ -2297,3 +2297,15 @@ canvas). 4K cost measured back to back: game theme 66-70 fps against 74-76 off. 
 differences in 181 paints). Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 58. Open: the message window not seen live (its
 frame drawers swap like the popups, which are); a 1-2 px palette-edge GPU / CPU difference in 11 of 947 paints, not attributed.
 - Published 2026-11-21: P40C in 76d88860 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release port-2026-11-21-76d88860.
+
+## P40D: pixel comparison and an art-fitted game theme (2026-11-21; notes log/roadmap/P40/P40_notes.md, P40D section)
+Mariano judged the published theme: "I see different colors, some shapes haven't been ported fully, you need to run a pixel
+approximation comparison". Tool port/test/p40_pixcmp.py: 45 elements drawn as art and as theme over the same background at 800 x 600,
+1080 and 4K (downsampled and compared with the art through the same scaling), per element within 4 / 8 / 16 levels and delta E, heat
+maps, worst-10 crops. Findings in P40C's theme: 0 / 45 met the target (palette colours read one 5-bit level dark, flat colours per
+region, 1 px lines faded by field smoothing, soft edges dropped, hand-made Hole Stats / OK button). New engine: each art region its
+own sharp-edged shape covering exactly the art's pixels, colour from the art (a gradient where one fits, else the art's per-pixel
+shading under the sharp edge); Hole Stats and the OK button through it. Result: 800 x 600 45 / 45 (>= 0.982 within 8, delta E <=
+0.15), 4K 43 / 45, 1080 30 / 45 (the rest 0.929-0.969 within 8, edge pixels at 1.8x, >= 99 % within 16); delta E under 2 everywhere.
+Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 104 (45 per-element floors); a colour-bug control fails 8 / 8; live 4K drives
+of 11 screens, 0 GPU / CPU mismatches.

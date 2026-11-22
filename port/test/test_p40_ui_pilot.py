@@ -256,10 +256,11 @@ def test_theme_file_adds_and_refuses(portlib):
 # ------------------------------------------------------------------------------------------------ P40B: the report art cells
 # (gfx_ui.cpp ui_cell_scene over the cells of port/test/p40_cells.py). FLOOR: the share of the art's opaque pixels the game
 # theme's 1x render matches (24 levels, 1 px of offset; the art's own colours, art_colours = 1), pinned 0.03 under the values
-# measured on 2026-11-21 after batch 3 (log/roadmap/P40/cells_fidelity.txt). Control: the slate theme on the same cell reads at least 0.1 lower.
+# measured on 2026-11-21 with P40D's art-fitted engine (log/roadmap/P40/d_test_p40_ui_pilot_values.log; P40B batch 3 read 0.77-0.98).
+# Control: the slate theme on the same cell reads at least 0.1 lower.
 from port.test import p40_cells as PC  # noqa: E402
 
-CELL_FLOOR = {"finance": 0.866, "course_head": 0.983, "course_row": 0.800, "course_subtotal": 0.881, "course_foot": 0.973, "sga": 0.907, "comments_head": 0.833, "comments_row": 0.937, "comments_foot": 0.942, "roster": 0.857, "lowscore_head": 0.898, "lowscore_row": 0.937, "lowscore_foot": 0.943, "histograph": 0.951, "hire": 0.942, "tour_head": 0.932, "tour_b1": 0.839, "tour_b2": 0.897, "tour_b3": 0.935, "tour_end1": 1.000, "tour_end2": 0.926, "eoy_top": 0.946, "eoy_bottom": 0.868, "eoy_line": 0.924, "shortcuts": 0.879, "route_course": 0.772, "route_bottom": 0.947, "buy_land": 0.843}
+CELL_FLOOR = {"finance": 1.000, "course_head": 1.000, "course_row": 1.000, "course_subtotal": 1.000, "course_foot": 1.000, "sga": 1.000, "comments_head": 1.000, "comments_row": 1.000, "comments_foot": 1.000, "roster": 1.000, "lowscore_head": 1.000, "lowscore_row": 1.000, "lowscore_foot": 1.000, "histograph": 1.000, "hire": 1.000, "tour_head": 1.000, "tour_b1": 1.000, "tour_b2": 1.000, "tour_b3": 0.999, "tour_end1": 1.000, "tour_end2": 1.000, "eoy_top": 1.000, "eoy_bottom": 1.000, "eoy_line": 1.000, "shortcuts": 1.000, "route_course": 1.000, "route_bottom": 1.000, "buy_land": 1.000}
 
 
 @need_exe
@@ -289,8 +290,8 @@ def test_cell_scene_is_resolution_independent(portlib, name):
 
 # ------------------------------------------------------------------------------------------------ P40C: the HUD panels (border-only)
 # The panels' outline as the vector shape, the painted inside kept as art (gfx_ui.h ui_cell_scene border_only). FLOOR: the share of
-# the drawn band's pixels matching the art (as above), pinned 0.03 under the 2026-11-21 values.
-HUD_FLOOR = {"hud_terrain": 0.917, "hud_building": 0.864, "hud_amenities": 0.992, "hud_member": 0.864, "hud_action": 0.998, "hud_match": 0.705, "hud_employee": 0.866, "hud_elevation": 0.998, "hud_golfer": 0.833, "hud_story": 0.895}
+# the drawn band's pixels matching the art (as above), pinned 0.03 under the P40D values (2026-11-21).
+HUD_FLOOR = {"hud_terrain": 1.000, "hud_building": 1.000, "hud_amenities": 1.000, "hud_member": 1.000, "hud_action": 1.000, "hud_match": 1.000, "hud_employee": 1.000, "hud_elevation": 1.000, "hud_golfer": 1.000, "hud_story": 1.000}
 
 
 @need_exe
@@ -303,3 +304,49 @@ def test_hud_panel_border_matches_the_art(portlib, cell):
     assert n > 500
     assert game >= HUD_FLOOR[cell[0]] - 0.03, game
     assert inside > 0.5, "border-only kept less than half of the panel as art"
+
+
+# ------------------------------------------------------------------------------------------------ P40D: the pixel comparison
+# port/test/p40_pixcmp.py draws every element the game theme replaces twice over the same background (the original's art draw, the
+# theme's scene with its kept pixels) and compares them. TARGET at the frame's scale (800 x 600, the art 1:1): at least 97 % of the
+# element's pixels within 8 levels (largest channel) and a mean CIEDE2000 under 2. Control: gfx.family.ui mode 3 (the art colours
+# read as level << 3, P40B's reading) fails the target on most elements.
+from port.test import p40_pixcmp as PX  # noqa: E402
+
+PIX_NAMES = ([c[0] for c in PC.CELLS] + [c[0] for c in PC.HUD_CELLS] +
+             ["hs_head", "hs_row", "hs_foot", "ok_button", "ok_button_hover", "popup_panel", "message_frame"])
+_PIX_ELEMENTS: dict = {}
+
+
+def pix_element(name):
+    if not _PIX_ELEMENTS:
+        _PIX_ELEMENTS.update({e.name: e for e in PX.elements()})
+    return _PIX_ELEMENTS[name]
+
+
+def pix_measure(lib, name, scale=1.0, theme=1):
+    el = pix_element(name)
+    words, drawn = el.art()
+    art = PX.expand(words)
+    mine, cover = el.theme(lib, theme, scale)
+    return PX.measure(PX.reference(art, scale), mine, drawn | cover)
+
+
+@need_exe
+@pytest.mark.parametrize("name", PIX_NAMES)
+def test_pixel_match_at_frame_scale(portlib, name):
+    m = pix_measure(portlib, name)
+    print(f"PIX {name}: within 8 {m['w8']:.4f} delta E {m['de_mean']:.3f} (p95 {m['de_p95']:.2f}) over {m['n']} px")
+    assert m["w8"] >= 0.97 and m["de_mean"] < 2.0, m
+
+
+@need_exe
+def test_negctl_art_colour_read_reads_red(portlib):
+    portlib.negctl("gfx.family.ui", 3)
+    try:
+        names = ["finance", "course_head", "sga", "roster", "popup_panel", "hs_head", "comments_row", "eoy_top"]
+        fail = [n for n in names if not (lambda m: m["w8"] >= 0.97 and m["de_mean"] < 2.0)(pix_measure(portlib, n))]
+    finally:
+        portlib.negctl_reset()
+    print(f"PIX control: {len(fail)} / {len(names)} fail ({fail})")
+    assert len(fail) * 2 > len(names), "gfx.family.ui mode 3 is blind"

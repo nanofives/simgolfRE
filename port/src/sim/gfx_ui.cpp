@@ -16,6 +16,7 @@
 // Negative controls (g_negctl_gfx_ui, sg_negctl_set "gfx.family.ui"):
 //   1 ui_render's frame point is half a pixel off ((x - ox) / sx instead of (x + 0.5 - ox) / sx): every scaled render moves
 //   2 p40.hs_row draws nothing (the comment box's middle rows missing)
+//   3 (P40D) the art-fitted cell engine reads each art colour as level << 3 instead of level * 255 / 31 (the colour P40B fitted)
 #include <algorithm>
 #include <tuple>
 #include <map>
@@ -104,6 +105,50 @@ float sd_field(const UiPrim &p, float x, float y) {
   const float val = (r0[0] * (1.f - fu) + r0[1] * fu) * (1.f - fv) + (r1[0] * (1.f - fu) + r1[1] * fu) * fv;
   const float ou = u - cu, ov = v - cv;
   return val + std::sqrt(ou * ou + ov * ov);
+}
+// P40D: an element's colour grid at frame point (x, y), bilinear between node centres, clamped at the border. A grid of step 1 (the
+// art's own pixels: no coarser grid held its colours) is sampled edge-aware: where its four nearest nodes differ by more than 48
+// levels in a channel each node is a block with a transition one target pixel wide (`k` target pixels per frame unit) at the block's
+// edge, as the port's sharp sprite filter draws art pixels; where they differ by less than 24 (a gradient, a rim's shading) it is
+// bilinear; between the two a blend of both
+const UiTex *tex_of(uint64_t id) {
+  thread_local std::unordered_map<uint64_t, const UiTex *> local;
+  auto it = local.find(id);
+  if (it != local.end()) return it->second;
+  const UiTex *t = ui_tex_get(id);
+  if (t) local[id] = t;
+  return t;
+}
+bool tex_colour(const UiElem &e, float x, float y, UiRgba &c, float k) {
+  const UiTex *t = tex_of(e.tex);
+  if (!t || t->w < 1 || t->h < 1) return false;
+  const float st = e.tex_step > 0 ? e.tex_step : 1.f;
+  const float u = clampf((x - e.tex_x0) / st - 0.5f, 0.f, static_cast<float>(t->w - 1));
+  const float v = clampf((y - e.tex_y0) / st - 0.5f, 0.f, static_cast<float>(t->h - 1));
+  const int32_t i0 = static_cast<int32_t>(u), j0 = static_cast<int32_t>(v);
+  const int32_t i1 = std::min(i0 + 1, t->w - 1), j1 = std::min(j0 + 1, t->h - 1);
+  float fu = u - static_cast<float>(i0), fv = v - static_cast<float>(j0);
+  const uint8_t *a = t->rgb.data() + (static_cast<size_t>(j0) * static_cast<size_t>(t->w) + static_cast<size_t>(i0)) * 3u;
+  const uint8_t *b = t->rgb.data() + (static_cast<size_t>(j0) * static_cast<size_t>(t->w) + static_cast<size_t>(i1)) * 3u;
+  const uint8_t *cc = t->rgb.data() + (static_cast<size_t>(j1) * static_cast<size_t>(t->w) + static_cast<size_t>(i0)) * 3u;
+  const uint8_t *d = t->rgb.data() + (static_cast<size_t>(j1) * static_cast<size_t>(t->w) + static_cast<size_t>(i1)) * 3u;
+  if (st <= 1.f && k > 1.f) {
+    int32_t spread = 0;
+    for (int ch = 0; ch < 3; ++ch) {
+      const int32_t lo = std::min(std::min(a[ch], b[ch]), std::min(cc[ch], d[ch])), hi = std::max(std::max(a[ch], b[ch]), std::max(cc[ch], d[ch]));
+      spread = std::max(spread, hi - lo);
+    }
+    const float tb = clampf((static_cast<float>(spread) - 24.f) / 24.f, 0.f, 1.f);
+    if (tb > 0.f) {
+      fu += (clampf((fu - 0.5f) * k + 0.5f, 0.f, 1.f) - fu) * tb;
+      fv += (clampf((fv - 0.5f) * k + 0.5f, 0.f, 1.f) - fv) * tb;
+    }
+  }
+  float o[3];
+  for (int ch = 0; ch < 3; ++ch)
+    o[ch] = (a[ch] * (1.f - fu) + b[ch] * fu) * (1.f - fv) + (cc[ch] * (1.f - fu) + d[ch] * fu) * fv;
+  c = UiRgba{o[0], o[1], o[2], 1.f};
+  return true;
 }
 float sd_prim(const UiPrim &p, float x, float y) {
   if (p.kind == kUiField) return sd_field(p, x, y);
@@ -221,7 +266,13 @@ void render_rows(const UiScene &s, double sx, double sy, double ox, double oy, i
     const int32_t ty1 = std::min(rb, static_cast<int32_t>(std::ceil(ey1 * sy + oy)) + 1);
     const float gspan = e.gy1 - e.gy0;
     const float eps = 0.25f;
-    const bool opaque = e.fill_top.a >= 1.f && e.fill_bot.a >= 1.f;
+    const bool opaque = e.tex != 0 || (e.fill_top.a >= 1.f && e.fill_bot.a >= 1.f);
+    // the fill at a frame point: the colour grid (P40D) or the vertical gradient
+    auto fill_at = [&](float fx, float fy) {
+      UiRgba c;
+      if (e.tex != 0 && tex_colour(e, fx, fy, c, sc)) return c;
+      return lerp(e.fill_top, e.fill_bot, gspan > 0 ? clampf((fy - e.gy0) / gspan, 0.f, 1.f) : 0.f);
+    };
     const float band = std::max(e.bevel_w, e.outline_w) + 1.f / sc + 1.5f;   // the edge's bands, its antialiasing and a margin
     const float sreach = e.shadow.a > 0 ? std::max(e.shadow_blur, 1.f / sc) * 0.5f + 1.5f : 0.f;
     constexpr int32_t kTile = 16;
@@ -245,7 +296,7 @@ void render_rows(const UiScene &s, double sx, double sy, double ox, double oy, i
             const float fx = static_cast<float>((tx + half - ox) / sx);
             float *dst = prem.data() + (static_cast<size_t>(ty - py0) * static_cast<size_t>(w) + static_cast<size_t>(tx - px0)) * 4u;
             if (deep) {
-              UiRgba c = lerp(e.fill_top, e.fill_bot, gspan > 0 ? clampf((fy - e.gy0) / gspan, 0.f, 1.f) : 0.f);
+              UiRgba c = fill_at(fx, fy);
               if (e.gloss.a > 0 && e.gloss_r > 0) {
                 const float gx = fx - e.gloss_cx, gy = fy - e.gloss_cy;
                 float gk = clampf(1.f - std::sqrt(gx * gx + gy * gy) / e.gloss_r, 0.f, 1.f);
@@ -265,7 +316,7 @@ void render_rows(const UiScene &s, double sx, double sy, double ox, double oy, i
             const float d = sd_elem(e, fx, fy);
             const float cov = clampf(0.5f - d * sc, 0.f, 1.f);
             if (cov <= 0) continue;
-            UiRgba c = lerp(e.fill_top, e.fill_bot, gspan > 0 ? clampf((fy - e.gy0) / gspan, 0.f, 1.f) : 0.f);
+            UiRgba c = fill_at(fx, fy);
             const float depth = -d;
             if (e.bevel_w > 0 && depth < e.bevel_w) {
               const float nx = sd_elem(e, fx + eps, fy) - sd_elem(e, fx - eps, fy);
@@ -430,6 +481,42 @@ const UiField *ui_field_get(uint64_t id) {
   auto it = field_store().find(id);
   return it == field_store().end() ? nullptr : it->second.get();
 }
+// P40D: the colour grids (UiElem::tex), stored like the fields
+namespace {
+std::unordered_map<uint64_t, std::unique_ptr<UiTex>> &tex_store() {
+  static std::unordered_map<uint64_t, std::unique_ptr<UiTex>> s;
+  return s;
+}
+float g_tune[3] = {0.5f, 16.f, 1.f};   // gfx_ui.h ui_tune: edge margin, largest grid step, field smoothing
+}  // namespace
+uint64_t ui_tex_put(int32_t w, int32_t h, std::vector<uint8_t> rgb) {
+  uint64_t id = 0x9e3779b97f4a7c15ull ^ (static_cast<uint64_t>(static_cast<uint32_t>(w)) << 32 | static_cast<uint32_t>(h));
+  for (uint8_t v : rgb) id = (id ^ v) * 1099511628211ull;
+  if (id == 0) id = 1;
+  std::lock_guard<std::mutex> l(field_mu());
+  auto &s = tex_store();
+  if (!s.count(id)) {
+    auto t = std::make_unique<UiTex>();
+    t->w = w;
+    t->h = h;
+    t->rgb = std::move(rgb);
+    s.emplace(id, std::move(t));
+  }
+  return id;
+}
+const UiTex *ui_tex_get(uint64_t id) {
+  std::lock_guard<std::mutex> l(field_mu());
+  auto it = tex_store().find(id);
+  return it == tex_store().end() ? nullptr : it->second.get();
+}
+float ui_tune(int32_t k, float v) {
+  if (k < 0 || k >= 3) return 0.f;
+  const float o = g_tune[k];
+  g_tune[k] = v;
+  return o;
+}
+float ui_tune_get(int32_t k) { return k >= 0 && k < 3 ? g_tune[k] : 0.f; }
+
 std::vector<float> ui_field_from_mask(const std::vector<uint8_t> &mask, int32_t w, int32_t h, int32_t pad) {
   const int32_t W = w + 2 * pad, H = h + 2 * pad;
   std::vector<uint8_t> in(static_cast<size_t>(W) * static_cast<size_t>(H), 0), out(in.size(), 1);
@@ -444,6 +531,10 @@ std::vector<float> ui_field_from_mask(const std::vector<uint8_t> &mask, int32_t 
   std::vector<float> sd(in.size());
   for (size_t i = 0; i < sd.size(); ++i) sd[i] = in[i] ? -(to_out[i] - 0.5f) : to_in[i] - 0.5f;
   std::vector<float> sm(sd.size());   // one 3 x 3 box pass: the staircase of a pixel mask softened (straight edges keep their place)
+  if (g_tune[2] < 0.5f) {   // P40D tuning: no smoothing
+    for (size_t i = 0; i < sd.size(); ++i) sm[i] = std::max(-32.f, std::min(32.f, sd[i]));
+    return sm;
+  }
   for (int32_t y = 0; y < H; ++y)
     for (int32_t x = 0; x < W; ++x) {
       float acc = 0;
@@ -462,7 +553,7 @@ std::vector<float> ui_field_from_mask(const std::vector<uint8_t> &mask, int32_t 
 
 // ------------------------------------------------------------------------------------------------ the transport
 namespace {
-constexpr char kMagic[] = "P40U2:";   // P40B: + the field id
+constexpr char kMagic[] = "P40U3:";   // P40B: + the field id; P40D: + the colour grid
 void put_bytes(std::string &o, const void *p, size_t n) {
   static const char *hx = "0123456789abcdef";
   const uint8_t *b = static_cast<const uint8_t *>(p);
@@ -536,6 +627,10 @@ std::string ui_encode(const UiScene &s) {
     put_f(o, e.gloss_cx);
     put_f(o, e.gloss_cy);
     put_f(o, e.gloss_r);
+    put_bytes(o, &e.tex, sizeof e.tex);
+    put_f(o, e.tex_x0);
+    put_f(o, e.tex_y0);
+    put_f(o, e.tex_step);
   }
   return o;
 }
@@ -589,6 +684,10 @@ bool ui_decode(const std::string &text, UiScene &s) {
     e.gloss_cx = r.f();
     e.gloss_cy = r.f();
     e.gloss_r = r.f();
+    r.bytes(&e.tex, sizeof e.tex);
+    e.tex_x0 = r.f();
+    e.tex_y0 = r.f();
+    e.tex_step = r.f();
   }
   return r.ok && r.i == text.size();
 }
@@ -747,6 +846,11 @@ std::vector<std::string> ui_theme_names() {
   for (const UiTheme &t : themes()) n.push_back(t.name);
   return n;
 }
+
+// P40D (defined with the cell engine below): an art cell pair drawn by the cell engine at (x, y) with its kept pixels from the art
+// (Surface_stretchBlit's place), and a colour-keyed cell (Image_draw's: indexes 0xfe / 0xff transparent) at the Image_draw position
+bool ui_cell_pair_draw(Gfx &g, Ctx &ctx, uint32_t cs, uint32_t ms, int32_t x, int32_t y, int32_t theme, bool border_only);
+bool ui_cell_keyed_draw(Gfx &g, Ctx &ctx, uint32_t cs, int32_t x, int32_t y, int32_t theme);
 
 // ------------------------------------------------------------------------------------------------ the Hole Stats scenes
 namespace {
@@ -1014,9 +1118,18 @@ void draw_scene(Gfx &g, Ctx &ctx, const UiScene &s) {
 
 int32_t theme_of(Ctx &ctx) { return gfx_ui_pilot(ctx); }
 
+// P40D: with an art-coloured theme (game) the Hole Stats cells and the close button go through the cell engine (gfx_routing.cpp's
+// HoleSTAT cuts in g_spriteRef_821200: the head +0, a row +0x58, the foot +0xb0, each mask 0x2c after; OkStates in g_spriteRef_820f40);
+// the scenes above stay for the other themes and whenever the art is not loaded
+bool hs_art(Gfx &g, Ctx &ctx, int32_t th, uint32_t off, int32_t y) {
+  if (ui_theme(th).art_colours <= 0.5f) return false;
+  const uint32_t cs = state_va(ctx, &GameState::g_spriteRef_821200) + off;
+  return ui_cell_pair_draw(g, ctx, cs, cs + 0x2cu, 0, y, th, false);
+}
 void b_hs_head(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t th = theme_of(ctx);
   if (th == kUiPilotOff) return;
+  if (hs_art(g, ctx, th, 0, static_cast<int32_t>(a[0]))) return;
   UiScene s = head_scene(ui_theme(th));
   const float dy = static_cast<float>(static_cast<int32_t>(a[0]));   // the head's y (0: drawn at the cut's own place)
   if (dy != 0) {
@@ -1030,6 +1143,7 @@ void b_hs_head(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
       e.gy0 += dy;
       e.gy1 += dy;
       e.gloss_cy += dy;
+      e.tex_y0 += dy;
     }
   }
   draw_scene(g, ctx, s);
@@ -1037,16 +1151,22 @@ void b_hs_head(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 void b_hs_row(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t th = theme_of(ctx);
   if (th == kUiPilotOff || SG_NEGCTL(g_negctl_gfx_ui) == 2) return;
+  if (hs_art(g, ctx, th, 0x58, static_cast<int32_t>(a[0]))) return;
   draw_scene(g, ctx, row_scene(ui_theme(th), static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1])));
 }
 void b_hs_foot(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t th = theme_of(ctx);
   if (th == kUiPilotOff) return;
+  if (hs_art(g, ctx, th, 0xb0, static_cast<int32_t>(a[0]))) return;
   draw_scene(g, ctx, foot_scene(ui_theme(th), static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1])));
 }
 void b_hs_button(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t th = theme_of(ctx);
   if (th == kUiPilotOff) return;
+  if (ui_theme(th).art_colours > 0.5f &&
+      ui_cell_keyed_draw(g, ctx, state_va(ctx, &GameState::g_spriteRef_820f40) + (a[2] != 0 ? 0x2cu : 0u), static_cast<int32_t>(a[0]),
+                         static_cast<int32_t>(a[1]), th))
+    return;
   draw_scene(g, ctx, button_scene(ui_theme(th), static_cast<int32_t>(a[0]), static_cast<int32_t>(a[1]), a[2] != 0));
 }
 
@@ -1167,59 +1287,13 @@ bool in_rrect(float px, float py, float x0, float y0, float x1, float y1, float 
   const float cx = std::min(std::max(px, x0 + r), x1 - r), cy = std::min(std::max(py, y0 + r), y1 - r);
   return (px - cx) * (px - cx) + (py - cy) * (py - cy) <= r * r;
 }
-}  // namespace
-
-bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
-                   UiScene &out, std::vector<uint8_t> &keep, bool border_only) {
-  out = UiScene{};
-  out.cx0 = 0;
-  out.cy0 = 0;
-  out.cx1 = static_cast<float>(w);
-  out.cy1 = static_cast<float>(h);
+// the pixels kept as art: pictures and coloured marks (the box, grown by 2, of each 8-connected cluster of picture-colour pixels, and
+// the dark / white parts joined to it), and large dark regions inside the panel. thick_only (P40D, the art-fitted engine): a large
+// dark region is kept only when at least half of its pixels have all four neighbours dark (a marbled ground), not a network of
+// lines (the roster's and the reports' table grids, 1 to 2 pixels wide, which are regions of the scene)
+void keep_pictures(const std::vector<uint8_t> &cls, const std::vector<uint8_t> &outside, int32_t w, int32_t h,
+                   std::vector<uint8_t> &keep, bool thick_only = false) {
   const size_t n = static_cast<size_t>(w) * static_cast<size_t>(h);
-  keep.assign(n, 0);
-  std::vector<uint8_t> cls(n, kNone);
-  std::vector<uint32_t> rgbv(n, 0);   // the pixel's colour (r | g << 8 | b << 16), for the art's median colours
-  bool any = false;
-  for (size_t i = 0; i < n; ++i) {
-    const uint8_t c = colour[i], k = mask[i];
-    if (c >= 0xff || k >= 0xff || k >= 0x80) continue;   // transparent, or less than half covering (a soft edge)
-    const uint16_t v = pal[c];
-    const int r = ((v >> 10) & 31) << 3, g = ((v >> 5) & 31) << 3, b = (v & 31) << 3;
-    cls[i] = classify(r, g, b);
-    rgbv[i] = static_cast<uint32_t>(r) | static_cast<uint32_t>(g) << 8 | static_cast<uint32_t>(b) << 16;
-    any = true;
-  }
-  if (!any) return false;
-  // the outside: transparent and dark pixels reached from the cell's border (an outer dark rim or shadow is not panel)
-  std::vector<uint8_t> outside(n, 0);
-  {
-    std::vector<int32_t> st;
-    auto push = [&](int32_t i) {
-      if (outside[static_cast<size_t>(i)]) return;
-      const uint8_t c = cls[static_cast<size_t>(i)];
-      if (c != kNone && c != kDark) return;
-      outside[static_cast<size_t>(i)] = 1;
-      st.push_back(i);
-    };
-    for (int32_t x = 0; x < w; ++x) {
-      if (cls[static_cast<size_t>(x)] == kNone) push(x);
-      if (cls[static_cast<size_t>((h - 1) * w + x)] == kNone) push((h - 1) * w + x);
-    }
-    for (int32_t y = 0; y < h; ++y) {
-      if (cls[static_cast<size_t>(y * w)] == kNone) push(y * w);
-      if (cls[static_cast<size_t>(y * w + w - 1)] == kNone) push(y * w + w - 1);
-    }
-    while (!st.empty()) {
-      const int32_t j = st.back();
-      st.pop_back();
-      const int32_t x = j % w, y = j / w;
-      if (x > 0) push(j - 1);
-      if (x + 1 < w) push(j + 1);
-      if (y > 0) push(j - w);
-      if (y + 1 < h) push(j + w);
-    }
-  }
   // pictures and coloured marks: every opaque pixel in the box (grown by 2) of each 8-connected cluster of picture-colour pixels
   // stays the art's (the SGA badge's white letters and dark ring sit among its coloured parts; a legend dot keeps its rim)
   {
@@ -1286,8 +1360,476 @@ bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *ma
         break;
       }
     if (!in) continue;
+    if (thick_only) {
+      int32_t inner = 0;
+      for (int32_t j : k.px) {
+        const int32_t x = j % w, y = j / w;
+        inner += x > 0 && x + 1 < w && y > 0 && y + 1 < h && cls[static_cast<size_t>(j - 1)] == kDark &&
+                 cls[static_cast<size_t>(j + 1)] == kDark && cls[static_cast<size_t>(j - w)] == kDark && cls[static_cast<size_t>(j + w)] == kDark;
+      }
+      if (inner * 2 < k.n) continue;
+    }
     for (int32_t j : k.px) keep[static_cast<size_t>(j)] = 1;
   }
+}
+
+}  // namespace
+
+// ------------------------------------------------------------------------------------------------ P40D: the art-fitted cell engine
+// The game theme (art_colours = 1) builds a cell's scene so that its scale-1 render repeats the art (log/roadmap/P40/P40_notes.md,
+// P40D: measured by port/test/p40_pixcmp.py) and its window render keeps the shapes sharp:
+//   * every opaque pixel belongs to one region: the outer shadow (dark pixels reached from the border), the panel, and the components
+//     of the inner classes (dark lines and rings, rims, pills, cream boxes, white rows), drawn in that order;
+//   * a region's shape is a distance field of its pixels whose value at each of its own pixel centres is at most -margin (inside) and
+//     at each other pixel centre at least +margin (ui_tune 0; 0.5 gives the art's coverage exactly at scale 1), and at a soft edge
+//     pixel (the mask cell's partial alpha) 0.5 - alpha, so the silhouette's antialiasing is the art's own and moves to its
+//     subpixel place at any scale; a pill, box or row whose pixels are a rounded rectangle (at most 1 % of them off) is that shape;
+//   * a region's colour is a grid fitted to the art's pixels (the coarsest step of 16 / 8 / 4 / 2 / 1 whose bilinear colour gives
+//     each pixel's 5-bit level exactly for 99 % of them and within one level for all), so gradients, bevels and rims are the art's;
+//   * a region drawn before an adjacent later one reaches one pixel into it (the later one covers it), so no seam of the colour
+//     under them shows where two regions meet at the window's scale.
+// The 5-bit colour of an art pixel is taken as level * 255 / 31, the value ui_over555 rounds back to the same level.
+namespace {
+struct TexFit {
+  uint64_t id = 0;
+  float x0 = 0, y0 = 0, step = 1;
+};
+// the colour grid of the pixels px (indexes into a w-wide cell; rgb: 3 straight channels per cell pixel), tested at the pixels whose
+// `test` byte is set
+TexFit fit_tex(const std::vector<float> &rgb, const std::vector<int32_t> &px, const std::vector<uint8_t> &test, int32_t w) {
+  TexFit f;
+  if (px.empty()) return f;
+  int32_t bx0 = (1 << 30), by0 = (1 << 30), bx1 = -1, by1 = -1;
+  for (int32_t i : px) {
+    const int32_t x = i % w, y = i / w;
+    bx0 = std::min(bx0, x);
+    by0 = std::min(by0, y);
+    bx1 = std::max(bx1, x + 1);
+    by1 = std::max(by1, y + 1);
+  }
+  const int32_t bw = bx1 - bx0, bh = by1 - by0;
+  const int32_t steps[] = {16, 8, 4, 2, 1};
+  for (int32_t st : steps) {
+    if (static_cast<float>(st) > ui_tune_get(1) && st != 1) continue;
+    const int32_t nx = (bw + st - 1) / st, ny = (bh + st - 1) / st;
+    std::vector<double> sum(static_cast<size_t>(nx) * static_cast<size_t>(ny) * 3u, 0.0);
+    std::vector<int32_t> cnt(static_cast<size_t>(nx) * static_cast<size_t>(ny), 0);
+    for (int32_t i : px) {
+      const int32_t x = i % w, y = i / w;
+      const size_t q = static_cast<size_t>((y - by0) / st) * static_cast<size_t>(nx) + static_cast<size_t>((x - bx0) / st);
+      for (int ch = 0; ch < 3; ++ch) sum[q * 3u + static_cast<size_t>(ch)] += rgb[static_cast<size_t>(i) * 3u + static_cast<size_t>(ch)];
+      ++cnt[q];
+    }
+    std::vector<float> node(sum.size(), 0.f);
+    std::vector<uint8_t> known(cnt.size(), 0);
+    for (size_t q = 0; q < cnt.size(); ++q)
+      if (cnt[q] > 0) {
+        known[q] = 1;
+        for (int ch = 0; ch < 3; ++ch) node[q * 3u + static_cast<size_t>(ch)] = static_cast<float>(sum[q * 3u + static_cast<size_t>(ch)] / cnt[q]);
+      }
+    // nodes without pixels: the colour of the nearest node with pixels (one breadth-first pass over the 8 neighbours), so no colour
+    // of another region reaches the edge
+    {
+      std::vector<int32_t> queue;
+      queue.reserve(known.size());
+      for (size_t q = 0; q < known.size(); ++q)
+        if (known[q]) queue.push_back(static_cast<int32_t>(q));
+      for (size_t head = 0; head < queue.size(); ++head) {
+        const int32_t q = queue[head], i = q % nx, j = q / nx;
+        for (int32_t dj = -1; dj <= 1; ++dj)
+          for (int32_t di = -1; di <= 1; ++di) {
+            const int32_t ii = i + di, jj = j + dj;
+            if (ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+            const size_t r = static_cast<size_t>(jj) * static_cast<size_t>(nx) + static_cast<size_t>(ii);
+            if (known[r]) continue;
+            known[r] = 1;
+            for (int ch = 0; ch < 3; ++ch) node[r * 3u + static_cast<size_t>(ch)] = node[static_cast<size_t>(q) * 3u + static_cast<size_t>(ch)];
+            queue.push_back(static_cast<int32_t>(r));
+          }
+      }
+    }
+    std::vector<uint8_t> bytes(node.size());
+    for (size_t q = 0; q < node.size(); ++q) bytes[q] = static_cast<uint8_t>(std::lround(clampf(node[q], 0.f, 255.f)));
+    // the test: each tested pixel's 5-bit level from the bilinear colour at its centre against the art's
+    bool ok = true;
+    if (st > 1) {
+      size_t n_test = 0, n_off = 0;
+      for (int32_t i : px) {
+        if (!test[static_cast<size_t>(i)]) continue;
+        const int32_t x = i % w, y = i / w;
+        const float u = clampf((x + 0.5f - bx0) / st - 0.5f, 0.f, static_cast<float>(nx - 1));
+        const float v = clampf((y + 0.5f - by0) / st - 0.5f, 0.f, static_cast<float>(ny - 1));
+        const int32_t i0 = static_cast<int32_t>(u), j0 = static_cast<int32_t>(v);
+        const int32_t i1 = std::min(i0 + 1, nx - 1), j1 = std::min(j0 + 1, ny - 1);
+        const float fu = u - static_cast<float>(i0), fv = v - static_cast<float>(j0);
+        int32_t worst = 0;
+        for (int ch = 0; ch < 3; ++ch) {
+          auto nv = [&](int32_t ii, int32_t jj) {
+            return static_cast<float>(bytes[(static_cast<size_t>(jj) * static_cast<size_t>(nx) + static_cast<size_t>(ii)) * 3u + static_cast<size_t>(ch)]);
+          };
+          const float c = (nv(i0, j0) * (1.f - fu) + nv(i1, j0) * fu) * (1.f - fv) + (nv(i0, j1) * (1.f - fu) + nv(i1, j1) * fu) * fv;
+          const int32_t lq = static_cast<int32_t>(std::lround(clampf(c, 0.f, 255.f) * 31.f / 255.f));
+          const int32_t la = static_cast<int32_t>(std::lround(clampf(rgb[static_cast<size_t>(i) * 3u + static_cast<size_t>(ch)], 0.f, 255.f) * 31.f / 255.f));
+          worst = std::max(worst, std::abs(lq - la));
+        }
+        ++n_test;
+        if (worst > 1) {
+          ok = false;
+          break;
+        }
+        if (worst == 1) ++n_off;
+      }
+      if (ok && n_off * 100 > n_test) ok = false;
+    }
+    if (!ok) continue;
+    f.id = ui_tex_put(nx, ny, std::move(bytes));
+    f.x0 = static_cast<float>(bx0);
+    f.y0 = static_cast<float>(by0);
+    f.step = static_cast<float>(st);
+    return f;
+  }
+  return f;
+}
+
+// a field primitive over the pixels `in` of the w x h cell (cropped to their box, padded; a box touching the cell's edge continues
+// past it), with the centre constraints of the margin and, where cov is given and 0 < cov < 1, the value 0.5 - cov
+// (`in` answers for a cell pixel index; the pixels it holds and the soft ones of cov lie in the box [x0, x1) x [y0, y1))
+template <class In>
+UiPrim field_in_box(const In &in, const std::vector<float> *cov, int32_t w, int32_t h, int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
+  UiPrim p;
+  p.kind = kUiField;
+  if (x1 <= x0) {
+    p.x0 = p.y0 = 0;
+    p.x1 = p.y1 = 1;
+    return p;
+  }
+  constexpr int32_t pad = 6, fp = 4;
+  const int32_t gx0 = x0 - pad, gy0 = y0 - pad, W = (x1 - x0) + 2 * pad, H = (y1 - y0) + 2 * pad;
+  auto cell = [&](int32_t gx, int32_t gy) {   // the cell pixel a grid sample stands for (clamped: the edge continues)
+    const int32_t cx = std::min(std::max(gx0 + gx, 0), w - 1), cy = std::min(std::max(gy0 + gy, 0), h - 1);
+    return static_cast<size_t>(cy) * static_cast<size_t>(w) + static_cast<size_t>(cx);
+  };
+  std::vector<uint8_t> ext(static_cast<size_t>(W) * static_cast<size_t>(H), 0);
+  for (int32_t gy = 0; gy < H; ++gy)
+    for (int32_t gx = 0; gx < W; ++gx) ext[static_cast<size_t>(gy) * static_cast<size_t>(W) + static_cast<size_t>(gx)] = in(cell(gx, gy)) ? 1 : 0;
+  std::vector<float> sd = ui_field_from_mask(ext, W, H, fp);
+  const float m = ui_tune_get(0);
+  const int32_t FW = W + 2 * fp;
+  for (int32_t gy = 0; gy < H; ++gy)
+    for (int32_t gx = 0; gx < W; ++gx) {
+      float &v = sd[static_cast<size_t>(gy + fp) * static_cast<size_t>(FW) + static_cast<size_t>(gx + fp)];
+      const size_t c = cell(gx, gy);
+      if (cov && (*cov)[c] > 0.f && (*cov)[c] < 1.f) v = 0.5f - (*cov)[c];
+      else if (in(c)) v = std::min(v, -m);
+      else v = std::max(v, m);
+    }
+  p.x0 = static_cast<float>(gx0 - fp);
+  p.y0 = static_cast<float>(gy0 - fp);
+  p.x1 = static_cast<float>(gx0 - fp + FW);
+  p.y1 = static_cast<float>(gy0 - fp + H + 2 * fp);
+  p.field = ui_field_put(FW, H + 2 * fp, std::move(sd));
+  return p;
+}
+// the same over a whole-cell mask (its box found by a scan)
+UiPrim field_box(const std::vector<uint8_t> &in, const std::vector<float> *cov, int32_t w, int32_t h) {
+  int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (int32_t y = 0; y < h; ++y)
+    for (int32_t x = 0; x < w; ++x) {
+      const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+      if (in[i] || (cov && (*cov)[i] > 0.f)) {
+        x0 = std::min(x0, x);
+        y0 = std::min(y0, y);
+        x1 = std::max(x1, x + 1);
+        y1 = std::max(y1, y + 1);
+      }
+    }
+  return field_in_box([&](size_t i) { return in[i] != 0; }, cov, w, h, x0, y0, x1, y1);
+}
+
+bool cell_scene_art(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
+                    UiScene &out, std::vector<uint8_t> &keep, bool border_only) {
+  (void)t;
+  out = UiScene{};
+  out.cx0 = 0;
+  out.cy0 = 0;
+  out.cx1 = static_cast<float>(w);
+  out.cy1 = static_cast<float>(h);
+  const size_t n = static_cast<size_t>(w) * static_cast<size_t>(h);
+  keep.assign(n, 0);
+  std::vector<uint8_t> cls(n, kNone);
+  std::vector<float> alpha(n, 0.f), rgb(n * 3u, 0.f);
+  std::vector<uint8_t> darkish(n, 0);   // a soft pixel whose straight colour is dark (the outer shadow's soft part)
+  bool any = false;
+  for (size_t i = 0; i < n; ++i) {
+    const uint8_t c = colour[i], k = mask[i];
+    if (c >= 0xff || k >= 0xff) continue;
+    const float a = 1.f - static_cast<float>(k) / 256.f;   // Surface_stretchBlit keeps (dst * k) >> 8 of what lies under
+    const uint16_t v = pal[c];
+    const int32_t l[3] = {(v >> 10) & 31, (v >> 5) & 31, v & 31};
+    // (negctl 3: the colour read as level << 3, P40B's reading, one 5-bit level low after ui_over555 for most levels)
+    const float unit = SG_NEGCTL(g_negctl_gfx_ui) == 3 ? 8.f : 255.f / 31.f;
+    for (int ch = 0; ch < 3; ++ch) rgb[i * 3u + static_cast<size_t>(ch)] = std::min(255.f, static_cast<float>(l[ch]) * unit / a);
+    alpha[i] = a;
+    const int r = static_cast<int>(rgb[i * 3u]), g = static_cast<int>(rgb[i * 3u + 1]), b = static_cast<int>(rgb[i * 3u + 2]);
+    const Cls cc = classify(r, g, b);
+    darkish[i] = cc == kDark;
+    if (a >= 0.5f) {
+      cls[i] = cc;
+      any = true;
+    }
+  }
+  if (!any) return false;
+  // the outside: transparent, dark and soft dark pixels reached from the cell's border
+  std::vector<uint8_t> outside(n, 0);
+  {
+    std::vector<int32_t> st;
+    auto pass = [&](size_t i) { return cls[i] == kNone ? (alpha[i] < 0.5f && (alpha[i] == 0.f || darkish[i])) : cls[i] == kDark; };
+    auto push = [&](int32_t i) {
+      if (outside[static_cast<size_t>(i)] || !pass(static_cast<size_t>(i))) return;
+      outside[static_cast<size_t>(i)] = 1;
+      st.push_back(i);
+    };
+    for (int32_t x = 0; x < w; ++x) {
+      if (cls[static_cast<size_t>(x)] == kNone) push(x);
+      if (cls[static_cast<size_t>((h - 1) * w + x)] == kNone) push((h - 1) * w + x);
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      if (cls[static_cast<size_t>(y * w)] == kNone) push(y * w);
+      if (cls[static_cast<size_t>(y * w + w - 1)] == kNone) push(y * w + w - 1);
+    }
+    while (!st.empty()) {
+      const int32_t j = st.back();
+      st.pop_back();
+      const int32_t x = j % w, y = j / w;
+      if (x > 0) push(j - 1);
+      if (x + 1 < w) push(j + 1);
+      if (y > 0) push(j - w);
+      if (y + 1 < h) push(j + w);
+    }
+  }
+  keep_pictures(cls, outside, w, h, keep, true);
+  for (size_t i = 0; i < n; ++i)
+    if (keep[i] && cls[i] != kNone) cls[i] = kFrame;
+  std::vector<uint8_t> all_test(n, 0);
+  for (size_t i = 0; i < n; ++i) all_test[i] = alpha[i] >= 1.f ? 1 : 0;
+  auto make = [&](const std::vector<int32_t> &px, UiPrim prim) {
+    UiElem e;
+    const TexFit f = fit_tex(rgb, px, all_test, w);
+    e.tex = f.id;
+    e.tex_x0 = f.x0;
+    e.tex_y0 = f.y0;
+    e.tex_step = f.step;
+    if (!px.empty()) {
+      const size_t i = static_cast<size_t>(px[px.size() / 2]);
+      e.fill_top = e.fill_bot = UiRgba{rgb[i * 3u], rgb[i * 3u + 1], rgb[i * 3u + 2], 1.f};
+    }
+    e.prims = {prim};
+    return e;
+  };
+  // the outer shadow (dark pixels outside the panel, opaque or soft)
+  {
+    std::vector<uint8_t> in(n, 0);
+    std::vector<float> cov(n, 0.f);
+    std::vector<int32_t> px;
+    bool has = false;
+    for (size_t i = 0; i < n; ++i)
+      if (outside[i] && alpha[i] > 0.f) {
+        in[i] = alpha[i] >= 0.5f;
+        cov[i] = alpha[i];
+        if (alpha[i] >= 0.25f) px.push_back(static_cast<int32_t>(i));
+        has = true;
+      }
+    if (has && !px.empty()) {
+      for (size_t i = 0; i < n; ++i)   // one pixel into the panel drawn over it
+        if (!outside[i] && alpha[i] >= 0.5f) {
+          const int32_t x = static_cast<int32_t>(i % static_cast<size_t>(w)), y = static_cast<int32_t>(i / static_cast<size_t>(w));
+          bool nb = false;
+          for (int32_t dy = -1; dy <= 1 && !nb; ++dy)
+            for (int32_t dx = -1; dx <= 1 && !nb; ++dx) {
+              const int32_t xx = x + dx, yy = y + dy;
+              if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+              const size_t q = static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx);
+              nb = outside[q] && alpha[q] >= 0.5f;
+            }
+          if (nb) in[i] = 1;
+        }
+      out.elems.push_back(make(px, field_box(in, &cov, w, h)));
+    }
+  }
+  // the panel: every pixel not outside, its silhouette's soft pixels at their coverage; its colour from its own (frame) pixels
+  std::vector<uint8_t> panel(n, 0);
+  std::vector<float> pcov(n, 0.f);
+  std::vector<int32_t> frame_px;
+  for (size_t i = 0; i < n; ++i) {
+    if (outside[i] || alpha[i] <= 0.f) continue;
+    panel[i] = alpha[i] >= 0.5f;
+    pcov[i] = alpha[i];
+    if (cls[i] == kFrame && !keep[i] && alpha[i] >= 0.25f) frame_px.push_back(static_cast<int32_t>(i));
+    if (cls[i] == kNone && alpha[i] >= 0.25f) frame_px.push_back(static_cast<int32_t>(i));   // the soft silhouette
+  }
+  if (frame_px.empty())
+    for (size_t i = 0; i < n; ++i)
+      if (panel[i]) frame_px.push_back(static_cast<int32_t>(i));
+  out.elems.push_back(make(frame_px, field_box(panel, &pcov, w, h)));
+  if (border_only) {   // P40C: the panel's shape only; its inside (farther than 5 pixels from the edge) stays the art
+    std::vector<float> dist(n, 1e9f);
+    for (int32_t y = 0; y < h; ++y)
+      for (int32_t x = 0; x < w; ++x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+        if (!panel[i]) {
+          dist[i] = 0;
+          continue;
+        }
+        if (x == 0 || y == 0) dist[i] = 1;
+        if (x > 0) dist[i] = std::min(dist[i], dist[i - 1] + 1);
+        if (y > 0) dist[i] = std::min(dist[i], dist[i - static_cast<size_t>(w)] + 1);
+      }
+    for (int32_t y = h - 1; y >= 0; --y)
+      for (int32_t x = w - 1; x >= 0; --x) {
+        const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
+        if (x == w - 1 || y == h - 1) dist[i] = std::min(dist[i], 1.f);
+        if (x + 1 < w) dist[i] = std::min(dist[i], dist[i + 1] + 1);
+        if (y + 1 < h) dist[i] = std::min(dist[i], dist[i + static_cast<size_t>(w)] + 1);
+      }
+    for (size_t i = 0; i < n; ++i)
+      if (cls[i] != kNone && (dist[i] > 5.f || (panel[i] && cls[i] != kFrame))) keep[i] = 1;
+    return true;
+  }
+  // the inner regions, in drawing order
+  const uint8_t order[] = {kDark, kRim, kPill, kCream, kWhite};
+  std::vector<uint8_t> rank(n, 0);   // 1 + the place in `order` of each inner pixel, 0 for the others
+  for (size_t i = 0; i < n; ++i) {
+    if (outside[i] || keep[i] || cls[i] == kNone) continue;
+    for (uint8_t k = 0; k < 5; ++k)
+      if (cls[i] == order[k]) rank[i] = static_cast<uint8_t>(k + 1);
+  }
+  std::vector<uint32_t> owner(n, 0);
+  uint32_t token = 0;
+  for (uint8_t k = 0; k < 5; ++k) {
+    const uint8_t c = order[k];
+    std::vector<uint8_t> lab(n, kNone);
+    for (size_t i = 0; i < n; ++i)
+      if (rank[i] == k + 1) lab[i] = c;
+    std::vector<int32_t> small;
+    auto emit = [&](const std::vector<int32_t> &px, const Comp *comp) {
+      const uint32_t own = ++token;   // this region's pixels: owner == own (owner is shared by every region, never cleared)
+      int32_t bx0 = w, by0 = h, bx1 = -1, by1 = -1;
+      for (int32_t j : px) {
+        owner[static_cast<size_t>(j)] = own;
+        bx0 = std::min(bx0, j % w);
+        by0 = std::min(by0, j / w);
+        bx1 = std::max(bx1, j % w + 1);
+        by1 = std::max(by1, j / w + 1);
+      }
+      auto in = [&](size_t i) { return owner[i] == own; };
+      // a box, pill or row that is a rounded rectangle: that shape
+      if (comp && (c == kPill || c == kCream || c == kWhite) && comp->n >= 12) {
+        const float bw = static_cast<float>(comp->x1 - comp->x0), bh = static_cast<float>(comp->y1 - comp->y0);
+        const float miss = bw * bh - static_cast<float>(comp->n);
+        float r = std::sqrt(std::max(0.f, miss) / (4.f * 0.2146f));
+        r = std::min(r, std::min(bw, bh) * 0.5f);
+        const float x0 = static_cast<float>(comp->x0), y0 = static_cast<float>(comp->y0), x1 = static_cast<float>(comp->x1),
+                    y1 = static_cast<float>(comp->y1);
+        int32_t off = 0;
+        for (int32_t y = comp->y0; y < comp->y1; ++y)
+          for (int32_t x = comp->x0; x < comp->x1; ++x)
+            off += in(static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x)) !=
+                   in_rrect(x + 0.5f, y + 0.5f, x0, y0, x1, y1, r);
+        if (off * 100 <= comp->n) {
+          UiPrim pr;
+          pr.kind = kUiRRect;
+          // a box cut by the cell's edge continues past it
+          pr.x0 = x0 - (comp->x0 == 0 ? 40.f : 0.f);
+          pr.y0 = y0 - (comp->y0 == 0 ? 40.f : 0.f);
+          pr.x1 = x1 + (comp->x1 == w ? 40.f : 0.f);
+          pr.y1 = y1 + (comp->y1 == h ? 40.f : 0.f);
+          for (int q = 0; q < 4; ++q) pr.rx[q] = pr.ry[q] = r;
+          out.elems.push_back(make(px, pr));
+          return;
+        }
+      }
+      // one pixel into the regions drawn after this one
+      for (int32_t j : px) {
+        const int32_t x = j % w, y = j / w;
+        for (int32_t dy = -1; dy <= 1; ++dy)
+          for (int32_t dx = -1; dx <= 1; ++dx) {
+            const int32_t xx = x + dx, yy = y + dy;
+            if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+            const size_t q = static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx);
+            if (rank[q] > k + 1 && owner[q] != own) {
+              owner[q] = own;
+              bx0 = std::min(bx0, xx);
+              by0 = std::min(by0, yy);
+              bx1 = std::max(bx1, xx + 1);
+              by1 = std::max(by1, yy + 1);
+            }
+          }
+      }
+      out.elems.push_back(make(px, field_in_box(in, nullptr, w, h, bx0, by0, bx1, by1)));
+    };
+    for (const Comp &comp : components(lab, w, h, c)) {
+      if (comp.n >= 64) emit(comp.px, &comp);
+      else small.insert(small.end(), comp.px.begin(), comp.px.end());
+    }
+    if (!small.empty()) emit(small, nullptr);
+  }
+  return true;
+}
+}  // namespace
+
+bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *mask, int32_t w, int32_t h, const UiTheme &t,
+                   UiScene &out, std::vector<uint8_t> &keep, bool border_only) {
+  if (t.art_colours > 0.5f) return cell_scene_art(colour, pal, mask, w, h, t, out, keep, border_only);   // P40D: the game theme
+  out = UiScene{};
+  out.cx0 = 0;
+  out.cy0 = 0;
+  out.cx1 = static_cast<float>(w);
+  out.cy1 = static_cast<float>(h);
+  const size_t n = static_cast<size_t>(w) * static_cast<size_t>(h);
+  keep.assign(n, 0);
+  std::vector<uint8_t> cls(n, kNone);
+  std::vector<uint32_t> rgbv(n, 0);   // the pixel's colour (r | g << 8 | b << 16), for the art's median colours
+  bool any = false;
+  for (size_t i = 0; i < n; ++i) {
+    const uint8_t c = colour[i], k = mask[i];
+    if (c >= 0xff || k >= 0xff || k >= 0x80) continue;   // transparent, or less than half covering (a soft edge)
+    const uint16_t v = pal[c];
+    const int r = ((v >> 10) & 31) << 3, g = ((v >> 5) & 31) << 3, b = (v & 31) << 3;
+    cls[i] = classify(r, g, b);
+    rgbv[i] = static_cast<uint32_t>(r) | static_cast<uint32_t>(g) << 8 | static_cast<uint32_t>(b) << 16;
+    any = true;
+  }
+  if (!any) return false;
+  // the outside: transparent and dark pixels reached from the cell's border (an outer dark rim or shadow is not panel)
+  std::vector<uint8_t> outside(n, 0);
+  {
+    std::vector<int32_t> st;
+    auto push = [&](int32_t i) {
+      if (outside[static_cast<size_t>(i)]) return;
+      const uint8_t c = cls[static_cast<size_t>(i)];
+      if (c != kNone && c != kDark) return;
+      outside[static_cast<size_t>(i)] = 1;
+      st.push_back(i);
+    };
+    for (int32_t x = 0; x < w; ++x) {
+      if (cls[static_cast<size_t>(x)] == kNone) push(x);
+      if (cls[static_cast<size_t>((h - 1) * w + x)] == kNone) push((h - 1) * w + x);
+    }
+    for (int32_t y = 0; y < h; ++y) {
+      if (cls[static_cast<size_t>(y * w)] == kNone) push(y * w);
+      if (cls[static_cast<size_t>(y * w + w - 1)] == kNone) push(y * w + w - 1);
+    }
+    while (!st.empty()) {
+      const int32_t j = st.back();
+      st.pop_back();
+      const int32_t x = j % w, y = j / w;
+      if (x > 0) push(j - 1);
+      if (x + 1 < w) push(j + 1);
+      if (y > 0) push(j - w);
+      if (y + 1 < h) push(j + w);
+    }
+  }
+  keep_pictures(cls, outside, w, h, keep);
   // the kept pixels are panel for the panel's shape and no part of a box or a line
   for (size_t i = 0; i < n; ++i)
     if (keep[i] && cls[i] != kNone) cls[i] = kFrame;
@@ -1530,6 +2072,8 @@ UiScene moved(const UiScene &s, float dx, float dy) {
     e.gy1 += dy;
     e.gloss_cx += dx;
     e.gloss_cy += dy;
+    e.tex_x0 += dx;
+    e.tex_y0 += dy;
   }
   return o;
 }
@@ -1683,6 +2227,61 @@ bool frame_drawer(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int32_t
 }
 }  // namespace
 
+bool ui_cell_pair_draw(Gfx &g, Ctx &ctx, uint32_t cs, uint32_t ms, int32_t x, int32_t y, int32_t theme, bool border_only) {
+  auto si = g.sprites.find(cs), mi = g.sprites.find(ms);
+  if (si == g.sprites.end() || mi == g.sprites.end()) return false;
+  const CellScene &c = cell_scene(g, cs, ms, si->second, mi->second, theme, border_only);
+  if (!c.ok) return false;
+  g.ensure_root(ctx);
+  ui_draw_scene(g, ctx, moved(c.scene, static_cast<float>(x), static_cast<float>(y)));
+  // the pixels the scene does not draw, from the art as Surface_stretchBlit draws them (copy or blend by the mask)
+  const Sprite8 &s = si->second, &m = mi->second;
+  Surface16 &d = g.root;
+  for (int32_t yy = std::max(y, 0); yy < std::min(y + s.h, d.h); ++yy)
+    for (int32_t xx = std::max(x, 0); xx < std::min(x + s.w, d.w); ++xx) {
+      const size_t o = static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x);
+      if (!c.keep[o] || o >= m.px.size()) continue;
+      const uint8_t cc = s.px[o], k = m.px[o];
+      if (cc >= 0xff || k >= 0xff) continue;
+      uint16_t &w = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
+      const uint16_t sw = s.pal[cc];
+      hud_mark(&w);
+      if (k == 0) {
+        w = sw;
+        continue;
+      }
+      auto ch = [&](uint32_t dv, uint32_t sv) { return static_cast<uint16_t>(static_cast<uint16_t>(((dv * k) >> 8) + sv) >> 3); };
+      w = static_cast<uint16_t>((ch((w >> 7) & 0xf8u, (sw >> 7) & 0xf8u) << 10) | (ch((w >> 2) & 0xf8u, (sw >> 2) & 0xf8u) << 5) |
+                                ch((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u));
+    }
+  return true;
+}
+bool ui_cell_keyed_draw(Gfx &g, Ctx &ctx, uint32_t cs, int32_t px, int32_t py, int32_t theme) {
+  auto si = g.sprites.find(cs);
+  if (si == g.sprites.end()) return false;
+  const Sprite8 &sp = si->second;
+  Sprite8 mask;   // a mask cell for the engine: 0 (opaque) where draw16 draws, 0xff where it skips
+  mask.w = sp.w;
+  mask.h = sp.h;
+  mask.px.resize(sp.px.size());
+  for (size_t i = 0; i < sp.px.size(); ++i) mask.px[i] = sp.px[i] >= 0xfe ? 0xff : 0;
+  const CellScene &c = cell_scene(g, cs, 0, sp, mask, theme);
+  if (!c.ok) return false;
+  g.ensure_root(ctx);
+  const int32_t x = add32(sp.left, px), y = add32(sp.top, py);
+  ui_draw_scene(g, ctx, moved(c.scene, static_cast<float>(x), static_cast<float>(y)));
+  Surface16 &d = g.root;   // the kept pixels (the marbled ground, the icons) as draw16 draws them
+  for (int32_t yy = std::max(y, 0); yy < std::min(y + sp.h, d.h); ++yy)
+    for (int32_t xx = std::max(x, 0); xx < std::min(x + sp.w, d.w); ++xx) {
+      const size_t o = static_cast<size_t>(yy - y) * static_cast<size_t>(sp.w) + static_cast<size_t>(xx - x);
+      if (!c.keep[o] || sp.px[o] >= 0xfe) continue;
+      uint16_t &wd = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
+      wd = sp.pal[sp.px[o]];
+      hud_mark(&wd);
+    }
+  return true;
+}
+
 // gfx.cpp gfx_drop: true when the drop was drawn here
 bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
   const int32_t theme = g.ui_pilot;
@@ -1699,33 +2298,7 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     const uint32_t hud_c = state_va(ctx, &GameState::g_sprites541a18), hud_m = state_va(ctx, &GameState::g_sprites58b390);
     const bool hud = a[0] >= hud_c + 0x2cu && a[0] < hud_c + 11u * 0x2cu && (a[0] - hud_c) % 0x2cu == 0 && a[1] == hud_m + (a[0] - hud_c);
     if (a[2] != g.root_va(ctx) || a[5] != 0 || !(hud || local || (a[1] == a[0] + 0x2cu && report_cell(ctx, a[0])))) return false;
-    auto si = g.sprites.find(a[0]), mi = g.sprites.find(a[1]);
-    if (si == g.sprites.end() || mi == g.sprites.end()) return false;
-    const CellScene &c = cell_scene(g, a[0], a[1], si->second, mi->second, theme, hud);
-    if (!c.ok) return false;
-    const int32_t x = i32(a[3]), y = i32(a[4]);
-    ui_draw_scene(g, ctx, moved(c.scene, static_cast<float>(x), static_cast<float>(y)));
-    // the pixels the scene does not draw, from the art as Surface_stretchBlit draws them (copy or blend by the mask)
-    const Sprite8 &s = si->second, &m = mi->second;
-    Surface16 &d = g.root;
-    for (int32_t yy = std::max(y, 0); yy < std::min(y + s.h, d.h); ++yy)
-      for (int32_t xx = std::max(x, 0); xx < std::min(x + s.w, d.w); ++xx) {
-        const size_t o = static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(xx - x);
-        if (!c.keep[o] || o >= m.px.size()) continue;
-        const uint8_t cc = s.px[o], k = m.px[o];
-        if (cc >= 0xff || k >= 0xff) continue;
-        uint16_t &w = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
-        const uint16_t sw = s.pal[cc];
-        hud_mark(&w);
-        if (k == 0) {
-          w = sw;
-          continue;
-        }
-        auto ch = [&](uint32_t dv, uint32_t sv) { return static_cast<uint16_t>(static_cast<uint16_t>(((dv * k) >> 8) + sv) >> 3); };
-        w = static_cast<uint16_t>((ch((w >> 7) & 0xf8u, (sw >> 7) & 0xf8u) << 10) | (ch((w >> 2) & 0xf8u, (sw >> 2) & 0xf8u) << 5) |
-                                  ch((static_cast<uint32_t>(w) << 3) & 0xf8u, (static_cast<uint32_t>(sw) << 3) & 0xf8u));
-      }
-    return true;
+    return ui_cell_pair_draw(g, ctx, a[0], a[1], i32(a[3]), i32(a[4]), theme, hud);
   }
   if (!std::strcmp(name, "blitPanel") && n >= 4) {
     // P40B: the shaded panel (the half-bright tiles of blitPanel: message windows, tips) as a half-dark rounded rectangle
@@ -1756,36 +2329,14 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     // drawn by Image_draw without a mask (indexes 0xfe / 0xff transparent, draw16): the cell's scene at (left + x, top + y)
     const uint32_t rs = state_va(ctx, &GameState::g_spriteRef_8224c8);
     if (a[0] == rs || a[0] == rs + 0x2cu || a[0] == rs + 0x58u || a[0] == rs + 0x84u || a[0] == rs + 0xb0u || a[0] == rs + 0x2ecu) {
-      auto si = g.sprites.find(a[0]);
-      if (si != g.sprites.end()) {
-        const Sprite8 &sp = si->second;
-        Sprite8 mask;   // a mask cell for the engine: 0 (opaque) where draw16 draws, 0xff where it skips
-        mask.w = sp.w;
-        mask.h = sp.h;
-        mask.px.resize(sp.px.size());
-        for (size_t i = 0; i < sp.px.size(); ++i) mask.px[i] = sp.px[i] >= 0xfe ? 0xff : 0;
-        const CellScene &c = cell_scene(g, a[0], 0, sp, mask, theme);
-        if (c.ok) {
-          const int32_t x = add32(sp.left, i32(a[2])), y = add32(sp.top, i32(a[3]));
-          ui_draw_scene(g, ctx, moved(c.scene, static_cast<float>(x), static_cast<float>(y)));
-          Surface16 &d = g.root;   // the kept pixels (the marbled ground, the icons) as draw16 draws them
-          for (int32_t yy = std::max(y, 0); yy < std::min(y + sp.h, d.h); ++yy)
-            for (int32_t xx = std::max(x, 0); xx < std::min(x + sp.w, d.w); ++xx) {
-              const size_t o = static_cast<size_t>(yy - y) * static_cast<size_t>(sp.w) + static_cast<size_t>(xx - x);
-              if (!c.keep[o] || sp.px[o] >= 0xfe) continue;
-              uint16_t &wd = d.px[static_cast<size_t>(yy) * static_cast<size_t>(d.w) + static_cast<size_t>(xx)];
-              wd = sp.pal[sp.px[o]];
-              hud_mark(&wd);
-            }
-          return true;
-        }
-      }
+      if (ui_cell_keyed_draw(g, ctx, a[0], i32(a[2]), i32(a[3]), theme)) return true;
     }
   }
   if (!std::strcmp(name, "Image_draw") && n >= 4) {
     const uint32_t ok = state_va(ctx, &GameState::g_spriteRef_820f40);
     if (a[1] != g.root_va(ctx) || a[0] < ok || a[0] >= ok + 5u * 0x2cu || (a[0] - ok) % 0x2cu != 0) return false;
     const bool hover = a[0] == ok + 0x2cu;
+    if (ui_theme(theme).art_colours > 0.5f && ui_cell_keyed_draw(g, ctx, a[0], i32(a[2]), i32(a[3]), theme)) return true;   // P40D
     ui_draw_scene(g, ctx, ui_button_scene(ui_theme(theme), i32(a[2]), i32(a[3]), hover));
     return true;
   }
