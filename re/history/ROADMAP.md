@@ -2324,3 +2324,4 @@ presenter's peel and bilinear canvas modelled, the game drawing over panels, sca
 pixels in 43 / 45 elements at 3.6, P40E 0 at every scale; controls gfx.family.ui 4 (P40D's draw) and 5 (the full peel) read red. Colour
 target at 1x 45 / 45. Live drives (camera moved between two shots of each screen, mask from a --text-res frame drive): HUD / popup / message at 4K 7,164 / 6,174 / 7,823 world pixels with P40D's draw, 0 / 0 / 0 with P40E; GPU against CPU 366 paints, 0 bad.
 Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 157; app selftests p9c / p9b 10 / 10.
+- Published 2026-11-22: P40E in 22aebefd (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release. Open: the crown icon on the yellow palette button looks rougher than before (small detail kept as art).
