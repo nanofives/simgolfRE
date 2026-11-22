@@ -2309,3 +2309,4 @@ shading under the sharp edge); Hole Stats and the OK button through it. Result: 
 0.15), 4K 43 / 45, 1080 30 / 45 (the rest 0.929-0.969 within 8, edge pixels at 1.8x, >= 99 % within 16); delta E under 2 everywhere.
 Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 104 (45 per-element floors); a colour-bug control fails 8 / 8; live 4K drives
 of 11 screens, 0 GPU / CPU mismatches.
+- Published 2026-11-22: P40D in 85483255 (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release, after Mariano approved the screenshots.
