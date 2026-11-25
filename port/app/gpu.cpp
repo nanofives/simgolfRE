@@ -3317,10 +3317,12 @@ void GpuCompositor::paint_flat(const Presenter &P, int32_t cw, int32_t ch) {
   }
   {
     const ProfScope prof(Phase::Patch);
-    char k[200];
-    std::snprintf(k, sizeof k, "flat/%llu/%d,%d/%d/%llu/%d/%d/%d", static_cast<unsigned long long>(P.content_gen_), cw, ch, text ? 1 : 0,
-                  static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), P.overlay_mode_, static_cast<int>(P.wide_),
-                  static_cast<int>(P.band_));
+    char k[240];
+    // P41W (present_wide.cpp): a frame with a wide backdrop is one patch over the whole client, made again when its picture changes
+    const bool wbd = P.wide_backdrop_now(cw, ch);
+    std::snprintf(k, sizeof k, "flat/%llu/%d,%d/%d/%llu/%d/%d/%d/%d,%llu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+                  text ? 1 : 0, static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), P.overlay_mode_, static_cast<int>(P.wide_),
+                  static_cast<int>(P.band_), wbd ? 1 : 0, static_cast<unsigned long long>(wbd ? P.wide_backdrop_serial() : 0));
     if (d.final_key != k) {
       const int64_t t0 = portsim::perf_now_ns();
       std::vector<Rect> rects;
@@ -3328,10 +3330,11 @@ void GpuCompositor::paint_flat(const Presenter &P, int32_t cw, int32_t ch) {
         b = Rect{std::max(b.x0, 0), std::max(b.y0, 0), std::min(b.x1, cw), std::min(b.y1, ch)};
         if (b.x1 > b.x0 && b.y1 > b.y0) rects.push_back(b);
       };
-      if (text)  // draw_runs' flat path: every run at its own place (no world: no world run, no moved panel, no mover)
+      if (wbd) add(Rect{0, 0, cw, ch});
+      if (text && !wbd)  // draw_runs' flat path: every run at its own place (no world: no world run, no moved panel, no mover)
         for (const portsim::GfxTextRun &r : P.text_.runs)
           if (r.target != 2) add(run_box(r, vp, 0, 0));
-      if (P.wide_ != WideFill::Off && P.band_ != BandFill::Black) {  // the bands with the content columns fill_bands reads
+      if (!wbd && P.wide_ != WideFill::Off && P.band_ != BandFill::Black) {  // the bands with the content columns fill_bands reads
         const int32_t ox = vp.origin_x, w = vp.client_w, kbg = std::max<int32_t>(1, w * 64 / kLogicalW) + 1;
         const int32_t bl = ox, br = cw - ox - w;
         if (bl > 0) add(Rect{0, 0, std::min(ox + w, ox + std::max(bl, kbg) + 1), ch});
@@ -3661,14 +3664,17 @@ void GpuCompositor::paint(const Presenter &P, int32_t cw, int32_t ch, int32_t sl
   // fix 3: a screen without a world layer through the GPU path too (render's flat path)
   const bool flat = !layered && W.empty() && !P.frame_.empty() && !P.layered() && P.defect_ == PresentDefect::None && cw <= 4096 &&
                     ch <= 4096 && !d.no_flat;
-  if (layered) paint_layered(P, cw, ch, slx, sly);
+  // P41W (present_wide.cpp): a front-end screen's wide backdrop is the flat path's one full-client patch, in game too (the editor)
+  const bool wbd = P.wide_backdrop_now(cw, ch) && P.defect_ == PresentDefect::None && cw <= 4096 && ch <= 4096 && !d.no_flat;
+  if (wbd) paint_flat(P, cw, ch);
+  else if (layered) paint_layered(P, cw, ch, slx, sly);
   else if (flat) {
     P.flat_remap_clear();  // P26C item 4a (render_impl does it for paint_full)
     paint_flat(P, cw, ch);
   } else {
     paint_full(P, cw, ch);
   }
-  if (d.verify_every > 0 && (d.verify_n++ % static_cast<uint64_t>(d.verify_every)) == 0) verify(P, cw, ch, layered);
+  if (d.verify_every > 0 && (d.verify_n++ % static_cast<uint64_t>(d.verify_every)) == 0) verify(P, cw, ch, layered && !wbd);
   shot_if_asked(cw, ch);
   P.overlay_freeze(false);
   HRESULT hr;

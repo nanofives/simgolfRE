@@ -2325,3 +2325,25 @@ pixels in 43 / 45 elements at 3.6, P40E 0 at every scale; controls gfx.family.ui
 target at 1x 45 / 45. Live drives (camera moved between two shots of each screen, mask from a --text-res frame drive): HUD / popup / message at 4K 7,164 / 6,174 / 7,823 world pixels with P40D's draw, 0 / 0 / 0 with P40E; GPU against CPU 366 paints, 0 bad.
 Evidence: segments x64 205 / 205 (off); test_p40_ui_pilot 157; app selftests p9c / p9b 10 / 10.
 - Published 2026-11-22: P40E in 22aebefd (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release. Open: the crown icon on the yellow palette button looks rougher than before (small detail kept as art).
+
+## P41: the interface redrawn as authored shapes, and the front end drawn wide (2026-11-24 / 25; notes log/roadmap/P41/)
+Mariano rejected P40D / P40E's colour-region vectors for the look: the UI is now AUTHORED shapes read from the pixel grid
+(ellipses, polygons, strokes, boolean trees, lit bevel paints, baked shadows); pictures stay textures. Toolkit `re/tools/uivec/`
+(renderer `sdf.py`, title / difficulty / Load Game builders, seven area modules). A roster of 392 elements; he judged every
+redrawn one on an artifact page over five rounds: 333 approved, 1 kept as art (the handwritten achievement list). Approved
+scenes: `re/tools/uivec/scenes/<area>/<id>.json` (numbers only), commit 5d523d67. His judging rules are in the memory
+`ui-redraw-authored-shapes`.
+- P41W, widescreen "same composition, real sides": every front-end screen (main menu, difficulty, theme packs, world map,
+  Load Game, Pick a Pro, golfer editor) has a fully drawn backdrop that continues to the screen edges at any shape from 4:3
+  upward; the composition stays centred; logo, publisher marks, globe, portrait window and Pick a Pro's ball stay art, lifted
+  with mattes. Method `re/tools/uivec/wide.py`, scenes `scenes/wide/`, approved 14 / 14 cards, commit b6139cf8.
+- Port (this commit, with the P40E code that 22aebefd left uncommitted): module `gfx_uivec` (the scene evaluator, `sdf.py`'s
+  formulas, parity <= 2.2e-5 levels on the 12 title button scenes at 1x and 2.7x), `gfx_uvwide` + `app/present_wide.cpp`
+  (a screen's backdrop rendered once per screen and window size at the window's resolution in 8 bits per channel on a worker,
+  quick pass first; whole screens within 1.2e-4 levels of `wide.render` at 4:3 and 16:9), generated includes
+  `port/src/sim/uivec_*.inc` from `re/tools/uivec/port_export.py`, overlays for hover / disabled states on the game's own draw
+  calls. Theme off makes the original's calls (8 / 8 backgrounds).
+  Evidence: test_p41_uivec 16 passed (controls RED), test_p40_ui_pilot 157, port test_static 7, segments x64 205 / 205 (off);
+  first full render 81-190 ms at 1080p, 251-594 ms at 3840 x 2108. Screenshots log/roadmap/P41/portwide/.
+  Open: the golfer editor was not reached by a driver (its backdrop passes the DLL test, its cells were not seen in the app);
+  the world map's site plates, pins and legend, list highlights and scroll thumbs are still the art; not published.

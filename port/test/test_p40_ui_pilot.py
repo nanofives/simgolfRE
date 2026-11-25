@@ -299,7 +299,7 @@ HUD_FLOOR = {"hud_terrain": 1.000, "hud_building": 1.000, "hud_amenities": 1.000
 def test_hud_panel_border_matches_the_art(portlib, cell):
     game, n = PC.fidelity(portlib, cell, 1)
     _, keep, col, msk, _ = PC.cell_render(portlib, cell, 1, 1)
-    inside = float((keep[(col != 0xFF) & (msk == 0)] == 1).mean())
+    inside = float((keep[(col != 0xFF) & (msk == 0)] > 0).mean())   # (P40E: 1 picture, 3 a vector shape: both the scene's)
     print(f"HUD {cell[0]}: band {game:.3f} over {n} px, kept inside {inside:.2f}")
     assert n > 500
     assert game >= HUD_FLOOR[cell[0]] - 0.03, game
@@ -342,11 +342,103 @@ def test_pixel_match_at_frame_scale(portlib, name):
 
 @need_exe
 def test_negctl_art_colour_read_reads_red(portlib):
+    _pix_clear()   # (P40E: the renders are memoised by input, not by the control's mode)
     portlib.negctl("gfx.family.ui", 3)
     try:
         names = ["finance", "course_head", "sga", "roster", "popup_panel", "hs_head", "comments_row", "eoy_top"]
         fail = [n for n in names if not (lambda m: m["w8"] >= 0.97 and m["de_mean"] < 2.0)(pix_measure(portlib, n))]
     finally:
         portlib.negctl_reset()
+        _pix_clear()
     print(f"PIX control: {len(fail)} / {len(names)} fail ({fail})")
     assert len(fail) * 2 > len(names), "gfx.family.ui mode 3 is blind"
+
+
+# ------------------------------------------------------------------------------------------------ P40E: holes and shapes
+# The opacity check of port/test/p40_pixcmp.py (window_model: the presenter's run over the frame it peels, the frame scaled
+# bilinearly): every window pixel over the art's interior opaque pixels shows the element alone (weight >= 0.99) at 1080 (1.8), at
+# the live 4K drive's 3840 x 2108 client (2108 / 600) and at 3.6. Before P40E the kept pixels were blitted after the run and the
+# world showed through them (hud_terrain: 1498 frame pixels holed at 4K). Control: gfx.family.ui mode 4 (that blit again) holes
+# every element with kept pixels.
+OPACITY_SCALES = (1.8, 2108 / 600, 3.6)
+
+
+def _pix_clear():
+    PX._MEMO.clear()
+    PX._WMEMO.clear()
+
+
+@need_exe
+@pytest.mark.parametrize("name", PIX_NAMES)
+def test_no_holes_at_window_scale(portlib, name):
+    el = pix_element(name)
+    got = []
+    for s in OPACITY_SCALES:
+        n, worst, fmap, _ = PX.opacity(portlib, el, 1, s)
+        got.append((s, n, int(fmap.sum()), worst))
+    print(f"OPACITY {name}: " + "  ".join(f"x{s:.3f} {n} px ({f} frame px, min weight {w:.3f})" for s, n, f, w in got))
+    assert all(n == 0 for _, n, _, _ in got), got
+
+
+@need_exe
+def test_negctl_kept_blit_holes_read_red(portlib):
+    names = ["hud_terrain", "ok_button", "sga", "route_bottom", "course_foot"]
+    _pix_clear()
+    portlib.negctl("gfx.family.ui", 4)
+    try:
+        holed = {n: PX.opacity(portlib, pix_element(n), 1, 2108 / 600)[0] for n in names}
+    finally:
+        portlib.negctl_reset()
+        _pix_clear()
+    print(f"OPACITY control: {holed}")
+    assert all(v > 0 for v in holed.values()), "gfx.family.ui mode 4 is blind"
+
+
+@need_exe
+def test_negctl_full_peel_holes_read_red(portlib):
+    # mode 5: the peel restores the world under a UI run's whole inside (gfx.h GfxTextPeelRun::keep null): what the game draws over a
+    # panel after its run (p40_pixcmp.overdraw_blocks) gets the world mixed into its edges by the frame's smooth scaling
+    names = ["finance", "popup_panel", "hud_terrain", "hs_head"]
+    _pix_clear()
+    portlib.negctl("gfx.family.ui", 5)
+    try:
+        holed = {n: PX.opacity(portlib, pix_element(n), 1, 2108 / 600)[0] for n in names}
+    finally:
+        portlib.negctl_reset()
+        _pix_clear()
+    print(f"OPACITY control 5: {holed}")
+    assert all(v > 0 for v in holed.values()), "gfx.family.ui mode 5 is blind"
+
+
+# P40E item 2: the shapes among the kept pixels are vector regions (keep 3), only pictures stay the art's (keep 1). Floors: the share
+# of the kept opaque pixels drawn as shapes, pinned 0.05 under the values of 2026-11-22 (log/roadmap/P40/e_test_p40_ui_pilot_1.log:
+# ok_button 0.907, hud_terrain 0.986, hud_member 0.986, course_foot 0.766, route_bottom 0.977). Control: ui_tune 3 = 0 (the P40E fix-1
+# engine: the kept pixels one picture) reads 0.
+SHAPE_FLOOR = {"ok_button": 0.85, "hud_terrain": 0.93, "hud_member": 0.93, "course_foot": 0.71, "route_bottom": 0.92}
+
+
+@need_exe
+@pytest.mark.parametrize("name", sorted(SHAPE_FLOOR))
+def test_kept_shapes_are_vector(portlib, name):
+    el = pix_element(name)
+    _pix_clear()
+    _, keep = PX.render_cell(portlib, el.idx, el.msk, el.pal, 1, 1.0, el.border_only)
+    kept = keep[(el.idx < 0xFF) & (el.msk == 0) & (keep > 0)]
+    share = float((kept == 3).mean()) if kept.size else 0.0
+    print(f"SHAPES {name}: {share:.3f} of {kept.size} kept px are vector shapes, {int((kept == 1).sum())} picture px")
+    assert share >= SHAPE_FLOOR[name], share
+
+
+@need_exe
+def test_shapes_control_reads_red(portlib):
+    el = pix_element("ok_button")
+    _pix_clear()
+    with portlib.state() as st:
+        old = st.call("holestats.uiTune", [3, 0]).eax
+    try:
+        _, keep = PX.render_cell(portlib, el.idx, el.msk, el.pal, 1, 1.0, el.border_only)
+    finally:
+        with portlib.state() as st:
+            st.call("holestats.uiTune", [3, old])
+        _pix_clear()
+    assert int((keep == 3).sum()) == 0 and int((keep == 1).sum()) > 0

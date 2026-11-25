@@ -40,6 +40,7 @@ OUT_VA = 0x30000000
 IN_VA = 0x34000000
 OUT_CAP = 1 << 24
 SCALES = (1.0, 1.8, 3.6)
+OPACITY_SCALES = (1.0, 1.8, 3.6, 2108 / 600)   # P40E: the opacity check also at the live 4K drive's scale (client 3840 x 2108)
 BG = (0x40, 0x70, 0x40)   # the background behind every element (a course green); the same word under the art and the theme
 
 
@@ -133,7 +134,7 @@ def render_cell(lib, col, msk, pal555, theme, scale, border_only=False):
     """holestats.uiCell at `scale` (thousandths above 1000): premultiplied (H, W, 4) (alpha 0..1) and the kept mask"""
     key = ("cell", id(lib), col.tobytes(), msk.tobytes(), pal555.tobytes(), theme, scale, border_only)
     if key not in _MEMO:
-        if len(_MEMO) >= 6:
+        if len(_MEMO) >= 12:
             _MEMO.clear()
         _MEMO[key] = _render_cell(lib, col, msk, pal555, theme, scale, border_only)
     px, keep = _MEMO[key]
@@ -248,41 +249,12 @@ class Element:
 
     def theme(self, lib, theme, scale):
         """the theme's picture at 800 x 600 (the window render box-filtered when scale > 1) and its cover"""
-        bgw = np.full((self.h, self.w), w555(BG), np.int32)
-        if self.kind == "cell":
-            px, keep = render_cell(lib, self.idx, self.msk, self.pal, theme, scale, self.border_only)
-            if px is None:   # an empty cell: the art as it is
-                return expand(self.art()[0]), self.art()[1]
-        else:
-            which, x, y, hov = self.scene
-            px = render_scene(lib, which, theme, x, y, hov, scale, (x if which == 3 else 0, y if which != 0 else 0, self.w, self.h))
-            keep = np.zeros((self.h, self.w), np.uint8)
-        H, W = px.shape[:2]
-        # the scale-1 frame: the scene over the background, then the kept pixels from the art
+        if self.kind == "cell" and render_cell(lib, self.idx, self.msk, self.pal, theme, 1.0, self.border_only)[0] is None:
+            return expand(self.art()[0]), self.art()[1]   # an empty cell: the art as it is
+        m = window_model(lib, self, theme, scale)
         if scale == 1.0:
-            one = px[:self.h, :self.w]
-            cov1 = one[..., 3] > 0
-            fw = over555(one, bgw)
-        else:
-            one_px, _ = (render_cell(lib, self.idx, self.msk, self.pal, theme, 1.0, self.border_only) if self.kind == "cell"
-                         else (render_scene(lib, self.scene[0], theme, self.scene[1], self.scene[2], self.scene[3], 1.0,
-                                            (self.scene[1] if self.scene[0] == 3 else 0, self.scene[2] if self.scene[0] != 0 else 0,
-                                             self.w, self.h)), None))
-            cov1 = one_px[..., 3] > 0
-            fw = over555(one_px, bgw)
-        kept = keep.astype(bool) & (self.idx < 0xFF) & (self.msk < 0xFF)
-        fw, _ = blit_words(fw, self.pal, np.where(kept, self.idx, 0xFF).astype(np.uint8), self.msk)
-        cover = cov1 | kept
-        if scale == 1.0:
-            return expand(fw), cover
-        # the window: the scene over the background word in 5 bits; where the frame pixel is kept, the frame's pixel (nearest)
-        yy = np.minimum((np.arange(H) / scale).astype(int), self.h - 1)
-        xx = np.minimum((np.arange(W) / scale).astype(int), self.w - 1)
-        win = expand(over555(px, np.full((H, W), w555(BG), np.int32)))
-        kup = kept[yy][:, xx]
-        if kup.any():   # the kept pixels show the frame, scaled up as the reference is
-            win = np.where(kup[..., None], upsample(expand(fw), self.h, self.w, scale)[:H, :W], win)
-        return downsample(win, self.h, self.w, scale), cover
+            return expand(m["frame"]), m["cover"]
+        return downsample(m["win"], self.h, self.w, scale), m["cover"]
 
 
 def _pcx(name):
@@ -428,12 +400,13 @@ def grid_info(lib, el, theme):
     return f"{k} elements; grid step " + " ".join(f"{s_}:{c}" for s_, c in sorted(steps.items()))
 
 
-def run(lib, out, theme=1, only=None, tag="", legacy=False):
+def run(lib, out, theme=1, only=None, tag="", legacy=False, opacity_on=True):
     from PIL import Image
     out = pathlib.Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    rows, screens = [], {}
+    rows, screens, holes = [], {}, []
     _MEMO.clear()
+    _WMEMO.clear()
     for el in elements(legacy):
         if only and el.name not in only and el.screen not in only:
             continue
@@ -454,6 +427,14 @@ def run(lib, out, theme=1, only=None, tag="", legacy=False):
                 rows.append((el.name, el.screen, s, m))
                 print(f"{el.name:18s} x{s:<4} w8 {m['w8']:.3f} dE {m['de_mean']:.2f} p95 {m['de_p95']:.1f}  w4 {m['w4']:.3f} w16 {m['w16']:.3f}",
                       flush=True)
+        # P40E: the opacity check (holes: window pixels over the art's interior where the world shows)
+        rec["holes"] = {}
+        for s in (OPACITY_SCALES if opacity_on else ()):
+            n, worst, fmap, _ = opacity(lib, el, theme, s)
+            rec["holes"][s] = fmap
+            pos = [(int(x), int(y)) for y, x in zip(*np.nonzero(fmap))]
+            holes.append((el.name, el.screen, s, n, worst, int(fmap.sum()), pos))
+            print(f"{el.name:18s} x{s:<6.4g} holes {n:6d} (frame px {int(fmap.sum()):5d}) min weight {worst:.3f}", flush=True)
         screens.setdefault(el.screen, []).append(rec)
     # per screen: the pixels of its elements together
     for scr, recs in screens.items():
@@ -469,6 +450,14 @@ def run(lib, out, theme=1, only=None, tag="", legacy=False):
         for name, scr, s, m in rows:
             ok = "PASS" if m["w8"] >= 0.97 and m["de_mean"] < 2.0 else "FAIL"
             f.write(f"{name}\t{scr}\t{s}\t" + "\t".join(f"{m[c]:.4f}" if c != "n" else str(m[c]) for c in COLS) + f"\t{ok}\t{m['grid']}\n")
+    if holes:
+        # P40E: one row per element and scale: the window pixels over the art's interior with element weight < HOLE_W, the frame
+        # pixels holding them, the lowest weight there, and the first 40 frame positions (x,y)
+        with open(out / "opacity.tsv", "w", encoding="utf-8") as f:
+            f.write("element\tscreen\tscale\thole_window_px\thole_frame_px\tmin_weight\tresult\tpositions\n")
+            for name, scr, s, n, worst, nf, pos in holes:
+                f.write(f"{name}\t{scr}\t{s:.4f}\t{n}\t{nf}\t{worst:.4f}\t{'PASS' if n == 0 else 'FAIL'}\t"
+                        + " ".join(f"{x},{y}" for x, y in pos[:40]) + "\n")
     # pictures per screen
     for scr, recs in screens.items():
         W = max(r["el"].pos[0] + r["el"].w for r in recs)
@@ -489,6 +478,18 @@ def run(lib, out, theme=1, only=None, tag="", legacy=False):
             bot = np.concatenate([heats[1], heats[2], np.zeros_like(art_c)], axis=1)
             top = np.concatenate([top, bot], axis=0)
         Image.fromarray(top).save(out / f"{scr}.png")
+        if opacity_on:   # P40E: the hole map per scale: the art dimmed, each frame pixel holding a hole red
+            tiles = []
+            for s in OPACITY_SCALES:
+                c = (art_c.astype(np.float64) * 0.45).astype(np.uint8)
+                for r in recs:
+                    x, y = r["el"].pos
+                    fm = r["holes"].get(s)
+                    if fm is not None and fm.any():
+                        c[y:y + r["el"].h, x:x + r["el"].w][fm] = (255, 0, 0)
+                _label(c, f"{scr} holes x{s:.4g}")
+                tiles.append(c)
+            Image.fromarray(np.concatenate(tiles, axis=1)).save(out / f"{scr}_holes.png")
         # the 4K side-by-side of the screen: art 3.6x nearest | theme at 4K (its window render, not downsampled)
         if W * H <= 800 * 620 and 3.6 in SCALES:
             s = 3.6
@@ -536,27 +537,166 @@ def run(lib, out, theme=1, only=None, tag="", legacy=False):
     return rows
 
 
-def window_picture(lib, el, theme, s):
-    """the theme's window render at scale s as the player sees it (8-bit, over the background, kept pixels from the frame)"""
+def bilinear(img, H, W, s):
+    """the frame picture (h, w, c) scaled to (H, W) as the presenter's smooth filter does (port/app/present.cpp, P5B item 4): each
+    window pixel centre mapped to ((k + 0.5) / s - 0.5) frame pixels, the four neighbours weighted, the edge row / column repeated"""
+    h, w = img.shape[:2]
+    def axis(n_out, n_in):
+        u = (np.arange(n_out) + 0.5) / s - 0.5
+        u = np.clip(u, 0, n_in - 1)
+        i0 = np.floor(u).astype(int)
+        i1 = np.minimum(i0 + 1, n_in - 1)
+        return i0, i1, (u - i0)
+    y0, y1, fy = axis(H, h)
+    x0, x1, fx = axis(W, w)
+    top = img[y0][:, x0] * (1 - fx)[None, :, None] + img[y0][:, x1] * fx[None, :, None]
+    bot = img[y1][:, x0] * (1 - fx)[None, :, None] + img[y1][:, x1] * fx[None, :, None]
+    return top * (1 - fy)[:, None, None] + bot * fy[:, None, None]
+
+
+_WMEMO: dict = {}
+
+
+OVERDRAW_WORD = 0x7C1F   # P40E: what the game draws over a panel after its run (a tool tile, an icon), an opaque magenta
+
+
+def overdraw_blocks(el):
+    """P40E: 4 x 4 blocks inside the art's interior (with a pixel of interior round them), one every 37 columns and 29 rows: the
+    places where the model lets the game draw over the panel after its run"""
+    inn = interior(el)
+    od = np.zeros((el.h, el.w), bool)
+    for y in range(9, el.h - 6, 29):
+        for x in range(9, el.w - 6, 37):
+            if inn[y - 1:y + 5, x - 1:x + 5].all():
+                od[y:y + 4, x:x + 4] = True
+    return od
+
+
+def peel_keep(lib, el, theme):
+    """the cell's pixels the peel leaves holding the run's words (holestats.uiCellPeel = gfx_ui.h ui_run_opaque over the cell's
+    encoded scene); all False for a hand scene (P40's legacy scenes), a DLL without the entry, or under gfx.family.ui 4 / 5"""
+    if el.kind != "cell" or not lib.has("holestats.uiCellPeel"):
+        return np.zeros((el.h, el.w), bool)
+    with lib.state() as st:
+        st.map(IN_VA, _page(np.ascontiguousarray(el.idx).tobytes()), readonly=True)
+        st.map(IN_VA + 0x400000, _page(np.ascontiguousarray(el.msk).tobytes()), readonly=True)
+        st.map(IN_VA + 0x800000, _page(el.pal.astype(np.uint16).tobytes()), readonly=True)
+        out = (C.c_uint8 * (((el.w * el.h) + 0xFFF) & ~0xFFF))()
+        st.map(OUT_VA, out)
+        n = st.call("holestats.uiCellPeel", [IN_VA, IN_VA + 0x800000, IN_VA + 0x400000, el.w | el.h << 16,
+                                            theme | (0x100 if el.border_only else 0), OUT_VA]).eax
+        m = np.frombuffer(bytes(out)[:el.w * el.h], dtype=np.uint8).reshape(el.h, el.w).astype(bool)
+    return m if n else np.zeros((el.h, el.w), bool)
+
+
+def window_model(lib, el, theme, s, overdraw=False):
+    """P40E: the element as the presenter shows it at scale s over the world (the background BG), non-layered path (textres.cpp
+    TextRaster::draw over the frame the backend publishes, gfx.cpp peel_kept):
+      frame   the 800 x 600 root's words after the draw (the scene at scale 1 over the world, then the pixels blitted after the run,
+              then with `overdraw` the game's later draws over the panel, overdraw_blocks)
+      vis     the frame pixels where the run shows: covered by its scale-1 drawing and still holding its words (keep == 2, the pixels
+              negative control 4 blits from the art after the run, and the later draws break the chain)
+      canvas  the published frame: the run peeled off (its visible pixels back to the world's word, except where the peel keeps the
+              run's opaque inside: peel_keep, gfx.h GfxTextPeelRun::keep, P40E), scaled bilinearly
+      win     the run's window render over the canvas word (5 bits per channel, TextRaster's per-level entries) wherever the window
+              pixel's frame pixel (floor mapping) is visible, else the canvas
+      weight  how much of each window pixel is the element and not the world behind it (1 = opaque): the run's coverage plus the
+              rest times the canvas's share of element pixels (the peeled pixels are world, the blitted ones element)"""
+    key = (id(el), theme, s, overdraw)
+    if key in _WMEMO:
+        return _WMEMO[key]
+    if len(_WMEMO) > 8:
+        _WMEMO.clear()
     bgw = np.full((el.h, el.w), w555(BG), np.int32)
     if el.kind == "cell":
         px, keep = render_cell(lib, el.idx, el.msk, el.pal, theme, s, el.border_only)
         one, _ = render_cell(lib, el.idx, el.msk, el.pal, theme, 1.0, el.border_only)
-        if px is None:
-            return np.zeros((int(math.ceil(el.h * s)), int(math.ceil(el.w * s)), 3), np.uint8)
     else:
         which, x, y, hov = el.scene
         box = (x if which == 3 else 0, y if which != 0 else 0, el.w, el.h)
         px = render_scene(lib, which, theme, x, y, hov, s, box)
         one = render_scene(lib, which, theme, x, y, hov, 1.0, box)
         keep = np.zeros((el.h, el.w), np.uint8)
-    kept = keep.astype(bool) & (el.idx < 0xFF) & (el.msk < 0xFF)
-    fw, _ = blit_words(over555(one, bgw), el.pal, np.where(kept, el.idx, 0xFF).astype(np.uint8), el.msk)
+    one = one[:el.h, :el.w]
+    blit = ((keep == 2) | ((keep == 1) & KEPT_BLIT)) & (el.idx < 0xFF) & (el.msk < 0xFF)
+    frame, _ = blit_words(over555(one, bgw), el.pal, np.where(blit, el.idx, 0xFF).astype(np.uint8), el.msk)
+    a1 = one[..., 3]
+    od = overdraw_blocks(el) if overdraw else np.zeros((el.h, el.w), bool)
+    frame = np.where(od, OVERDRAW_WORD, frame)
+    cover = (a1 > 0) | blit | od
+    vis = (a1 > 0) & ~blit & ~od
+    peeled = np.where(vis & ~peel_keep(lib, el, theme), bgw, frame)
+    H, W = int(math.ceil(el.h * s - 1e-6)), int(math.ceil(el.w * s - 1e-6))
+    px = px[:H, :W]
     H, W = px.shape[:2]
-    yy = np.minimum((np.arange(H) / s).astype(int), el.h - 1)
-    xx = np.minimum((np.arange(W) / s).astype(int), el.w - 1)
-    win = np.where(kept[yy][:, xx], fw[yy][:, xx], over555(px, np.full((H, W), w555(BG), np.int32)))
-    return np.clip(expand(win), 0, 255).astype(np.uint8)
+    # the element's share of each frame pixel in the published frame: the scale-1 coverage where the run does not show, 0 where it
+    # was peeled (the world)
+    share = np.where(vis, np.where(peeled == frame, 1.0, 0.0), np.where(blit | od, 1.0, a1))
+    if s == 1.0:
+        out = {"frame": frame, "cover": cover, "win": expand(frame), "weight": np.where(vis, a1, share), "vis": vis}
+        _WMEMO[key] = out
+        return out
+    canvas = bilinear(expand(peeled)[..., :3], H, W, s)
+    cshare = bilinear(share[..., None], H, W, s)[..., 0]
+    yy = np.minimum(np.floor(np.arange(H) / s).astype(int), el.h - 1)
+    xx = np.minimum(np.floor(np.arange(W) / s).astype(int), el.w - 1)
+    drawn = vis[yy][:, xx]
+    cq = expand(np.clip(np.floor(canvas / 8.0), 0, 31).astype(np.int32) @ np.array([1024, 32, 1]))   # TextRaster: the canvas as a 555 word
+    run = px[..., :3] + (1.0 - px[..., 3:4]) * cq
+    run = expand(np.floor(np.clip(run, 0, 255) * 31.0 / 255.0 + 0.5).astype(np.int32) @ np.array([1024, 32, 1]))
+    win = np.where(drawn[..., None], run, canvas)
+    weight = np.where(drawn, px[..., 3] + (1.0 - px[..., 3]) * cshare, cshare)
+    out = {"frame": frame, "cover": cover, "win": win, "weight": weight, "vis": vis}
+    _WMEMO[key] = out
+    return out
+
+
+def interior(el):
+    """the art's interior opaque pixels: opaque (mask 0) with all 8 neighbours opaque (a cell's edge continues: its rows and
+    columns are repeated past it). A window pixel over one of them must show the element alone"""
+    op = (el.idx < 0xFF) & (el.msk == 0)
+    p = np.pad(op, 1, mode="edge")
+    out = op.copy()
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            out &= p[1 + dy:1 + dy + el.h, 1 + dx:1 + dx + el.w]
+    return out
+
+
+KEPT_BLIT = False   # --kept-blit: a DLL before P40E (keep 1 = blitted from the art after the run)
+HOLE_W = 0.99   # a window pixel over the art's interior whose element weight is below this shows the world (a hole)
+
+
+def opacity(lib, el, theme, s, overdraw=True):
+    """P40E: the holes of the element at scale s: the window pixels over the art's interior opaque pixels whose element weight is
+    under HOLE_W, with the game drawing over the panel after its run (overdraw_blocks) unless overdraw is False. Returns (count,
+    worst weight, the frame pixels holding a hole (bool map), the window weight map)"""
+    m = window_model(lib, el, theme, s, overdraw)
+    inn = interior(el)
+    w = m["weight"]
+    H, W = w.shape
+    if s == 1.0:
+        hole = inn & (w < HOLE_W)
+        return int(hole.sum()), float(w[inn].min()) if inn.any() else 1.0, hole, w
+    yy = np.minimum(np.floor(np.arange(H) / s).astype(int), el.h - 1)
+    xx = np.minimum(np.floor(np.arange(W) / s).astype(int), el.w - 1)
+    # a window pixel counts when the whole of it lies over interior frame pixels (its two ends' frame pixels both interior)
+    yy1 = np.minimum(np.floor((np.arange(H) + 1 - 1e-6) / s).astype(int), el.h - 1)
+    xx1 = np.minimum(np.floor((np.arange(W) + 1 - 1e-6) / s).astype(int), el.w - 1)
+    over = inn[yy][:, xx] & inn[yy1][:, xx1] & inn[yy][:, xx1] & inn[yy1][:, xx]
+    hw = over & (w < HOLE_W)
+    fmap = np.zeros((el.h, el.w), bool)
+    if hw.any():
+        ys, xs = np.nonzero(hw)
+        fmap[yy[ys], xx[xs]] = True
+    return int(hw.sum()), float(w[over].min()) if over.any() else 1.0, fmap, w
+
+
+def window_picture(lib, el, theme, s):
+    """the theme's window render at scale s as the player sees it (8-bit, over the background; P40E: window_model)"""
+    if el.kind == "cell" and render_cell(lib, el.idx, el.msk, el.pal, theme, 1.0, el.border_only)[0] is None:
+        return np.zeros((int(math.ceil(el.h * s)), int(math.ceil(el.w * s)), 3), np.uint8)
+    return np.clip(window_model(lib, el, theme, s)["win"], 0, 255).astype(np.uint8)
 
 
 def _label(tile, text):
@@ -579,6 +719,9 @@ def main(argv):
     ap.add_argument("--scales", default="1,1.8,3.6", help="the scales measured (the pictures at 4K need 3.6)")
     ap.add_argument("--tune", default="", help="k=v,...: holestats.uiTune(k, v) first (gfx_ui.h ui_tune: 0 edge margin, 1 grid step, 2 smoothing)")
     ap.add_argument("--legacy", action="store_true", help="the Hole Stats screen and the OK button as P40's hand scenes (before P40D)")
+    ap.add_argument("--negctl", type=int, default=0, help="P40E: sg_negctl_set gfx.family.ui to this mode first (4: the kept pixels blitted after the run)")
+    ap.add_argument("--kept-blit", action="store_true", help="a DLL before P40E: its kept pixels are blitted after the run")
+    ap.add_argument("--no-opacity", action="store_true", help="skip the P40E opacity check")
     a = ap.parse_args(argv)
     global SCALES
     SCALES = tuple(float(v) for v in a.scales.split(","))
@@ -587,7 +730,11 @@ def main(argv):
         k, v = kv.split("=")
         with lib.state() as st:
             st.call("holestats.uiTune", [int(k), int(round(float(v) * 1000)) & 0xFFFFFFFF])
-    run(lib, a.out, a.theme, set(filter(None, a.only.split(","))), a.tag, a.legacy)
+    global KEPT_BLIT
+    KEPT_BLIT = a.kept_blit
+    if a.negctl:
+        lib.negctl("gfx.family.ui", a.negctl)
+    run(lib, a.out, a.theme, set(filter(None, a.only.split(","))), a.tag, a.legacy, not a.no_opacity)
 
 
 if __name__ == "__main__":

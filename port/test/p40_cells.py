@@ -135,7 +135,7 @@ def main(argv):
         g, keep, col, msk, rgb = cell_render(lib, cell, 1, 1)
         s, *_ = cell_render(lib, cell, 2, 1)
         art = np.where(((col != 0xFF) & (msk != 0xFF))[..., None], rgb, 255 * np.array([1.0, 0, 1.0]))
-        shown = (keep == 1) & (col != 0xFF) & (msk != 0xFF)   # the game draws the kept pixels from the art over the scene
+        shown = (keep == 2) & (col != 0xFF) & (msk != 0xFF)   # (P40E: only negctl 4 blits kept pixels after the scene)
         row = np.concatenate([art, np.where(shown[..., None], rgb, over_art_alpha(g)), np.where(shown[..., None], rgb, over_art_alpha(s))], axis=1)
         Image.fromarray(row.clip(0, 255).astype(np.uint8)).save(out / f"{name}.png")
         f, n = fidelity(lib, cell)

@@ -63,6 +63,14 @@ struct UiRender {
     if (lx < fx0 || ly < fy0 || lx >= fx0 + fw || ly >= fy0 + fh) return false;
     return cover[static_cast<size_t>(ly - fy0) * static_cast<size_t>(fw) + static_cast<size_t>(lx - fx0)] != 0;
   }
+  // P41W (TextRaster::set_true_colour): the window-scale render, premultiplied, 8 bits per channel (0xAARRGGBB, A = coverage), and
+  // the cover grown by one frame pixel
+  std::vector<uint32_t> prem8;
+  std::vector<uint8_t> near_cover;
+  bool covered_near(int32_t lx, int32_t ly) const {
+    if (lx < fx0 || ly < fy0 || lx >= fx0 + fw || ly >= fy0 + fh) return false;
+    return near_cover[static_cast<size_t>(ly - fy0) * static_cast<size_t>(fw) + static_cast<size_t>(lx - fx0)] != 0;
+  }
 };
 struct UiBox {
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the run's pixels in canvas coordinates (inside the canvas and the render)
@@ -80,10 +88,9 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
     key.append(reinterpret_cast<const char *>(&v), sizeof v);
   auto it = cache.find(key);
   if (it == cache.end()) {
-    portsim::UiScene sc;
-    if (!portsim::ui_decode(r.text, sc)) return nullptr;
+    // P41: the run's text is an encoded UiScene or names a uivec scene (gfx_ui.h ui_run_bounds / ui_run_render)
     float fx0, fy0, fx1, fy1;
-    portsim::ui_bounds(sc, fx0, fy0, fx1, fy1);
+    if (!portsim::ui_run_bounds(r.text, fx0, fy0, fx1, fy1)) return nullptr;
     UiRender u;
     u.x0 = first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW);   // origin-0 client coordinates
     u.y0 = first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH);
@@ -91,16 +98,31 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
     const int32_t y1 = first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH);
     u.w = std::max(0, x1 - u.x0);
     u.h = std::max(0, y1 - u.y0);
-    portsim::ui_render(sc, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH, 0.0, 0.0,
-                       u.x0, u.y0, u.w, u.h, u.prem);
+    portsim::ui_run_render(r.text, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH, 0.0,
+                           0.0, u.x0, u.y0, u.w, u.h, u.prem);
     u.fx0 = static_cast<int32_t>(std::floor(fx0));
     u.fy0 = static_cast<int32_t>(std::floor(fy0));
     u.fw = std::max(0, static_cast<int32_t>(std::ceil(fx1)) - u.fx0);
     u.fh = std::max(0, static_cast<int32_t>(std::ceil(fy1)) - u.fy0);
     std::vector<float> one;
-    portsim::ui_render(sc, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp draw_scene)
+    portsim::ui_run_render(r.text, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp)
     u.cover.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
     for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = one[4 * i + 3] > 0.f ? 1 : 0;
+    u.near_cover.assign(u.cover.size(), 0);
+    for (int32_t y = 0; y < u.fh; ++y)
+      for (int32_t x = 0; x < u.fw; ++x) {
+        bool any = false;
+        for (int32_t j = std::max(0, y - 1); j <= std::min(u.fh - 1, y + 1) && !any; ++j)
+          for (int32_t i = std::max(0, x - 1); i <= std::min(u.fw - 1, x + 1) && !any; ++i)
+            any = u.cover[static_cast<size_t>(j) * static_cast<size_t>(u.fw) + static_cast<size_t>(i)] != 0;
+        u.near_cover[static_cast<size_t>(y) * static_cast<size_t>(u.fw) + static_cast<size_t>(x)] = any ? 1 : 0;
+      }
+    u.prem8.assign(static_cast<size_t>(u.w) * static_cast<size_t>(u.h), 0);
+    for (size_t i = 0; i < u.prem8.size(); ++i) {
+      const float *q = u.prem.data() + i * 4u;
+      auto b8 = [](float v) { return static_cast<uint32_t>(std::min(255.f, std::max(0.f, v + 0.5f))); };
+      u.prem8[i] = b8(q[3] * 255.f) << 24 | b8(q[0]) << 16 | b8(q[1]) << 8 | b8(q[2]);
+    }
     // the entries: pixels of one premultiplied value share one (memo), entries of equal words are one (ids)
     u.ent.assign(static_cast<size_t>(u.w) * static_cast<size_t>(u.h), 0);
     std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;
@@ -175,6 +197,23 @@ bool ui_visible(const portsim::GfxTextRun &r, const UiRender &u, bool layered, i
   return u.covered(lx, ly) && r.visible(lx, ly, layered) != 0;
 }
 }  // namespace
+
+bool TextRaster::ui_cover(const portsim::GfxTextRun &r, int32_t &fx0, int32_t &fy0, int32_t &fw, int32_t &fh, const uint8_t *&cover) {
+  if (!portsim::ui_is_run_face(r.face)) return false;
+  // the cover does not depend on the viewport: any prepared one serves (the 800 x 600 one is the smallest)
+  UiBox b;
+  Viewport v;
+  v.client_w = kLogicalW;
+  v.client_h = kLogicalH;
+  const UiRender *u = ui_prepare(r, v, 0, kLogicalW, kLogicalH, b);
+  if (!u) return false;
+  fx0 = u->fx0;
+  fy0 = u->fy0;
+  fw = u->fw;
+  fh = u->fh;
+  cover = u->cover.data();
+  return true;
+}
 
 #ifdef _WIN32
 struct TextRaster::Impl {
@@ -440,6 +479,22 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return;
+    if (true_colour_) {  // P41W: the premultiplied colour over the window's own word, 8 bits per channel
+      for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y)
+        for (int32_t x = b.x0 - b.ox; x < b.x1 - b.ox; ++x) {
+          const uint32_t p = u->prem8[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];
+          const uint32_t a = p >> 24;
+          if (a == 0) continue;
+          const int32_t lx = u->lxs[static_cast<size_t>(x)], ly = u->lys[static_cast<size_t>(y)];
+          if (!u->covered_near(lx, ly) || r.visible(lx, ly, layered) == 0) continue;
+          uint32_t &o = out[static_cast<size_t>(b.oy + y) * static_cast<size_t>(cw) + static_cast<size_t>(b.ox + x)];
+          const uint32_t k = 255 - a;
+          auto ch8 = [&](int sh) { return std::min<uint32_t>(255, ((p >> sh) & 255) + (((o >> sh) & 255) * k + 127) / 255); };
+          o = 0xff000000u | ch8(16) << 16 | ch8(8) << 8 | ch8(0);
+        }
+      ++stats.runs;
+      return;
+    }
     for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y)
       for (int32_t x = b.x0 - b.ox; x < b.x1 - b.ox; ++x) {
         const uint32_t e = u->ent[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];

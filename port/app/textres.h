@@ -72,6 +72,14 @@ class TextRaster {
   // ink rows measured once per string: Impl::ink). Off = P9C: TextOutA at the scaled origin with the window-resolution font's
   // own advances and baseline (the string up to a few percent narrower or wider than its box, its ink 1-2 px higher).
   void set_fit(bool on) { fit_ = on; }
+  // P41W (portsim/sim/gfx_uvwide.h): UI runs composed in 8 bits per channel over the BGRA words under them (the window's own
+  // colours: the wide backdrop), each pixel the scene's premultiplied colour over the word, instead of the 5-bit tables; drawn where
+  // the run's frame pixel or one of its 8 neighbours is covered by its scale-1 drawing (the bilinear edge of a picture run reaches
+  // half a frame pixel past its 1x cover) and visible
+  void set_true_colour(bool on) { true_colour_ = on; }
+  // P41W: UI run `r`'s scale-1 cover (the frame pixels its drawing covers: fw x fh bytes from frame pixel (fx0, fy0), 1 = covered);
+  // false for another run. The pointer stays valid until the next call of this raster.
+  bool ui_cover(const portsim::GfxTextRun &r, int32_t &fx0, int32_t &fy0, int32_t &fw, int32_t &fh, const uint8_t *&cover);
   // run `r` into `out` (cw x ch BGRA words, rows top-down) through the content rectangle vp, shifted right by dx client pixels;
   // `layered` reads the run's layer visibility (GfxTextRun::vis_layer) instead of the back buffer's (vis)
   void draw(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, std::vector<uint32_t> &out, int32_t cw,
@@ -94,6 +102,7 @@ class TextRaster {
   TextDefect defect_ = TextDefect::None;
   TextAa aa_ = TextAa::System;
   bool fit_ = false;
+  bool true_colour_ = false;
 };
 
 }  // namespace portapp

@@ -53,6 +53,7 @@
 
 #include "commands_internal.h"
 #include "gfx_body.h"
+#include "portsim/sim/gfx_ui.h"  // P41W: ui_wide_overlay
 #include "portsim/sim/bridge.h"  // P22D fix 2: view_list_columns
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
@@ -1150,7 +1151,13 @@ void draw_scaled_blend(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t alpha, int32
     }
   }
 }
-void b_draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_scaled(g, ctx, a, a[4], a[5], a[6], a[7], "Surface_drawScaled"); }
+void b_draw_scaled(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g.ui_pilot != 0 && g.uw_screen >= 0 && a[4] == 1 && a[5] == 1 && a[6] == 1 && a[7] == 0) {   // P41W (gfx_ui.h): an overlay cell
+    const uint32_t d[5] = {a[0], a[1], a[2], a[3], 0};
+    if (ui_wide_overlay(g, ctx, d)) return;
+  }
+  draw_scaled(g, ctx, a, a[4], a[5], a[6], a[7], "Surface_drawScaled");
+}
 void b_draw_scaled_421b60(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   draw_scaled(g, ctx, a, a[4], a[4], a[5], a[6], "drawScaledSprite421b60");
 }

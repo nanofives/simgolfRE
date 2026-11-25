@@ -15,6 +15,7 @@
 
 #include <array>  // P12A fix 2
 #include <cstdint>
+#include <functional>  // P41W (set_repaint)
 #include <map>  // P19A (objects_start)
 #include <memory>
 #include <mutex>
@@ -571,6 +572,16 @@ class Presenter {
   // `hwnd`). gpu_start: false = the CPU path stays (`why` says why). The GPU path draws what Presenter::render would draw at the same
   // state: the integer pixel rules on the GPU, GDI text / tee lines / the overlay as CPU patches (render restricted to rectangles).
   bool gpu_start(void *hwnd, std::string &why);
+  // P41W (portsim/sim/gfx_uvwide.h, log/roadmap/P41/portwide/notes.md): a frame that carries a wide front-end backdrop
+  // (GfxTextFrame::backdrop) is drawn as that backdrop over the whole client at the client's resolution in 8 bits per channel, the
+  // frame's own pixels only where they are neither the backdrop's 1x words nor a UI run's (the bilinear scaling of those alone),
+  // and the runs over it (UI runs composed in 8 bits). The backdrop is rendered once per screen and client size: a client of more
+  // than 1.1 M pixels first shows a quick render at half a pixel per frame unit, upsampled, and a worker thread renders the full
+  // one, then calls `repaint` (from that thread) so the window paints again. Narrower than 4:3: the letterbox rows stay black.
+  void set_repaint(std::function<void()> f) { repaint_ = std::move(f); }
+  bool wide_backdrop_now(int32_t cw, int32_t ch) const;  // this client's paint takes the backdrop path
+  uint64_t wide_backdrop_serial() const;                 // changes when the backdrop picture shown changes (GPU patch key)
+  std::string wide_backdrop_json() const;                // session.json p41w: the screen, the level shown, the render times
   bool gpu_on() const;
   void gpu_stop();
   std::string gpu_json() const;  // session.json p14
@@ -714,6 +725,15 @@ class Presenter {
   mutable std::unique_ptr<TextRaster> raster_;
   const portsim::GfxHudFrame &hud_for(bool text) const;
   bool text_now(const Viewport &vp) const;  // the runs are drawn for this content rectangle
+  // P41W: render_impl's backdrop path (false: the frame has none, or it does not apply; nothing was drawn)
+  bool wide_backdrop(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp) const;
+  int32_t wide_backdrop_screen() const;
+  struct WideBd;
+  mutable std::shared_ptr<WideBd> wbd_;
+  std::function<void()> repaint_;
+  mutable std::vector<uint8_t> wbd_mask_;  // the frame pixels drawn from the frame (foreign), per content generation
+  mutable std::vector<uint8_t> wbd_rows_;
+  mutable uint64_t wbd_mask_gen_ = ~0ull;
   void draw_runs(std::vector<uint32_t> &out, int32_t cw, int32_t ch, const Viewport &vp, bool layered, int32_t layer,
                  int32_t dx) const;
   // P9E: the popups of the frame being composed (GfxHudFrame::pieces): each piece's client offset (0 = it stays centred), set by

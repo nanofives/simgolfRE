@@ -2049,6 +2049,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
     std::printf("GPU %s %s\n", on ? "on" : "off", why.c_str());
     std::fflush(stdout);
   }
+  // P41W (present.h set_repaint): a wide backdrop's full render finished on its worker: paint again
+  presenter.set_repaint([hwnd]() { InvalidateRect(hwnd, nullptr, FALSE); });
   session.set_window(hwnd, win.viewport());
   Options ow = o;  // P8B: the world layer's size from the window's client at the session's start (render_scale native), the
                    // wide width (render scale 1 with --wide) or the explicit size
@@ -2626,6 +2628,7 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   Profiler::get().close_csv();
   s += ",\"p14\":" + presenter.gpu_json();  // P14A
+  s += ",\"p41w\":" + presenter.wide_backdrop_json();  // P41W
   s += ",\"p35a_shaders\":" + portapp::shader_cache_json();  // P35A item 6
   s += ",\"p15c_objects\":" + presenter.objects_json();  // P15C
   s += ",\"p15\":" + session.world_thread_json();  // P15A

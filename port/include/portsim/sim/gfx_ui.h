@@ -20,6 +20,7 @@
 #define PORTSIM_SIM_GFX_UI_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -107,6 +108,11 @@ constexpr const char *kUiRunFace = "\x01p40ui";
 inline bool ui_is_run_face(const std::string &face) { return face == kUiRunFace; }
 std::string ui_encode(const UiScene &s);
 bool ui_decode(const std::string &text, UiScene &s);
+// P40E: the pixels of the frame box [x0, x1) x [y0, y1) that a UI run's scene (its text) covers wholly at scale 1 (coverage 1: 1,
+// else 0), row by row; the peel (gfx.h GfxTextPeelRun::keep) leaves them holding the run's words. Kept per scene and box (the panels
+// redraw the same scene every frame). Null for a text that is no scene, and under negative controls gfx.family.ui 4 and 5 (the peel
+// restores the world under the whole run, as before P40E).
+std::shared_ptr<const std::vector<uint8_t>> ui_run_opaque(const std::string &text, int32_t x0, int32_t y0, int32_t x1, int32_t y1);
 
 // The scene over the target pixels [px0, px0 + w) x [py0, py0 + h): target pixel (x, y) shows the frame point
 // ((x + 0.5 - ox) / sx, (y + 0.5 - oy) / sy), and lies in the clip when floor((x - ox) / sx) (likewise y) does (the presenter's
@@ -121,6 +127,11 @@ inline uint16_t ui_over_level(const float *p, uint32_t level) {
 }
 // the scene's bounding box in 800-space (elements, outlines, shadows), clipped
 void ui_bounds(const UiScene &s, float &x0, float &y0, float &x1, float &y1);
+// P41 (gfx_uivec.h): a UI run's text is an encoded UiScene (ui_encode) or names a uivec scene (uv_run_text, "uv:..."). These take
+// either: the scene's 800-space bounds and its render (ui_render's contract). False for a text that is neither.
+bool ui_run_bounds(const std::string &text, float &x0, float &y0, float &x1, float &y1);
+bool ui_run_render(const std::string &text, double sx, double sy, double ox, double oy, int32_t px0, int32_t py0, int32_t w,
+                   int32_t h, std::vector<float> &prem);
 
 // ---------------------------------------------------------------------------------------------------------- the themes
 struct UiTheme {
@@ -155,7 +166,10 @@ bool ui_test_scene(int32_t which, int32_t theme, int32_t x, int32_t y, int32_t h
 // ui_cell_scene builds a cell's scene from the user's art (the colour cell, its mask cell; relative to the cell's top-left):
 // the panel from the cell's opaque pixels as a distance field, each pill / cream box / white row as a fitted rounded
 // rectangle or ellipse (a field when no fit holds) with its dark outline, the dark lines inside as a field, coloured by the
-// theme; `keep` gets the pixels the scene does not draw (pictures, coloured marks: drawn from the art). False for an empty cell.
+// theme; `keep` gets the pixels kept as art (pictures, coloured marks). False for an empty cell. P40E: the kept pixels are the
+// scene's own picture element (their art colours, sampled edge-aware at the window's scale), so the scene's run covers every pixel
+// of the cell and nothing is drawn after it: keep = 1 where the picture draws, 0 elsewhere (a soft kept pixel is the region's under
+// it); 2 only under negative control gfx.family.ui 4 (blitted from the art after the run, as before P40E).
 // border_only (P40C, the HUD panels: painted slots and shading): only the panel's shape is drawn; every panel pixel farther than
 // 5 pixels from its edge, and every box, line and rim, is kept as art.
 // P40D: a theme with art_colours (game) takes the art-fitted engine instead (gfx_ui.cpp cell_scene_art): one region per class
@@ -165,6 +179,14 @@ bool ui_cell_scene(const uint8_t *colour, const uint16_t *pal, const uint8_t *ma
                    UiScene &out, std::vector<uint8_t> &keep, bool border_only = false);
 class Gfx;
 void ui_draw_scene(Gfx &g, Ctx &ctx, const UiScene &s);
+// P41: a uivec scene's run text (gfx_uivec.h uv_run_text) drawn into the root and kept as a UI run; false for another text
+bool ui_draw_uvec(Gfx &g, Ctx &ctx, const std::string &text);
+// P41W (gfx_uvwide.h): a full-screen Surface_blit3 (args as the body's) of a wide screen's background image onto the root drawn as
+// that screen's backdrop (its 1x render, Gfx::uw_screen set); any other full-screen copy clears uw_screen. False: not drawn here.
+bool ui_wide_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a);
+// P41W: an Image_draw (args sprite, surface, x, y, mask) of one of the shown wide screen's overlay cuts drawn as that overlay (a scene
+// or picture run moved by the draw point minus its place, or the backdrop's 1x pixels over the cut's rectangle). False: not one.
+bool ui_wide_overlay(Gfx &g, Ctx &ctx, const uint32_t *a);
 UiScene ui_button_scene(const UiTheme &t, int32_t x, int32_t y, bool hover);
 
 }  // namespace portsim

@@ -1508,6 +1508,7 @@ void Presenter::render_impl(int32_t cw, int32_t ch, std::vector<uint32_t> &out, 
   const Canvas C = cv_;  // P14A: client pixel (x, y) is out[(y - C.y0) * C.w + x - C.x0]
   out.assign(static_cast<size_t>(C.w) * static_cast<size_t>(C.h), 0xff000000u);
   if (frame_.empty() || cw <= 0 || ch <= 0 || C.w <= 0 || C.h <= 0) return;
+  if (wide_backdrop(out, cw, ch, vp)) return;  // P41W (present_wide.cpp): a front-end screen's wide backdrop
   const bool side = C.full && !quiet_;  // P14A: the scene kept for the slide and the remap only from a paint of the whole client
   // P9B: with the frame's HUD layers the scaled image is the layers' base (the root before the first panel drew); the layers
   // are composed over it in compose_layers

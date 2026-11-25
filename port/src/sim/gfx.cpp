@@ -46,6 +46,7 @@
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
 #include "portsim/sim/gfx_ui.h"  // P40: ui_is_run_face
+#include "portsim/sim/gfx_uvwide.h"  // P41W: the frame's wide backdrop
 #include "portsim/sim/perf.h"  // P10A: the drawing's wall time for the host's profiler
 
 namespace portsim {
@@ -215,7 +216,9 @@ int load_image_named(Gfx &g, Ctx &ctx, std::string name, uint32_t pal, int32_t o
   if (!dot) name += vstring(ctx.mem, state_va(ctx, &GameState::f_strpool_4e4218) + 0x1c);   // ".pcx"
   if (!ctx.files().exists(name)) return 6;
   const std::vector<uint8_t> data = ctx.files().read_all(name);
-  return decode_pcx8(g, data, ofs, count, (flags & 3) != 0 || pal != 0, img);   // loadImageData gets the palette in use
+  const int rc = decode_pcx8(g, data, ofs, count, (flags & 3) != 0 || pal != 0, img);   // loadImageData gets the palette in use
+  img.name = rc == 0 ? GameFiles::normalize(name) : std::string();   // P41W (gfx_uvwide.h: a front-end screen's background)
+  return rc;
 }
 
 // cropSprite(this, src, x, y, w, h, kind, trim) (c3ee.cpp CropSprite_re), reached through Surface_blit; the source must be
@@ -398,6 +401,7 @@ void copy8(const Image8 &s, Surface16 &d, int32_t x, int32_t y, int32_t w, int32
 // of this's rectangle onto dst's. Modelled: an 8-bit image onto the root surface at the same size (a copy through the
 // image's colour table, which GDI converts to RGB555 by the same truncation as Palette::apply).
 static void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g.ui_pilot != 0 && ui_wide_backdrop(g, ctx, a)) return;   // P41W (gfx_ui.h): a front-end screen's wide backdrop
   g.ensure_root(ctx);
   auto it = g.images.find(a[0]);
   if (it == g.images.end() || a[1] != g.root_va(ctx) || a[4] != a[8] || a[5] != a[9]) {
@@ -416,6 +420,7 @@ static void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // display's scale triple, (1, 1, 1) unless Display::setScale changed it (any other scale is reported; it is restored to 1 by every
 // caller the menu reaches), through Sprite::drawB -> draw16_1001bc40 for an 8-bit sprite on the 16-bit root surface.
 static void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g.ui_pilot != 0 && g.uw_screen >= 0 && ui_wide_overlay(g, ctx, a)) return;   // P41W (gfx_ui.h): a wide screen's overlay
   g.ensure_root(ctx);
   // the display's blit scale (Display::setScale, gfx_prim_fill.cpp; roadmap S2.4): drawB's blitters scale by nx / den and
   // ny / den, which the backend does not model
@@ -896,6 +901,7 @@ std::vector<GfxTextPeelRun> peel_runs(const std::vector<Gfx::TextCapture::Run> &
     p.before = r.before.data();
     p.after = r.after.data();
     p.solid = ui_is_run_face(r.info.face);  // P40: a UI run's fill shows whole (no witness rule)
+    if (p.solid) p.keep = ui_run_opaque(r.info.text, p.x0, p.y0, p.x1, p.y1);   // P40E
     out.push_back(p);
   }
   return out;
@@ -1103,6 +1109,16 @@ static void text_publish(Gfx &g, const GfxHudFrame *hud) {
   }
   // the wide scene's world runs (beside the frame's columns), first: they are drawn over the world, under everything else
   if (g.back_terrain && !c.wide_published.empty()) f.runs.insert(f.runs.begin(), c.wide_published.begin(), c.wide_published.end());
+  // P41W (gfx_uvwide.h): the wide front-end backdrop the back buffer shows, while at least a quarter of it still holds the
+  // backdrop's 1x words (a screen drawn over the whole root ends it)
+  if (g.uw_screen >= 0) {
+    const auto bd = uw_frame555(g.uw_screen);
+    size_t same = 0;
+    if (bd && bd->size() == g.back.px.size())
+      for (size_t i = 0; i < bd->size(); ++i) same += (*bd)[i] == g.back.px[i];
+    if (bd && same * 4 >= bd->size()) f.backdrop = uw_screen_name(g.uw_screen);
+    else g.uw_screen = -1;
+  }
   c.stats.published = f.runs.size();
   ++c.stats.frames;
   c.published = std::move(f);
@@ -1716,7 +1732,7 @@ void gfx_text_peel(std::vector<uint16_t> &img, int32_t w, int32_t h, const std::
       for (int32_t x = std::max(r.x0, 0); x < std::min(r.x1, w); ++x) {
         const size_t i = static_cast<size_t>(y) * static_cast<size_t>(w) + static_cast<size_t>(x);
         const size_t j = static_cast<size_t>(y - r.y0) * static_cast<size_t>(bw) + static_cast<size_t>(x - r.x0);
-        if (v[j]) img[i] = r.before[j];
+        if (v[j] && !(r.keep && j < r.keep->size() && (*r.keep)[j])) img[i] = r.before[j];   // (P40E: a UI run's inside stays)
       }
   }
 }
@@ -1909,6 +1925,10 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // Surface_fillRegion(this, s, x, y, w, h) (c3h.cpp SurfaceFillRegion_re): this's handle slot +0x40 (Surface::stretchTo) with
 // the rectangle (x, y, x + w, y + h) as source and destination: a 1:1 copy of an 8-bit image's rectangle onto the root surface
 static void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  if (g.ui_pilot != 0 && a[2] == 0 && a[3] == 0 && a[4] == 800 && a[5] == 600) {   // P41W: the world map's whole background
+    const uint32_t b3[10] = {a[0], a[1], 0, 0, 800, 600, 0, 0, 800, 600};
+    if (ui_wide_backdrop(g, ctx, b3)) return;
+  }
   g.ensure_root(ctx);
   auto it = g.images.find(a[0]);
   if (it == g.images.end() || a[1] != g.root_va(ctx)) {

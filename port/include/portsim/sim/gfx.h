@@ -652,7 +652,10 @@ struct GfxTextFrame {
   std::vector<uint16_t> base_clean;  // layered: the HUD frame's base the same way (empty = no layers this frame)
   std::vector<GfxTextLayerPatch> patches;  // layered: the layer pixels the peel changed
   std::vector<GfxTextRun> runs;      // draw order (the root's, then the window targets')
-  bool empty() const { return runs.empty(); }
+  // P41W (gfx_uvwide.h): the wide front-end screen whose backdrop the frame shows (uw_screen_name; empty: none). The presenter
+  // draws it over the whole window at the window's resolution and the frame's pixels only where they are not the backdrop's.
+  std::string backdrop;
+  bool empty() const { return runs.empty() && backdrop.empty(); }
 };
 // the patched-transparent marker of GfxTextLayerPatch (kind 0, k 0xff): the layer drew there (a glyph), so a click there is the
 // layer's (PanelRemap coverage), but nothing of it shows once the glyph is removed
@@ -666,6 +669,12 @@ struct GfxTextPeelRun {
   // P40 (gfx_ui.h): a UI run (a filled shape, not glyphs): every box pixel holding its after word shows it; the witness rule
   // below is for glyphs and would hide the inside of a flat fill farther than kGfxTextPeelSpread from a colour change
   bool solid = false;
+  // P40E: a UI run's box pixels the peel leaves holding the run's words (1 = keep; gfx_ui.h ui_run_opaque: the pixels its scale-1
+  // drawing covers wholly). The run is still visible there (the presenter draws it at the window's resolution), but the frame under
+  // that render keeps the run's own picture instead of the world: a pixel the game draws over the panel later (a tool tile, an icon)
+  // is not the run's, keeps its word, and before P40E the frame's smooth scaling mixed the peeled world beside it into its edges
+  // (null: every visible pixel is peeled, as for a glyph run)
+  std::shared_ptr<const std::vector<uint8_t>> keep;
 };
 // P10B fix 3 (gfx_set_text_peel_witness, on by default): a box pixel holding the run's `after` word counts as visible only when it is
 // within kGfxTextPeelSpread steps (8-connected, through such pixels) of a WITNESS: one of them with a 4-neighbour of them whose

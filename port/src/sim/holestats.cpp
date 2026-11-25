@@ -682,6 +682,27 @@ void a_ui_cell_time(Ctx &c, const uint32_t *a, Ret &r) {
   ui_render(s, k, k, 0.0, 0.0, 0, 0, W, H, prem);
   r.set_u32(static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - t0).count()));
 }
+// holestats.uiCellPeel(colour_va, pal_va, mask_va, w | h << 16, theme, out_va): P40E: the cell's scene as its UI run carries it
+// (ui_encode), then gfx_ui.h ui_run_opaque over the cell's box: out gets one byte per cell pixel, 1 where the peel leaves the run's
+// word (its opaque inside). Returns 1, or 0 when ui_run_opaque gives null (negative controls gfx.family.ui 4 / 5: the whole run is
+// peeled) or the cell is empty
+void a_ui_cell_peel(Ctx &c, const uint32_t *a, Ret &r) {
+  r.set_u32(0);
+  const int32_t w = static_cast<int32_t>(a[3] & 0xffffu), h = static_cast<int32_t>(a[3] >> 16);
+  std::vector<uint8_t> col(static_cast<size_t>(w) * static_cast<size_t>(h)), msk(col.size());
+  std::vector<uint16_t> pal(256);
+  for (size_t i = 0; i < col.size(); ++i) {
+    col[i] = c.mem.load<uint8_t>(a[0] + static_cast<uint32_t>(i));
+    msk[i] = c.mem.load<uint8_t>(a[2] + static_cast<uint32_t>(i));
+  }
+  for (uint32_t i = 0; i < 256; ++i) pal[i] = c.mem.load<uint16_t>(a[1] + 2 * i);
+  UiScene s;
+  std::vector<uint8_t> keep;
+  if (!ui_cell_scene(col.data(), pal.data(), msk.data(), w, h, ui_theme(i32(a[4] & 0xffu)), s, keep, (a[4] & 0x100u) != 0)) return;
+  const std::shared_ptr<const std::vector<uint8_t>> m = ui_run_opaque(ui_encode(s), 0, 0, w, h);
+  for (size_t i = 0; i < col.size(); ++i) c.mem.store<uint8_t>(a[5] + static_cast<uint32_t>(i), m && i < m->size() ? (*m)[i] : 0u);
+  r.set_u32(m ? 1u : 0u);
+}
 // holestats.uiCodec(which, theme): 1 when the scene survives ui_encode / ui_decode unchanged (its encoding again equal)
 void a_ui_codec(Ctx &, const uint32_t *a, Ret &r) {
   UiScene s, t;
@@ -710,6 +731,7 @@ const FuncDef kFuncs[] = {
     {"holestats.uiTune", "default", "int", 2, 0, a_ui_tune, &g_negctl_none},
     {"holestats.uiCellInfo", "default", "int", 7, 0, a_ui_cell_info, &g_negctl_none},
     {"holestats.uiCellTime", "default", "int", 6, 0, a_ui_cell_time, &g_negctl_none},
+    {"holestats.uiCellPeel", "default", "int", 6, 0, a_ui_cell_peel, &g_negctl_none},
 };
 }  // namespace
 
