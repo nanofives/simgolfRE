@@ -1,0 +1,42 @@
+[
+ {
+  "id": "coursereport-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 5.75,
+  "edge_px": 0.2,
+  "unsure": ""
+ },
+ {
+  "id": "coursereport-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.16,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "coursereport-cell-bands",
+  "status": "done",
+  "how": "",
+  "interior_mad": 11.44,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "coursereport-legend",
+  "status": "done",
+  "how": "",
+  "interior_mad": 6.62,
+  "edge_px": 0.0,
+  "unsure": ""
+ },
+ {
+  "id": "coursereport-marks",
+  "status": "done",
+  "how": "",
+  "interior_mad": 53.38,
+  "edge_px": "",
+  "unsure": ""
+ }
+]

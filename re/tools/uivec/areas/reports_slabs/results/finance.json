@@ -1,0 +1,26 @@
+[
+ {
+  "id": "finance-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.92,
+  "edge_px": 0.2,
+  "unsure": ""
+ },
+ {
+  "id": "finance-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.16,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "finance-table",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.61,
+  "edge_px": 0.2,
+  "unsure": ""
+ }
+]

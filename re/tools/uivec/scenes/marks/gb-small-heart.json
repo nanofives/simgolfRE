@@ -1,0 +1,100 @@
+{
+ "id": "gb-small-heart",
+ "coords": "crop pixels: pixel (i, j) covers [i, i+1) x [j, j+1); scale with the element",
+ "states": [
+  {
+   "state": "idle",
+   "sheet": "GBUBBLES.pcx",
+   "rect": [
+    512,
+    324,
+    16,
+    16
+   ],
+   "scene": [
+    {
+     "box": [
+      -1,
+      -1,
+      17,
+      17
+     ],
+     "layers": [
+      {
+       "shape": {
+        "t": "move",
+        "of": {
+         "t": "marks.heart",
+         "box": [
+          1.0,
+          1.0,
+          8.0,
+          7.1
+         ]
+        },
+        "d": [
+         1,
+         0.4
+        ]
+       },
+       "fill": [
+        17,
+        2,
+        2
+       ]
+      },
+      {
+       "shape": {
+        "t": "marks.heart",
+        "box": [
+         1.0,
+         1.0,
+         8.0,
+         7.1
+        ]
+       },
+       "fill": {
+        "linear": {
+         "a": [
+          2.0,
+          1.5
+         ],
+         "b": [
+          6.0,
+          6.5
+         ],
+         "stops": [
+          [
+           0,
+           [
+            217,
+            12,
+            12
+           ]
+          ],
+          [
+           0.45,
+           [
+            196,
+            0,
+            0
+           ]
+          ],
+          [
+           1.0,
+           [
+            142,
+            2,
+            1
+           ]
+          ]
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

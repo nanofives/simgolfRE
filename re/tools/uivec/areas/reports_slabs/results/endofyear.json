@@ -1,0 +1,26 @@
+[
+ {
+  "id": "endofyear-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 5.27,
+  "edge_px": 0.22,
+  "unsure": ""
+ },
+ {
+  "id": "endofyear-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 5.18,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "endofyear-pills",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.28,
+  "edge_px": 0.22,
+  "unsure": ""
+ }
+]

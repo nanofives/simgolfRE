@@ -1,0 +1,26 @@
+[
+ {
+  "id": "hire-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.31,
+  "edge_px": 0.4,
+  "unsure": ""
+ },
+ {
+  "id": "hire-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.29,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "hire-card",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.17,
+  "edge_px": 0.4,
+  "unsure": ""
+ }
+]

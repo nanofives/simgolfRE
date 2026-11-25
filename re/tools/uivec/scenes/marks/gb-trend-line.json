@@ -1,0 +1,104 @@
+{
+ "id": "gb-trend-line",
+ "coords": "crop pixels: pixel (i, j) covers [i, i+1) x [j, j+1); scale with the element",
+ "states": [
+  {
+   "state": "idle",
+   "sheet": "GBUBBLES.pcx",
+   "rect": [
+    176,
+    324,
+    16,
+    16
+   ],
+   "scene": [
+    {
+     "box": [
+      -1,
+      -1,
+      17,
+      17
+     ],
+     "layers": [
+      {
+       "shape": {
+        "t": "move",
+        "of": {
+         "t": "circle",
+         "c": [
+          7.5,
+          7.5
+         ],
+         "r": 7.5
+        },
+        "d": [
+         1,
+         1
+        ]
+       },
+       "fill": [
+        24,
+        24,
+        24
+       ]
+      },
+      {
+       "shape": {
+        "t": "circle",
+        "c": [
+         7.5,
+         7.5
+        ],
+        "r": 7.5
+       },
+       "fill": [
+        184,
+        200,
+        136
+       ]
+      },
+      {
+       "shape": {
+        "t": "marks.pline",
+        "pts": [
+         [
+          1.2,
+          10.8
+         ],
+         [
+          5.5,
+          7.4
+         ],
+         [
+          6.5,
+          8.3
+         ],
+         [
+          8.5,
+          6.4
+         ],
+         [
+          10.5,
+          8.4
+         ],
+         [
+          13.8,
+          5.2
+         ]
+        ],
+        "w": 1.0,
+        "smooth": 0,
+        "cap": "butt"
+       },
+       "fill": [
+        0,
+        0,
+        0
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

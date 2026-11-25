@@ -1,0 +1,102 @@
+{
+ "id": "gb-info-i",
+ "coords": "crop pixels: pixel (i, j) covers [i, i+1) x [j, j+1); scale with the element",
+ "states": [
+  {
+   "state": "idle",
+   "sheet": "GBUBBLES.pcx",
+   "rect": [
+    240,
+    324,
+    16,
+    16
+   ],
+   "scene": [
+    {
+     "box": [
+      -1,
+      -1,
+      17,
+      17
+     ],
+     "layers": [
+      {
+       "shape": {
+        "t": "move",
+        "of": {
+         "t": "circle",
+         "c": [
+          7.5,
+          7.5
+         ],
+         "r": 7.5
+        },
+        "d": [
+         1,
+         1
+        ]
+       },
+       "fill": [
+        24,
+        24,
+        24
+       ]
+      },
+      {
+       "shape": {
+        "t": "circle",
+        "c": [
+         7.5,
+         7.5
+        ],
+        "r": 7.5
+       },
+       "fill": [
+        184,
+        200,
+        136
+       ]
+      },
+      {
+       "shape": {
+        "t": "rrect",
+        "c": [
+         7.5,
+         4.0
+        ],
+        "half": [
+         1.5,
+         1.0
+        ],
+        "r": 0.3
+       },
+       "fill": [
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "shape": {
+        "t": "rrect",
+        "c": [
+         7.5,
+         9.0
+        ],
+        "half": [
+         1.5,
+         3.0
+        ]
+       },
+       "fill": [
+        0,
+        0,
+        0
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

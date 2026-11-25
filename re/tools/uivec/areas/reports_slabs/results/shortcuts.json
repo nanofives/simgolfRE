@@ -1,0 +1,26 @@
+[
+ {
+  "id": "shortcuts-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.64,
+  "edge_px": 0.12,
+  "unsure": ""
+ },
+ {
+  "id": "shortcuts-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 3.99,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "shortcuts-pills",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.73,
+  "edge_px": 0.12,
+  "unsure": ""
+ }
+]

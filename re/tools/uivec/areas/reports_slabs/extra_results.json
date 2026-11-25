@@ -1,0 +1,17 @@
+[
+ {"id": "report-ok", "status": "done",
+  "how": "bubble button (ok.py): flat lavender square; socket = one disc with a bevel fitted on the art (thin navy ring r~20 + groove); toolkit recipes.bubble for rim r~15 + glass body, body bevel (linear light terms) and specular spot measured per state on this sheet; the check = one 7-point polygon read on the idle cell's grid, placed about each cell's measured rim centre (hover bubble sits 1 px higher: measured); wire stubs at cell edges read from the edge columns",
+  "interior_mad": 10.04, "edge_px": "",
+  "unsure": "socket ring reads as a soft dark band, the art's is a thin distinct navy ring with a lighter groove inside; check arms slightly thicker than the art's"},
+ {"id": "endofyear-ok-hover", "status": "done",
+  "how": "same OK bubble recipe as report-ok (ok.py), yellow state measured on End of Year's own cut (cell 551, 486)",
+  "interior_mad": 11.7, "edge_px": "",
+  "unsure": "the short wire stub at the cell's left edge is not drawn (below the stub reader's threshold); socket as in report-ok"},
+ {"id": "report-dim", "status": "done",
+  "how": "one screen-size rectangle painted flat black: black.pcx is uniformly 0,0,0 (checked); the quarter blend is the game's, kept as blend 0.25 in the scene",
+  "interior_mad": 0.0, "edge_px": "", "unsure": ""},
+ {"id": "coursereport-marks", "status": "blocked",
+  "how": "not drawn. markers: three 3-5 px navy marks (a short diagonal, a flat mark with a bump, a short stroke with a dot); icons: orange / yellow squares and three squares carrying a 12 px navy pictogram (two top lobes, a small ring, a bar, a stem, two hooks)",
+  "interior_mad": "", "edge_px": "",
+  "unsure": "I could not say what the pictogram depicts, so I did not draw parts I would be guessing; needs Mariano's reading of the icon (or keep as art). The squares alone are easy (flat cells with a shaded bottom row)"}
+]

@@ -1,0 +1,34 @@
+[
+ {
+  "id": "sga-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 3.99,
+  "edge_px": 0.21,
+  "unsure": ""
+ },
+ {
+  "id": "sga-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.67,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "sga-pills",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.73,
+  "edge_px": 0.11,
+  "unsure": ""
+ },
+ {
+  "id": "sga-badge",
+  "status": "kept_art",
+  "how": "kept as art (Mariano's mark: art): the round SGA badge picture",
+  "interior_mad": "",
+  "edge_px": "",
+  "unsure": ""
+ }
+]

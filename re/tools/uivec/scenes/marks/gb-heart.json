@@ -1,0 +1,100 @@
+{
+ "id": "gb-heart",
+ "coords": "crop pixels: pixel (i, j) covers [i, i+1) x [j, j+1); scale with the element",
+ "states": [
+  {
+   "state": "idle",
+   "sheet": "GBUBBLES.pcx",
+   "rect": [
+    480,
+    324,
+    16,
+    16
+   ],
+   "scene": [
+    {
+     "box": [
+      -1,
+      -1,
+      17,
+      17
+     ],
+     "layers": [
+      {
+       "shape": {
+        "t": "move",
+        "of": {
+         "t": "marks.heart",
+         "box": [
+          0.0,
+          0.0,
+          11.0,
+          9.2
+         ]
+        },
+        "d": [
+         1,
+         0.4
+        ]
+       },
+       "fill": [
+        17,
+        2,
+        2
+       ]
+      },
+      {
+       "shape": {
+        "t": "marks.heart",
+        "box": [
+         0.0,
+         0.0,
+         11.0,
+         9.2
+        ]
+       },
+       "fill": {
+        "linear": {
+         "a": [
+          2.0,
+          1.0
+         ],
+         "b": [
+          8.0,
+          8.0
+         ],
+         "stops": [
+          [
+           0,
+           [
+            233,
+            29,
+            28
+           ]
+          ],
+          [
+           0.4,
+           [
+            200,
+            0,
+            0
+           ]
+          ],
+          [
+           1.0,
+           [
+            150,
+            2,
+            1
+           ]
+          ]
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

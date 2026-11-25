@@ -1,0 +1,26 @@
+[
+ {
+  "id": "holestats-slab",
+  "status": "done",
+  "how": "",
+  "interior_mad": 2.01,
+  "edge_px": 0.26,
+  "unsure": ""
+ },
+ {
+  "id": "holestats-title-plate",
+  "status": "done",
+  "how": "",
+  "interior_mad": 3.69,
+  "edge_px": "",
+  "unsure": ""
+ },
+ {
+  "id": "holestats-pills",
+  "status": "done",
+  "how": "",
+  "interior_mad": 4.35,
+  "edge_px": 0.26,
+  "unsure": ""
+ }
+]

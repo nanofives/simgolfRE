@@ -1,0 +1,1 @@
+{"id": "report-dim", "sheet": "black.pcx", "scene": [{"box": [0, 0, 800, 600], "layers": [{"shape": {"t": "rrect", "c": [400.0, 300.0], "half": [400.0, 300.0], "r": 0.0, "rot": 0.0}, "fill": [0.0, 0.0, 0.0]}], "part": "dim", "blend": 0.25}], "sheet_is_flat": true}
