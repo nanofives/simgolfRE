@@ -16,7 +16,8 @@
 // Negative controls (g_negctl_gfx_ui, sg_negctl_set "gfx.family.ui"):
 //   1 ui_render's frame point is half a pixel off ((x - ox) / sx instead of (x + 0.5 - ox) / sx): every scaled render moves
 //   2 p40.hs_row draws nothing (the comment box's middle rows missing)
-//   3 (P40D) the art-fitted cell engine reads each art colour as level << 3 instead of level * 255 / 31 (the colour P40B fitted)
+//   3 (P40D) the art-fitted cell engine reads each art colour one 5-bit level low (level * 8 - 1; P41G: was level << 3, which the
+//     game's packing in ui_over555 now draws exactly)
 //   4 (P40E) P40D's draw: no picture element (the kept pixels blitted from the art after the scene's run) and the peel restoring
 //     the world under the run's whole inside (ui_run_opaque null): the window's render shows the world through the kept pixels'
 //     edges, the holes Mariano saw
@@ -43,11 +44,13 @@
 #include "portsim/sim/gditext.h"
 #include "portsim/sim/gfx_ui.h"
 #include "portsim/sim/gfx_uivec.h"  // P41: the title menu's buttons (ui_swap) and uivec runs
+#include "portsim/sim/gfx_uvgame.h"  // P41G: the in-game element scenes (uvg runs)
 #include "portsim/sim/gfx_uvwide.h"  // P41W: the wide front-end backdrops and their picture overlays
 
 namespace portsim {
 
 int g_negctl_gfx_ui = 0;
+extern int g_negctl_uvgame;   // gfx_uvgame.cpp (P41G): 3 = the hook off
 
 // ------------------------------------------------------------------------------------------------ the option
 void gfx_set_ui_pilot(Ctx &ctx, int32_t theme) {
@@ -396,11 +399,23 @@ std::shared_ptr<const std::vector<uint8_t>> ui_run_opaque(const std::string &tex
     auto it = cache.find(key);
     if (it != cache.end()) return it->second;
   }
-  std::vector<float> prem;
   const int32_t w = x1 - x0, h = y1 - y0;
-  if (!ui_run_render(text, 1.0, 1.0, 0.0, 0.0, x0, y0, w, h, prem)) return nullptr;   // P41: an encoded scene or a uivec scene
   auto m = std::make_shared<std::vector<uint8_t>>(static_cast<size_t>(w) * static_cast<size_t>(h), 0);
-  for (size_t i = 0; i < m->size(); ++i) (*m)[i] = prem[4 * i + 3] >= 0.999f ? 1 : 0;
+  // P41G: a uivec scene's kept scale-1 frame (the one draw_uvec drew: uv_frame / uvg_frame) gives the coverage; before, every run was
+  // rendered again here at each first show (a report's bands: about as long as their draw)
+  std::shared_ptr<const UvFrame> fr = uv_frame(text);
+  if (!fr && uvg_is_run_text(text)) fr = uvg_frame(text);
+  if (fr) {
+    const int32_t fw = fr->x1 - fr->x0;
+    for (int32_t y = std::max(y0, fr->y0); y < std::min(y1, fr->y1); ++y)
+      for (int32_t x = std::max(x0, fr->x0); x < std::min(x1, fr->x1); ++x)
+        (*m)[static_cast<size_t>(y - y0) * static_cast<size_t>(w) + static_cast<size_t>(x - x0)] =
+            fr->prem[(static_cast<size_t>(y - fr->y0) * static_cast<size_t>(fw) + static_cast<size_t>(x - fr->x0)) * 4u + 3u] >= 0.999f ? 1 : 0;
+  } else {
+    std::vector<float> prem;
+    if (!ui_run_render(text, 1.0, 1.0, 0.0, 0.0, x0, y0, w, h, prem)) return nullptr;   // P41: an encoded scene or a uivec scene
+    for (size_t i = 0; i < m->size(); ++i) (*m)[i] = prem[4 * i + 3] >= 0.999f ? 1 : 0;
+  }
   std::lock_guard<std::mutex> l(mu);
   if (cache.size() > 256 || cached_bytes > (64u << 20)) {   // a bound (the panels of a few screens)
     cache.clear();
@@ -418,6 +433,7 @@ bool ui_run_bounds(const std::string &text, float &x0, float &y0, float &x1, flo
     return true;
   }
   if (uw_is_run_text(text)) return uw_run_bounds(text, x0, y0, x1, y1);   // P41W (gfx_uvwide.h)
+  if (uvg_is_run_text(text)) return uvg_run_bounds(text, x0, y0, x1, y1);   // P41G (gfx_uvgame.h)
   UiScene s;
   if (!ui_decode(text, s)) return false;
   ui_bounds(s, x0, y0, x1, y1);
@@ -431,6 +447,7 @@ bool ui_run_render(const std::string &text, double sx, double sy, double ox, dou
     return true;
   }
   if (uw_is_run_text(text)) return uw_run_render(text, sx, sy, ox, oy, px0, py0, w, h, prem);   // P41W (gfx_uvwide.h)
+  if (uvg_is_run_text(text)) return uvg_run_render(text, sx, sy, ox, oy, px0, py0, w, h, prem);   // P41G (gfx_uvgame.h)
   UiScene s;
   if (!ui_decode(text, s)) return false;
   ui_render(s, sx, sy, ox, oy, px0, py0, w, h, prem);
@@ -444,7 +461,12 @@ uint16_t ui_over555(const float *p, uint16_t bg) {
     const uint32_t l = (bg >> sh) & 31u;
     const float e = static_cast<float>((l << 3) | (l >> 2));
     const float v = p[ch] + (1.f - p[3]) * e;
-    const int32_t q = static_cast<int32_t>(std::lround(clampf(v, 0.f, 255.f) * 31.f / 255.f));
+    // P41G: the game's own packing of an 8-bit channel (gfx.cpp's colour LUT, c >> 3): a scene's opaque colour gives the word the
+    // game makes from the same palette colour, and coverage 0 the background's word. It was lround(v * 31 / 255), which put a
+    // palette colour such as 240 one level under the game's (29 against 30): the arc bracket's bar (240, 208, 128) drew as
+    // (29, 25, 16) beside the member panel's stub (247, 214, 132 = 30, 26, 16), a colour step the original does not have (both
+    // pack to 30, 26, 16). 1e-3 absorbs float error under a whole value.
+    const int32_t q = std::min<int32_t>(31, static_cast<int32_t>(std::floor(clampf(v, 0.f, 255.f) + 1e-3f)) >> 3);
     out = static_cast<uint16_t>(out | (static_cast<uint32_t>(q) << sh));
   }
   return out;
@@ -1180,6 +1202,7 @@ void draw_scene(Gfx &g, Ctx &ctx, const UiScene &s) {
 // kept as a UI run whose text is the scene's name, clipped to the scene's whole-pixel bounds
 bool draw_uvec(Gfx &g, Ctx &ctx, const std::string &text) {
   std::shared_ptr<const UvFrame> fr = uv_frame(text);
+  if (!fr && uvg_is_run_text(text)) fr = uvg_frame(text);   // P41G (gfx_uvgame.h): kept per text
   if (!fr && uw_is_run_text(text)) {   // P41W: a picture or scene overlay (gfx_uvwide.h), its scale-1 render over its whole-pixel bounds
     float fx0, fy0, fx1, fy1;
     if (!uw_run_bounds(text, fx0, fy0, fx1, fy1)) return false;
@@ -1197,15 +1220,23 @@ bool draw_uvec(Gfx &g, Ctx &ctx, const std::string &text) {
   const int32_t x0 = std::max(0, fr->x0), y0 = std::max(0, fr->y0), x1 = std::min(r.w, fr->x1), y1 = std::min(r.h, fr->y1);
   if (x1 <= x0 || y1 <= y0) return true;
   gfxb::TextRunScope ts;
-  gfxb::text_run_begin(g, r.px.data(), r.w, r.h, ts, std::max(0, y0 - 4), std::min(r.h, y1 + 4));
+  // P41G: the run changes no pixel outside its bounds: the snapshot is that rectangle grown by 4 (the box margin is 3), not whole rows
+  gfxb::text_run_begin_rect(g, r.px.data(), r.w, r.h, ts, x0 - 4, y0 - 4, x1 + 4, y1 + 4);
   const int32_t fw = fr->x1 - fr->x0;
+  // P41G: only the pixels the scene covers wholly (ui_run_opaque's keep, coverage >= 0.999) are marked as the panel layer's writes. A
+  // pixel of the anti-aliased ring holds the scene blended over what was there; marked, the layer kept it (or, peeled, the word under
+  // it) as an opaque pixel of the layer, the world of the panel's unmoved place, and a moved layer showed that world as a jagged
+  // one-pixel fringe along the edge (log/roadmap/P41/portgame/notes.md). Unmarked, the peel leaves the ring what the layer held
+  // before the run (transparent over the world, or the panel art an earlier primitive of the layer wrote) and the presenter draws
+  // the run's window-scale edge over that. Negative control uvgame 5 = every covered pixel marked (the fringe back).
+  const bool mark_all = SG_NEGCTL(g_negctl_uvgame) == 5;
   for (int32_t y = y0; y < y1; ++y)
     for (int32_t x = x0; x < x1; ++x) {
       const float *p = fr->prem.data() + (static_cast<size_t>(y - fr->y0) * static_cast<size_t>(fw) + static_cast<size_t>(x - fr->x0)) * 4u;
       if (p[3] <= 0.f) continue;
       uint16_t &o = r.px[static_cast<size_t>(y) * static_cast<size_t>(r.w) + static_cast<size_t>(x)];
       o = ui_over555(p, o);
-      hud_mark(&o);
+      if (mark_all || p[3] >= 0.999f) hud_mark(&o);
     }
   GameFont f;
   f.face = kUiRunFace;
@@ -2032,9 +2063,12 @@ bool cell_scene_art(const uint8_t *colour, const uint16_t *pal, const uint8_t *m
     const float a = 1.f - static_cast<float>(k) / 256.f;   // Surface_stretchBlit keeps (dst * k) >> 8 of what lies under
     const uint16_t v = pal[c];
     const int32_t l[3] = {(v >> 10) & 31, (v >> 5) & 31, v & 31};
-    // (negctl 3: the colour read as level << 3, P40B's reading, one 5-bit level low after ui_over555 for most levels)
-    const float unit = SG_NEGCTL(g_negctl_gfx_ui) == 3 ? 8.f : 255.f / 31.f;
-    for (int ch = 0; ch < 3; ++ch) rgb[i * 3u + static_cast<size_t>(ch)] = std::min(255.f, static_cast<float>(l[ch]) * unit / a);
+    // (negctl 3: the colour one 5-bit level low, level * 8 - 1: what P40B's reading, level << 3, gave under ui_over555's former
+    // rounding for most levels; with the game's packing, c >> 3, level << 3 itself is exact)
+    const bool low = SG_NEGCTL(g_negctl_gfx_ui) == 3;
+    for (int ch = 0; ch < 3; ++ch)
+      rgb[i * 3u + static_cast<size_t>(ch)] =
+          std::min(255.f, (low ? std::max(0.f, static_cast<float>(l[ch]) * 8.f - 1.f) : static_cast<float>(l[ch]) * 255.f / 31.f) / a);
     alpha[i] = a;
     const int r = static_cast<int>(rgb[i * 3u]), g = static_cast<int>(rgb[i * 3u + 1]), b = static_cast<int>(rgb[i * 3u + 2]);
     const Cls cc = classify(r, g, b);
@@ -2604,6 +2638,15 @@ bool frame_drawer(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int32_t
     ps[k] = &si->second;
     pm[k] = &mi->second;
   }
+  // P41G (gfx_uvgame.h): pieces with approved records: the original body draws the frame, each piece's Surface_stretchBlit drawn from
+  // its record (a piece of the approved frame, clipped to the piece) instead of P40's assembled cell scene
+  if (SG_NEGCTL(g_negctl_uvgame) != 3) {
+    std::vector<int32_t> cuts;
+    for (int k = 0; k < 8; ++k) {
+      uvg_match(*ps[k], cuts);
+      if (!cuts.empty()) return false;
+    }
+  }
   struct Built {
     CellScene c;
     std::vector<uint8_t> idx, msk;
@@ -2785,6 +2828,70 @@ bool ui_wide_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a) {
   return true;
 }
 
+// P41G round 6 (gfx_uvwide.h; log/roadmap/P41/portgame/notes.md): an in-game full-screen report drawn wide. The routing map's redraw
+// draws its bottom sheet at (0, 253) and then the mode's top sheet at (0, 0), Buy Land its one full-screen sheet at (0, 0): an
+// Image_draw of a wide screen's own sheet ("bg") from its corner at (0, 0) writes the screen's backdrop over the root and marks the
+// frame, as ui_wide_backdrop does for a front-end screen's full-screen copy; the route bottom's draw writes the backdrop's pixels over
+// the rectangle it covers (from the route screen shown, else the course mode's; the top drawn next turns the pixels still holding
+// that screen's backdrop into its own mode's). Both write only their sheet's rectangle, so nothing the game drew elsewhere is lost. The
+// game's later draws (the map, the buttons' states, the texts) go over it as before. Negative control uvwide 4: off.
+bool ui_wide_report(Gfx &g, Ctx &ctx, const uint32_t *a) {
+  if (g.ui_pilot == kUiPilotOff || a[1] != g.root_va(ctx) || a[4] != 0 || SG_NEGCTL(g_negctl_uvwide) == 4) return false;
+  auto sp = g.sprites.find(a[0]);
+  if (sp == g.sprites.end()) return false;
+  const Sprite8 &s = sp->second;
+  // a panel: a cut of the sheet's whole width drawn at its own place in the sheet (the buttons' cuts of the same sheets are not)
+  if (s.sx != 0 || s.sheet.empty() || s.cut_w != 800 || i32(a[2]) != s.sx || i32(a[3]) != s.sy) return false;
+  static const std::string kRouteBottom = "interface/infoscreens/route screens_bottom.pcx";
+  if (s.sheet == kRouteBottom) {
+    int32_t k = g.uw_screen;
+    if (k < 0 || std::strncmp(uw_screen_name(k), "route", 5) != 0) k = uw_screen_find("route");
+    if (k < 0 || !uw_prepare(ctx, k)) return false;
+    const auto f = uw_frame555(k);
+    g.ensure_root(ctx);
+    if (!f || f->size() != g.root.px.size()) return false;
+    const int32_t x0 = std::max(0, i32(a[2]) + s.left), y0 = std::max(0, i32(a[3]) + s.top);
+    const int32_t x1 = std::min(g.root.w, i32(a[2]) + s.left + s.w), y1 = std::min(g.root.h, i32(a[3]) + s.top + s.h);
+    for (int32_t y = y0; y < y1; ++y)
+      for (int32_t x = x0; x < x1; ++x) {
+        const size_t j = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+        g.root.px[j] = (*f)[j];
+      }
+    if (x1 > x0 && y1 > y0) g.note_root_write(x0, y0, x1 - x0, y1 - y0);
+    g.uw_screen = k;
+    return true;
+  }
+  if (s.sy != 0) return false;
+  const int32_t k = uw_screen_by_bg(s.sheet);
+  if (k < 0 || std::strncmp(uw_screen_name(k), "route", 5) != 0 && std::strcmp(uw_screen_name(k), "buyland") != 0) return false;
+  if (!uw_prepare(ctx, k)) return false;
+  g.ensure_root(ctx);
+  const auto f = uw_frame555(k);
+  if (!f || f->size() != g.root.px.size()) return false;
+  // the backdrop over the rectangle the sheet covers; outside it, a pixel still holding the previous wide screen's backdrop word (the
+  // route bottom restored from another mode, the screen shown before) takes this screen's word, and what the game drew stays
+  const int32_t x1 = std::min(g.root.w, s.left + s.w), y1 = std::min(g.root.h, s.top + s.h);
+  const int32_t x0 = std::max(0, s.left), y0 = std::max(0, s.top);
+  const int32_t old = g.uw_screen;
+  const auto fo = old >= 0 && old != k ? uw_frame555(old) : nullptr;
+  for (int32_t y = 0; y < g.root.h; ++y)
+    for (int32_t x = 0; x < g.root.w; ++x) {
+      const size_t j = static_cast<size_t>(y) * static_cast<size_t>(g.root.w) + static_cast<size_t>(x);
+      if (x >= x0 && x < x1 && y >= y0 && y < y1) g.root.px[j] = (*f)[j];
+      else if (fo && fo->size() == f->size() && g.root.px[j] == (*fo)[j]) g.root.px[j] = (*f)[j];
+    }
+  g.note_root_write(0, 0, 800, 600);
+  g.uw_screen = k;
+  // every run inside the rectangle is covered by it (ui_wide_backdrop drops every root run for a full-screen copy)
+  std::vector<Gfx::TextCapture::Run> &live = g.text.live;
+  live.erase(std::remove_if(live.begin(), live.end(),
+                            [&](const Gfx::TextCapture::Run &r) {
+                              return r.info.target == 0 && r.info.x0 >= x0 && r.info.x1 <= x1 && r.info.y0 >= y0 && r.info.y1 <= y1;
+                            }),
+             live.end());
+  return true;
+}
+
 // P41W (gfx_ui.h): an Image_draw (args sprite, surface, x, y, mask) of a cut that is one of the shown wide screen's overlays
 bool ui_wide_overlay(Gfx &g, Ctx &ctx, const uint32_t *a) {
   if (g.ui_pilot == kUiPilotOff || g.uw_screen < 0 || a[1] != g.root_va(ctx) || a[4] != 0) return false;
@@ -2824,6 +2931,11 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
   const int32_t theme = g.ui_pilot;
   if (theme == kUiPilotOff) return false;
   g.ensure_root(ctx);
+  if (!std::strcmp(name, "Surface_stretchBlit") && n >= 6 && a[2] == g.root_va(ctx) && a[5] == 0) {
+    // P41G (gfx_uvgame.h): a cut with approved element scenes is drawn from them, before P40's cell engine (the HUD panels below)
+    auto si = g.sprites.find(a[0]);
+    if (si != g.sprites.end() && uvg_draw(g, ctx, si->second, i32(a[3]), i32(a[4]))) return true;
+  }
   if (!std::strcmp(name, "Surface_stretchBlit") && n >= 6) {
     // the loadInfoScreenArt pairs (mask = colour + 0x2c), and the frame-local pairs of the End of Year strips (reports.cpp: top 0x5500,
     // bottom 0x5700, line 0x5900) and the Shortcuts page (routing.cpp: 0x5100), whose masks are the colour key + 0x100
@@ -2861,7 +2973,15 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     return true;
   }
   if (n >= 5 && frame_drawer(g, ctx, name, a, theme)) return true;
+  if (!std::strcmp(name, "Image_draw") && n >= 5 && ui_wide_report(g, ctx, a)) return true;   // P41G round 6: the wide reports
   if (!std::strcmp(name, "Image_draw") && n >= 4 && ui_wide_overlay(g, ctx, a)) return true;   // P41W (gfx_ui.h)
+  if (!std::strcmp(name, "Image_draw") && n >= 4 && a[1] == g.root_va(ctx) && (n < 5 || a[4] == 0)) {
+    // P41G (gfx_uvgame.h): a cut with approved element scenes drawn from them (the kept pixel (0, 0) at the draw point plus the trims, as
+    // Image_draw draws at scale 1), before P40's routing-map panels and OK buttons below
+    auto si = g.sprites.find(a[0]);
+    if (si != g.sprites.end() && uvg_draw(g, ctx, si->second, add32(si->second.left, i32(a[2])), add32(si->second.top, i32(a[3]))))
+      return true;
+  }
   if (!std::strcmp(name, "Surface_drawScaled") && n >= 8 && a[4] == 1 && a[5] == 1 && a[6] == 1 && a[7] == 0) {   // P41W: the editor's cells
     const uint32_t d[5] = {a[0], a[1], a[2], a[3], 0};
     if (ui_wide_overlay(g, ctx, d)) return true;

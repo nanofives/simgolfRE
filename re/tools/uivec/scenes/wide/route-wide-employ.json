@@ -1,0 +1,255 @@
+{
+ "id": "route-wide-employ",
+ "screen": "Routing map",
+ "mode": "employ",
+ "design_x": [
+  -700.0,
+  1500.0
+ ],
+ "frame": [
+  800,
+  600
+ ],
+ "ground": {
+  "flat": [
+   148.0,
+   150.0,
+   198.0
+  ]
+ },
+ "changed_refs": {
+  "route-bottom": "log/roadmap/P41/work6/reports_maps/route-bottom.json (disc item boxes; side walls open at the window rows)"
+ },
+ "draw": [
+  {
+   "name": "lilac field",
+   "anchor": "span",
+   "box": [
+    -2000.0,
+    -20.0,
+    2800.0,
+    620.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "rrect",
+      "c": [
+       400.0,
+       300.0
+      ],
+      "half": [
+       3000.0,
+       400.0
+      ],
+      "r": 0.0
+     },
+     "fill": [
+      148.0,
+      150.0,
+      198.0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "slab line shadow",
+   "anchor": "centre",
+   "box": [
+    -10.0,
+    80.0,
+    810.0,
+    560.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "move",
+      "of": {
+       "t": "union",
+       "of": [
+        {
+         "t": "outline",
+         "of": {
+          "t": "rrect",
+          "c": [
+           400.5,
+           363.4
+          ],
+          "half": [
+           395.29999999999995,
+           116.6
+          ],
+          "r": 8.0,
+          "rot": 0.0
+         },
+         "w": 1.7
+        },
+        {
+         "t": "inter",
+         "of": [
+          {
+           "t": "outline",
+           "of": {
+            "t": "rrect",
+            "c": [
+             400.15,
+             368.9
+            ],
+            "half": [
+             395.35,
+             168.9
+            ],
+            "r": 8.0,
+            "rot": 0.0
+           },
+           "w": 1.7
+          },
+          {
+           "t": "half",
+           "p": [
+            0.0,
+            253.0
+           ],
+           "n": [
+            0.0,
+            -1.0
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "d": [
+       1.5,
+       1.0
+      ]
+     },
+     "soft": 3.0,
+     "fill": [
+      24.0,
+      26.0,
+      70.0
+     ],
+     "alpha": 0.5
+    }
+   ]
+  },
+  {
+   "name": "map window lip (outside the slab)",
+   "anchor": "span",
+   "box": [
+    -2000.0,
+    400.0,
+    2800.0,
+    620.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "half",
+      "p": [
+       0.0,
+       406.0
+      ],
+      "n": [
+       0.0,
+       -1.0
+      ]
+     },
+     "soft": 2.5,
+     "fill": [
+      99.0,
+      99.0,
+      132.0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "map window floor (outside the slab)",
+   "anchor": "span",
+   "box": [
+    -2000.0,
+    405.0,
+    2800.0,
+    620.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "half",
+      "p": [
+       0.0,
+       408.5
+      ],
+      "n": [
+       0.0,
+       -1.0
+      ]
+     },
+     "fill": {
+      "linear": {
+       "a": [
+        0.0,
+        409.5
+       ],
+       "b": [
+        0.0,
+        472.5
+       ],
+       "stops": [
+        [
+         0.0,
+         [
+          18.0,
+          25.0,
+          48.0
+         ]
+        ],
+        [
+         1.0,
+         [
+          28.0,
+          36.0,
+          66.0
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "top: banner, list, pills, title plate (employ)",
+   "anchor": "centre",
+   "ref": "route-top-employ"
+  },
+  {
+   "name": "marbled floor (kept art)",
+   "anchor": "centre",
+   "picture": {
+    "sheet": "Interface/infoscreens/route screens_bottom.pcx",
+    "rect": [
+     5,
+     268,
+     790,
+     332
+    ],
+    "at": [
+     5,
+     268
+    ],
+    "matte": {
+     "kind": "opaque"
+    }
+   }
+  },
+  {
+   "name": "bottom: slab, arch, mode bubbles, board frame, discs, socket, check",
+   "anchor": "centre",
+   "ref": "route-bottom"
+  }
+ ]
+}

@@ -78,7 +78,7 @@ def over555(prem, bgword):
     """ui_over555 of premultiplied pixels (r, g, b 0..255, a 0..1) over the background words"""
     e = expand(bgword)
     v = prem[..., :3] + (1.0 - prem[..., 3:4]) * e
-    q = np.floor(np.clip(v, 0, 255) * 31.0 / 255.0 + 0.5).astype(np.int32)   # lround of a non-negative value
+    q = np.minimum(31, np.floor(np.clip(v, 0, 255) + 1e-3).astype(np.int32) >> 3)   # the game's packing, c >> 3 (P41G)
     return (q[..., 0] << 10) | (q[..., 1] << 5) | q[..., 2]
 
 
@@ -643,7 +643,7 @@ def window_model(lib, el, theme, s, overdraw=False):
     drawn = vis[yy][:, xx]
     cq = expand(np.clip(np.floor(canvas / 8.0), 0, 31).astype(np.int32) @ np.array([1024, 32, 1]))   # TextRaster: the canvas as a 555 word
     run = px[..., :3] + (1.0 - px[..., 3:4]) * cq
-    run = expand(np.floor(np.clip(run, 0, 255) * 31.0 / 255.0 + 0.5).astype(np.int32) @ np.array([1024, 32, 1]))
+    run = expand(np.minimum(31, np.floor(np.clip(run, 0, 255) + 1e-3).astype(np.int32) >> 3) @ np.array([1024, 32, 1]))   # ui_over555
     win = np.where(drawn[..., None], run, canvas)
     weight = np.where(drawn, px[..., 3] + (1.0 - px[..., 3]) * cshare, cshare)
     out = {"frame": frame, "cover": cover, "win": win, "weight": weight, "vis": vis}

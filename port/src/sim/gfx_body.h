@@ -47,7 +47,30 @@ struct Sprite8 {
   int32_t cut_w = 0, cut_h = 0;   // the requested rectangle's size (the SpriteRef's +0x18 / +0x1c; roadmap S2.8)
   std::vector<uint8_t> px;
   std::array<uint16_t, 256> pal{};
+  // P41G (gfx_uvgame.h): where crop_sprite cut it from: the source image's file (Image8::name, empty when not loaded from a file) and
+  // the requested rectangle's corner in it (-1: not a crop_sprite cut). Data only: no body reads it with the UI theme off.
+  std::string sheet;
+  int32_t sx = -1, sy = -1;
 };
+// P41G: the draw trace (SG_UVG_TRACE=<file>): every distinct (drop, primitive, sheet, cut, destination) a sprite primitive draws is
+// appended to the file once, with its first draw point. Off (one load of an int) unless the variable is set. g_uvg_drop: the drop
+// gfx_drop is running (the game's call), g_uvg_root: that Gfx's root surface.
+extern int g_uvg_trace_on;
+extern thread_local const char *g_uvg_drop;
+extern thread_local const struct Surface16 *g_uvg_root;
+void uvg_trace_note(const char *prim, const Sprite8 &s, int32_t x, int32_t y, const struct Surface16 &d);
+inline void uvg_trace(const char *prim, const Sprite8 &s, int32_t x, int32_t y, const struct Surface16 &d) {
+  if (g_uvg_trace_on) uvg_trace_note(prim, s, x, y, d);
+}
+// P41G (portsim/sim/gfx_uvgame.h): the in-game element scenes drawn in place of a sprite's art. gfx_drop sets the drawing Gfx and Ctx
+// for the drop's duration when a UI theme is on (null otherwise and outside every drop); a sprite primitive asks uvg_hook first and
+// draws nothing when it returns true (the records were drawn as a UI run).
+extern thread_local Gfx *g_uvg_gfx;
+extern thread_local Ctx *g_uvg_ctx;
+bool uvg_hook_slow(const Sprite8 &s, int32_t x, int32_t y, const struct Surface16 &d);
+inline bool uvg_hook(const Sprite8 &s, int32_t x, int32_t y, const struct Surface16 &d) {
+  return g_uvg_gfx != nullptr && !s.sheet.empty() && uvg_hook_slow(s, x, y, d);
+}
 // A 16 bpp RGB555 surface, top-down, clip = the whole surface (allocDrawBuffer's setClip of (0, 0, w, h)).
 struct Surface16 {
   int32_t w = 0, h = 0;
@@ -428,10 +451,17 @@ struct TextRunScope {
   bool ink = false;
   int32_t ink_x0 = 0, ink_x1 = 0;
   bool frame = false;  // P23F: a frame text (gfx.h gfx_set_frame_edge_text): its edge run goes to frame_edge_runs
+  // P41G: with cx0 < cx1 the snapshot holds only columns [cx0, cx1) of rows [lo, hi) (text_run_begin_rect: a draw that changes no
+  // pixel outside that rectangle, whose box margin stays inside it); else whole rows
+  int32_t cx0 = 0, cx1 = 0;
 };
 // (P24C fix 1: with lo <= hi, only rows [lo, hi) are snapshotted and compared: the caller guarantees the draw changes no other row,
 // and that the run's box margin stays inside them, as TextMetrics::glyph_rows does)
 void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t lo = 0, int32_t hi = -1);
+// P41G: the snapshot of the rectangle [x0, x1) x [y0, y1) only (clamped to the surface): text_run_end finds the same changed box and
+// keeps the same words as with whole rows when the draw changes no pixel outside the rectangle and its margin stays inside it
+void text_run_begin_rect(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t x0, int32_t y0, int32_t x1,
+                         int32_t y1);
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
                   uint8_t target, const GameFont *font = nullptr);  // P26C item 11: font = the run's face / size (no FontRef)

@@ -19,6 +19,10 @@
 //     (the ground is so soft that even a quarter-scale grid upsampled stays within 2.2 levels of the exact one: measured)
 //   3 a ground_diff picture's matte without its feather (the cut's rectangle shows): the picture's parity reads RED
 //   4 the backdrop hook off (gfx_ui.cpp ui_swap): the background image is copied as art, the frame carries no backdrop
+//     (P41G round 6: also the in-game reports' hook, gfx_ui.cpp ui_wide_report: the routing map and Buy Land as their element scenes)
+//
+// P41G round 6: the routing map (one screen per mode: route, route_employ, route_aura, route_value) and Buy Land (buyland) are wide
+// screens too, started by the game's Image_draw of their sheet at (0, 0) (gfx_ui.cpp ui_wide_report).
 #ifndef PORTSIM_SIM_GFX_UVWIDE_H
 #define PORTSIM_SIM_GFX_UVWIDE_H
 

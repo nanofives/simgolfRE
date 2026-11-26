@@ -2051,6 +2051,8 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
   }
   // P41W (present.h set_repaint): a wide backdrop's full render finished on its worker: paint again
   presenter.set_repaint([hwnd]() { InvalidateRect(hwnd, nullptr, FALSE); });
+  // P41G (textres.h): a UI run's window-scale render finished on the worker: paint again (its quick tables are made again)
+  ui_async_set_notify([hwnd]() { InvalidateRect(hwnd, nullptr, FALSE); });
   session.set_window(hwnd, win.viewport());
   Options ow = o;  // P8B: the world layer's size from the window's client at the session's start (render_scale native), the
                    // wide width (render scale 1 with --wide) or the explicit size

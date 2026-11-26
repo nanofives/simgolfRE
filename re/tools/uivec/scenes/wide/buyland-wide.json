@@ -1,0 +1,158 @@
+{
+ "id": "buyland-wide",
+ "screen": "Buy Land",
+ "design_x": [
+  -700.0,
+  1500.0
+ ],
+ "frame": [
+  800,
+  600
+ ],
+ "ground": {
+  "flat": [
+   148.0,
+   148.0,
+   198.0
+  ]
+ },
+ "changed_refs": {
+  "buyland-backdrop": "log/roadmap/P41/work6/reports_maps/buyland-backdrop.json (disc item boxes only)"
+ },
+ "draw": [
+  {
+   "name": "lilac field",
+   "anchor": "span",
+   "box": [
+    -2000.0,
+    -20.0,
+    2800.0,
+    620.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "rrect",
+      "c": [
+       400.0,
+       300.0
+      ],
+      "half": [
+       3000.0,
+       400.0
+      ],
+      "r": 0.0
+     },
+     "fill": [
+      148.0,
+      148.0,
+      198.0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "slab line shadow",
+   "anchor": "centre",
+   "box": [
+    -10.0,
+    80.0,
+    810.0,
+    560.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "move",
+      "of": {
+       "t": "outline",
+       "of": {
+        "t": "rrect",
+        "c": [
+         399.8,
+         403.75
+        ],
+        "half": [
+         392.0,
+         134.05
+        ],
+        "r": 8.0,
+        "rot": 0.0
+       },
+       "w": 1.7
+      },
+      "d": [
+       1.5,
+       1.0
+      ]
+     },
+     "soft": 3.0,
+     "fill": [
+      24.0,
+      26.0,
+      70.0
+     ],
+     "alpha": 0.5
+    }
+   ]
+  },
+  {
+   "name": "map window lip",
+   "anchor": "centre",
+   "box": [
+    10.0,
+    258.0,
+    790.0,
+    290.0
+   ],
+   "layers": [
+    {
+     "shape": {
+      "t": "rrect",
+      "c": [
+       399.8,
+       283.0
+      ],
+      "half": [
+       382.8,
+       17.0
+      ],
+      "r": 0.0,
+      "rot": 0.0
+     },
+     "soft": 2.5,
+     "fill": [
+      99.0,
+      99.0,
+      132.0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "marbled floor (kept art)",
+   "anchor": "centre",
+   "picture": {
+    "sheet": "Interface/infoscreens/buy_land.pcx",
+    "rect": [
+     18,
+     269,
+     764,
+     331
+    ],
+    "at": [
+     18,
+     269
+    ],
+    "matte": {
+     "kind": "opaque"
+    }
+   }
+  },
+  {
+   "name": "slab, window rim, pills, discs, capsules, balls, sockets, check, lot board",
+   "anchor": "centre",
+   "ref": "buyland-backdrop"
+  }
+ ]
+}

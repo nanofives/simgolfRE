@@ -3,8 +3,12 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
+#include <mutex>
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -23,6 +27,14 @@
 
 #include "present.h"  // rgb555_to_bgra
 #include "portsim/sim/gfx_ui.h"  // P40: UI runs
+#include "portsim/sim/gfx_uivec.h"  // P41G: UvFrame
+#include "portsim/sim/gfx_uvgame.h"  // P41G: the in-game element runs' cached 1x frames
+#include <memory>
+#include <atomic>
+#include <condition_variable>
+#include <deque>
+#include <set>
+#include <thread>
 
 namespace portapp {
 
@@ -54,6 +66,7 @@ struct UiRender {
   std::vector<uint32_t> ent;
   std::vector<uint16_t> lut;
   std::vector<int32_t> lxs, lys;
+  bool quick = false;   // P41G: the run's 1x frame upscaled (nearest) while a worker renders it at the window's scale
   // the word at entry e over word w, per channel from its level (what the GPU's text_runs computes)
   uint16_t over(uint32_t e, uint16_t word) const {
     const uint16_t *l = lut.data() + static_cast<size_t>(e) * 32u;
@@ -76,6 +89,227 @@ struct UiBox {
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // the run's pixels in canvas coordinates (inside the canvas and the render)
   int32_t ox = 0, oy = 0;                  // P40C: the canvas coordinates of the render's pixel (0, 0)
 };
+// P41G: one run's entry for a viewport (the render at the window's scale, or with quick the run's 1x frame upscaled), as ui_prepare made
+// it before; false when the text names no run
+bool build_render(const std::string &text, const Viewport &vp, UiRender &u, bool quick) {
+  // P41: the run's text is an encoded UiScene or names a uivec scene (gfx_ui.h ui_run_bounds / ui_run_render)
+  float fx0, fy0, fx1, fy1;
+  if (!portsim::ui_run_bounds(text, fx0, fy0, fx1, fy1)) return false;
+  u.x0 = first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW);   // origin-0 client coordinates
+  u.y0 = first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH);
+  const int32_t x1 = first_client(static_cast<int32_t>(std::ceil(fx1)), vp.client_w, kLogicalW);
+  const int32_t y1 = first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH);
+  u.w = std::max(0, x1 - u.x0);
+  u.h = std::max(0, y1 - u.y0);
+  // per client column / row of the render its frame column / row (the presenter's floor mapping)
+  u.lxs.resize(static_cast<size_t>(u.w));
+  for (int32_t x = 0; x < u.w; ++x)
+    u.lxs[static_cast<size_t>(x)] = floor_div(static_cast<int64_t>(u.x0 + x) * kLogicalW, vp.client_w);
+  u.lys.resize(static_cast<size_t>(u.h));
+  for (int32_t y = 0; y < u.h; ++y)
+    u.lys[static_cast<size_t>(y)] = floor_div(static_cast<int64_t>(u.y0 + y) * kLogicalH, vp.client_h);
+  const auto t_render = std::chrono::steady_clock::now();
+  // P41G: an in-game element run's 1x frame (the sim's root drawing, kept per text: gfx_uvgame.h uvg_frame)
+  std::shared_ptr<const portsim::UvFrame> f1 = portsim::uvg_is_run_text(text) ? portsim::uvg_frame(text) : nullptr;
+  // quick: per client column / row its 1x frame column / row (-1: none). The entry's words are the 1x pixels' (below): no
+  // window-scale picture is made
+  std::vector<int32_t> qx, qy;
+  const bool q1 = quick && f1 && u.w > 0 && u.h > 0;
+  const int32_t fw1 = f1 ? f1->x1 - f1->x0 : 0, fh1 = f1 ? f1->y1 - f1->y0 : 0;
+  if (quick && f1) {   // the 1x frame upscaled, nearest (the worker renders the window-scale one)
+    qx.resize(static_cast<size_t>(u.w));
+    for (int32_t x = 0; x < u.w; ++x) {
+      const int32_t lx = u.lxs[static_cast<size_t>(x)] - f1->x0;
+      qx[static_cast<size_t>(x)] = lx >= 0 && lx < fw1 ? lx : -1;
+    }
+    qy.resize(static_cast<size_t>(u.h));
+    for (int32_t y = 0; y < u.h; ++y) {
+      const int32_t ly = u.lys[static_cast<size_t>(y)] - f1->y0;
+      qy[static_cast<size_t>(y)] = ly >= 0 && ly < fh1 ? ly : -1;
+    }
+    u.quick = true;
+  } else {
+    portsim::ui_run_render(text, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH, 0.0,
+                           0.0, u.x0, u.y0, u.w, u.h, u.prem);
+  }
+  if (const char *lp = std::getenv("SG_P41G_UILOG")) {   // P41G development: every window-scale UI run render (ms, size, text)
+    static std::mutex lmu;
+    std::lock_guard<std::mutex> ll(lmu);
+    if (FILE *lf = std::fopen(lp, "a")) {
+      const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t_render).count();
+      std::fprintf(lf, "%.3f\t%.2f\t%d\t%d\t%s%s\n", std::chrono::duration<double>(t_render.time_since_epoch()).count(), ms, u.w, u.h,
+                   text.compare(0, 4, "uvg:") == 0 || text.compare(0, 3, "uv:") == 0 || text.compare(0, 4, "uwo:") == 0 ||
+                           text.compare(0, 4, "uwp:") == 0
+                       ? text.c_str()
+                       : "<UiScene>", u.quick ? " (quick)" : "");
+      std::fclose(lf);
+    }
+  }
+  u.fx0 = static_cast<int32_t>(std::floor(fx0));
+  u.fy0 = static_cast<int32_t>(std::floor(fy0));
+  u.fw = std::max(0, static_cast<int32_t>(std::ceil(fx1)) - u.fx0);
+  u.fh = std::max(0, static_cast<int32_t>(std::ceil(fy1)) - u.fy0);
+  u.cover.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
+  if (f1 && f1->x0 == u.fx0 && f1->y0 == u.fy0 && f1->x1 - f1->x0 == u.fw && f1->y1 - f1->y0 == u.fh) {
+    for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = f1->prem[4 * i + 3] > 0.f ? 1 : 0;   // P41G: the same 1x render, kept
+  } else {
+    std::vector<float> one;
+    portsim::ui_run_render(text, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp)
+    for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = one[4 * i + 3] > 0.f ? 1 : 0;
+  }
+  u.near_cover.assign(u.cover.size(), 0);
+  for (int32_t y = 0; y < u.fh; ++y)
+    for (int32_t x = 0; x < u.fw; ++x) {
+      bool any = false;
+      for (int32_t j = std::max(0, y - 1); j <= std::min(u.fh - 1, y + 1) && !any; ++j)
+        for (int32_t i = std::max(0, x - 1); i <= std::min(u.fw - 1, x + 1) && !any; ++i)
+          any = u.cover[static_cast<size_t>(j) * static_cast<size_t>(u.fw) + static_cast<size_t>(i)] != 0;
+      u.near_cover[static_cast<size_t>(y) * static_cast<size_t>(u.fw) + static_cast<size_t>(x)] = any ? 1 : 0;
+    }
+  // the 8-bit words and the entries of the pixels of `src` (n pixels, 4 floats each); quick: of the 1x frame's pixels, mapped below
+  const float *src = q1 ? f1->prem.data() : u.prem.data();
+  const size_t n_src = q1 ? f1->prem.size() / 4u : static_cast<size_t>(u.w) * static_cast<size_t>(u.h);
+  std::vector<uint32_t> pe(n_src, 0), en(n_src, 0);
+  for (size_t i = 0; i < n_src; ++i) {
+    const float *q = src + i * 4u;
+    auto b8 = [](float v) { return static_cast<uint32_t>(std::min(255.f, std::max(0.f, v + 0.5f))); };
+    pe[i] = b8(q[3] * 255.f) << 24 | b8(q[0]) << 16 | b8(q[1]) << 8 | b8(q[2]);
+  }
+  // the entries: pixels of one premultiplied value share one (memo), entries of equal words are one (ids)
+  std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;
+  std::unordered_multimap<uint64_t, uint32_t> ids;
+  uint16_t e[32];
+  for (size_t i = 0; i < n_src; ++i) {
+    const float *q = src + i * 4u;
+    if (q[3] <= 0.f) continue;
+    uint32_t pk[4];
+    std::memcpy(pk, q, sizeof pk);
+    const uint64_t ph = (static_cast<uint64_t>(pk[0]) * 0x9E3779B97F4A7C15ull) ^ (static_cast<uint64_t>(pk[1]) * 0xC2B2AE3D27D4EB4Full) ^
+                        (static_cast<uint64_t>(pk[2]) * 0x165667B19E3779F9ull) ^ (static_cast<uint64_t>(pk[3]) * 0x27D4EB2F165667C5ull);
+    auto m = memo.find(ph);
+    if (m != memo.end() && std::memcmp(m->second.first.data(), pk, sizeof pk) == 0) {
+      en[i] = m->second.second;
+      continue;
+    }
+    bool ink = false;
+    uint64_t hsh = 1469598103934665603ull;
+    for (uint32_t L = 0; L < 32; ++L) {
+      e[L] = portsim::ui_over_level(q, L);
+      ink = ink || e[L] != static_cast<uint16_t>(L | (L << 5) | (L << 10));
+      hsh = (hsh ^ e[L]) * 1099511628211ull;
+    }
+    uint32_t k1 = 0;
+    if (ink) {
+      uint32_t k = ~0u;
+      for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
+        if (std::memcmp(u.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
+          k = r2.first->second;
+          break;
+        }
+      if (k == ~0u) {
+        k = static_cast<uint32_t>(u.lut.size() / 32);
+        ids.emplace(hsh, k);
+        u.lut.insert(u.lut.end(), e, e + 32);
+      }
+      k1 = k + 1;
+    }
+    memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, k1};
+    en[i] = k1;
+  }
+  if (q1) {   // P41G quick: each window pixel takes its 1x pixel's word and entry (no hashing per window pixel); the client rows of
+    // one 1x row are one row copied
+    const size_t w = static_cast<size_t>(u.w);
+    u.prem8.assign(w * static_cast<size_t>(u.h), 0);
+    u.ent.assign(w * static_cast<size_t>(u.h), 0);
+    for (int32_t y = 0; y < u.h; ++y) {
+      const int32_t ly = qy[static_cast<size_t>(y)];
+      if (ly < 0) continue;
+      uint32_t *pr = u.prem8.data() + static_cast<size_t>(y) * w, *er = u.ent.data() + static_cast<size_t>(y) * w;
+      if (y > 0 && qy[static_cast<size_t>(y - 1)] == ly) {
+        std::memcpy(pr, pr - w, w * 4u);
+        std::memcpy(er, er - w, w * 4u);
+        continue;
+      }
+      const size_t base = static_cast<size_t>(ly) * static_cast<size_t>(fw1);
+      for (size_t x = 0; x < w; ++x)
+        if (qx[x] >= 0) {
+          pr[x] = pe[base + static_cast<size_t>(qx[x])];
+          er[x] = en[base + static_cast<size_t>(qx[x])];
+        }
+    }
+  } else if (quick && f1) {   // (an empty render)
+    u.prem8.clear();
+    u.ent.clear();
+  } else {
+    u.prem8 = std::move(pe);
+    u.ent = std::move(en);
+  }
+  u.prem.clear();
+  u.prem.shrink_to_fit();
+  return true;
+}
+// P41G: a big in-game element run (more window pixels than this) is rendered on a worker; its quick entry shows until then
+constexpr size_t kUiAsyncPx = 20000;
+struct UiAsync {
+  std::mutex mu;
+  std::map<std::string, std::shared_ptr<UiRender>> ready;
+  std::set<std::string> pending;
+  // one persistent worker renders the queued runs one at a time, each on at most half the machine's threads (gfx_uvgame.h
+  // uvg_set_render_threads): detached workers per run starved the paint thread at 4K (a report's bands: paints of 600 ms)
+  std::deque<std::pair<std::string, std::pair<std::string, Viewport>>> queue;
+  std::condition_variable cv;
+  bool started = false;
+  std::atomic<uint64_t> serial{0};
+  std::function<void()> notify;
+};
+UiAsync &ui_async() {
+  static UiAsync a;
+  return a;
+}
+}  // namespace
+uint64_t ui_async_serial() { return ui_async().serial.load(); }
+void ui_async_set_notify(std::function<void()> f) {
+  UiAsync &A = ui_async();
+  std::lock_guard<std::mutex> l(A.mu);
+  A.notify = std::move(f);
+}
+namespace {
+void ui_async_enqueue(const std::string &key, const std::string &text, const Viewport &v) {
+  UiAsync &A = ui_async();
+  std::lock_guard<std::mutex> l(A.mu);
+  A.queue.emplace_back(key, std::make_pair(text, v));
+  if (!A.started) {
+    A.started = true;
+    std::thread([]() {
+      portsim::uvg_set_render_threads(static_cast<int32_t>(std::max(1u, std::thread::hardware_concurrency() / 2)));
+      UiAsync &B = ui_async();
+      for (;;) {
+        std::pair<std::string, std::pair<std::string, Viewport>> job;
+        {
+          std::unique_lock<std::mutex> l(B.mu);
+          B.cv.wait(l, [&] { return !B.queue.empty(); });
+          job = std::move(B.queue.back());   // the newest first (what the screen shows now)
+          B.queue.pop_back();
+        }
+        auto f = std::make_shared<UiRender>();
+        const bool ok = build_render(job.second.first, job.second.second, *f, false);
+        std::function<void()> nf;
+        {
+          std::lock_guard<std::mutex> l(B.mu);
+          B.pending.erase(job.first);
+          if (ok) B.ready[job.first] = f;
+          // a bound (entries no paint came back for; an evicted one is queued again by the paint that finds its quick entry)
+          if (B.ready.size() > 256) B.ready.erase(B.ready.begin());
+          B.serial.fetch_add(1);
+          nf = B.notify;
+        }
+        if (nf) nf();   // P41G: paint again (the tables and patches made from the quick entry are made again)
+      }
+    }).detach();
+  }
+  A.cv.notify_one();
+}
+
 const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, UiBox &rb) {
   if (vp.client_w <= 0 || vp.client_h <= 0 || r.x1 <= r.x0 || r.y1 <= r.y0) return nullptr;
   // P40C: one render per scene and scale, at origin 0: a canvas whose content rectangle starts elsewhere (a patch rectangle's
@@ -87,94 +321,62 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
   for (int64_t v : {static_cast<int64_t>(vp.client_w), static_cast<int64_t>(vp.client_h)})
     key.append(reinterpret_cast<const char *>(&v), sizeof v);
   auto it = cache.find(key);
+  if (it != cache.end() && it->second.quick) {   // P41G: the worker's window-scale entry replaces the quick one when ready
+    UiAsync &A = ui_async();
+    std::shared_ptr<UiRender> full;
+    bool requeue = false;
+    {
+      std::lock_guard<std::mutex> l(A.mu);
+      auto f = A.ready.find(key);
+      if (f != A.ready.end()) {
+        full = f->second;
+        A.ready.erase(f);
+      } else if (A.pending.insert(key).second) {   // its render was dropped from the ready bound: render it again
+        requeue = true;
+      }
+    }
+    if (full) it->second = std::move(*full);
+    if (requeue) ui_async_enqueue(key, r.text, vp);
+  }
   if (it == cache.end()) {
-    // P41: the run's text is an encoded UiScene or names a uivec scene (gfx_ui.h ui_run_bounds / ui_run_render)
-    float fx0, fy0, fx1, fy1;
-    if (!portsim::ui_run_bounds(r.text, fx0, fy0, fx1, fy1)) return nullptr;
     UiRender u;
-    u.x0 = first_client(static_cast<int32_t>(std::floor(fx0)), vp.client_w, kLogicalW);   // origin-0 client coordinates
-    u.y0 = first_client(static_cast<int32_t>(std::floor(fy0)), vp.client_h, kLogicalH);
-    const int32_t x1 = first_client(static_cast<int32_t>(std::ceil(fx1)), vp.client_w, kLogicalW);
-    const int32_t y1 = first_client(static_cast<int32_t>(std::ceil(fy1)), vp.client_h, kLogicalH);
-    u.w = std::max(0, x1 - u.x0);
-    u.h = std::max(0, y1 - u.y0);
-    portsim::ui_run_render(r.text, static_cast<double>(vp.client_w) / kLogicalW, static_cast<double>(vp.client_h) / kLogicalH, 0.0,
-                           0.0, u.x0, u.y0, u.w, u.h, u.prem);
-    u.fx0 = static_cast<int32_t>(std::floor(fx0));
-    u.fy0 = static_cast<int32_t>(std::floor(fy0));
-    u.fw = std::max(0, static_cast<int32_t>(std::ceil(fx1)) - u.fx0);
-    u.fh = std::max(0, static_cast<int32_t>(std::ceil(fy1)) - u.fy0);
-    std::vector<float> one;
-    portsim::ui_run_render(r.text, 1.0, 1.0, 0.0, 0.0, u.fx0, u.fy0, u.fw, u.fh, one);   // as the sim's root drawing (gfx_ui.cpp)
-    u.cover.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
-    for (size_t i = 0; i < u.cover.size(); ++i) u.cover[i] = one[4 * i + 3] > 0.f ? 1 : 0;
-    u.near_cover.assign(u.cover.size(), 0);
-    for (int32_t y = 0; y < u.fh; ++y)
-      for (int32_t x = 0; x < u.fw; ++x) {
-        bool any = false;
-        for (int32_t j = std::max(0, y - 1); j <= std::min(u.fh - 1, y + 1) && !any; ++j)
-          for (int32_t i = std::max(0, x - 1); i <= std::min(u.fw - 1, x + 1) && !any; ++i)
-            any = u.cover[static_cast<size_t>(j) * static_cast<size_t>(u.fw) + static_cast<size_t>(i)] != 0;
-        u.near_cover[static_cast<size_t>(y) * static_cast<size_t>(u.fw) + static_cast<size_t>(x)] = any ? 1 : 0;
-      }
-    u.prem8.assign(static_cast<size_t>(u.w) * static_cast<size_t>(u.h), 0);
-    for (size_t i = 0; i < u.prem8.size(); ++i) {
-      const float *q = u.prem.data() + i * 4u;
-      auto b8 = [](float v) { return static_cast<uint32_t>(std::min(255.f, std::max(0.f, v + 0.5f))); };
-      u.prem8[i] = b8(q[3] * 255.f) << 24 | b8(q[0]) << 16 | b8(q[1]) << 8 | b8(q[2]);
-    }
-    // the entries: pixels of one premultiplied value share one (memo), entries of equal words are one (ids)
-    u.ent.assign(static_cast<size_t>(u.w) * static_cast<size_t>(u.h), 0);
-    std::unordered_map<uint64_t, std::pair<std::array<uint32_t, 4>, uint32_t>> memo;
-    std::unordered_multimap<uint64_t, uint32_t> ids;
-    uint16_t e[32];
-    for (size_t i = 0; i < u.ent.size(); ++i) {
-      const float *q = u.prem.data() + i * 4u;
-      if (q[3] <= 0.f) continue;
-      uint32_t pk[4];
-      std::memcpy(pk, q, sizeof pk);
-      const uint64_t ph = (static_cast<uint64_t>(pk[0]) * 0x9E3779B97F4A7C15ull) ^ (static_cast<uint64_t>(pk[1]) * 0xC2B2AE3D27D4EB4Full) ^
-                          (static_cast<uint64_t>(pk[2]) * 0x165667B19E3779F9ull) ^ (static_cast<uint64_t>(pk[3]) * 0x27D4EB2F165667C5ull);
-      auto m = memo.find(ph);
-      if (m != memo.end() && std::memcmp(m->second.first.data(), pk, sizeof pk) == 0) {
-        u.ent[i] = m->second.second;
-        continue;
-      }
-      bool ink = false;
-      uint64_t hsh = 1469598103934665603ull;
-      for (uint32_t L = 0; L < 32; ++L) {
-        e[L] = portsim::ui_over_level(q, L);
-        ink = ink || e[L] != static_cast<uint16_t>(L | (L << 5) | (L << 10));
-        hsh = (hsh ^ e[L]) * 1099511628211ull;
-      }
-      uint32_t k1 = 0;
-      if (ink) {
-        uint32_t k = ~0u;
-        for (auto r2 = ids.equal_range(hsh); r2.first != r2.second; ++r2.first)
-          if (std::memcmp(u.lut.data() + static_cast<size_t>(r2.first->second) * 32u, e, sizeof e) == 0) {
-            k = r2.first->second;
-            break;
-          }
-        if (k == ~0u) {
-          k = static_cast<uint32_t>(u.lut.size() / 32);
-          ids.emplace(hsh, k);
-          u.lut.insert(u.lut.end(), e, e + 32);
+    bool done = false;
+    if (portsim::uvg_is_run_text(r.text)) {   // P41G: a big in-game element run: a worker renders it, a quick entry shows meanwhile
+      UiAsync &A = ui_async();
+      std::shared_ptr<UiRender> full;
+      {
+        std::lock_guard<std::mutex> l(A.mu);
+        auto f = A.ready.find(key);
+        if (f != A.ready.end()) {
+          full = f->second;
+          A.ready.erase(f);
         }
-        k1 = k + 1;
       }
-      memo[ph] = {std::array<uint32_t, 4>{pk[0], pk[1], pk[2], pk[3]}, k1};
-      u.ent[i] = k1;
+      if (full) {
+        u = std::move(*full);
+        done = true;
+      } else {
+        float a0, b0, a1, b1;
+        if (!portsim::ui_run_bounds(r.text, a0, b0, a1, b1)) return nullptr;
+        const double px_est = (a1 - a0) * static_cast<double>(vp.client_w) / kLogicalW * (b1 - b0) * vp.client_h / kLogicalH;
+        if (px_est > kUiAsyncPx && vp.client_w > kLogicalW && !std::getenv("SG_P41G_SYNC")) {
+          bool start = false;
+          {
+            std::lock_guard<std::mutex> l(A.mu);
+            start = A.pending.insert(key).second;
+          }
+          if (start) ui_async_enqueue(key, r.text, vp);
+          if (!build_render(r.text, vp, u, true)) return nullptr;
+          done = true;
+        }
+      }
     }
-    u.lxs.resize(static_cast<size_t>(u.w));
-    for (int32_t x = 0; x < u.w; ++x)
-      u.lxs[static_cast<size_t>(x)] = floor_div(static_cast<int64_t>(u.x0 + x) * kLogicalW, vp.client_w);
-    u.lys.resize(static_cast<size_t>(u.h));
-    for (int32_t y = 0; y < u.h; ++y)
-      u.lys[static_cast<size_t>(y)] = floor_div(static_cast<int64_t>(u.y0 + y) * kLogicalH, vp.client_h);
-    u.prem.clear();
-    u.prem.shrink_to_fit();
+    if (!done && !build_render(r.text, vp, u, false)) return nullptr;
     const size_t px = static_cast<size_t>(u.w) * static_cast<size_t>(u.h);
-    if (cache.size() > 48 || cached_px + px > 60000000u) {   // about 300 MB of entries and indexes at most
+    // about 300 MB of entries and indexes at most. P41G: 1024 entries (was 48): the in-game HUD drawn from the approved scenes holds
+    // 60-100 runs on screen (each button, pill, face, pip and medal is its own run), so 48 cleared the whole cache every few paints and
+    // re-rendered every run at once (paints of 160-170 ms, log/roadmap/P41/portgame/notes.md); the pixel bound stays the memory bound
+    if (cache.size() > 1024 || cached_px + px > 60000000u) {
       cache.clear();
       cached_px = 0;
     }
@@ -191,10 +393,33 @@ const UiRender *ui_prepare(const portsim::GfxTextRun &r, const Viewport &vp, int
   rb.y1 = std::min(std::min(rb.oy + u.h, ch), sy + first_client(r.y1, vp.client_h, kLogicalH));
   return &u;
 }
-// whether box pixel (x, y) (render coordinates) shows the run: its frame pixel visible and covered by the scale-1 drawing
-bool ui_visible(const portsim::GfxTextRun &r, const UiRender &u, bool layered, int32_t x, int32_t y) {
-  const int32_t lx = u.lxs[static_cast<size_t>(x)], ly = u.lys[static_cast<size_t>(y)];
-  return u.covered(lx, ly) && r.visible(lx, ly, layered) != 0;
+// whether box pixel (x, y) (render coordinates) shows the run: its frame pixel visible and covered by the scale-1 drawing, as a mask
+// per frame pixel of the render's frame box (P41G: tested once per frame pixel, not once per window pixel; with near the cover grown
+// by one pixel (grown), the true-colour draw's test), and per render column / row its index in the box (-1: outside, never shown)
+struct UiVis {
+  std::vector<uint8_t> v;
+  std::vector<int32_t> cx, cy;
+  int32_t fw = 0;
+};
+void ui_vis(const portsim::GfxTextRun &r, const UiRender &u, bool layered, bool grown, UiVis &o) {
+  o.fw = u.fw;
+  o.v.assign(static_cast<size_t>(u.fw) * static_cast<size_t>(u.fh), 0);
+  const std::vector<uint8_t> &c = grown ? u.near_cover : u.cover;
+  for (int32_t ly = 0; ly < u.fh; ++ly)
+    for (int32_t lx = 0; lx < u.fw; ++lx) {
+      const size_t i = static_cast<size_t>(ly) * static_cast<size_t>(u.fw) + static_cast<size_t>(lx);
+      o.v[i] = c[i] != 0 && r.visible(u.fx0 + lx, u.fy0 + ly, layered) != 0 ? 1 : 0;
+    }
+  o.cx.resize(static_cast<size_t>(u.w));
+  for (int32_t x = 0; x < u.w; ++x) {
+    const int32_t lx = u.lxs[static_cast<size_t>(x)] - u.fx0;
+    o.cx[static_cast<size_t>(x)] = lx >= 0 && lx < u.fw ? lx : -1;
+  }
+  o.cy.resize(static_cast<size_t>(u.h));
+  for (int32_t y = 0; y < u.h; ++y) {
+    const int32_t ly = u.lys[static_cast<size_t>(y)] - u.fy0;
+    o.cy[static_cast<size_t>(y)] = ly >= 0 && ly < u.fh ? ly : -1;
+  }
 }
 }  // namespace
 
@@ -479,30 +704,42 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return;
+    UiVis V;
+    ui_vis(r, *u, layered, true_colour_, V);
     if (true_colour_) {  // P41W: the premultiplied colour over the window's own word, 8 bits per channel
-      for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y)
+      for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y) {
+        const int32_t cy = V.cy[static_cast<size_t>(y)];
+        if (cy < 0) continue;
+        const uint8_t *vrow = V.v.data() + static_cast<size_t>(cy) * static_cast<size_t>(V.fw);
         for (int32_t x = b.x0 - b.ox; x < b.x1 - b.ox; ++x) {
           const uint32_t p = u->prem8[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];
           const uint32_t a = p >> 24;
           if (a == 0) continue;
-          const int32_t lx = u->lxs[static_cast<size_t>(x)], ly = u->lys[static_cast<size_t>(y)];
-          if (!u->covered_near(lx, ly) || r.visible(lx, ly, layered) == 0) continue;
+          const int32_t cx = V.cx[static_cast<size_t>(x)];
+          if (cx < 0 || !vrow[cx]) continue;
           uint32_t &o = out[static_cast<size_t>(b.oy + y) * static_cast<size_t>(cw) + static_cast<size_t>(b.ox + x)];
           const uint32_t k = 255 - a;
           auto ch8 = [&](int sh) { return std::min<uint32_t>(255, ((p >> sh) & 255) + (((o >> sh) & 255) * k + 127) / 255); };
           o = 0xff000000u | ch8(16) << 16 | ch8(8) << 8 | ch8(0);
         }
+      }
       ++stats.runs;
       return;
     }
-    for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y)
+    for (int32_t y = b.y0 - b.oy; y < b.y1 - b.oy; ++y) {
+      const int32_t cy = V.cy[static_cast<size_t>(y)];
+      if (cy < 0) continue;
+      const uint8_t *vrow = V.v.data() + static_cast<size_t>(cy) * static_cast<size_t>(V.fw);
       for (int32_t x = b.x0 - b.ox; x < b.x1 - b.ox; ++x) {
         const uint32_t e = u->ent[static_cast<size_t>(y) * static_cast<size_t>(u->w) + static_cast<size_t>(x)];
-        if (e == 0 || !ui_visible(r, *u, layered, x, y)) continue;
+        if (e == 0) continue;
+        const int32_t cx = V.cx[static_cast<size_t>(x)];
+        if (cx < 0 || !vrow[cx]) continue;
         uint32_t &o = out[static_cast<size_t>(b.oy + y) * static_cast<size_t>(cw) + static_cast<size_t>(b.ox + x)];
         const uint16_t w = to555(o), v = u->over(e - 1, w);
         if (v != w) o = rgb555_to_bgra(v);
       }
+    }
     ++stats.runs;
     return;
   }
@@ -552,22 +789,64 @@ void TextRaster::draw(const portsim::GfxTextRun &r, bool layered, const Viewport
 // visible pixels where some level's result differs from the level.
 bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
                        TextTable &t, uint32_t levels) {
+  static const char *tlog = std::getenv("SG_P41G_UILOG");   // P41G development: every table's time (ms, kind, text)
+  if (!tlog) return table_(r, layered, vp, dx, cw, ch, t, levels);
+  const auto t0 = std::chrono::steady_clock::now();
+  const bool ok = table_(r, layered, vp, dx, cw, ch, t, levels);
+  const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+  static std::mutex lmu;
+  std::lock_guard<std::mutex> ll(lmu);
+  if (FILE *lf = std::fopen(tlog, "a")) {
+    const bool ui = portsim::ui_is_run_face(r.face);
+    std::fprintf(lf, "%.3f\t%.2f\ttable\t%s\t%s\n", std::chrono::duration<double>(t0.time_since_epoch()).count(), ms, ui ? "ui" : "gdi",
+                 ui && (r.text.compare(0, 4, "uvg:") == 0 || r.text.compare(0, 3, "uv:") == 0) ? r.text.c_str() : ui ? "<UiScene>" : r.text.c_str());
+    std::fclose(lf);
+  }
+  return ok;
+}
+
+bool TextRaster::table_(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch,
+                        TextTable &t, uint32_t levels) {
   t = TextTable();
   if (portsim::ui_is_run_face(r.face)) {  // P40: a UI run's table: the scene's entries over the run's visible pixels (P40B: the
     // entries are the scene's, made once per scene and viewport; only the ones the run uses are copied)
+    const uint64_t serial = ui_async_serial();   // (read before the prepare: a render ready after it moves the serial again)
     UiBox b;
     const UiRender *u = ui_prepare(r, vp, dx, cw, ch, b);
     if (!u) return false;
+    t.quick = u->quick;
+    t.serial = serial;
     const int32_t bw = std::max(0, b.x1 - b.x0), bh = std::max(0, b.y1 - b.y0);
     std::vector<uint32_t> idx(static_cast<size_t>(bw) * static_cast<size_t>(bh), 0);
     std::vector<uint32_t> remap(u->lut.size() / 32, 0);
     int32_t ix0 = bw, ix1 = -1, iy0 = bh, iy1 = -1;
+    UiVis V;
+    ui_vis(r, *u, layered, false, V);
+    const int32_t rx0 = b.x0 - b.ox;
+    int32_t prev_y = -2;   // P41G: the last row made, and whether it held a pixel (a quick entry's rows of one 1x row are equal)
+    bool prev_hit = false;
     for (int32_t y = 0; y < bh; ++y) {
       const int32_t ry = b.y0 - b.oy + y;
+      const int32_t cy = V.cy[static_cast<size_t>(ry)];
+      if (cy < 0) continue;
+      uint32_t *irow = idx.data() + static_cast<size_t>(y) * static_cast<size_t>(bw);
+      if (u->quick && prev_y == y - 1 && u->lys[static_cast<size_t>(ry - 1)] == u->lys[static_cast<size_t>(ry)]) {
+        std::memcpy(irow, irow - bw, static_cast<size_t>(bw) * 4u);   // the same entries and visibility: the same row
+        if (prev_hit) iy1 = y + 1;
+        prev_y = y;
+        continue;
+      }
+      prev_y = y;
+      prev_hit = false;
+      const uint8_t *vrow = V.v.data() + static_cast<size_t>(cy) * static_cast<size_t>(V.fw);
+      const uint32_t *erow = u->ent.data() + static_cast<size_t>(ry) * static_cast<size_t>(u->w) + static_cast<size_t>(rx0);
+      const int32_t *cxs = V.cx.data() + rx0;
       for (int32_t x = 0; x < bw; ++x) {
-        const int32_t rx = b.x0 - b.ox + x;
-        const uint32_t e = u->ent[static_cast<size_t>(ry) * static_cast<size_t>(u->w) + static_cast<size_t>(rx)];
-        if (e == 0 || !ui_visible(r, *u, layered, rx, ry)) continue;
+        const uint32_t e = erow[x];
+        if (e == 0) continue;
+        const int32_t cx = cxs[x];
+        if (cx < 0 || !vrow[cx]) continue;
+        prev_hit = true;
         uint32_t &m = remap[e - 1];
         if (m == 0) {
           const uint16_t *src = u->lut.data() + static_cast<size_t>(e - 1) * 32u;
@@ -576,7 +855,7 @@ bool TextRaster::table(const portsim::GfxTextRun &r, bool layered, const Viewpor
           for (uint32_t L = levels; L < 32; ++L) t.lut[at + L] = static_cast<uint16_t>(L | (L << 5) | (L << 10));
           m = static_cast<uint32_t>(at / 32) + 1;
         }
-        idx[static_cast<size_t>(y) * static_cast<size_t>(bw) + static_cast<size_t>(x)] = m;
+        irow[x] = m;
         ix0 = std::min(ix0, x);
         ix1 = std::max(ix1, x + 1);
         iy0 = std::min(iy0, y);

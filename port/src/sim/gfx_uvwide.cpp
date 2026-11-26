@@ -77,10 +77,18 @@ struct UvwScreenDef {
 #include "uivec_wide_pro.inc"
 #include "uivec_wide_editor.inc"
 #include "uivec_wide_editor_male.inc"
+// P41G round 6: the in-game full-screen reports (gfx_ui.cpp ui_wide_report)
+#include "uivec_wide_route.inc"
+#include "uivec_wide_route_employ.inc"
+#include "uivec_wide_route_aura.inc"
+#include "uivec_wide_route_value.inc"
+#include "uivec_wide_buyland.inc"
 
 // the order of port_export.py WIDE (the test entries' screen index)
 const UvwScreenDef *const kScreens[] = {&uvw_title::kScreen, &uvw_diff::kScreen,   &uvw_load::kScreen,   &uvw_theme::kScreen,
-                                        &uvw_world::kScreen, &uvw_pro::kScreen,    &uvw_editor::kScreen, &uvw_editor_male::kScreen};
+                                        &uvw_world::kScreen, &uvw_pro::kScreen,    &uvw_editor::kScreen, &uvw_editor_male::kScreen,
+                                        &uvw_route::kScreen, &uvw_route_employ::kScreen, &uvw_route_aura::kScreen,
+                                        &uvw_route_value::kScreen, &uvw_buyland::kScreen};
 constexpr int32_t kNumScreens = static_cast<int32_t>(sizeof(kScreens) / sizeof(kScreens[0]));
 
 // a lifted picture (wide.py lift): its own colour (clipped) and alpha per pixel, and the premultiplied form composite_picture lays

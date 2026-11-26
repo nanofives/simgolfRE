@@ -46,7 +46,13 @@ BUTTONS = [("load", 0), ("play", 1), ("tutorial", 2), ("champ", 3), ("sandbox", 
 # kTitleButtons' unselected SpriteRef slot of each button (the hover cut is the next slot)
 SLOTS = {"load": 0, "play": 2, "tutorial": 4, "champ": 6, "sandbox": 8, "exit": 10}
 KEY_KINDS = {"title": 1, "local": 2, "cgb": 3}
-KINDS = ["circle", "ellipse", "poly", "seg", "half", "union", "inter", "sub", "grow", "outline", "stroke", "rrect", "arc"]
+KINDS = ["circle", "ellipse", "poly", "seg", "half", "union", "inter", "sub", "grow", "outline", "stroke", "rrect", "arc",
+         # P41G (port_game.py): area shape kinds (sdf.EXTRA), evaluated natively by gfx_uivec_eval.h with the area module's formula
+         "hud_panels.limb", "hud_panels.rrect4", "popups.sinter", "rm.smin",
+         "marks.superellipse", "marks.pline", "marks.vline"]
+# P41G: area kinds that are a plain polygon built by their area module (port_game.py registers the builder): expanded to "poly"
+AREA_EXPAND = {}
+FX = {"edge_light": 0, "inner_shadow": 1, "tone": 2}
 CAPS = {"butt": 0, "flat": 1, "round": 2}
 MATTES = {"key": 0, "opaque": 1, "ground_diff": 2}
 
@@ -75,6 +81,20 @@ WIDE = {
     "pro": {"bg": "interface/title_pickapro.pcx", "overlays": {}, "draws": None},
     "editor": {"bg": "interface/custgolfbckgrnd.pcx", "overlays": {}, "draws": None},
     "editor_male": {"bg": "interface/custglfbckmale.pcx", "overlays": {}, "draws": None},
+    # P41G round 6 (log/roadmap/P41/work6/reports_maps/results.tsv): in-game full-screen reports drawn wide. "bg" is the sheet whose
+    # Image_draw at (0, 0) starts the screen (gfx_ui.cpp ui_wide_report): the routing map's top per mode (its bottom sheet, drawn just
+    # before, is restored from the backdrop), Buy Land's one full-screen sheet. "file": the scene file (one per route mode); "refs":
+    # the approved element scenes the wide scene places (scenes/<area>/<id>.json, first state)
+    "route": {"bg": "interface/infoscreens/route screens_course.pcx", "file": "route-wide.json", "overlays": {}, "draws": [],
+              "refs": ("reports_maps", ["route-top-course", "route-bottom"])},
+    "route_employ": {"bg": "interface/infoscreens/route screens_employ.pcx", "file": "route-wide-employ.json", "overlays": {},
+                     "draws": [], "refs": ("reports_maps", ["route-top-employ", "route-bottom"])},
+    "route_aura": {"bg": "interface/infoscreens/route screens_aura.pcx", "file": "route-wide-aura.json", "overlays": {},
+                   "draws": [], "refs": ("reports_maps", ["route-top-aura", "route-bottom"])},
+    "route_value": {"bg": "interface/infoscreens/route screens_value.pcx", "file": "route-wide-value.json", "overlays": {},
+                    "draws": [], "refs": ("reports_maps", ["route-top-value", "route-bottom"])},
+    "buyland": {"bg": "interface/infoscreens/buy_land.pcx", "file": "buyland-wide.json", "overlays": {}, "draws": [],
+                "refs": ("reports_maps", ["buyland-backdrop"])},
 }
 
 
@@ -183,8 +203,31 @@ def _smooth_open(pts, n):
 def expand(S):
     """S with only the port's kinds (sdf.py's own constructions, same arithmetic)."""
     t = S["t"]
-    if t in ("circle", "ellipse", "seg", "half", "rrect", "arc"):
+    if t in ("circle", "ellipse", "seg", "half", "rrect", "arc", "hud_panels.rrect4"):
         return dict(S)
+    if t == "hud_panels.limb":   # figs.py _limb: its smooth rounds applied here (ends kept, widths interpolated)
+        pts = [list(map(float, p)) for p in S["pts"]]
+        for _ in range(int(S.get("smooth", 0))):
+            out = [pts[0]]
+            for a, b in zip(pts, pts[1:]):
+                for f in (0.25, 0.75):
+                    out.append([a[k] * (1 - f) + b[k] * f for k in range(3)])
+            out.append(pts[-1])
+            pts = out
+        return {"t": t, "pts": pts, "cap": S.get("cap", "round")}
+    if t == "popups.sinter":
+        return {"t": t, "of": [expand(q) for q in S["of"]], "r": S["r"]}
+    if t == "rm.smin":
+        return {"t": t, "of": [expand(q) for q in S["of"]], "k": S["k"]}
+    if t == "marks.superellipse":
+        return dict(S)
+    if t == "marks.pline":   # common.py _pline: the smooth rounds applied here (ends kept)
+        return {"t": t, "pts": _smooth_open([list(map(float, p)) for p in S["pts"]], S.get("smooth", 0)), "w": S["w"],
+                "w1": S.get("w1", S["w"]), "cap": S.get("cap", "butt")}
+    if t == "marks.vline":   # fix2.py _vline: the Catmull-Rom points and their widths resolved here (AREA_EXPAND["marks.vline"])
+        return AREA_EXPAND["marks.vline"](S)
+    if t in AREA_EXPAND:
+        return expand(AREA_EXPAND[t](S))
     if t == "poly":
         return {"t": "poly", "rings": _smooth_closed(S["rings"], S.get("smooth", 0))}
     if t == "stroke":
@@ -289,7 +332,18 @@ def translate(S, dx, dy):
         return dict(S, a=mv(S["a"]), b=mv(S["b"]))
     if t == "half":
         return dict(S, p=mv(S["p"]))
-    if t in ("union", "inter"):
+    if t == "hud_panels.limb":
+        return dict(S, pts=[[p[0] + dx, p[1] + dy, p[2]] for p in S["pts"]])
+    if t == "marks.superellipse":
+        return dict(S, c=mv(S["c"]))
+    if t == "marks.pline":
+        return dict(S, pts=[mv(p) for p in S["pts"]])
+    if t == "marks.vline":
+        return dict(S, pts=[[p[0] + dx, p[1] + dy, p[2]] for p in S["pts"]])
+    if t == "hud_panels.rrect4":
+        b = S["box"]
+        return dict(S, box=[b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy])
+    if t in ("union", "inter", "popups.sinter", "rm.smin"):
         return dict(S, of=[translate(q, dx, dy) for q in S["of"]])
     if t == "sub":
         return dict(S, a=translate(S["a"], dx, dy), b=translate(S["b"], dx, dy))
@@ -328,6 +382,7 @@ class Tables:
     def __init__(self):
         self.nodes, self.kids, self.rings, self.pts = [], [], [], []
         self.paints, self.stops, self.coef, self.layers, self.items, self.scenes = [], [], [], [], [], []
+        self.fx = []   # P41G: layer effects (UvFx rows)
 
     def node(self, S):
         t = S["t"]
@@ -361,8 +416,27 @@ class Tables:
             p = [S["w"]]
             ns, ne = stroke_near(S)
             cap, closed = CAPS[S["cap"]], int(S["closed"])
+        elif t == "hud_panels.limb":
+            # the n points (x, y) then their n widths as (w, 0) pairs; cap 1 = "butt"
+            a, n = len(self.pts), len(S["pts"])
+            self.pts.extend([[q[0], q[1]] for q in S["pts"]])
+            self.pts.extend([[q[2], 0.0] for q in S["pts"]])
+            cap = 1 if S.get("cap") == "butt" else 0
+        elif t == "hud_panels.rrect4":
+            p = list(S["box"]) + list(S["r"])
+        elif t == "marks.superellipse":
+            p = [S["c"][0], S["c"][1], S["r"][0], S["r"][1], S["n"]]
+        elif t == "marks.pline":   # the points; p = w (start), w1 (end); cap 1 = "butt"
+            a, n = len(self.pts), len(S["pts"])
+            self.pts.extend(S["pts"])
+            p = [S["w"], S["w1"]]
+            cap = 1 if S["cap"] == "butt" else 0
+        elif t == "marks.vline":   # the spline's points then their widths as (w, 0) pairs (as limb)
+            a, n = len(self.pts), len(S["pts"])
+            self.pts.extend([[q[0], q[1]] for q in S["pts"]])
+            self.pts.extend([[q[2], 0.0] for q in S["pts"]])
         else:
-            ch = S["of"] if t in ("union", "inter") else [S["a"], S["b"]] if t == "sub" else [S["of"]]
+            ch = S["of"] if t in ("union", "inter", "popups.sinter", "rm.smin") else [S["a"], S["b"]] if t == "sub" else [S["of"]]
             ids = [self.node(q) for q in ch]
             a, n = len(self.kids), len(ids)
             self.kids.extend(ids)
@@ -370,6 +444,10 @@ class Tables:
                 p = [S["d"]]
             elif t == "outline":
                 p = [S["w"]]
+            elif t == "popups.sinter":
+                p = [S["r"]]
+            elif t == "rm.smin":
+                p = [S["k"]]
         assert len(p) <= 10
         self.nodes.append((k, cap, closed, a, n, ns, ne, p))
         return len(self.nodes) - 1
@@ -415,7 +493,7 @@ class Tables:
         return len(self.paints) - 1
 
     def layer(self, L):
-        extra = set(L) - {"shape", "fill", "alpha", "soft", "clip", "falloff", "key"}
+        extra = set(L) - {"shape", "fill", "alpha", "soft", "clip", "falloff", "key", "name", "fx"}
         if extra:
             raise ValueError(f"port_export: layer keys {sorted(extra)} are not exported")
         sh = self.node(expand(L["shape"]))
@@ -423,8 +501,20 @@ class Tables:
         # the bevel's normal is the layer shape's own (circle / ellipse, analytic) or its "of" shape's
         pa = self.paint(L["fill"], expand(L["shape"]))
         f = L.get("falloff")
+        fa = len(self.fx)
+        for e in L.get("fx", ()):   # sdf.py render_layer's effects, in order: (t, w, pow, dir x / y, colour 1, colour 2, k, a, b, add)
+            t = FX[e["t"]]
+            if t == 0:
+                row = (0, e["w"], e.get("pow", 1.0), e["dir"][0], e["dir"][1], *e["light"], *e["dark"], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            elif t == 1:
+                row = (1, e["w"], e.get("pow", 2.0), e["dir"][0], e["dir"][1], *e["rgb"], 0.0, 0.0, 0.0, e.get("k", 0.8),
+                       0.0, 0.0, 0.0, 0.0, 0.0)
+            else:
+                row = (2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, *e["a"], *e["b"], e["add"])
+            self.fx.append(row)
         self.layers.append((sh, cl, pa, L.get("alpha", 1.0), L.get("soft", -1.0),
-                            (1, f["c"][0], f["c"][1], f["r"], f.get("pow", 2.0)) if f else (0, 0.0, 0.0, 0.0, 0.0)))
+                            (1, f["c"][0], f["c"][1], f["r"], f.get("pow", 2.0)) if f else (0, 0.0, 0.0, 0.0, 0.0),
+                            (fa, len(self.fx) - fa)))
 
     def item(self, it):
         la = len(self.layers)
@@ -475,8 +565,9 @@ def emit_tables(T):
                      f"{{{', '.join(num(v) for v in g)}}}}},")
     lines.append("};")
     lines.append("static const UvLayer kLayers[] = {")
-    for sh, cl, pa, al, so, f in T.layers:
-        lines.append(f"    {{{sh}, {cl}, {pa}, {num(al)}, {num(so)}, {f[0]}, {num(f[1])}, {num(f[2])}, {num(f[3])}, {num(f[4])}}},")
+    for sh, cl, pa, al, so, f, fx in T.layers:
+        tail = f", {fx[0]}, {fx[1]}" if fx[1] else ""   # P41G: a layer's effects (zero-initialised when it has none)
+        lines.append(f"    {{{sh}, {cl}, {pa}, {num(al)}, {num(so)}, {f[0]}, {num(f[1])}, {num(f[2])}, {num(f[3])}, {num(f[4])}{tail}}},")
     lines.append("};")
     lines.append("static const UvItem kItems[] = {")
     for box, la, ln in T.items:
@@ -484,7 +575,14 @@ def emit_tables(T):
     if not T.items:
         lines.append("    {{0.0, 0.0, 0.0, 0.0}, 0, 0},")
     lines.append("};")
-    lines.append("static const UvTab kTab = {kNodes, kKids, kRings, kPts, kStops, kCoef, kPaints, kLayers, kItems};")
+    if T.fx:   # P41G: the effects table (a table set without effects leaves UvTab::fx null)
+        lines.append("static const UvFx kFx[] = {")
+        for row in T.fx:
+            lines.append(f"    {{{row[0]}, {{{', '.join(num(v) for v in row[1:])}}}}},")
+        lines.append("};")
+        lines.append("static const UvTab kTab = {kNodes, kKids, kRings, kPts, kStops, kCoef, kPaints, kLayers, kItems, kFx};")
+    else:
+        lines.append("static const UvTab kTab = {kNodes, kKids, kRings, kPts, kStops, kCoef, kPaints, kLayers, kItems};")
     return lines
 
 
@@ -529,7 +627,7 @@ def export():
 
 # ------------------------------------------------------------------------------------------------------------ wide screens
 def wide_scene(screen):
-    with open(os.path.join(WIDE_DIR, f"{screen}-wide.json")) as f:
+    with open(os.path.join(WIDE_DIR, WIDE.get(screen, {}).get("file", f"{screen}-wide.json"))) as f:
         return json.load(f)
 
 
@@ -563,6 +661,13 @@ def wide_refs(screen):
     """the refs of a wide scene that are not plain approved scene files"""
     if screen == "title":
         return {"title.py:idle": title.scene(title.measure(verbose=False), False)}
+    if "refs" in WIDE.get(screen, {}):   # P41G round 6: in-game element scenes (states as a dict: the first one's scene)
+        area, ids = WIDE[screen]["refs"]
+        out = {}
+        for eid in ids:
+            with open(os.path.join(HERE, "scenes", area, eid + ".json"), encoding="utf-8") as f:
+                out[eid] = list(json.load(f)["states"].values())[0]["scene"]
+        return out
     return {}
 
 
@@ -598,6 +703,10 @@ def blob_row(e):
 def wide_export(screen):
     import wide
     cfg = WIDE[screen]
+    if "refs" in cfg:   # P41G round 6: the in-game areas' polygon kinds (rm.arc, reports_slabs.rpoly) expanded as port_game does
+        import port_game
+        port_game._area_kinds()
+        AREA_EXPAND.update(port_game.PE.AREA_EXPAND)   # (run as __main__, port_game's port_export is another module object)
     sc = wide_scene(screen)
     refs = wide_refs(screen)
     T = Tables()

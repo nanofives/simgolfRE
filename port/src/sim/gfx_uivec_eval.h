@@ -13,7 +13,13 @@
 namespace portsim {
 namespace uveval {
 
-enum UvKind : uint8_t { kCircle = 0, kEllipse, kPoly, kSeg, kHalf, kUnion, kInter, kSub, kGrow, kOutline, kStroke, kRRect, kArc };
+enum UvKind : uint8_t { kCircle = 0, kEllipse, kPoly, kSeg, kHalf, kUnion, kInter, kSub, kGrow, kOutline, kStroke, kRRect, kArc,
+                        // P41G: area kinds (sdf.EXTRA): hud_panels.limb (figs.py _limb), hud_panels.rrect4 (_rrect4), popups.sinter (hs3.py)
+                        kLimb, kRRect4, kSInter,
+                        // rm.smin (reports_maps parts.py _smin: a union with polynomial smooth-minimum fillets of size p[0])
+                        kSMin,
+                        // marks: superellipse (common.py _superellipse), pline (_pline), vline (fix2.py _vline, points resolved)
+                        kSuper, kPLine, kVLine };
 struct UvNode {
   uint8_t kind, cap, closed;  // cap: 0 butt, 1 flat, 2 round (a stroke)
   int32_t a, n;               // children (kids) / rings (rings) / points (pts pairs, a stroke)
@@ -41,6 +47,13 @@ struct UvLayer {
   double alpha, soft;  // soft < 0: none
   int32_t falloff;
   double fcx, fcy, fr, fpow;
+  int32_t fx_a, fx_n;  // P41G: the layer's effects in UvTab::fx (0, 0: none)
+};
+// P41G: a layer effect (sdf.py render_layer "fx"): kind 0 edge_light, 1 inner_shadow, 2 tone; v = w, pow, dir x / y, colour 1 (light /
+// rgb), colour 2 (dark), k, a x / y, b x / y, add
+struct UvFx {
+  uint8_t kind;
+  double v[16];
 };
 struct UvItem {
   double box[4];
@@ -53,6 +66,7 @@ struct UvTab {
   const UvPaint *paints;
   const UvLayer *layers;
   const UvItem *items;
+  const UvFx *fx = nullptr;   // P41G (null: no table set before P41G has effects)
 };
 
 constexpr double kDeg = 3.141592653589793 / 180.0;   // numpy's deg2rad factor
@@ -138,6 +152,77 @@ inline double sd_stroke(const UvTab &T, const UvNode &S, double x, double y) {
   return d;
 }
 
+// P41G: figs.py _cone (iq's uneven capsule from a, radius r1, to b, radius r2) and _limb (n points, then their n widths as pairs)
+inline double sd_cone(double x, double y, double ax, double ay, double bx, double by, double r1, double r2) {
+  const double ex = bx - ax, ey = by - ay;
+  const double h = std::max(std::hypot(ex, ey), 1e-9);
+  const double ux = ex / h, uy = ey / h;
+  const double px = x - ax, py = y - ay;
+  const double v = px * ux + py * uy;
+  const double u = std::abs(-px * uy + py * ux);
+  if (std::abs(r1 - r2) >= h) return std::min(std::hypot(px, py) - r1, std::hypot(x - bx, y - by) - r2);
+  const double s = (r1 - r2) / h, c = std::sqrt(1 - s * s);
+  const double k = -s * u + c * v;
+  if (k < 0) return std::hypot(u, v) - r1;
+  if (k > c * h) return std::hypot(u, v - h) - r2;
+  return u * c + v * s - r1;
+}
+inline double sd_limb(const UvTab &T, const UvNode &S, double x, double y) {
+  const double *P = T.pts + 2 * S.a, *Wd = T.pts + 2 * (S.a + S.n);
+  const int32_t n = S.n;
+  if (n == 1) return std::hypot(x - P[0], y - P[1]) - Wd[0] / 2;
+  double d = 1e18;
+  for (int32_t k = 0; k + 1 < n; ++k) {
+    double dk = sd_cone(x, y, P[2 * k], P[2 * k + 1], P[2 * k + 2], P[2 * k + 3], Wd[2 * k] / 2, Wd[2 * k + 2] / 2);
+    if (S.cap == 1) {
+      auto plane = [&](int32_t e, int32_t f) {
+        const double ux = P[2 * e] - P[2 * f], uy = P[2 * e + 1] - P[2 * f + 1];
+        const double nn = std::max(std::hypot(ux, uy), 1e-9);
+        dk = std::max(dk, ((x - P[2 * e]) * ux + (y - P[2 * e + 1]) * uy) / nn);
+      };
+      if (k == 0) plane(0, 1);
+      if (k == n - 2) plane(n - 1, n - 2);
+    }
+    d = std::min(d, dk);
+  }
+  return d;
+}
+
+// P41G: common.py _pline: an open polyline whose width runs from p[0] to p[1] along its length, round joins; cap 1 ("butt"): the
+// segments starting within one (larger) width of the start are cut by the start's plane, those ending within it of the end by the end's
+inline double sd_pline(const UvTab &T, const UvNode &S, double x, double y) {
+  const double *P = T.pts + 2 * S.a;
+  const int32_t n = S.n;
+  double tot = 0;
+  for (int32_t k = 0; k + 1 < n; ++k) tot += std::hypot(P[2 * k + 2] - P[2 * k], P[2 * k + 3] - P[2 * k + 1]);
+  const double Lt = std::max(tot, 1e-9), w0 = S.p[0], w1 = S.p[1], wm = std::max(w0, w1);
+  double d = 1e18, L = 0;
+  for (int32_t k = 0; k + 1 < n; ++k) {
+    const double ax = P[2 * k], ay = P[2 * k + 1], ex = P[2 * k + 2] - ax, ey = P[2 * k + 3] - ay;
+    const double ll = std::max(ex * ex + ey * ey, 1e-12);
+    const double wx = x - ax, wy = y - ay;
+    const double u = clip01((wx * ex + wy * ey) / ll);
+    const double t = (L + u * std::sqrt(ll)) / Lt;
+    double dk = std::hypot(wx - ex * u, wy - ey * u) - (w0 * (1 - t) + w1 * t) / 2;
+    const double Lnext = L + std::hypot(ex, ey);
+    if (S.cap == 1) {
+      if (L < wm) {
+        const double ux = P[2] - P[0], uy = P[3] - P[1];
+        const double nn = std::max(std::hypot(ux, uy), 1e-9);
+        dk = std::max(dk, -((x - P[0]) * ux + (y - P[1]) * uy) / nn);
+      }
+      if (tot - Lnext < wm) {
+        const double ux = P[2 * (n - 1)] - P[2 * (n - 2)], uy = P[2 * (n - 1) + 1] - P[2 * (n - 2) + 1];
+        const double nn = std::max(std::hypot(ux, uy), 1e-9);
+        dk = std::max(dk, ((x - P[2 * (n - 1)]) * ux + (y - P[2 * (n - 1) + 1]) * uy) / nn);
+      }
+    }
+    d = std::min(d, dk);
+    L = Lnext;
+  }
+  return d;
+}
+
 inline double sd(const UvTab &T, int32_t id, double x, double y) {
   const UvNode &S = T.nodes[id];
   switch (S.kind) {
@@ -190,6 +275,49 @@ inline double sd(const UvTab &T, int32_t id, double x, double y) {
       if (rel < 0) rel += 360.0;
       if (rel <= S.p[4]) return std::abs(std::hypot(dx, dy) - S.p[2]) - S.p[5] / 2;
       return std::min(std::hypot(x - S.p[6], y - S.p[7]), std::hypot(x - S.p[8], y - S.p[9])) - S.p[5] / 2;
+    }
+    case kLimb:
+      return sd_limb(T, S, x, y);
+    case kRRect4: {   // figs.py _rrect4: box p[0..3], radii tl tr br bl p[4..7]
+      const double cx = (S.p[0] + S.p[2]) / 2, cy = (S.p[1] + S.p[3]) / 2, hx = (S.p[2] - S.p[0]) / 2, hy = (S.p[3] - S.p[1]) / 2;
+      const double px = x - cx, py = y - cy;
+      const double r = px > 0 ? (py > 0 ? S.p[6] : S.p[5]) : (py > 0 ? S.p[7] : S.p[4]);
+      const double qx = std::abs(px) - hx + r, qy = std::abs(py) - hy + r;
+      return std::min(std::max(qx, qy), 0.0) + std::hypot(std::max(qx, 0.0), std::max(qy, 0.0)) - r;
+    }
+    case kSuper: {   // common.py _superellipse: (|dx / a|^n + |dy / b|^n)^(1 / n) - 1, times min(a, b)
+      const double u = std::abs(x - S.p[0]) / S.p[2], v = std::abs(y - S.p[1]) / S.p[3];
+      return (std::pow(std::pow(u, S.p[4]) + std::pow(v, S.p[4]), 1.0 / S.p[4]) - 1.0) * std::min(S.p[2], S.p[3]);
+    }
+    case kPLine:
+      return sd_pline(T, S, x, y);
+    case kVLine: {   // fix2.py _vline: capsules along the spline points with the width interpolated along each segment
+      const double *P = T.pts + 2 * S.a, *Wd = T.pts + 2 * (S.a + S.n);
+      double d = 1e18;
+      for (int32_t k = 0; k + 1 < S.n; ++k) {
+        const double ax = P[2 * k], ay = P[2 * k + 1], ex = P[2 * k + 2] - ax, ey = P[2 * k + 3] - ay;
+        const double ll = std::max(ex * ex + ey * ey, 1e-12);
+        const double wx = x - ax, wy = y - ay;
+        const double u = clip01((wx * ex + wy * ey) / ll);
+        const double r = (Wd[2 * k] * (1 - u) + Wd[2 * k + 2] * u) / 2;
+        d = std::min(d, std::hypot(wx - ex * u, wy - ey * u) - r);
+      }
+      return d;
+    }
+    case kSMin: {   // parts.py _smin
+      double d = sd(T, T.kids[S.a], x, y);
+      const double k = S.p[0];
+      for (int32_t i = 1; i < S.n; ++i) {
+        const double e = sd(T, T.kids[S.a + i], x, y);
+        const double h = clip01(0.5 + 0.5 * (e - d) / k);
+        d = e * (1 - h) + d * h - k * h * (1 - h);
+      }
+      return d;
+    }
+    case kSInter: {   // hs3.py _sinter: the round intersection of two shapes (radius p[0])
+      const double d1 = sd(T, T.kids[S.a], x, y), d2 = sd(T, T.kids[S.a + 1], x, y), r = S.p[0];
+      const double u = std::max(r + d1, 0.0), v = std::max(r + d2, 0.0);
+      return std::min(-r, std::max(d1, d2)) + std::hypot(u, v);
     }
     default:
       return 1e18;
@@ -249,6 +377,8 @@ inline void grid_normal(const UvTab &T, int32_t id, const UvPix &q, double d, do
   ny = gy / n;
 }
 
+inline void bevel_colour(const UvTab &T, const UvPaint &P, double dd, double nx, double ny, double out[3]);
+
 // sdf.py paint(): the layer's colour at (x, y) with its distance d. flip_ny: a negative control (the bevel's normal upside down).
 // q: the pixel's place in its item (needed only by a grid-normal bevel)
 inline void paint(const UvTab &T, const UvLayer &L, double x, double y, double d, double out[3], bool flip_ny = false,
@@ -278,6 +408,11 @@ inline void paint(const UvTab &T, const UvLayer &L, double x, double y, double d
     normal(T, sh, x, y, nx, ny);
   }
   if (flip_ny) ny = -ny;
+  bevel_colour(T, P, dd, nx, ny, out);
+}
+
+// P41G: the bevel paint's colour at depth dd (the bevel shape's distance) with the outward normal (nx, ny)
+inline void bevel_colour(const UvTab &T, const UvPaint &P, double dd, double nx, double ny, double out[3]) {
   const double *st = T.stops + P.stops_a;
   const int32_t K = P.nstops;
   const double u = clampd(-dd / P.L, st[0], st[K - 1]);
@@ -307,12 +442,227 @@ inline void paint(const UvTab &T, const UvLayer &L, double x, double y, double d
   }
 }
 
+// P41G: the effects with the layer's grid normal (nx, ny) given (the grid renderer reads it from its distance grid)
+inline void apply_fx_n(const UvTab &T, const UvLayer &L, double x, double y, double d, double nx, double ny, double c[3]) {
+  for (int32_t i = 0; i < L.fx_n; ++i) {
+    const UvFx &F = T.fx[L.fx_a + i];
+    const double *v = F.v;
+    if (F.kind == 2) {
+      const double ex = v[13] - v[11], ey = v[14] - v[12];
+      const double u = clip01(((x - v[11]) * ex + (y - v[12]) * ey) / (ex * ex + ey * ey));
+      for (int k = 0; k < 3; ++k) c[k] += (1 - 2 * u) * v[15];
+      continue;
+    }
+    const double e = std::pow(clip01(1 + d / v[0]), v[1]);
+    if (F.kind == 0) {
+      const double lit = nx * v[2] + ny * v[3];
+      const double up = e * clip01(lit), dn = e * clip01(-lit);
+      for (int k = 0; k < 3; ++k) c[k] = c[k] + up * v[4 + k] - dn * v[7 + k];
+    } else {
+      const double wall = clip01(nx * v[2] + ny * v[3]);
+      const double kk = v[10] * wall * e;
+      for (int k = 0; k < 3; ++k) c[k] = c[k] * (1 - kk) + v[4 + k] * kk;
+    }
+  }
+}
+
+// P41G: sdf.py render_layer's effects on the layer's colour, in order (edge_light / inner_shadow take np.gradient's normal of the layer's
+// distance on the item's pixel grid: q needed; without q they are left out)
+inline void apply_fx(const UvTab &T, const UvLayer &L, double x, double y, double d, double c[3], const UvPix *q) {
+  for (int32_t i = 0; i < L.fx_n; ++i) {
+    const UvFx &F = T.fx[L.fx_a + i];
+    const double *v = F.v;
+    if (F.kind == 2) {   // tone
+      const double ex = v[13] - v[11], ey = v[14] - v[12];
+      const double u = clip01(((x - v[11]) * ex + (y - v[12]) * ey) / (ex * ex + ey * ey));
+      for (int k = 0; k < 3; ++k) c[k] += (1 - 2 * u) * v[15];
+      continue;
+    }
+    if (!q) continue;
+    double nx = 0, ny = 0;
+    grid_normal(T, L.shape, *q, d, nx, ny);
+    const double e = std::pow(clip01(1 + d / v[0]), v[1]);
+    if (F.kind == 0) {   // edge_light
+      const double lit = nx * v[2] + ny * v[3];
+      const double up = e * clip01(lit), dn = e * clip01(-lit);
+      for (int k = 0; k < 3; ++k) c[k] = c[k] + up * v[4 + k] - dn * v[7 + k];
+    } else {             // inner_shadow
+      const double wall = clip01(nx * v[2] + ny * v[3]);
+      const double kk = v[10] * wall * e;
+      for (int k = 0; k < 3; ++k) c[k] = c[k] * (1 - kk) + v[4 + k] * kk;
+    }
+  }
+}
+
+// P41G: a conservative box of shape `id` (b = x0, y0, x1, y1, +-1e300 when unbounded): every point outside it grown by m has sd >= m
+// (exact distances: circle, poly, seg, stroke, rrect, arc, limb, rrect4; union = min, inter / sub / sinter = max-like, grow / outline
+// shift the distance; the ellipse's distance is an approximation, so its box is grown by its larger radius as well)
+inline void node_bounds(const UvTab &T, int32_t id, double b[4]) {
+  const UvNode &S = T.nodes[id];
+  constexpr double kInf = 1e300;
+  auto set = [&](double x0, double y0, double x1, double y1) {
+    b[0] = x0;
+    b[1] = y0;
+    b[2] = x1;
+    b[3] = y1;
+  };
+  auto pts_box = [&](const double *P, int32_t n, double g) {
+    double x0 = kInf, y0 = kInf, x1 = -kInf, y1 = -kInf;
+    for (int32_t i = 0; i < n; ++i) {
+      x0 = std::min(x0, P[2 * i]);
+      y0 = std::min(y0, P[2 * i + 1]);
+      x1 = std::max(x1, P[2 * i]);
+      y1 = std::max(y1, P[2 * i + 1]);
+    }
+    set(x0 - g, y0 - g, x1 + g, y1 + g);
+  };
+  switch (S.kind) {
+    case kCircle:
+      set(S.p[0] - S.p[2], S.p[1] - S.p[2], S.p[0] + S.p[2], S.p[1] + S.p[2]);
+      return;
+    case kEllipse: {
+      const double r = 2 * std::max(S.p[2], S.p[3]);
+      set(S.p[0] - r, S.p[1] - r, S.p[0] + r, S.p[1] + r);
+      return;
+    }
+    case kPoly: {
+      double x0 = kInf, y0 = kInf, x1 = -kInf, y1 = -kInf;
+      for (int32_t r = 0; r < S.n; ++r) {
+        double q[4];
+        const int32_t pa = T.rings[2 * (S.a + r)], pn = T.rings[2 * (S.a + r) + 1];
+        double *bb = b;
+        b = q;
+        pts_box(T.pts + 2 * pa, pn, 0);
+        b = bb;
+        x0 = std::min(x0, q[0]);
+        y0 = std::min(y0, q[1]);
+        x1 = std::max(x1, q[2]);
+        y1 = std::max(y1, q[3]);
+      }
+      set(x0, y0, x1, y1);
+      return;
+    }
+    case kSeg:
+      set(std::min(S.p[0], S.p[2]) - S.p[4] / 2, std::min(S.p[1], S.p[3]) - S.p[4] / 2, std::max(S.p[0], S.p[2]) + S.p[4] / 2,
+          std::max(S.p[1], S.p[3]) + S.p[4] / 2);
+      return;
+    case kStroke:
+      pts_box(T.pts + 2 * S.a, S.n, S.p[0] / 2);
+      return;
+    case kPLine:
+      pts_box(T.pts + 2 * S.a, S.n, std::max(S.p[0], S.p[1]) / 2);
+      return;
+    case kVLine:
+    case kLimb: {
+      double wmax = 0;
+      for (int32_t i = 0; i < S.n; ++i) wmax = std::max(wmax, T.pts[2 * (S.a + S.n + i)]);
+      pts_box(T.pts + 2 * S.a, S.n, wmax / 2);
+      return;
+    }
+    case kRRect: {
+      const double ex = S.p[2] * std::abs(S.p[6]) + S.p[3] * std::abs(S.p[7]), ey = S.p[2] * std::abs(S.p[7]) + S.p[3] * std::abs(S.p[6]);
+      set(S.p[0] - ex, S.p[1] - ey, S.p[0] + ex, S.p[1] + ey);
+      return;
+    }
+    case kRRect4:
+      set(S.p[0], S.p[1], S.p[2], S.p[3]);
+      return;
+    case kArc:
+      set(S.p[0] - S.p[2] - S.p[5] / 2, S.p[1] - S.p[2] - S.p[5] / 2, S.p[0] + S.p[2] + S.p[5] / 2, S.p[1] + S.p[2] + S.p[5] / 2);
+      return;
+    case kUnion:
+    case kSMin: {   // (smin lies at most k / 4 below the plain minimum: its box grown by k / 4)
+      double x0 = kInf, y0 = kInf, x1 = -kInf, y1 = -kInf, q[4];
+      for (int32_t i = 0; i < S.n; ++i) {
+        node_bounds(T, T.kids[S.a + i], q);
+        x0 = std::min(x0, q[0]);
+        y0 = std::min(y0, q[1]);
+        x1 = std::max(x1, q[2]);
+        y1 = std::max(y1, q[3]);
+      }
+      const double g = S.kind == kSMin ? std::abs(S.p[0]) / 4 + 1e-9 : 0.0;
+      set(x0 - g, y0 - g, x1 + g, y1 + g);
+      return;
+    }
+    case kInter:
+    case kSInter: {
+      double x0 = -kInf, y0 = -kInf, x1 = kInf, y1 = kInf, q[4];
+      for (int32_t i = 0; i < S.n; ++i) {
+        node_bounds(T, T.kids[S.a + i], q);
+        x0 = std::max(x0, q[0]);
+        y0 = std::max(y0, q[1]);
+        x1 = std::min(x1, q[2]);
+        y1 = std::min(y1, q[3]);
+      }
+      set(x0, y0, x1, y1);
+      return;
+    }
+    case kSub:
+      node_bounds(T, T.kids[S.a], b);
+      return;
+    case kGrow:
+    case kOutline: {
+      node_bounds(T, T.kids[S.a], b);
+      const double g = S.kind == kGrow ? std::max(0.0, S.p[0]) : S.p[0] / 2;
+      if (b[0] > -kInf) b[0] -= g;
+      if (b[1] > -kInf) b[1] -= g;
+      if (b[2] < kInf) b[2] += g;
+      if (b[3] < kInf) b[3] += g;
+      if (S.kind == kOutline) {   // the line along an unbounded shape's edge: unbounded (a half plane's outline)
+        double q[4];
+        node_bounds(T, T.kids[S.a], q);
+        if (q[0] <= -kInf || q[1] <= -kInf || q[2] >= kInf || q[3] >= kInf) set(-kInf, -kInf, kInf, kInf);
+      }
+      return;
+    }
+    default:   // kHalf and anything else: unbounded
+      set(-kInf, -kInf, kInf, kInf);
+  }
+}
+// P41G: true when shape `id`'s distance is 1-Lipschitz (|sd(p) - sd(q)| <= |p - q|): the exact distances and their min / max / shifts;
+// not the ellipse's approximation, not rrect4 (its radius jumps between quadrants), not sinter (its rounding can reach sqrt 2), not a
+// half plane with a normal longer than 1
+inline bool node_lip(const UvTab &T, int32_t id) {
+  const UvNode &S = T.nodes[id];
+  switch (S.kind) {
+    case kCircle: case kPoly: case kSeg: case kStroke: case kRRect: case kArc: case kLimb:
+      return true;
+    case kHalf:
+      return std::hypot(S.p[2], S.p[3]) <= 1.0 + 1e-12;
+    case kUnion: case kInter: case kSub: case kGrow: case kOutline:
+      for (int32_t i = 0; i < (S.kind == kSub ? 2 : S.kind == kGrow || S.kind == kOutline ? 1 : S.n); ++i)
+        if (!node_lip(T, T.kids[S.a + i])) return false;
+      return true;
+    default:
+      return false;
+  }
+}
+// a layer's shape box and clip box (8 doubles, frame units, ungrown); a pixel's layer can be skipped when it lies outside the shape
+// box grown by the edge width (soft, or 0.5 / s for a hard edge) or outside the clip box grown by 0.5 / s: its coverage is 0 there
+inline void layer_boxes(const UvTab &T, int32_t li, double out[8]) {
+  const UvLayer &L = T.layers[li];
+  node_bounds(T, L.shape, out);
+  if (L.clip >= 0) {
+    node_bounds(T, L.clip, out + 4);
+  } else {
+    out[4] = out[5] = -1e300;
+    out[6] = out[7] = 1e300;
+  }
+}
+inline bool layer_outside(const double *lb, double soft, double x, double y, double s) {
+  const double m = (soft >= 0 ? soft : 0.5 / s) + 1e-9, mc = 0.5 / s + 1e-9;
+  return x < lb[0] - m || x > lb[2] + m || y < lb[1] - m || y > lb[3] + m || x < lb[4] - mc || x > lb[6] + mc || y < lb[5] - mc ||
+         y > lb[7] + mc;
+}
+
 // one item's layers over the pixel at frame point (x, y): px = red, green, blue (premultiplied or opaque, 0..255) and the coverage.
 // s = frame units -> target pixels (the hard edge's width, sdf.render's s)
 inline void composite_item(const UvTab &T, const UvItem &I, double x, double y, double s, double px[4], bool flip_ny = false,
-                           const UvPix *q = nullptr) {
+                           const UvPix *q = nullptr, const double *lboxes = nullptr) {
   for (int32_t li = 0; li < I.nlayers; ++li) {
     const UvLayer &L = T.layers[I.layer_a + li];
+    // P41G: lboxes (layer_boxes of the item's layers, 8 doubles each): a layer whose box the point lies outside covers 0 there
+    if (lboxes && layer_outside(lboxes + 8 * li, L.soft, x, y, s)) continue;
     const double d = sd(T, L.shape, x, y);
     double a;
     if (L.soft >= 0) {
@@ -329,6 +679,7 @@ inline void composite_item(const UvTab &T, const UvItem &I, double x, double y, 
     if (a <= 0) continue;
     double c[3];
     paint(T, L, x, y, d, c, flip_ny, q);
+    if (L.fx_n > 0 && T.fx != nullptr) apply_fx(T, L, x, y, d, c, q);
     const double k1 = 1 - a;
     px[0] = clampd(c[0], 0, 255) * a + px[0] * k1;
     px[1] = clampd(c[1], 0, 255) * a + px[1] * k1;

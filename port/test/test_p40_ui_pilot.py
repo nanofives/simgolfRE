@@ -310,7 +310,7 @@ def test_hud_panel_border_matches_the_art(portlib, cell):
 # port/test/p40_pixcmp.py draws every element the game theme replaces twice over the same background (the original's art draw, the
 # theme's scene with its kept pixels) and compares them. TARGET at the frame's scale (800 x 600, the art 1:1): at least 97 % of the
 # element's pixels within 8 levels (largest channel) and a mean CIEDE2000 under 2. Control: gfx.family.ui mode 3 (the art colours
-# read as level << 3, P40B's reading) fails the target on most elements.
+# read one 5-bit level low, as P40B's level << 3 reading came out under ui_over555's former rounding) fails the target on most elements.
 from port.test import p40_pixcmp as PX  # noqa: E402
 
 PIX_NAMES = ([c[0] for c in PC.CELLS] + [c[0] for c in PC.HUD_CELLS] +

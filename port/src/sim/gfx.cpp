@@ -47,6 +47,7 @@
 #include "portsim/sim/gfx_text.h"
 #include "portsim/sim/gfx_ui.h"  // P40: ui_is_run_face
 #include "portsim/sim/gfx_uvwide.h"  // P41W: the frame's wide backdrop
+#include "portsim/sim/gfx_uvgame.h"  // P41G: the in-game element scenes (uvg_hook)
 #include "portsim/sim/perf.h"  // P10A: the drawing's wall time for the host's profiler
 
 namespace portsim {
@@ -264,6 +265,9 @@ int crop_sprite(Gfx &g, uint32_t self, const Image8 &src, int32_t x, int32_t y, 
   s.top = top;
   s.cut_w = w;
   s.cut_h = h;
+  s.sheet = src.name;   // P41G (gfx_body.h): the cut's provenance
+  s.sx = x;
+  s.sy = y;
   s.pal = src.pal;
   s.px.resize(static_cast<size_t>(keep_w) * keep_h);
   for (int32_t r = 0; r < keep_h; ++r) std::memcpy(s.px.data() + static_cast<size_t>(r) * keep_w, row(top + r) + left, keep_w);
@@ -275,6 +279,8 @@ int crop_sprite(Gfx &g, uint32_t self, const Image8 &src, int32_t x, int32_t y, 
 // jgld Sprite::draw16_1001bc40 at scale 1 (re/match/jgld_blit16.cpp): the sprite's rectangle at (x, y) clipped to the
 // destination; bytes >= 0xfe are transparent, the others the sprite palette's RGB555 word.
 void draw16(const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
+  uvg_trace("draw16", s, x, y, d);   // P41G (gfx_body.h)
+  if (uvg_hook(s, x, y, d)) return;   // P41G: an approved element scene drawn instead (theme on only)
   const int32_t l = std::max(x, 0), t = std::max(y, 0);
   const int32_t r = std::min(x + s.w, d.w), b = std::min(y + s.h, d.h);
   const uint8_t key = SG_NEGCTL(g_negctl_gfx) == 3 ? 0xff : 0xfe;
@@ -744,18 +750,34 @@ void text_run_begin(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunSco
   if (s.on)
     s.snap.assign(px + static_cast<size_t>(s.lo) * static_cast<size_t>(w), px + static_cast<size_t>(s.hi) * static_cast<size_t>(w));
 }
+void text_run_begin_rect(Gfx &g, const uint16_t *px, int32_t w, int32_t h, TextRunScope &s, int32_t x0, int32_t y0, int32_t x1,
+                         int32_t y1) {
+  s.on = g.text.on && w > 0 && h > 0;
+  s.lo = std::max<int32_t>(0, std::min(y0, h));
+  s.hi = std::max<int32_t>(s.lo, std::min(y1, h));
+  s.cx0 = std::max<int32_t>(0, std::min(x0, w));
+  s.cx1 = std::max<int32_t>(s.cx0, std::min(x1, w));
+  if (s.cx1 <= s.cx0) s.cx1 = s.cx0 = 0, s.on = false;
+  if (!s.on) return;
+  const size_t sw = static_cast<size_t>(s.cx1 - s.cx0);
+  s.snap.resize(sw * static_cast<size_t>(s.hi - s.lo));
+  for (int32_t yy = s.lo; yy < s.hi; ++yy)
+    std::memcpy(s.snap.data() + static_cast<size_t>(yy - s.lo) * sw, px + static_cast<size_t>(yy) * static_cast<size_t>(w) + s.cx0, sw * 2);
+}
 void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t w, int32_t h, int32_t ox, int32_t oy,
                   const int32_t clip[4], uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
                   uint8_t target, const GameFont *font) {
-  if (!s.on || !g.text.on || s.hi > h || s.snap.size() != static_cast<size_t>(w) * static_cast<size_t>(s.hi - s.lo)) return;
+  const bool rect = s.cx1 > s.cx0;   // P41G (text_run_begin_rect)
+  const int32_t sx0 = rect ? s.cx0 : 0, sw = rect ? s.cx1 - s.cx0 : w;
+  if (!s.on || !g.text.on || s.hi > h || s.snap.size() != static_cast<size_t>(sw) * static_cast<size_t>(s.hi - s.lo)) return;
   int32_t x0 = w, y0 = h, x1 = -1, y1 = -1;
   for (int32_t yy = s.lo; yy < s.hi; ++yy) {  // P24C fix 1: the snapshotted rows (no other row changed)
-    const uint16_t *a = s.snap.data() + static_cast<size_t>(yy - s.lo) * w, *b = px + static_cast<size_t>(yy) * w;
-    if (std::memcmp(a, b, static_cast<size_t>(w) * 2) == 0) continue;
-    for (int32_t xx = 0; xx < w; ++xx)
+    const uint16_t *a = s.snap.data() + static_cast<size_t>(yy - s.lo) * sw, *b = px + static_cast<size_t>(yy) * w + sx0;
+    if (std::memcmp(a, b, static_cast<size_t>(sw) * 2) == 0) continue;
+    for (int32_t xx = 0; xx < sw; ++xx)
       if (a[xx] != b[xx]) {
-        x0 = std::min(x0, xx);
-        x1 = std::max(x1, xx);
+        x0 = std::min(x0, xx + sx0);
+        x1 = std::max(x1, xx + sx0);
       }
     y0 = std::min(y0, yy);
     y1 = yy;
@@ -820,6 +842,10 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   y0 = std::max(std::max(y0 - kMargin, cy0), s.lo);  // (P24C fix 1: inside the snapshot's rows; the band holds the margin)
   x1 = std::min(x1 + 1 + kMargin, cx1);
   y1 = std::min(std::min(y1 + 1 + kMargin, cy1), s.hi);
+  if (rect) {   // P41G: inside the snapshot's columns (the rectangle holds the margin)
+    x0 = std::max(x0, s.cx0);
+    x1 = std::min(x1, s.cx1);
+  }
   if (x1 <= x0 || y1 <= y0) return;
   Gfx::TextCapture::Run r;
   r.info.fontref = fontref;
@@ -859,7 +885,8 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
     for (int32_t xx = x0; xx < x1; ++xx) {
       const size_t i = static_cast<size_t>(yy) * static_cast<size_t>(w) + static_cast<size_t>(xx);
       const size_t j = static_cast<size_t>(yy - y0) * bw + static_cast<size_t>(xx - x0);
-      r.before[j] = s.snap[i - static_cast<size_t>(s.lo) * static_cast<size_t>(w)];
+      r.before[j] = rect ? s.snap[static_cast<size_t>(yy - s.lo) * static_cast<size_t>(sw) + static_cast<size_t>(xx - sx0)]
+                         : s.snap[i - static_cast<size_t>(s.lo) * static_cast<size_t>(w)];
       r.after[j] = px[i];
     }
   // the HUD segment it belongs to (P9B's layers are made on the root only)
@@ -1650,6 +1677,37 @@ int8_t gfx_layer_anchor(int32_t id) {
 }
 std::atomic<int> g_gfx_hud_capture{0};
 thread_local HudWriteMark g_hud_wm;  // P10C fix 2 (gfx_body.h)
+
+// P41G: the draw trace (gfx_body.h uvg_trace)
+static int uvg_trace_init() {
+  const char *v = std::getenv("SG_UVG_TRACE");
+  return v != nullptr && *v != 0 ? 1 : 0;
+}
+int g_uvg_trace_on = uvg_trace_init();
+thread_local const char *g_uvg_drop = "";
+thread_local const Surface16 *g_uvg_root = nullptr;
+thread_local Gfx *g_uvg_gfx = nullptr;   // P41G (gfx_body.h uvg_hook)
+thread_local Ctx *g_uvg_ctx = nullptr;
+bool uvg_hook_slow(const Sprite8 &s, int32_t x, int32_t y, const Surface16 &d) {
+  Gfx *g = g_uvg_gfx;
+  if (g == nullptr || g_uvg_ctx == nullptr || &d != &g->root) return false;
+  return uvg_draw(*g, *g_uvg_ctx, s, x, y);
+}
+void uvg_trace_note(const char *prim, const Sprite8 &s, int32_t x, int32_t y, const Surface16 &d) {
+  static std::mutex mu;
+  static std::map<std::string, int> seen;
+  char buf[512];
+  std::snprintf(buf, sizeof buf, "%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%s", g_uvg_drop ? g_uvg_drop : "", prim ? prim : "",
+                s.sheet.c_str(), s.sx, s.sy, s.cut_w, s.cut_h, s.left, s.top, &d == g_uvg_root ? "root" : "other");
+  std::lock_guard<std::mutex> lk(mu);
+  if (seen[buf]++ != 0) return;
+  const char *path = std::getenv("SG_UVG_TRACE");
+  if (path == nullptr) return;
+  if (FILE *f = std::fopen(path, "a")) {
+    std::fprintf(f, "%s\t%d\t%d\n", buf, x, y);
+    std::fclose(f);
+  }
+}
 void gfx_set_hud_writes(Ctx &ctx, bool on) {  // P10C fix 2
   Gfx *g = gfx(ctx);
   if (!g) return;
@@ -1962,6 +2020,7 @@ static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const Sprite8 &s = si->second, &m = mi->second;
   Surface16 &d = g.root;
   const int32_t x = static_cast<int32_t>(a[3]), y = static_cast<int32_t>(a[4]);
+  uvg_trace("stretchBlit", s, x, y, d);   // P41G (gfx_body.h)
   const int32_t l = std::max(x, 0), t = std::max(y, 0), r = std::min(x + s.w, d.w), b = std::min(y + s.h, d.h);
   const bool wrong = SG_NEGCTL(g_negctl_gfx) == 5;
   for (int32_t yy = t; yy < b; ++yy)
@@ -2082,6 +2141,8 @@ void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
   draw_g16_lut(g, s, d, x, y, shade_lut().data(), shade_lut().size());
 }
 void draw_g16_lut(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, const uint16_t *lut, size_t lut_n) {
+  uvg_trace("draw_g16", s, x, y, d);   // P41G (gfx_body.h)
+  if (uvg_hook(s, x, y, d)) return;   // P41G: an approved element scene drawn instead (theme on only)
   const int32_t l = std::max(x, 0), t = std::max(y, 0), r = std::min(x + s.w, d.w), b = std::min(y + s.h, d.h);
   for (int32_t yy = t; yy < b; ++yy)
     for (int32_t xx = l; xx < r; ++xx) {
@@ -2595,6 +2656,23 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);
   if (!g) return false;
+  if (g_uvg_trace_on) {   // P41G (gfx_body.h): the draw trace's current drop
+    g_uvg_drop = name;
+    g_uvg_root = &g->root;
+  }
+  // P41G (gfx_body.h uvg_hook): the drawing Gfx / Ctx for the sprite primitives, for this drop only (restored on every exit)
+  struct UvgScope {
+    Gfx *pg;
+    Ctx *pc;
+    UvgScope(Gfx *g, Ctx *c) : pg(g_uvg_gfx), pc(g_uvg_ctx) {
+      g_uvg_gfx = g;
+      g_uvg_ctx = c;
+    }
+    ~UvgScope() {
+      g_uvg_gfx = pg;
+      g_uvg_ctx = pc;
+    }
+  } uvg_scope(g->ui_pilot != 0 ? g : nullptr, g->ui_pilot != 0 ? &ctx : nullptr);
   // P33A item 1 (gfx.h gfx_set_quiet_frame): a quiet frame's world phases draw nothing but the terrain family's passes, and its
   // HUD panels' own drawing bodies (no screen opens from those bodies: a dialog is drawn by its own) are left for the shown frame
   if (g->quiet_on() && ((g->quiet_world && std::strncmp(name, "terrain.", 8) != 0) || !std::strcmp(name, "showInfoCursorPanel.draw") ||

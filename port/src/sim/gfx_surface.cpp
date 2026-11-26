@@ -128,6 +128,8 @@ void b_draw_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const int32_t y = add32(static_cast<int32_t>(a[3]), trims ? s.top : 0);
   const uint32_t key = mode() == 5 ? 0x100u : 0xffu;
   Surface16 &d = g.root;
+  uvg_trace("drawRegion", s, x, y, d);   // P41G (gfx_body.h)
+  if (uvg_hook(s, x, y, d)) return;   // P41G: an approved element scene drawn instead (theme on only)
   const int32_t l = std::max(x, 0), t = std::max(y, 0), r = std::min(x + s.w, d.w), b = std::min(y + s.h, d.h);
   for (int32_t yy = t; yy < b; ++yy) {
     const uint8_t *sp = s.px.data() + static_cast<size_t>(yy - y) * static_cast<size_t>(s.w) + static_cast<size_t>(l - x);

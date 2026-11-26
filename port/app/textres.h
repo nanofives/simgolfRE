@@ -16,6 +16,7 @@
 #define PORTAPP_TEXTRES_H
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -48,7 +49,15 @@ struct TextTable {
   int32_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;  // client box of the pixels with an entry (half-open; empty = no ink)
   std::vector<uint32_t> idx;               // (x1 - x0) * (y1 - y0): 0 none, k + 1 entry k
   std::vector<uint16_t> lut;               // 32 words per entry: GDI's word over grey level L
+  // P41G: made from a UI run's quick entry (its 1x frame upscaled while the worker renders it at the window's scale): a cache of
+  // tables makes it again once ui_async_serial() moved past `serial` (the worker's serial when it was made)
+  bool quick = false;
+  uint64_t serial = 0;
 };
+// P41G: the UI-run worker (textres.cpp): the serial grows each time a window-scale render it made is ready, and the notify function
+// (the app's repaint) is called then; a table or a patch made from a quick entry is made again when the serial moved
+uint64_t ui_async_serial();
+void ui_async_set_notify(std::function<void()> f);
 
 struct TextResStats {
   uint64_t runs = 0;          // runs drawn
@@ -89,6 +98,8 @@ class TextRaster {
   // above it (the FPS overlay's box, darkened to half: every channel <= 127, level <= 15) passes 16
   bool table(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, TextTable &t,
              uint32_t levels = 32);
+  bool table_(const portsim::GfxTextRun &r, bool layered, const Viewport &vp, int32_t dx, int32_t cw, int32_t ch, TextTable &t,
+              uint32_t levels);
   TextResStats stats;
   uint64_t table_draws = 0;  // P15B: GDI draws made for tables
   uint64_t raster_draws = 0, raster_reuses = 0;  // P24C fix 2b: tables made from new / kept level pictures (Impl::Raster)

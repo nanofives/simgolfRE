@@ -1671,6 +1671,8 @@ const uint16_t *ground_pal(const Op &, uint8_t &kind) {
 
 template <class Op>
 void blit16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y, Scale sc, const char *who, Op &op) {
+  uvg_trace(who, s, x, y, d);   // P41G (gfx_body.h)
+  if (sc.nx == 1 && sc.ny == 1 && sc.den == 1 && uvg_hook(s, x, y, d)) return;   // P41G: an approved element scene (theme on, scale 1)
   uint8_t gk = 0;   // P23D fix 8: inside GfxGroundScope, the draw is also kept for the hr plane
   const uint16_t *gp = g.hud.ground_depth > 0 && &d == &g.root && !g_hr_pass.hr ? ground_pal(op, gk) : nullptr;
   gfxs::GroundSnap gsnap;

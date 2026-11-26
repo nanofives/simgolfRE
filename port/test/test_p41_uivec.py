@@ -166,7 +166,7 @@ def _over555(prem, word):
         lv = (word >> sh) & 31
         e = ((lv << 3) | (lv >> 2)).astype(np.float64)
         v = np.clip(prem[..., ch] + (1.0 - prem[..., 3]) * e, 0, 255)
-        out |= (np.floor(v * 31.0 / 255.0 + 0.5).astype(np.uint16) << sh)
+        out |= (np.minimum(31, np.floor(v + 1e-3).astype(np.int64) >> 3).astype(np.uint16) << sh)   # gfx_ui.cpp ui_over555 (c >> 3)
     return out
 
 
@@ -214,3 +214,8 @@ def test_option_off_makes_the_original_calls(uvlib, scenes):
 from port.test import p41_wide_cases as _wide  # noqa: E402
 
 globals().update(_wide.make(port_export, sdf, UIVEC, INSTALL, _title_state, _root))
+
+# P41G: the in-game element scenes (port/test/p41_game_cases.py)
+from port.test import p41_game_cases as _game  # noqa: E402
+
+globals().update(_game.make(sdf, UIVEC, INSTALL, _root, _over555))

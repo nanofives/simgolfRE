@@ -2347,3 +2347,24 @@ scenes: `re/tools/uivec/scenes/<area>/<id>.json` (numbers only), commit 5d523d67
   first full render 81-190 ms at 1080p, 251-594 ms at 3840 x 2108. Screenshots log/roadmap/P41/portwide/.
   Open: the golfer editor was not reached by a driver (its backdrop passes the DLL test, its cells were not seen in the app);
   the world map's site plates, pins and legend, list highlights and scroll thumbs are still the art; not published.
+
+## P41G: the in-game interface drawn from the approved scenes (2026-11-25 / 26; notes log/roadmap/P41/portgame/notes.md)
+All 277 approved in-game elements (hud_palettes, hud_panels, popups, reports_slabs, reports_maps, marks: 563 element states)
+are drawn by the port from their scenes with the theme on, at window resolution; the wide HUD layout (--wide, --hud-anchor,
+the layered compositor) is unchanged. Module `gfx_uvgame` (generated `uivec_game_*.inc` from `re/tools/uivec/port_game.py`):
+crop_sprite keeps each cut's sheet + rectangle, a drawn sprite takes the approved record its crop covers, so the state the
+game picks selects the scene; 9-slice frames are drawn piece by piece from their record; layers that paint a cell's
+transparent key are left out; kept pictures are lifted at first draw (SGA emblem: ground_diff matte + solid + clip).
+- Round 6 (differences seen in the running game, approved 6 / 6): Routing map (four modes) and Buy Land get a drawn WIDE
+  backdrop (flat lilac field, the map window's navy to the edges, whole discs, the marble as art); SGA emblem back; course
+  report rows with their own label frames, Scenic Hole icon and legend stubs; the amenities well's curved lip.
+- Presenter: UI-run cache 48 -> 1024 entries, exact layer culling, tables not re-uploaded when unchanged, one queued render
+  worker with a quick 1x entry first. GPU bug fixed: a table built from a run's quick entry was never rebuilt when the full
+  render arrived (large elements showed the 1x picture scaled up on the default path). Fringe fixed: only fully covered
+  pixels are marked as layer writes. `ui_over555` packs like the game (c >> 3).
+  Evidence: test_p41_uivec 27 passed (parity 563 states at 1x / 2.7x, pictures, wide backdrops <= 1.8e-5 levels, controls
+  RED), off = the original art on 336 loader sprites, test_p40_ui_pilot 157, port test_static 7, segments x64 205 / 205,
+  app replay 5 / 5. 4K, P41 / P40 / off: golfers screen 75.0 / 75.4 / 74.5 fps; report first open, longest paint
+  390 / 503 / 203 ms.
+  Open: Buy Land and the golfer editor not reached in the running app; in-game states verified through the DLL only
+  (golfer panel's other tabs, shot shapes, hire / fire, membership icons); not published.

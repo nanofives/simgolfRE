@@ -957,6 +957,7 @@ struct GpuCompositor::Impl {
   struct TCache {
     TextTable t;
     uint64_t used = 0;
+    uint64_t id = 0;  // P41G: its number (made in order; a table never changes once made)
   };
   std::map<std::string, TCache> tcache;  // key: everything TextRaster::table reads (run_key)
   uint64_t tbuild = 0;                   // builds of the set (the cache's clock)
@@ -965,6 +966,10 @@ struct GpuCompositor::Impl {
   bool tbound = false;                   // the buffers hold at least one run
   std::vector<std::vector<const TextTable *>> tper;  // per HUD layer, its runs' tables with ink (into tcache)
   bool tdirty = false;                   // tper or the overlay's tables changed since the upload
+  // P41G: the uploaded set (per layer its tables' ids): a frame whose tables are the same ones uploads nothing (at 4K the in-game
+  // HUD's element runs hold millions of table pixels, re-joined and re-uploaded at every sim frame before)
+  uint64_t tcache_ids = 0;
+  std::vector<uint64_t> tper_sig;
   // fix 2: the FPS overlay (build_overlay_tables): its runs' tables, its box, its slot in tlay
   std::unique_ptr<TextRaster> oraster;
   std::string ov_key;
@@ -1104,6 +1109,7 @@ void GpuCompositor::stop() {
   d.ct_upload = true;
   d.tset_key.clear();
   d.tbound = false;
+  d.tper_sig.clear();  // P41G: the buffers are gone: the next set uploads
   rel(d.stage_bb);
   rel(d.stage_u);
   rel(d.occ_srv);
@@ -2155,9 +2161,11 @@ void GpuCompositor::build_course_tables(const Presenter &P, const Viewport &vp, 
   const bool movers = P.objects_on_ && !P.movers_.empty();
   char b[256];
   const bool on = d.ct_on && P.course_tables_;  // --course-tables, SG_P24C_CTABLES
-  std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%d,%d,%d/%d/%zu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+  const uint64_t ui_serial = ui_async_serial();   // P41G: a UI run's window-scale render became ready (textres.h)
+  std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%d,%d,%d/%d/%zu/%llu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
                 text ? 1 : 0, movers ? 1 : 0, vp.origin_x, vp.origin_y, vp.client_w, vp.client_h, static_cast<int>(P.text_aa_),
-                P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_), on ? 1 : 0, P.text_.runs.size());
+                P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_), on ? 1 : 0, P.text_.runs.size(),
+                static_cast<unsigned long long>(ui_serial));
   if (d.ct_key == b) return;
   const int64_t t0 = portsim::perf_now_ns();
   d.ct_key = b;
@@ -2198,6 +2206,10 @@ void GpuCompositor::build_course_tables(const Presenter &P, const Viewport &vp, 
         put(v);
       key.append(reinterpret_cast<const char *>(r.vis_layer.data()), r.vis_layer.size());
       auto it = d.tcache.find(key);
+      if (it != d.tcache.end() && it->second.t.quick && it->second.t.serial != ui_serial) {   // P41G: made from a quick entry
+        d.tcache.erase(it);
+        it = d.tcache.end();
+      }
       if (it == d.tcache.end()) {
         Impl::TCache c;
         if (d.traster->table(r, true, ve, 0, cw + 2 * kE, ch + 2 * kE, c.t)) {  // false = draw draws nothing either
@@ -2781,12 +2793,14 @@ void GpuCompositor::build_text_tables(const Presenter &P, const Viewport &vp, bo
   const int32_t cw = d.w, ch = d.h;
   const portsim::GfxHudFrame &f = P.hud_for(text);
   const bool movers = P.objects_on_ && !P.movers_.empty();
+  const uint64_t ui_serial = ui_async_serial();   // P41G: a UI run's window-scale render became ready (textres.h)
   std::string sk;
   {
     char b[256];
-    std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%zu/%p/%d,%d,%d/", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+    std::snprintf(b, sizeof b, "%llu/%d,%d/%d/%d/%d,%d,%d,%d/%zu/%p/%d,%d,%d/%llu/", static_cast<unsigned long long>(P.content_gen_), cw, ch,
                   text ? 1 : 0, movers ? 1 : 0, vp.origin_x, vp.origin_y, vp.client_w, vp.client_h, f.layers.size(),
-                  static_cast<const void *>(&f), static_cast<int>(P.text_aa_), P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_));
+                  static_cast<const void *>(&f), static_cast<int>(P.text_aa_), P.text_fit_ ? 1 : 0, static_cast<int>(P.text_defect_),
+                  static_cast<unsigned long long>(ui_serial));
     sk = b;
     for (int32_t v : P.piece_dx_) sk += std::to_string(v) + ",";
   }
@@ -2801,6 +2815,7 @@ void GpuCompositor::build_text_tables(const Presenter &P, const Viewport &vp, bo
   d.traster->set_aa(P.text_aa_);
   d.traster->set_fit(P.text_fit_);
   std::vector<std::vector<const TextTable *>> per(f.layers.size());
+  std::vector<std::vector<uint64_t>> per_ids(f.layers.size());  // P41G
   if (text && d.p15) {
     const bool anchor = P.hud_anchor_ && vp.origin_x > 0 && P.defect_ != PresentDefect::HudUnmoved;
     const int32_t dxl = -vp.origin_x, dxr = cw - vp.origin_x - vp.client_w;
@@ -2839,9 +2854,14 @@ void GpuCompositor::build_text_tables(const Presenter &P, const Viewport &vp, bo
         put(v);
       key.append(reinterpret_cast<const char *>(r.vis_layer.data()), r.vis_layer.size());
       auto it = d.tcache.find(key);
+      if (it != d.tcache.end() && it->second.t.quick && it->second.t.serial != ui_serial) {   // P41G: made from a quick entry
+        d.tcache.erase(it);
+        it = d.tcache.end();
+      }
       if (it == d.tcache.end()) {
         Impl::TCache c;
         d.traster->table(r, true, vp, dd, cw, ch, c.t);  // false = draw draws nothing either (an empty table)
+        c.id = ++d.tcache_ids;
         it = d.tcache.emplace(key, std::move(c)).first;
         ++d.text_tables_made;
       } else {
@@ -2850,11 +2870,25 @@ void GpuCompositor::build_text_tables(const Presenter &P, const Viewport &vp, bo
       it->second.used = d.tbuild;
       d.tabled[i] = 1;
       ++d.text_runs_tabled;
-      if (!it->second.t.idx.empty()) per[static_cast<size_t>(r.layer)].push_back(&it->second.t);
+      if (!it->second.t.idx.empty()) {
+        per[static_cast<size_t>(r.layer)].push_back(&it->second.t);
+        per_ids[static_cast<size_t>(r.layer)].push_back(it->second.id);
+      }
     }
   }
   d.tper = std::move(per);
-  d.tdirty = true;
+  {  // P41G: the set's signature (layer count, then per layer its count and ids); unchanged = the uploaded buffers hold it
+    std::vector<uint64_t> sig;
+    sig.push_back(per_ids.size());
+    for (const std::vector<uint64_t> &l : per_ids) {
+      sig.push_back(l.size());
+      sig.insert(sig.end(), l.begin(), l.end());
+    }
+    if (sig != d.tper_sig) {
+      d.tper_sig = std::move(sig);
+      d.tdirty = true;
+    }
+  }
   // the cache keeps the tables of the last builds (a run that comes back, the date / money that alternate)
   if (d.tcache.size() > 512)
     for (auto it = d.tcache.begin(); it != d.tcache.end();)
@@ -2934,6 +2968,7 @@ void GpuCompositor::upload_text_tables(int32_t cw, int32_t ch) {
                     make_sbuf(d.dev, d.ctx, d.tlut, 4, static_cast<uint32_t>(lut.size()), lut.data());
     if (!ok) {  // no buffers: the runs and the overlay back to final patches (the static set is made again)
       d.tbound = false;
+      d.tper_sig.clear();  // P41G
       std::fill(d.tabled.begin(), d.tabled.end(), static_cast<uint8_t>(0));
       d.ov_on = false;
       d.fstat_key.clear();
@@ -2998,7 +3033,7 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
           mover_runs = true;
       }
     const uint64_t ck = P.content_gen_ * 1000003ull + (mover_runs ? P.world_gen_ * 7919ull : 0ull) + static_cast<uint64_t>(cw) * 31ull +
-                        static_cast<uint64_t>(ch);
+                        static_cast<uint64_t>(ch) + ui_async_serial() * 0x9E3779B97F4A7C15ull;   // P41G: + the UI worker's serial
     if (ck == d.course_key && !d.cdirty.empty() && !d.qc.empty() && W.fw > 0 && W.ph > 0) {  // P15C: a course patch over moved pixels
       auto lo = [](int64_t a, int64_t b) { return static_cast<int32_t>(a >= 0 ? a / b : -((-a + b - 1) / b)); };
       bool meet = false;
@@ -3027,9 +3062,10 @@ void GpuCompositor::paint_layered(const Presenter &P, int32_t cw, int32_t ch, in
       d.ns_course += portsim::perf_now_ns() - t0;
     }
     char k[256];
-    std::snprintf(k, sizeof k, "%llu/%llu/%d,%d/%d,%d,%d/%d,%d,%d,%d/%llu/%d,%d/%d", static_cast<unsigned long long>(P.content_gen_),
+    std::snprintf(k, sizeof k, "%llu/%llu/%d,%d/%d,%d,%d/%d,%d,%d,%d/%llu/%d,%d/%d/%llu", static_cast<unsigned long long>(P.content_gen_),
                   static_cast<unsigned long long>(P.world_gen_), slx, sly, cdx, shx, shy, P.live_.active ? 1 : 0, P.live_.sx,
-                  P.live_.sy, P.live_.dx, static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), cw, ch, P.overlay_mode_);
+                  P.live_.sy, P.live_.dx, static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), cw, ch, P.overlay_mode_,
+                  static_cast<unsigned long long>(ui_async_serial()));   // P41G: + the UI worker's serial (textres.h)
     if (d.final_key != k) {
       const int64_t t0 = portsim::perf_now_ns();
       {  // fill_gap's world rectangle at this slide (the patches that need the previous picture lie outside it)
@@ -3320,9 +3356,10 @@ void GpuCompositor::paint_flat(const Presenter &P, int32_t cw, int32_t ch) {
     char k[240];
     // P41W (present_wide.cpp): a frame with a wide backdrop is one patch over the whole client, made again when its picture changes
     const bool wbd = P.wide_backdrop_now(cw, ch);
-    std::snprintf(k, sizeof k, "flat/%llu/%d,%d/%d/%llu/%d/%d/%d/%d,%llu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
+    std::snprintf(k, sizeof k, "flat/%llu/%d,%d/%d/%llu/%d/%d/%d/%d,%llu/%llu", static_cast<unsigned long long>(P.content_gen_), cw, ch,
                   text ? 1 : 0, static_cast<unsigned long long>(P.overlay_line_.t_s * 1000.0), P.overlay_mode_, static_cast<int>(P.wide_),
-                  static_cast<int>(P.band_), wbd ? 1 : 0, static_cast<unsigned long long>(wbd ? P.wide_backdrop_serial() : 0));
+                  static_cast<int>(P.band_), wbd ? 1 : 0, static_cast<unsigned long long>(wbd ? P.wide_backdrop_serial() : 0),
+                  static_cast<unsigned long long>(ui_async_serial()));   // P41G: + the UI worker's serial
     if (d.final_key != k) {
       const int64_t t0 = portsim::perf_now_ns();
       std::vector<Rect> rects;

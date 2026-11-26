@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
 P41 = os.path.join(ROOT, "log", "roadmap", "P41")
 OUT = os.path.join(HERE, "scenes")
-ROUNDS = [(5, "work5"), (4, "work4"), (3, "work3"), (2, "work2"), (1, "work")]
+ROUNDS = [(6, "work6"), (5, "work5"), (4, "work4"), (3, "work3"), (2, "work2"), (1, "work")]
 
 
 def main():

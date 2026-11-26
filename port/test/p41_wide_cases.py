@@ -230,7 +230,10 @@ def make(port_export, sdf, uivec_dir, install, title_state, root_of):
             pytest.skip("no exe image")
         name_va = 0x2e000000
         n = 0
-        for screen in screens:
+        # (the in-game reports, P41G round 6, start from the game's Image_draw of their panels, not a full-screen copy: gfx_ui.cpp
+        # ui_wide_report; checked in the running game, log/roadmap/P41/portgame/round6/)
+        front = [scr for scr in screens if "refs" not in port_export.WIDE[scr]]
+        for screen in front:
             k = screens.index(screen)
             sheet = port_export.WIDE[screen]["bg"]
             via = 1 if screen == "world" else 0
@@ -252,6 +255,6 @@ def make(port_export, sdf, uivec_dir, install, title_state, root_of):
             assert got[1][1] == k and (got[1][0] == frame).all(), f"{screen}: theme on is not the backdrop (shown {got[1][1]})"
             assert (frame != art).any()
             n += 1
-            print(f"[{n}/{len(screens)}] {screen} ({sheet}, {'fillRegion' if via else 'blitThunk'}) off=art on=backdrop PASS", flush=True)
+            print(f"[{n}/{len(front)}] {screen} ({sheet}, {'fillRegion' if via else 'blitThunk'}) off=art on=backdrop PASS", flush=True)
 
     return {k: v for k, v in locals().items() if k.startswith("test_") or k in ("wlib", "wide_static")}
