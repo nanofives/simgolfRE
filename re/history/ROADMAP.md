@@ -2368,3 +2368,4 @@ transparent key are left out; kept pictures are lifted at first draw (SGA emblem
   390 / 503 / 203 ms.
   Open: Buy Land and the golfer editor not reached in the running app; in-game states verified through the DLL only
   (golfer panel's other tabs, shot shapes, hire / fire, membership icons); not published.
+- Published 2026-11-26: P41 + P41W + P41G in 400c188e (fast check: x64 0 errors, static 7, SMOKE OK, paint 81-100% of the refresh), LAN + GitHub release port-2026-11-26-400c188e.
