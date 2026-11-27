@@ -209,6 +209,10 @@ class Gfx {
     uint32_t gen = 0;         // blend records of the open layer: valid where rec_gen == gen
     std::vector<uint32_t> rec_gen;
     std::vector<GfxLayerPx> rec;   // kind 2 / 3 with px = the word the blend wrote
+    // P41 feedback1 item 13: the box (x0, y0, x1, y1 inclusive) of the pixels the segment `rec_box_gen` recorded a blend of
+    // (kind >= 2), so hud_diff finds a blend that left its pixel's word unchanged (a half-bright over black)
+    int32_t rec_box[4] = {0, 0, -1, -1};
+    uint32_t rec_box_gen = 0;
     std::vector<GfxHudLayer> layers;
     GfxHudFrame published;
     uint64_t serial = 0;
@@ -350,6 +354,19 @@ class Gfx {
       r.kind = kind;
       r.src = src;
       r.k = k;
+      if (root.w > 0) {   // P41 feedback1 item 13: the segment's blend box
+        const int32_t x = static_cast<int32_t>(i % static_cast<size_t>(root.w)), y = static_cast<int32_t>(i / static_cast<size_t>(root.w));
+        if (hud.rec_box_gen != hud.gen) {
+          hud.rec_box_gen = hud.gen;
+          hud.rec_box[0] = hud.rec_box[2] = x;
+          hud.rec_box[1] = hud.rec_box[3] = y;
+        } else {
+          hud.rec_box[0] = std::min(hud.rec_box[0], x);
+          hud.rec_box[1] = std::min(hud.rec_box[1], y);
+          hud.rec_box[2] = std::max(hud.rec_box[2], x);
+          hud.rec_box[3] = std::max(hud.rec_box[3], y);
+        }
+      }
     }
     r.px = res;
     hud.rec_gen[i] = hud.gen;

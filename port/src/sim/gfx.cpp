@@ -19,6 +19,8 @@
 //   5 Surface_stretchBlit (blitPair1) ignores the mask's blend bytes (every pixel the colour sprite's word)
 //   6 drawG16's shade byte 0xf8 drawn as a palette colour instead of shading the destination through the table
 //   7 drawCenteredText / drawTextWithColor leave the target's Widget_setQuad words alone (roadmap S2.10, U-1293)
+//   8 (P41 feedback1 item 13) hud_diff leaves out a blend that left its pixel's word unchanged (a half-bright over black: the event
+//     message's backdrop missing over the off-map ground)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -1305,6 +1307,31 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
     x1 = std::max(x1, wb[2]);
     y1 = std::max(y1, wb[3]);
   }
+  // P41 feedback1 item 13: a blend this segment recorded is the layer's pixel even where it left the word unchanged. A half-bright
+  // (shade) or mask blend over a black root pixel (the off-map ground beside the course) gives black again; such a pixel was left out
+  // of the layer, so the presenter showed the world there undimmed: the event message's dark backdrop went missing wherever the
+  // panel lay over the course's edge, more of it as the camera moved toward the edge (Mariano's item 13; theme off too). The result
+  // must still be the root's word (a later opaque draw over the blend wins). Negative control gfx 8: as before.
+  const bool blends = use_rec && SG_NEGCTL(g_negctl_gfx) != 8 && hc.rec_gen.size() == now.size() && hc.rec_box_gen == hc.gen &&
+                      hc.rec_box[2] >= hc.rec_box[0];
+  auto blend_here = [&](size_t i) {
+    return blends && hc.rec_gen[i] == hc.gen && hc.rec[i].kind >= 2 && hc.rec[i].px == now[i];
+  };
+  if (blends) {
+    bool found = false;
+    for (int32_t y = std::max(0, hc.rec_box[1]); y <= std::min(h - 1, hc.rec_box[3]) && !found; ++y)
+      for (int32_t x = std::max(0, hc.rec_box[0]); x <= std::min(w - 1, hc.rec_box[2]); ++x)
+        if (blend_here(static_cast<size_t>(y) * w + static_cast<size_t>(x))) {
+          found = true;
+          break;
+        }
+    if (found) {
+      x0 = std::min(x0, hc.rec_box[0]);
+      y0 = std::min(y0, hc.rec_box[1]);
+      x1 = std::max(x1, std::min(w - 1, hc.rec_box[2]));
+      y1 = std::max(y1, std::min(h - 1, hc.rec_box[3]));
+    }
+  }
   if (x1 < 0) return false;
   out = GfxHudLayer{};
   out.id = id;
@@ -1324,7 +1351,7 @@ bool hud_diff(Gfx &g, const std::vector<uint16_t> &ref, const std::vector<uint16
   for (int32_t y = out.y0; y < out.y1; ++y)
     for (int32_t x = out.x0; x < out.x1; ++x) {
       const size_t i = static_cast<size_t>(y) * w + static_cast<size_t>(x);
-      if (ref[i] == now[i] && !(wr && hc.wr_gen[i] == hc.gen)) continue;
+      if (ref[i] == now[i] && !(wr && hc.wr_gen[i] == hc.gen) && !blend_here(i)) continue;
       // P25C fix 2 (gfx.h gfx_set_hud_left_hide): a pixel a closed popup left that nothing wrote since is not the screen's: the
       // frame beneath shows there (the Information menu is gone under the report it opened)
       if (id == kGfxLayerCentred && use_rec && g.hud_left_untouched(i, now[i])) continue;
