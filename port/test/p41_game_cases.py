@@ -8,6 +8,10 @@ by test_p41_uivec.py so they run in its process with its fixtures (portlib, the 
   * KEEP ITEMS: a state with keep_art, its sheet read (uvgame.prepare), equals hp.render_state's rule (the sheet's own pixels, nearest,
     edge coverage clip(0.5 - d s), opaque pixels only) after the layers.
   * GAME EXPORT: port/src/sim/uivec_game_<area>.inc is what port_game.py writes now.
+  * STATES (P41S, re/tools/uivec/states.py, states_port.py): a state exported as patches of its element's base is compared above with
+    states.apply of its alteration (in the base's coordinates, the record's shift + origin), and states.apply itself equals the approved
+    scene within 1 level (max abs) at 1x and 2.7x over black and white (test_game_states_apply_equals_approved). Control uvgame 8 (the
+    patches ignored: every patched state drawn as its element's base) reads RED on the states that alter their base.
   * GAME OFF IS THE ORIGINAL: after loadInterfaceArt's cuts, every sprite that takes records drawn by Image_draw and by
     Surface_stretchBlit with the theme off draws exactly what a backend with no theme draws (the art); with the theme on the root
     outside the run's clip is unchanged and inside it is the run's 1x render over the root as it was (RGB555, within one level), and
@@ -47,9 +51,9 @@ def make(sdf, uivec_dir, install, root_of, over555):
     def game_records(glib):
         """[(index, area, id, state, items, keep)] in the DLL's order, each matched to its port_game record"""
         py = {}
-        for area in port_game.EXPORTED:
-            for eid, st, sheet, cut, shift, items, extra in port_game.records(area):
-                py[(area, eid, st)] = (sheet, cut, shift, items, extra.get("textures") or [])
+        for area in port_game.EXPORTED:   # (P41S: as exported: a patched state's shift and states.apply's items)
+            for eid, st, sheet, cut, shift, items, extra, how in port_game.export_records(area):
+                py[(area, eid, st)] = (sheet, cut, shift, items, extra.get("textures") or [], how)
         out = []
         with glib.state() as s:
             buf = (C.c_uint8 * 1024)()
@@ -60,9 +64,9 @@ def make(sdf, uivec_dir, install, root_of, over555):
                 f = bytes(buf)[:ln].decode().split("\t")
                 area, eid, st, sheet = f[:4]
                 x, y, w, h, sx, sy, nitems, keep = (int(v) for v in f[4:12])
-                psheet, pcut, pshift, items, tex = py[(area, eid, st)]
+                psheet, pcut, pshift, items, tex, how = py[(area, eid, st)]
                 assert (psheet, [int(round(v)) for v in pcut], tuple(pshift)) == (sheet, [x, y, w, h], (sx, sy)), (i, area, eid, st)
-                out.append((i, area, eid, st, items, bool(keep), (sheet, x, y, w, h, sx, sy), tex))
+                out.append((i, area, eid, st, items, bool(keep), (sheet, x, y, w, h, sx, sy), tex, how))
         assert len(out) == len(py)
         only = [a for a in os.environ.get("P41G_AREAS", "").split(",") if a]   # development: the areas to judge (default all)
         return [r for r in out if not only or r[1] in only]
@@ -137,7 +141,7 @@ def make(sdf, uivec_dir, install, root_of, over555):
         bad = []
         n = len(game_records)
         with glib.state() as s:
-            for k, (i, area, eid, st, items, keep, rec, _t) in enumerate(game_records):
+            for k, (i, area, eid, st, items, keep, rec, _t, _h) in enumerate(game_records):
                 prem, x0, y0 = g_render(glib, i, scale, s)
                 mad, worst = g_compare(prem, x0, y0, items, scale, shift=rec[5:7])
                 ok = mad <= MAD_MAX and worst <= PX_MAX
@@ -155,7 +159,7 @@ def make(sdf, uivec_dir, install, root_of, over555):
         with glib.state() as s:
             glib.negctl("uvgame.render", 2)
             try:
-                for (i, area, eid, st, items, keep, rec, _t) in picks:
+                for (i, area, eid, st, items, keep, rec, _t, _h) in picks:
                     prem, x0, y0 = g_render(glib, i, 1.0, s)
                     mad, worst = g_compare(prem, x0, y0, items, 1.0, shift=rec[5:7])
                     red += mad > MAD_MAX or worst > PX_MAX
@@ -163,6 +167,64 @@ def make(sdf, uivec_dir, install, root_of, over555):
                 glib.negctl_reset()
         print(f"uvgame 2: {red}/{len(picks)} bevel states RED", flush=True)
         assert red >= len(picks) // 2
+
+    def _patched_pairs():
+        """[(area, id, state, approved items, exported items, rect in the base's coordinates, origin)] of the states exported as
+        patches of their element's base (P41S)"""
+        states = importlib.import_module("states")
+        out = []
+        for area in port_game.EXPORTED:
+            for a, b in zip(port_game.records(area), port_game.export_records(area)):
+                if b[7] != "patched":
+                    continue
+                eid, st, sheet, cut, shift, items, extra = a
+                o = (b[4][0] - shift[0], b[4][1] - shift[1])
+                approved = states._moved_items(items, list(o)) if o != (0, 0) else items
+                rect = [cut[0] - b[4][0], cut[1] - b[4][1], cut[2], cut[3]]
+                out.append((area, eid, st, approved, b[5], rect, o))
+        return out
+
+    def test_game_states_apply_equals_approved():
+        """states.apply of every patched state equals its approved scene within 1 level (max abs, black and white, 1x and 2.7x):
+        the conversion changes nothing visible"""
+        states = importlib.import_module("states")
+        pairs = _patched_pairs()
+        assert pairs
+        bad = []
+        for k, (area, eid, st, approved, ref, rect, o) in enumerate(pairs):
+            m = states.check(layer_items(ref), layer_items(approved), rect)
+            ok = max(m) <= states.TOL_LEVELS
+            print(f"[{k + 1}/{len(pairs)}] {area}/{eid}.{st} origin {o} max {m[0]:.3f} / {m[1]:.3f} {'PASS' if ok else 'FAIL'}", flush=True)
+            if not ok:
+                bad.append((area, eid, st, m))
+        assert not bad, bad
+
+    def test_game_negctl_states_read_red(glib, game_records):
+        """control uvgame 8: the patches ignored (every patched state drawn as its element's base) reads RED on the states whose
+        alteration changes the drawing"""
+        st_mod = importlib.import_module("states_port")
+        conv = {a: st_mod.load(a) for a in port_game.EXPORTED}
+        picks = []
+        for r in game_records:
+            if r[8] != "patched":
+                continue
+            e = conv[r[1]].get(r[2])
+            ref = e["states"][r[3]]
+            if ref.get("status") == "exact" and e["variants"][ref["variant"]]["states"].get(r[3]):
+                picks.append(r)
+        assert picks
+        red = 0
+        with glib.state() as s:
+            glib.negctl("uvgame.render", 8)
+            try:
+                for (i, area, eid, st, items, keep, rec, _t, _h) in picks:
+                    prem, x0, y0 = g_render(glib, i, 1.0, s)
+                    mad, worst = g_compare(prem, x0, y0, items, 1.0, shift=rec[5:7])
+                    red += mad > MAD_MAX or worst > PX_MAX
+            finally:
+                glib.negctl_reset()
+        print(f"uvgame 8: {red}/{len(picks)} patched states RED", flush=True)
+        assert red >= (3 * len(picks)) // 4
 
     @need_install
     def test_game_keep_items(glib, game_records):
@@ -178,7 +240,7 @@ def make(sdf, uivec_dir, install, root_of, over555):
         with glib.state() as s:
             s.fill_from_exe()
             s.files_root(install)
-            for k, (i, area, eid, st, items, keep, (sheet, cx, cy, cw, ch, shx, shy), tex) in enumerate(keeps):
+            for k, (i, area, eid, st, items, keep, (sheet, cx, cy, cw, ch, shx, shy), tex, _h) in enumerate(keeps):
                 assert s.call("uvgame.prepare", [i]).eax == 1, (eid, st, sheet)
                 if sheet not in sheets:
                     p = next(q for q in install.rglob("*.pcx") if str(q.relative_to(install)).replace("\\", "/").lower() == sheet)
@@ -414,7 +476,7 @@ def make(sdf, uivec_dir, install, root_of, over555):
         with glib.state() as s:
             s.fill_from_exe()
             s.files_root(install)
-            for (i, area, eid, st, items, keep, rec, _t) in recs:
+            for (i, area, eid, st, items, keep, rec, _t, _h) in recs:
                 assert s.call("uvgame.prepare", [i]).eax == 1, (eid, st)
                 prem, x0, y0 = g_render(glib, i, scale, s, keep=1)
                 h, w = prem.shape[:2]
@@ -437,7 +499,7 @@ def make(sdf, uivec_dir, install, root_of, over555):
     def test_game_negctl_picture_fields_read_red(glib, game_records):
         if glib.exe_load():
             pytest.skip("no exe image")
-        i, area, eid, st, items, keep, rec, _t = _picture_records(game_records)[0]
+        i, area, eid, st, items, keep, rec, _t, _h = _picture_records(game_records)[0]
         glib.negctl("uvgame.render", 6)
         try:
             with glib.state() as s:

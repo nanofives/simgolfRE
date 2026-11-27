@@ -49,7 +49,9 @@ KEY_KINDS = {"title": 1, "local": 2, "cgb": 3}
 KINDS = ["circle", "ellipse", "poly", "seg", "half", "union", "inter", "sub", "grow", "outline", "stroke", "rrect", "arc",
          # P41G (port_game.py): area shape kinds (sdf.EXTRA), evaluated natively by gfx_uivec_eval.h with the area module's formula
          "hud_panels.limb", "hud_panels.rrect4", "popups.sinter", "rm.smin",
-         "marks.superellipse", "marks.pline", "marks.vline"]
+         "marks.superellipse", "marks.pline", "marks.vline",
+         # P41S (states_port.py): a moved shape, p = dx, dy over one kid (a state's rigid move of a base layer)
+         "uv.move"]
 # P41G: area kinds that are a plain polygon built by their area module (port_game.py registers the builder): expanded to "poly"
 AREA_EXPAND = {}
 FX = {"edge_light": 0, "inner_shadow": 1, "tone": 2}
@@ -756,17 +758,24 @@ def wide_export(screen):
             ops[-1] = (0, ops[-1][1], ops[-1][2] + len(items))
         else:
             ops.append((0, ia, len(items)))
+    shared_scenes = {}
     for d in cfg.get("draws") or []:
         kk, off = d["key"]
         ox, oy = d.get("origin", d["at"])
         if d["scene"] == "restore":
             overlays.append((d["name"], 3, KEY_KINDS[kk], off, ox, oy, -1, 0, 0))
             continue
-        items = overlay_items(d["scene"])
-        ia = len(T.items)
-        for it in items:
-            T.item(it)
-        overlays.append((d["name"], 2, KEY_KINDS[kk], off, ox, oy, -1, ia, len(items)))
+        # P41S: one scene drawn on several cuts (the editor's pills: one scene for ten cells) is exported once; each overlay keeps
+        # its own key and origin and points at the shared items
+        sk = repr(d["scene"])
+        if sk not in shared_scenes:
+            items = overlay_items(d["scene"])
+            ia = len(T.items)
+            for it in items:
+                T.item(it)
+            shared_scenes[sk] = (ia, len(items))
+        ia, nit = shared_scenes[sk]
+        overlays.append((d["name"], 2, KEY_KINDS[kk], off, ox, oy, -1, ia, nit))
     # the leading ground ops (rendered at the ground's scale): the base rectangle alone in the first items op, then a blobs op
     nground = 0
     first = sc["draw"][0]

@@ -227,44 +227,106 @@ def _area_kinds():
 TEX_UNDER = {"pair-capsule": 1}
 
 
+def _emit_items(T, pics, items, eid, st, cut, shift, tex):
+    """a scene's items into the tables (layers, pictures, textures; the keep shapes as one KEEP ITEM over the cut at the end)"""
+    keep = []
+    n_under = TEX_UNDER.get(eid, len(items))
+    for k, it in enumerate(items):
+        if tex and k == n_under:
+            add_tex(T, tex)
+        if "picture" in it:
+            add_pic(T, pics, it["picture"], shift, f"{eid}.{st}")
+            continue
+        if "keep_art" in it:
+            keep.append(it["keep_art"])
+            continue
+        T.item(it)
+    if tex and n_under >= len(items):
+        add_tex(T, tex)
+    if keep:
+        # hud_palettes hp.render_state: the art's own pixels where the union of the keep shapes covers (nearest, its edge
+        # coverage clip(0.5 - d s)), after every layer: a KEEP ITEM (nlayers -1, layer_a = the union's node), box = the cut
+        node = T.node(PE.expand({"t": "union", "of": keep}))
+        x, y, w, h = cut
+        T.items.append(([x - shift[0], y - shift[1], x + w - shift[0], y + h - shift[1]], node, -1))
+
+
+def export_records(area):
+    """[(id, state, sheet, cut, shift, items, extra, how)] as exported: a state drawn as an alteration of its element's base (P41S,
+    states_port.py) has the shift of the base's coordinates and the items states.apply draws (how = "patched"); every other record
+    is port_game.records' (how = "scene")"""
+    import states_port as SP
+    conv = SP.load(area) if STATES_ON else {}
+    recs = records(area)
+    cur = {}
+    for r in recs:
+        cur.setdefault(r[0], {})[r[1]] = r[5]
+    out = []
+    for eid, st, sheet, cut, shift, items, extra in recs:
+        e = conv.get(eid)
+        if e is not None and SP.convertible(e, st, items, extra, cur[eid]):
+            ref, o = SP.reference(e, st)
+            out.append((eid, st, sheet, cut, (shift[0] + int(round(o[0])), shift[1] + int(round(o[1]))), ref, extra, "patched"))
+        else:
+            out.append((eid, st, sheet, cut, shift, items, extra, "scene"))
+    return out
+
+
+# P41S: states exported as patches of their element's base (states_port.py); SIMGOLF_UVG_STATES=0 exports every state as its own scene
+STATES_ON = os.environ.get("SIMGOLF_UVG_STATES", "1") != "0"
+
+
 def export(area):
+    import states_port as SP
     _area_kinds()
     T = PE.Tables()
     pics = []   # PICTURE items (wide.py's format: art lifted with a matte against the items drawn beneath): one row each
     rows = []
+    patch_rows = []   # P41S: UvgPatch rows (states_port.patches)
     shared = {}   # one scene shared by several states (reports_slabs): exported once
-    for eid, st, sheet, cut, shift, items, extra in records(area):
+    bases = {}    # P41S: (id, variant) -> (item a, item n, BaseMap, base cut, base shift)
+    conv = SP.load(area) if STATES_ON else {}
+    n_patched = 0
+    recs = records(area)
+    cur = {}
+    for r in recs:
+        cur.setdefault(r[0], {})[r[1]] = r[5]
+    for eid, st, sheet, cut, shift, items, extra in recs:
         tex = extra.get("textures") or []
         for t in tex:
             if norm(t["texture"]["sheet"]) != sheet:
                 raise ValueError(f"port_game: {eid}.{st}: a texture from another sheet ({t['texture']['sheet']})")
+        e = conv.get(eid)
+        if e is not None and SP.convertible(e, st, items, extra, cur[eid]):
+            ref = e["states"][st]
+            vname = ref["variant"]
+            var = e["variants"][vname]
+            o = ref.get("origin", [0, 0])
+            sh2 = (shift[0] + int(round(o[0])), shift[1] + int(round(o[1])))
+            if (eid, vname) not in bases:
+                ia = len(T.items)
+                M = _emit_base(T, pics, var, eid, var["base"], cut, sh2, SP)
+                bases[(eid, vname)] = (ia, len(T.items) - ia, M, cut, sh2)
+            ia, n, M, bcut, bshift = bases[(eid, vname)]
+            pa, pn = SP.patches(T, PE, var, st, M, patch_rows)
+            # the keep item's box is the cut: a state cut of another size takes its own box
+            if T.items[ia + n - 1][2] == -1:
+                x, y, w, h = cut
+                kb = [x - sh2[0], y - sh2[1], x + w - sh2[0], y + h - sh2[1]]
+                if [float(v) for v in kb] != [float(v) for v in T.items[ia + n - 1][0]]:
+                    patch_rows.append((1, n - 1, -1, tuple(float(v) for v in kb)))
+                    pn += 1
+            rows.append((eid, st, sheet, cut, sh2, ia, n, pa, pn))
+            n_patched += 1
+            continue
         # one scene shared by several states (reports_slabs) is exported once; a keep item's box is the cut, so then per cut
         key = (id(items), tuple(cut) if (tex or any("keep_art" in it for it in items)) else None)
         if key not in shared:
             ia = len(T.items)
-            keep = []
-            n_under = TEX_UNDER.get(eid, len(items))
-            for k, it in enumerate(items):
-                if tex and k == n_under:
-                    add_tex(T, tex)
-                if "picture" in it:
-                    add_pic(T, pics, it["picture"], shift, f"{eid}.{st}")
-                    continue
-                if "keep_art" in it:
-                    keep.append(it["keep_art"])
-                    continue
-                T.item(it)
-            if tex and n_under >= len(items):
-                add_tex(T, tex)
-            if keep:
-                # hud_palettes hp.render_state: the art's own pixels where the union of the keep shapes covers (nearest, its edge
-                # coverage clip(0.5 - d s)), after every layer: a KEEP ITEM (nlayers -1, layer_a = the union's node), box = the cut
-                node = T.node(PE.expand({"t": "union", "of": keep}))
-                x, y, w, h = cut
-                T.items.append(([x - shift[0], y - shift[1], x + w - shift[0], y + h - shift[1]], node, -1))
+            _emit_items(T, pics, items, eid, st, cut, shift, tex)
             shared[key] = (ia, len(T.items) - ia)
         ia, n = shared[key]
-        rows.append((eid, st, sheet, cut, shift, ia, n))
+        rows.append((eid, st, sheet, cut, shift, ia, n, 0, 0))
     ns = f"uvg_{area}"
     lines = [f"// GENERATED by re/tools/uivec/port_game.py --area {area} from the approved scenes re/tools/uivec/scenes/{area}/ (P41G).",
              "// Numbers only. Do not edit: run the exporter. Read by gfx_uvgame.cpp.",
@@ -278,13 +340,21 @@ def export(area):
               "// a x / y, b x / y, add. Kinds 13 limb (points then their widths as pairs; cap 1 butt), 14 rrect4 (box, radii tl tr br bl),",
               "// 15 sinter (two kids, r).",
               "// UvgCut: element id, state, sheet (GameFiles::normalize), cut x / y / w / h in the sheet, shift x / y (sheet = scene + shift),",
-              "// items a / n."]
+              "// items a / n, patches a / n (P41S: a state drawn as patches of its element's base; 0, 0: its own scene).",
+              "// UvgPatch (P41S, states_port.py): kind (0 base layer `target` replaced by layer row `row`, -1 = not drawn; 1 base item",
+              "// `target` takes `box`), target, row, box x0 / y0 / x1 / y1."]
     lines.append(f"namespace {ns} {{")
     lines += PE.emit_tables(T)
     lines.append("static const UvgCut kCuts[] = {")
-    for eid, st, sheet, cut, shift, ia, n in rows:
+    for eid, st, sheet, cut, shift, ia, n, pa, pn in rows:
         lines.append(f"    {{\"{eid}\", \"{st}\", \"{sheet}\", {', '.join(str(int(round(v))) for v in cut)}, {int(shift[0])}, {int(shift[1])}, "
-                     f"{ia}, {n}}},")
+                     f"{ia}, {n}, {pa}, {pn}}},")
+    lines.append("};")
+    lines.append("static const UvgPatch kPatches[] = {")
+    for kind, tg, prow, box in patch_rows:
+        lines.append(f"    {{{kind}, {tg}, {prow}, {{{', '.join(PE.num(v) for v in box)}}}}},")
+    if not patch_rows:
+        lines.append("    {-1, 0, 0, {0.0, 0.0, 0.0, 0.0}},")
     lines.append("};")
     if pics:
         lines.append("static const UvgPic kPics[] = {")
@@ -292,12 +362,39 @@ def export(area):
             lines.append(f"    {{\"{sh}\", {x}, {y}, {w}, {h}, {ax}, {ay}, {PE.num(t0)}, {PE.num(t1)}, {PE.num(fe)}, {solid}, {clip}, "
                          f"{PE.num(csoft)}, \"{name}\"}},")
         lines.append("};")
-        lines.append(f"static const UvgArea kArea = {{\"{area}\", &kTab, kCuts, {len(rows)}, kPics, {len(pics)}}};")
+        lines.append(f"static const UvgArea kArea = {{\"{area}\", &kTab, kCuts, {len(rows)}, kPics, {len(pics)}, kPatches, "
+                     f"{len(patch_rows)}}};")
     else:
-        lines.append(f"static const UvgArea kArea = {{\"{area}\", &kTab, kCuts, {len(rows)}}};")
+        lines.append(f"static const UvgArea kArea = {{\"{area}\", &kTab, kCuts, {len(rows)}, nullptr, 0, kPatches, {len(patch_rows)}}};")
     lines.append(f"}}  // namespace {ns}")
-    return "\n".join(lines) + "\n", {"states": len(rows), "items": len(T.items), "layers": len(T.layers), "nodes": len(T.nodes),
-                                       "fx": len(T.fx)}
+    return "\n".join(lines) + "\n", {"states": len(rows), "patched": n_patched, "patches": len(patch_rows), "items": len(T.items),
+                                       "layers": len(T.layers), "nodes": len(T.nodes), "fx": len(T.fx)}
+
+
+def _emit_base(T, pics, var, eid, st, cut, shift, SP):
+    """P41S: a variant's base items (hidden layers included, ids stripped) as _emit_items does, and where its layers landed"""
+    M = SP.BaseMap()
+    ia = len(T.items)
+    la = len(T.layers)
+    M.first_row = la
+    items = [dict(it, layers=[SP._strip(L) for L in it["layers"]]) if "layers" in it else SP._strip(it) for it in var["items"]]
+    _emit_items(T, pics, items, eid, st, cut, shift, [])
+    # layer rows were appended in item order; items with layers map one to one onto the emitted layer items
+    row = la
+    k = ia
+    for bi, it in enumerate(var["items"]):
+        if "layers" not in it:
+            continue
+        while T.items[k][2] < 0:   # (pictures and the keep item are not layer items)
+            k += 1
+        M.item_rel[bi] = k - ia
+        k += 1
+        for L in it["layers"]:
+            M.row[L["id"]] = row
+            M.rel[L["id"]] = row - la
+            M.layer[L["id"]] = L
+            row += 1
+    return M
 
 
 def add_pic(T, pics, pic, shift, what):

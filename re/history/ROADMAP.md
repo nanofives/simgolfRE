@@ -2397,3 +2397,20 @@ member panel drawn twice.
 - Published 2026-11-27: items 14 and 10 in 61f1b72f (fast check: x64 0 errors, static 7, SEGCMP 205 / 205, SMOKE OK), LAN + GitHub release.
 - Item 8 (building thumbnails at window resolution): with a theme on, the layout sheet's cuts drawn by drawBuildingPanel (slots 0-3 and 5-8, rows 0..3) are composed from the building's own world cells (the cells and palette objects buildSceneSprites draws, facing 0, zoom-4 placement) and resampled by exact area coverage at window scale (gfx_bthumb.cpp, table gfx_bthumb_table.inc fitted for 4 course types x 8 slots x 2 levels; control uvgame 9 = the art). Grey rows (locked / upgraded / not yet allowed) take the filter measured on the art: L = 0.299 R + 0.587 G + 0.114 B; R' = 1.0042 L - 13.22, G' = 1.0076 L - 2.62, B' = 0.9728 L + 37.56. The driving range stays art (its target green has no world sprite). World pixels per art pixel: airport 4.8, hotel 3.3, putting green 2.7, tennis 2.5, pro shop / cart shop / marina 1.5-1.6, snack bar 1.1. Speed with the palette open at 4K equal to the art's.
   Evidence: x64 0 errors, test_static 7, test_p41_bthumb 3, the hud_palettes parity selection of test_p41_uivec. Not done: the terrain palette's tree strip and the amenities panel's three corner buttons (pedestal baked into the cut).
+- Published 2026-11-27: item 8 in 4db3eb18 (fast check: x64 0 errors, static 7, SMOKE OK), LAN + GitHub release.
+
+## P41S: states as alterations of one base drawing (2026-11-27; notes log/roadmap/P41/states/notes.md)
+Mariano: hover and button states drawn as alterations of the shapes, not as separate drawings. An element is now one base scene plus,
+per state, a short list of changes (paint, a rigid move of named layers, a shadow's spread, decoration layers on / off, item boxes);
+a figure that really changes is a variant with its own base. Toolkit `re/tools/uivec/states.py` (apply / derive / check / stamp),
+element files `re/tools/uivec/states/<area>/<id>.json` (each holds the hashes of the approved scenes it was derived from; the exporter
+uses a patch only while they match). Port: the exporter shares one base per element and emits patch rows, moved shapes are a `uv.move`
+node; gfx_uvgame applies the patches once per area (resolve_area); control uvgame 8 ignores them.
+- Derived from the approved scenes: 171 multi-state elements, 518 states = 171 bases + 88 variant bases + 91 exact alterations + 168
+  not exact (radii and centres 0.01-0.4 px apart between separately authored states, moves of 0.85-1.05 px, shadows that change shape,
+  title / difficulty hover pads 1.4-2.4 px off). Exact ones are converted (nothing visible changes); the 168 keep their own scene until
+  he judges the unified versions (round 8, log/roadmap/P41/work8/, 72 elements).
+- Size of the in-game includes: 6,653,816 -> 6,528,768 bytes (-1.9%) now, 5,986,228 (-10%) projected after rounds 7 and 8: the bevel
+  paint is most of a state's bytes and the hover light is the state itself. Timings and cache unchanged within the runs' spread.
+  Evidence (port/build/P41S): test_p41_uivec 29 / 29 (parity 563 records at 1x / 2.7x; states.apply == approved within 1 level on 278
+  patched records; control 8 RED 43 / 43), test_static 7.

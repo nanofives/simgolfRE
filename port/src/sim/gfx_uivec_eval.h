@@ -19,7 +19,9 @@ enum UvKind : uint8_t { kCircle = 0, kEllipse, kPoly, kSeg, kHalf, kUnion, kInte
                         // rm.smin (reports_maps parts.py _smin: a union with polynomial smooth-minimum fillets of size p[0])
                         kSMin,
                         // marks: superellipse (common.py _superellipse), pline (_pline), vline (fix2.py _vline, points resolved)
-                        kSuper, kPLine, kVLine };
+                        kSuper, kPLine, kVLine,
+                        // P41S (re/tools/uivec/states_port.py): a state's rigid move of a base layer's shape: kid a at (x - p[0], y - p[1])
+                        kMove };
 struct UvNode {
   uint8_t kind, cap, closed;  // cap: 0 butt, 1 flat, 2 round (a stroke)
   int32_t a, n;               // children (kids) / rings (rings) / points (pts pairs, a stroke)
@@ -319,6 +321,8 @@ inline double sd(const UvTab &T, int32_t id, double x, double y) {
       const double u = std::max(r + d1, 0.0), v = std::max(r + d2, 0.0);
       return std::min(-r, std::max(d1, d2)) + std::hypot(u, v);
     }
+    case kMove:
+      return sd(T, T.kids[S.a], x - S.p[0], y - S.p[1]);
     default:
       return 1e18;
   }
@@ -327,6 +331,10 @@ inline double sd(const UvTab &T, int32_t id, double x, double y) {
 // sdf.py normal(): the outward unit normal of a circle's or an ellipse's edge (the exporter refuses a bevel on any other shape)
 inline void normal(const UvTab &T, int32_t id, double x, double y, double &nx, double &ny) {
   const UvNode &S = T.nodes[id];
+  if (S.kind == kMove) {   // P41S: the moved shape's normal is its kid's at the moved point
+    normal(T, T.kids[S.a], x - S.p[0], y - S.p[1], nx, ny);
+    return;
+  }
   if (S.kind == kCircle) {
     const double px = x - S.p[0], py = y - S.p[1];
     const double n = std::max(std::hypot(px, py), 1e-9);
@@ -600,6 +608,13 @@ inline void node_bounds(const UvTab &T, int32_t id, double b[4]) {
     case kSub:
       node_bounds(T, T.kids[S.a], b);
       return;
+    case kMove:   // P41S: the kid's box moved
+      node_bounds(T, T.kids[S.a], b);
+      if (b[0] > -kInf) b[0] += S.p[0];
+      if (b[2] < kInf) b[2] += S.p[0];
+      if (b[1] > -kInf) b[1] += S.p[1];
+      if (b[3] < kInf) b[3] += S.p[1];
+      return;
     case kGrow:
     case kOutline: {
       node_bounds(T, T.kids[S.a], b);
@@ -629,8 +644,8 @@ inline bool node_lip(const UvTab &T, int32_t id) {
       return true;
     case kHalf:
       return std::hypot(S.p[2], S.p[3]) <= 1.0 + 1e-12;
-    case kUnion: case kInter: case kSub: case kGrow: case kOutline:
-      for (int32_t i = 0; i < (S.kind == kSub ? 2 : S.kind == kGrow || S.kind == kOutline ? 1 : S.n); ++i)
+    case kUnion: case kInter: case kSub: case kGrow: case kOutline: case kMove:
+      for (int32_t i = 0; i < (S.kind == kSub ? 2 : S.kind == kGrow || S.kind == kOutline || S.kind == kMove ? 1 : S.n); ++i)
         if (!node_lip(T, T.kids[S.a + i])) return false;
       return true;
     default:

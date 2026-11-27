@@ -7,8 +7,6 @@
 #endif
 #include "portsim/sim/gfx_uvgame.h"
 
-#include "portsim/sim/gfx_bthumb.h"   // P41 feedback 1 item 8: the building thumbnails from the world art ("uvg:B" runs)
-
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -42,6 +40,15 @@ struct UvgCut {
   const char *id, *state, *sheet;
   int32_t x, y, w, h, shift_x, shift_y;
   int32_t item_a, nitems;
+  // P41S: a state drawn as patches of its element's base (re/tools/uivec/states_port.py): item_a / nitems are the base's items and
+  // its patches are applied when the area is resolved (resolve_area); 0, 0 = the record's own scene
+  int32_t patch_a = 0, npatch = 0;
+};
+// P41S: one patch of a state (states_port.py patches): kind 0 = the base's layer `target` (its index among the base's layer rows) is
+// drawn as layer row `row` of the table (-1: not drawn); kind 1 = the base's item `target` takes the box `box`
+struct UvgPatch {
+  int32_t kind, target, row;
+  double box[4];
 };
 // P41G round 6: a PICTURE item (port_game.py add_pic; areas/reports_slabs/fix6_sga.py): the sheet's pixels of `rect` at the scene
 // point (atx, aty), lifted with wide.py's ground_diff matte against the record's items before it at 1x (alpha clip((|A - G| - t0) /
@@ -63,6 +70,8 @@ struct UvgArea {
   int32_t ncuts;
   const UvgPic *pics = nullptr;   // P41G round 6
   int32_t npics = 0;
+  const UvgPatch *patches = nullptr;   // P41S
+  int32_t npatches = 0;
 };
 
 #include "uivec_game_hud_palettes.inc"
@@ -73,9 +82,91 @@ struct UvgArea {
 #include "uivec_game_marks.inc"
 
 // port_game.py EXPORTED order
-const UvgArea *const kAreas[] = {&uvg_hud_palettes::kArea, &uvg_hud_panels::kArea, &uvg_popups::kArea, &uvg_reports_slabs::kArea,
-                                 &uvg_reports_maps::kArea, &uvg_marks::kArea};
-constexpr int32_t kNumAreas = static_cast<int32_t>(sizeof(kAreas) / sizeof(kAreas[0]));
+const UvgArea *const kAreasIn[] = {&uvg_hud_palettes::kArea, &uvg_hud_panels::kArea, &uvg_popups::kArea, &uvg_reports_slabs::kArea,
+                                   &uvg_reports_maps::kArea, &uvg_marks::kArea};
+constexpr int32_t kNumAreas = static_cast<int32_t>(sizeof(kAreasIn) / sizeof(kAreasIn[0]));
+
+// P41S: an area with every patched state applied to its element's base: the base's item and layer rows copied, then per patched
+// record its own item rows and layer rows (the base's, with each patched layer replaced by its row or left out, an item's box
+// replaced, an item left without layers dropped: states.apply's rules). The record points at its own rows; everything after
+// (bounds, layer boxes, the grid renderer, the caches) reads the resolved table as it read the generated one.
+struct ResolvedArea {
+  UvgArea area;
+  UvTab tab;
+  std::vector<UvItem> items;
+  std::vector<UvLayer> layers;
+  std::vector<UvgCut> cuts;
+};
+ResolvedArea *resolve_area(const UvgArea &A, bool apply_patches) {
+  auto *R = new ResolvedArea();   // (kept for the process's life, as the generated tables)
+  const UvTab &T = *A.tab;
+  int32_t nitems = 0, nlayers = 0;
+  for (int32_t c = 0; c < A.ncuts; ++c) nitems = std::max(nitems, A.cuts[c].item_a + A.cuts[c].nitems);
+  for (int32_t it = 0; it < nitems; ++it)
+    if (T.items[it].nlayers > 0) nlayers = std::max(nlayers, T.items[it].layer_a + T.items[it].nlayers);
+  for (int32_t p = 0; p < A.npatches; ++p)
+    if (A.patches[p].kind == 0 && A.patches[p].row >= 0) nlayers = std::max(nlayers, A.patches[p].row + 1);
+  R->items.assign(T.items, T.items + nitems);
+  R->layers.assign(T.layers, T.layers + nlayers);
+  R->cuts.assign(A.cuts, A.cuts + A.ncuts);
+  if (apply_patches) {
+    for (UvgCut &C : R->cuts) {
+      if (C.npatch <= 0) continue;
+      std::unordered_map<int32_t, int32_t> lay;          // base layer index -> row (-1: not drawn)
+      std::unordered_map<int32_t, const double *> box;   // base item index -> box
+      for (int32_t p = C.patch_a; p < C.patch_a + C.npatch; ++p) {
+        const UvgPatch &P = A.patches[p];
+        if (P.kind == 0) lay[P.target] = P.row;
+        else if (P.kind == 1) box[P.target] = P.box;
+      }
+      int32_t first = -1;   // the base's first layer row
+      for (int32_t k = 0; k < C.nitems && first < 0; ++k)
+        if (T.items[C.item_a + k].nlayers > 0) first = T.items[C.item_a + k].layer_a;
+      const int32_t ia = static_cast<int32_t>(R->items.size());
+      for (int32_t k = 0; k < C.nitems; ++k) {
+        UvItem J = T.items[C.item_a + k];
+        if (J.nlayers > 0) {
+          const int32_t la = static_cast<int32_t>(R->layers.size());
+          for (int32_t li = 0; li < J.nlayers; ++li) {
+            const int32_t src = J.layer_a + li;
+            auto f = lay.find(src - first);
+            if (f != lay.end() && f->second < 0) continue;
+            const UvLayer L = T.layers[f != lay.end() ? f->second : src];
+            R->layers.push_back(L);
+          }
+          J.layer_a = la;
+          J.nlayers = static_cast<int32_t>(R->layers.size()) - la;
+          if (J.nlayers == 0) continue;
+        }
+        auto b = box.find(k);
+        if (b != box.end()) std::copy(b->second, b->second + 4, J.box);
+        R->items.push_back(J);
+      }
+      C.item_a = ia;
+      C.nitems = static_cast<int32_t>(R->items.size()) - ia;
+    }
+  }
+  R->tab = T;
+  R->tab.items = R->items.data();
+  R->tab.layers = R->layers.data();
+  R->area = A;
+  R->area.tab = &R->tab;
+  R->area.cuts = R->cuts.data();
+  return R;
+}
+// the resolved areas; negative control uvgame 8: every patched state drawn as its element's base (patches ignored)
+const UvgArea *area_at(int32_t a) {
+  static ResolvedArea *with[kNumAreas] = {};
+  static ResolvedArea *without[kNumAreas] = {};
+  static std::once_flag once_with[kNumAreas], once_without[kNumAreas];
+  const size_t i = static_cast<size_t>(a);
+  if (SG_NEGCTL(g_negctl_uvgame) == 8) {
+    std::call_once(once_without[i], [&] { without[i] = resolve_area(*kAreasIn[i], false); });
+    return &without[i]->area;
+  }
+  std::call_once(once_with[i], [&] { with[i] = resolve_area(*kAreasIn[i], true); });
+  return &with[i]->area;
+}
 
 struct Ref {
   int32_t area, cut;
@@ -84,16 +175,16 @@ const std::vector<Ref> &all_refs() {
   static const std::vector<Ref> v = [] {
     std::vector<Ref> r;
     for (int32_t a = 0; a < kNumAreas; ++a)
-      for (int32_t c = 0; c < kAreas[a]->ncuts; ++c) r.push_back(Ref{a, c});
+      for (int32_t c = 0; c < kAreasIn[a]->ncuts; ++c) r.push_back(Ref{a, c});
     return r;
   }();
   return v;
 }
 const UvgCut &cut_of(int32_t i) {
   const Ref &r = all_refs()[static_cast<size_t>(i)];
-  return kAreas[r.area]->cuts[r.cut];
+  return area_at(r.area)->cuts[r.cut];
 }
-const UvTab &tab_of(int32_t i) { return *kAreas[all_refs()[static_cast<size_t>(i)].area]->tab; }
+const UvTab &tab_of(int32_t i) { return *area_at(all_refs()[static_cast<size_t>(i)].area)->tab; }
 // the records per sheet
 const std::unordered_map<std::string, std::vector<int32_t>> &by_sheet() {
   static const std::unordered_map<std::string, std::vector<int32_t>> m = [] {
@@ -184,7 +275,7 @@ int64_t pic_key(int32_t i, int32_t p) {
          (SG_NEGCTL(g_negctl_uvgame) == 6 ? (int64_t{1} << 62) : int64_t{0});
 }
 const UvgPic *pic_def(int32_t i, int32_t p) {
-  const UvgArea &A = *kAreas[all_refs()[static_cast<size_t>(i)].area];
+  const UvgArea &A = *area_at(all_refs()[static_cast<size_t>(i)].area);
   return p >= 0 && p < A.npics ? &A.pics[p] : nullptr;
 }
 std::shared_ptr<const LiftedPic> lifted_get(int32_t i, int32_t p) {
@@ -303,7 +394,7 @@ const std::vector<uint8_t> &lip_of(const UvTab &T, int32_t nlayers) {
   return m.emplace(&T, std::move(v)).first->second;
 }
 int32_t layer_count(int32_t i) {   // the number of layers of record i's table (its items' highest layer end)
-  const UvgArea &A = *kAreas[all_refs()[static_cast<size_t>(i)].area];
+  const UvgArea &A = *area_at(all_refs()[static_cast<size_t>(i)].area);
   int32_t n = 0;
   for (int32_t c = 0; c < A.ncuts; ++c)
     for (int32_t it = A.cuts[c].item_a; it < A.cuts[c].item_a + A.cuts[c].nitems; ++it)
@@ -735,7 +826,7 @@ int32_t uvg_cut_count() { return static_cast<int32_t>(all_refs().size()); }
 bool uvg_cut_info(int32_t i, UvgCutInfo &o) {
   if (i < 0 || i >= uvg_cut_count()) return false;
   const UvgCut &c = cut_of(i);
-  o.area = kAreas[all_refs()[static_cast<size_t>(i)].area]->name;
+  o.area = area_at(all_refs()[static_cast<size_t>(i)].area)->name;
   o.id = c.id;
   o.state = c.state;
   o.sheet = c.sheet;
@@ -795,7 +886,6 @@ std::string uvg_run_text(const std::vector<int32_t> &cuts, int32_t dx, int32_t d
 }
 
 bool uvg_run_bounds(const std::string &text, float &x0, float &y0, float &x1, float &y1) {
-  if (bthumb_is_text(text)) return bthumb_bounds(text, x0, y0, x1, y1);   // P41 feedback 1 item 8 (gfx_bthumb.h)
   Run r;
   if (!parse(text, r)) return false;
   double a, b, c, d;
@@ -808,21 +898,6 @@ bool uvg_run_bounds(const std::string &text, float &x0, float &y0, float &x1, fl
 }
 bool uvg_run_render(const std::string &text, double sx, double sy, double ox, double oy, int32_t px0, int32_t py0, int32_t w, int32_t h,
                     std::vector<float> &prem) {
-  if (bthumb_is_text(text)) {   // P41 feedback 1 item 8 (gfx_bthumb.h): drawn over a cleared target, as the records are
-    prem.assign(static_cast<size_t>(std::max(0, w)) * static_cast<size_t>(std::max(0, h)) * 4u, 0.f);
-    const auto t0 = std::chrono::steady_clock::now();
-    const bool ok = bthumb_render(text, sx, sy, ox, oy, px0, py0, w, h, prem);
-    if (const char *lp = std::getenv("SG_P41G_UILOG")) {   // development: every building thumbnail render (ms, size, scale, text)
-      static std::mutex lmu;
-      std::lock_guard<std::mutex> ll(lmu);
-      if (FILE *lf = std::fopen(lp, "a")) {
-        std::fprintf(lf, "%.3f\t%.2f\tbthumb\t%d\t%d\t%.3f\t%s\n", std::chrono::duration<double>(t0.time_since_epoch()).count(),
-                     std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count(), w, h, sx, text.c_str());
-        std::fclose(lf);
-      }
-    }
-    return ok;
-  }
   Run r;
   if (!parse(text, r)) return false;
   prem.assign(static_cast<size_t>(std::max(0, w)) * static_cast<size_t>(std::max(0, h)) * 4u, 0.f);
@@ -884,7 +959,6 @@ bool uvg_prepare_sheet(Ctx &ctx, const std::string &sheet) {
 
 bool uvg_draw(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y) {
   if (g.ui_pilot == kUiPilotOff || SG_NEGCTL(g_negctl_uvgame) == 3 || s.sheet.empty()) return false;
-  if (bthumb_draw(g, ctx, s, x, y)) return true;   // P41 feedback 1 item 8: a building thumbnail from the world art (gfx_bthumb.h)
   std::vector<int32_t> cuts;
   bool piece = false;
   uvg_match(s, cuts, &piece);
