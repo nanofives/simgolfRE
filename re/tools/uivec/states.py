@@ -26,7 +26,9 @@ No geometry in an alteration: a state cannot change a shape except by moving it.
     derive([(state, items), ...], base_name) -> (variant dict, report)
     check(items_a, items_b, rect) -> max abs difference in levels at 1x and 2.7x over black and white grounds
 
-    py -3.12 re/tools/uivec/states.py derive [--area <area>] [--id <id>] [--write]   -> log/roadmap/P41/states/derive.tsv
+    py -3.12 re/tools/uivec/states.py derive [--area <area>] [--id <id>] [--write] [--work7]   -> log/roadmap/P41/states/derive.tsv
+    py -3.12 re/tools/uivec/states.py stamp [--work7]
+  (--work7: also round 7's pending drawings, log/roadmap/P41/work7; judged and installed 2026-11-27, install78.py)
 """
 import copy
 import json
@@ -611,10 +613,12 @@ def derive(states, base_name, rects, origins, unify=False):
         # the whole drawing moved by whole pixels (every drawn layer, clips too): that is the state's origin, not a patch
         origin_add = None
         drawn = [L["id"] for (_, _, L) in flat_b if L["id"] not in A["off"]]
-        if len(mv) == 1 and not any(p[0] == name for p in pending_hidden):
-            (mx, my, mc), ids = next(iter(mv.items()))
-            has_clip = any("clip" in L for (_, _, L) in flat_b if L["id"] in ids)
-            if sorted(ids) == sorted(drawn) and mx == round(mx) and my == round(my) and (mc or not has_clip):
+        # (install78: a move group of clipped layers moving their clips and one of unclipped layers are the same rigid move)
+        if mv and len({k[:2] for k in mv}) == 1 and not any(p[0] == name for p in pending_hidden):
+            (mx, my, _), _ = next(iter(mv.items()))
+            ids = [i for k, v in mv.items() for i in v]
+            ok_clip = all(k[2] or not any("clip" in L for (_, _, L) in flat_b if L["id"] in v) for k, v in mv.items())
+            if sorted(ids) == sorted(drawn) and mx == round(mx) and my == round(my) and ok_clip:
                 origin_add = [float(mx), float(my)]
                 mv = {}
                 nb = {}
@@ -843,8 +847,22 @@ def _moved_items(items, o):
     return out
 
 
-def derive_element(area, eid, recs, unify=False, do_check=True):
-    """recs: [(state, sheet, cut, shift, items, extra)] -> (element dict, rows for derive.tsv)"""
+UNIFIED_DIR = os.path.join(HERE, "unified")
+
+
+def given_element(area, eid):
+    """install78: the approved unified element of (area, eid) (re/tools/uivec/unified/<area>/<id>.json) or None"""
+    p = os.path.join(UNIFIED_DIR, area, eid + ".json")
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def derive_element(area, eid, recs, unify=False, do_check=True, given=None):
+    """recs: [(state, sheet, cut, shift, items, extra)] -> (element dict, rows for derive.tsv). given: an approved unified element
+    (given_element): each of its variants whose every state's scene is apply(variant, state) at its origin within TOL_LEVELS is
+    used as is (Mariano approved it as base + alteration, so a state that switches a base layer for one of its own is exact)."""
     names = [r[0] for r in recs]
     by = {r[0]: r for r in recs}
     parsed = {n: parse_state(n) for n in names}
@@ -956,8 +974,46 @@ def derive_element(area, eid, recs, unify=False, do_check=True):
         for n in names:   # (a not-exact state keeps its first report; its own scene is what the port draws)
             if vmap[n][0] == vname and n in notexact and n in fvar["states"]:
                 del fvar["states"][n]
+    if given:
+        for gname, gv in given["variants"].items():
+            members = [n for n, r in given["states"].items() if r["variant"] == gname and n in by and n in gv["states"]]
+            if gv["base"] not in members:
+                continue
+            gres = {}
+            for n in members:
+                o = given["states"][n].get("origin", [0, 0])
+                rr = _scene_rect(by[n][2], by[n][3])
+                gres[n] = tuple(check(apply(gv, n), _moved_items(by[n][4], o), [rr[0] - o[0], rr[1] - o[1], rr[2], rr[3]]))
+            if max(max(v) for v in gres.values()) > TOL_LEVELS:
+                print(f"  [{area}] {eid}: the approved unified variant {gname!r} does not reproduce the scenes "
+                      f"({max(max(v) for v in gres.values()):.2f} levels): derived instead", flush=True)
+                continue
+            vname = vmap[gv["base"]][0]
+            if variants[vname]["base"] != gv["base"]:   # (derive filed the unified base under another base: a variant of its own)
+                vname = gname or gv["base"]
+                while vname in variants:
+                    vname += "'"
+                old_members = []
+            else:
+                old_members = [n for n in names if vmap[n][0] == vname]
+            variants[vname] = copy.deepcopy(gv)
+            for n in members:
+                A = gv["states"][n]
+                vmap[n] = (vname, list(given["states"][n].get("origin", [0, 0])))
+                res[n] = gres[n]
+                notexact.discard(n)
+                rep[n] = {"status": ("variant-base" if vname else "base") if n == gv["base"] else "exact", "geom": [],
+                          "moves": [[list(g["d"]), len(g["layers"])] for g in A.get("move", ())], "off": list(A.get("off", ())),
+                          "on": list(A.get("on", ())), "paint": len(A.get("paint", {})), "spread": dict(A.get("spread", {})),
+                          "given": True}
+            for n in old_members:   # (a state the unified element does not name: its own scene)
+                if n not in members:
+                    notexact.add(n)
+                    rep[n] = dict(rep[n], status="not-exact")
     elem = {"id": eid, "area": area, "variants": variants,
             "states": {n: {"variant": vmap[n][0], "origin": vmap[n][1], "sha": scene_sha(by[n][4])} for n in names}}
+    if given:
+        elem["unified"] = os.path.relpath(os.path.join(UNIFIED_DIR, area, eid + ".json"), ROOT).replace("\\", "/")
     for n in names:
         v = vmap[n][0]
         r = rep[n]
@@ -997,7 +1053,8 @@ def main_derive(argv):
         PG._area_kinds()
     rows_all = []
     for area in areas:
-        sources = ["approved"] + (["work7"] if work7_overrides(area) else [])
+        # (install78, 2026-11-27: round 7 is judged and installed in scenes/; its pending pass runs only on request)
+        sources = ["approved"] + (["work7"] if "--work7" in argv and work7_overrides(area) else [])
         for source in sources:
             recs = area_records(area, source)
             w7 = set(work7_overrides(area)) if source == "work7" else set()
@@ -1005,7 +1062,7 @@ def main_derive(argv):
                 if len(rs) < 2 or (only and eid not in only) or (source == "work7" and eid not in w7):
                     continue
                 t0 = time.time()
-                elem, rows = derive_element(area, eid, rs)
+                elem, rows = derive_element(area, eid, rs, given=given_element(area, eid) if source == "approved" else None)
                 elem["source"] = source if source == "approved" else "pending-round-7"
                 for r in rows:
                     r["source"] = elem["source"]
@@ -1035,6 +1092,8 @@ def main_stamp(argv):
     n = 0
     for d in sorted(os.listdir(STATES_DIR)):
         w7 = d.endswith("_work7")
+        if w7 and "--work7" not in argv:   # (install78: round 7's pending element files are not stamped)
+            continue
         area = d[:-len("_work7")] if w7 else d
         recs = area_records(area, "work7" if w7 else "approved")
         for f in sorted(os.listdir(os.path.join(STATES_DIR, d))):

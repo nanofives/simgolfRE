@@ -85,6 +85,15 @@ bool uvg_prepare_sheet(Ctx &ctx, const std::string &sheet);
 // Sim side: draws sprite s's records at its draw point (x, y) (where the kept pixel (0, 0) goes) as a UI run; false (nothing drawn)
 // when the theme is off, the sprite has no records or negative control 3 is on. Called by the primitives through uvg_hook.
 bool uvg_draw(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y);
+// install78 (log/roadmap/P41/install78/notes.md): a record by element id and state (-1: none), and a record drawn by index at frame =
+// scene + (dx, dy) (no sprite: the port's own elements, the speed button's hud-speed-<n>x on the pseudo sheet "@root"); false when the
+// theme is off, the hook is off (negative control uvgame 3) or there is no such record
+int32_t uvg_find(const char *id, const char *state);
+bool uvg_draw_record(Gfx &g, Ctx &ctx, int32_t i, int32_t dx, int32_t dy);
+// the speed button (gfx_hud.cpp b_radial_menu, P33A item 1) from its approved scene hud-speed-<1x|2x|4x> (speed 1 / 2 / 4+), state
+// hover when `over`, else idle; false (the caller draws the button made from the pause's pixels) when uvg_draw_record cannot or under
+// negative control uvgame 10
+bool uvg_draw_speed(Gfx &g, Ctx &ctx, int32_t speed, bool over);
 
 }  // namespace portsim
 

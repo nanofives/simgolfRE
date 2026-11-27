@@ -51,3 +51,18 @@ Output `log/roadmap/P41/work3/hud_panels/`: `py -3.12 run3.py [ids]` (two-versio
 | el_fix3_figs.py | staff tabs A / B (B: the man and post re-read) |
 | el_fix3_trophy.py | trophy A / B (B: ring handles, tapered bowl, per-column bands, two-tone foot) |
 | el_fix3_faces.py | mood faces A / B (B: round 2's feature shapes painted with edge shade, core + edge tones, glints) |
+
+## Round 7 (2026-11-26, log/roadmap/P41/FIX7_BRIEF.md #5: one structure per button across its states)
+
+Output `log/roadmap/P41/work7/hud_panels/`: `py -3.12 fix7.py [tabs] [ids]` (no argument: tabs + every multi-state element),
+then `py -3.12 fix7_results.py` (results.tsv; moves the per-state decisions into `_notes/<id>.json`).
+
+| module | what |
+|---|---|
+| fix7_look.py | the approved tab scenes as they appear on the three trays (yellow + baked blue) and as cuts, art over drawing |
+| fix7_audit.py | `audit(el)`: each state's scene against idle (item / layer structure, whole-px move, residual); `MULTI` list |
+| fix7_detail.py | which layer parameters differ between states (after the move) |
+| fix7_artstrip.py | a state strip of the art with idle's rim circle moved onto each state |
+| fix7_artmove.py | the ART's own whole-px move per state (edge-map match), independent of the scenes |
+| fix7.py | tabs: one canonical scene per glyph (the approved idle cut) placed at every cut and tray position, yellow = same shapes with rim / body paint measured on the yellow art; multi-state: idle's shapes moved per layer by whole px, state paints, grounds the art does not move held (`FIXED_ITEMS`), `MOVE_AS` for a state whose approved scene missed the art's move, a reshaped layer (cast shadow) kept only when it fits the art 20 % better; notes cross-check every move against fix7_artmove |
+| fix7_results.py | results.tsv |

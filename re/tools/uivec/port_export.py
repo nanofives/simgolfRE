@@ -597,13 +597,32 @@ HEADER_TABLES = [
 
 
 # ------------------------------------------------------------------------------------------------------------ title buttons
+TITLE_SCENES = os.path.join(HERE, "scenes", "title")
+
+
+def title_override(eid, state):
+    """install78 (log/roadmap/P41/install78/notes.md): the approved round-8 state of a title / difficulty button
+    (re/tools/uivec/scenes/title/<eid>.json, written by install78.py from the unified element) or None. Only the hover states are
+    read: the idle look is the unified element's base, title.py's own idle drawing (the backdrops hold it)."""
+    if state != "hover":
+        return None
+    p = os.path.join(TITLE_SCENES, eid + ".json")
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding="utf-8") as f:
+        st = json.load(f)["states"].get(state)
+    return st["scene"] if st else None
+
+
 def scenes():
-    """[(name, kTitleButtons index, hover, scene items)] as sdf.py renders them (title.scene of the measured geometry)"""
+    """[(name, kTitleButtons index, hover, scene items)] as sdf.py renders them (title.scene of the measured geometry; a hover
+    approved in round 8 from scenes/title, title_override)"""
     meas = title.measure(verbose=False)
     out = []
     for name, idx in BUTTONS:
         for hover in (0, 1):
-            out.append((name, idx, hover, title.scene(meas, bool(hover), only=(name,))))
+            ov = title_override(f"title.{name}", "hover" if hover else "idle")
+            out.append((name, idx, hover, ov if ov is not None else title.scene(meas, bool(hover), only=(name,))))
     return out
 
 
@@ -646,6 +665,10 @@ def diff_scenes():
                 "print(json.dumps({f'{n}|{h}': title.scene(m, h, only=(n,)) for n in m for h in (0, 1)}))")
         r = subprocess.run([sys.executable, "-c", code], cwd=HERE, capture_output=True, text=True, check=True)
         _DIFF = {(k.split("|")[0], bool(int(k.split("|")[1]))): v for k, v in json.loads(r.stdout.strip().splitlines()[-1]).items()}
+        for (pad, hover) in list(_DIFF):   # install78: the round-8 approved hover of each pad (scenes/title/diff.<pad>.json)
+            ov = title_override(f"diff.{pad}", "hover" if hover else "idle")
+            if ov is not None:
+                _DIFF[(pad, hover)] = ov
     return _DIFF
 
 

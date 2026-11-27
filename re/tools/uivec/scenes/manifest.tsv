@@ -1,32 +1,32 @@
 area	id	round	source
-frontend	diff-back-button	1	log/roadmap/P41/work/frontend/diff-back-button.json
-frontend	diff-backdrop	1	log/roadmap/P41/work/frontend/diff-backdrop.json
+frontend	diff-back-button	7	log/roadmap/P41/work7/frontend/diff-back-button.json
+frontend	diff-backdrop	7	log/roadmap/P41/work7/frontend/diff-backdrop.json
 frontend	diff-title-plate	1	log/roadmap/P41/work/frontend/diff-title-plate.json
 frontend	editor-backdrop	2	log/roadmap/P41/work2/frontend/editor-backdrop.json
-frontend	editor-body	2	log/roadmap/P41/work2/frontend/editor-body.json
-frontend	editor-family	1	log/roadmap/P41/work/frontend/editor-family.json
-frontend	editor-gender	1	log/roadmap/P41/work/frontend/editor-gender.json
-frontend	editor-hair	2	log/roadmap/P41/work2/frontend/editor-hair.json
-frontend	editor-head	1	log/roadmap/P41/work/frontend/editor-head.json
+frontend	editor-body	8	log/roadmap/P41/work8/frontend/editor-body.json over log/roadmap/P41/work2/frontend/editor-body.json
+frontend	editor-family	8	log/roadmap/P41/work8/frontend/editor-family.json over log/roadmap/P41/work/frontend/editor-family.json
+frontend	editor-gender	8	log/roadmap/P41/work8/frontend/editor-gender.json over log/roadmap/P41/work/frontend/editor-gender.json
+frontend	editor-hair	8	log/roadmap/P41/work8/frontend/editor-hair.json over log/roadmap/P41/work2/frontend/editor-hair.json
+frontend	editor-head	8	log/roadmap/P41/work8/frontend/editor-head.json over log/roadmap/P41/work/frontend/editor-head.json
 frontend	editor-list	2	log/roadmap/P41/work2/frontend/editor-list.json
 frontend	editor-load	2	log/roadmap/P41/work2/frontend/editor-load.json
 frontend	editor-name-card	2	log/roadmap/P41/work2/frontend/editor-name-card.json
 frontend	editor-ok	1	log/roadmap/P41/work/frontend/editor-ok.json
-frontend	editor-outfit	2	log/roadmap/P41/work2/frontend/editor-outfit.json
+frontend	editor-outfit	8	log/roadmap/P41/work8/frontend/editor-outfit.json over log/roadmap/P41/work2/frontend/editor-outfit.json
 frontend	editor-oval	1	log/roadmap/P41/work/frontend/editor-oval.json
 frontend	editor-page	2	log/roadmap/P41/work2/frontend/editor-page.json
-frontend	editor-pants	2	log/roadmap/P41/work2/frontend/editor-pants.json
-frontend	editor-pill	2	log/roadmap/P41/work2/frontend/editor-pill.json
-frontend	editor-pill-tall	2	log/roadmap/P41/work2/frontend/editor-pill-tall.json
+frontend	editor-pants	8	log/roadmap/P41/work8/frontend/editor-pants.json over log/roadmap/P41/work2/frontend/editor-pants.json
+frontend	editor-pill	8	log/roadmap/P41/work8/frontend/editor-pill.json over log/roadmap/P41/work2/frontend/editor-pill.json
+frontend	editor-pill-tall	8	log/roadmap/P41/work8/frontend/editor-pill-tall.json over log/roadmap/P41/work2/frontend/editor-pill-tall.json
 frontend	editor-reset	2	log/roadmap/P41/work2/frontend/editor-reset.json
 frontend	editor-save	2	log/roadmap/P41/work2/frontend/editor-save.json
-frontend	editor-shirt	2	log/roadmap/P41/work2/frontend/editor-shirt.json
-frontend	load-back-button	1	log/roadmap/P41/work/frontend/load-back-button.json
-frontend	load-backdrop	2	log/roadmap/P41/work2/frontend/load-backdrop.json
-frontend	load-delete-button	1	log/roadmap/P41/work/frontend/load-delete-button.json
+frontend	editor-shirt	8	log/roadmap/P41/work8/frontend/editor-shirt.json over log/roadmap/P41/work2/frontend/editor-shirt.json
+frontend	load-back-button	7	log/roadmap/P41/work7/frontend/load-back-button.json
+frontend	load-backdrop	7	log/roadmap/P41/work7/frontend/load-backdrop.json
+frontend	load-delete-button	8	log/roadmap/P41/work8/frontend/load-delete-button.json over log/roadmap/P41/work/frontend/load-delete-button.json
 frontend	load-detail-pills	1	log/roadmap/P41/work/frontend/load-detail-pills.json
 frontend	load-info-bar	2	log/roadmap/P41/work2/frontend/load-info-bar.json
-frontend	load-ok-button	1	log/roadmap/P41/work/frontend/load-ok-button.json
+frontend	load-ok-button	8	log/roadmap/P41/work8/frontend/load-ok-button.json over log/roadmap/P41/work/frontend/load-ok-button.json
 frontend	load-page	1	log/roadmap/P41/work/frontend/load-page.json
 frontend	load-preview-frame	1	log/roadmap/P41/work/frontend/load-preview-frame.json
 frontend	load-save-list	1	log/roadmap/P41/work/frontend/load-save-list.json
@@ -34,13 +34,13 @@ frontend	load-scroll-down	1	log/roadmap/P41/work/frontend/load-scroll-down.json
 frontend	load-scroll-track	2	log/roadmap/P41/work2/frontend/load-scroll-track.json
 frontend	load-scroll-up	1	log/roadmap/P41/work/frontend/load-scroll-up.json
 frontend	load-title-plate	1	log/roadmap/P41/work/frontend/load-title-plate.json
-frontend	pro-backdrop	1	log/roadmap/P41/work/frontend/pro-backdrop.json
+frontend	pro-backdrop	7	log/roadmap/P41/work7/frontend/pro-backdrop.json
 frontend	pro-ball-ring	1	log/roadmap/P41/work/frontend/pro-ball-ring.json
 frontend	pro-bottom-bar	2	log/roadmap/P41/work2/frontend/pro-bottom-bar.json
 frontend	pro-list	1	log/roadmap/P41/work/frontend/pro-list.json
-frontend	theme-back-button	1	log/roadmap/P41/work/frontend/theme-back-button.json
-frontend	theme-backdrop	1	log/roadmap/P41/work/frontend/theme-backdrop.json
-frontend	theme-cell	1	log/roadmap/P41/work/frontend/theme-cell.json
+frontend	theme-back-button	7	log/roadmap/P41/work7/frontend/theme-back-button.json
+frontend	theme-backdrop	7	log/roadmap/P41/work7/frontend/theme-backdrop.json
+frontend	theme-cell	8	log/roadmap/P41/work8/frontend/theme-cell.json over log/roadmap/P41/work/frontend/theme-cell.json
 frontend	theme-header-pills	1	log/roadmap/P41/work/frontend/theme-header-pills.json
 frontend	theme-ok-button	1	log/roadmap/P41/work/frontend/theme-ok-button.json
 frontend	theme-row-bar	1	log/roadmap/P41/work/frontend/theme-row-bar.json
@@ -51,28 +51,28 @@ frontend	theme-table	1	log/roadmap/P41/work/frontend/theme-table.json
 frontend	theme-title-plate	1	log/roadmap/P41/work/frontend/theme-title-plate.json
 frontend	title-backdrop	1	log/roadmap/P41/work/frontend/title-backdrop.json
 frontend	title-centre-ellipse	1	log/roadmap/P41/work/frontend/title-centre-ellipse.json
-frontend	world-back	2	log/roadmap/P41/work2/frontend/world-back.json
-frontend	world-backdrop	2	log/roadmap/P41/work2/frontend/world-backdrop.json
+frontend	world-back	7	log/roadmap/P41/work7/frontend/world-back.json
+frontend	world-backdrop	7	log/roadmap/P41/work7/frontend/world-backdrop.json
 frontend	world-capsule	1	log/roadmap/P41/work/frontend/world-capsule.json
-frontend	world-load	2	log/roadmap/P41/work2/frontend/world-load.json
+frontend	world-load	8	log/roadmap/P41/work8/frontend/world-load.json over log/roadmap/P41/work2/frontend/world-load.json
 frontend	world-plates	1	log/roadmap/P41/work/frontend/world-plates.json
 frontend	world-refresh	1	log/roadmap/P41/work/frontend/world-refresh.json
-frontend	world-save	3	log/roadmap/P41/work3/frontend/world-save.json
-hud_palettes	amenities-bench-tab	1	log/roadmap/P41/work/hud_palettes/amenities-bench-tab.json
-hud_palettes	amenities-bridge-tab	2	log/roadmap/P41/work2/hud_palettes/amenities-bridge-tab.json
-hud_palettes	amenities-bulldozer	1	log/roadmap/P41/work/hud_palettes/amenities-bulldozer.json
-hud_palettes	amenities-flowers-tab	2	log/roadmap/P41/work2/hud_palettes/amenities-flowers-tab.json
-hud_palettes	amenities-obelisk-tab	2	log/roadmap/P41/work2/hud_palettes/amenities-obelisk-tab.json
+frontend	world-save	8	log/roadmap/P41/work8/frontend/world-save.json over log/roadmap/P41/work3/frontend/world-save.json
+hud_palettes	amenities-bench-tab	8	log/roadmap/P41/work8/hud_palettes/amenities-bench-tab.json over log/roadmap/P41/work/hud_palettes/amenities-bench-tab.json
+hud_palettes	amenities-bridge-tab	8	log/roadmap/P41/work8/hud_palettes/amenities-bridge-tab.json over log/roadmap/P41/work2/hud_palettes/amenities-bridge-tab.json
+hud_palettes	amenities-bulldozer	8	log/roadmap/P41/work8/hud_palettes/amenities-bulldozer.json over log/roadmap/P41/work/hud_palettes/amenities-bulldozer.json
+hud_palettes	amenities-flowers-tab	8	log/roadmap/P41/work8/hud_palettes/amenities-flowers-tab.json over log/roadmap/P41/work2/hud_palettes/amenities-flowers-tab.json
+hud_palettes	amenities-obelisk-tab	8	log/roadmap/P41/work8/hud_palettes/amenities-obelisk-tab.json over log/roadmap/P41/work2/hud_palettes/amenities-obelisk-tab.json
 hud_palettes	amenities-page-left	1	log/roadmap/P41/work/hud_palettes/amenities-page-left.json
 hud_palettes	amenities-page-right	1	log/roadmap/P41/work/hud_palettes/amenities-page-right.json
 hud_palettes	amenities-palette	2	log/roadmap/P41/work2/hud_palettes/amenities-palette.json
 hud_palettes	amenities-rotate	1	log/roadmap/P41/work/hud_palettes/amenities-rotate.json
 hud_palettes	amenities-slot	2	log/roadmap/P41/work2/hud_palettes/amenities-slot.json
 hud_palettes	amenities-strip	3	log/roadmap/P41/work3/hud_palettes/amenities-strip.json
-hud_palettes	amenities-tree-tab	1	log/roadmap/P41/work/hud_palettes/amenities-tree-tab.json
+hud_palettes	amenities-tree-tab	8	log/roadmap/P41/work8/hud_palettes/amenities-tree-tab.json over log/roadmap/P41/work/hud_palettes/amenities-tree-tab.json
 hud_palettes	building-palette	3	log/roadmap/P41/work3/hud_palettes/building-palette.json
 hud_palettes	building-slot	2	log/roadmap/P41/work2/hud_palettes/building-slot.json
-hud_palettes	bulldozer-button	1	log/roadmap/P41/work/hud_palettes/bulldozer-button.json
+hud_palettes	bulldozer-button	8	log/roadmap/P41/work8/hud_palettes/bulldozer-button.json over log/roadmap/P41/work/hud_palettes/bulldozer-button.json
 hud_palettes	course-cash-box	1	log/roadmap/P41/work/hud_palettes/course-cash-box.json
 hud_palettes	course-cash-medal	1	log/roadmap/P41/work/hud_palettes/course-cash-medal.json
 hud_palettes	course-fun-box	1	log/roadmap/P41/work/hud_palettes/course-fun-box.json
@@ -80,12 +80,12 @@ hud_palettes	course-fun-medal	1	log/roadmap/P41/work/hud_palettes/course-fun-med
 hud_palettes	course-skill-box	1	log/roadmap/P41/work/hud_palettes/course-skill-box.json
 hud_palettes	course-skill-medal	1	log/roadmap/P41/work/hud_palettes/course-skill-medal.json
 hud_palettes	course-title-badge	1	log/roadmap/P41/work/hud_palettes/course-title-badge.json
-hud_palettes	elevation-area	2	log/roadmap/P41/work2/hud_palettes/elevation-area.json
-hud_palettes	elevation-bulldozer	1	log/roadmap/P41/work/hud_palettes/elevation-bulldozer.json
+hud_palettes	elevation-area	8	log/roadmap/P41/work8/hud_palettes/elevation-area.json over log/roadmap/P41/work2/hud_palettes/elevation-area.json
+hud_palettes	elevation-bulldozer	8	log/roadmap/P41/work8/hud_palettes/elevation-bulldozer.json over log/roadmap/P41/work/hud_palettes/elevation-bulldozer.json
 hud_palettes	elevation-palette	1	log/roadmap/P41/work/hud_palettes/elevation-palette.json
-hud_palettes	elevation-point	2	log/roadmap/P41/work2/hud_palettes/elevation-point.json
-hud_palettes	elevation-smooth	2	log/roadmap/P41/work2/hud_palettes/elevation-smooth.json
-hud_palettes	elevation-square	2	log/roadmap/P41/work2/hud_palettes/elevation-square.json
+hud_palettes	elevation-point	8	log/roadmap/P41/work8/hud_palettes/elevation-point.json over log/roadmap/P41/work2/hud_palettes/elevation-point.json
+hud_palettes	elevation-smooth	8	log/roadmap/P41/work8/hud_palettes/elevation-smooth.json over log/roadmap/P41/work2/hud_palettes/elevation-smooth.json
+hud_palettes	elevation-square	8	log/roadmap/P41/work8/hud_palettes/elevation-square.json over log/roadmap/P41/work2/hud_palettes/elevation-square.json
 hud_palettes	elevation-up-down-tab	2	log/roadmap/P41/work2/hud_palettes/elevation-up-down-tab.json
 hud_palettes	gb-arrow-up-left	1	log/roadmap/P41/work/hud_palettes/gb-arrow-up-left.json
 hud_palettes	gb-arrow-up-right	1	log/roadmap/P41/work/hud_palettes/gb-arrow-up-right.json
@@ -117,71 +117,71 @@ hud_palettes	gb-trophy	1	log/roadmap/P41/work/hud_palettes/gb-trophy.json
 hud_palettes	gb-white-ball	1	log/roadmap/P41/work/hud_palettes/gb-white-ball.json
 hud_palettes	gb-white-cup	1	log/roadmap/P41/work/hud_palettes/gb-white-cup.json
 hud_palettes	hud-arc-bracket	1	log/roadmap/P41/work/hud_palettes/hud-arc-bracket.json
-hud_palettes	hud-buildings-mode	1	log/roadmap/P41/work/hud_palettes/hud-buildings-mode.json
-hud_palettes	hud-course-mode	1	log/roadmap/P41/work/hud_palettes/hud-course-mode.json
-hud_palettes	hud-golfers-mode	3	log/roadmap/P41/work3/hud_palettes/hud-golfers-mode.json
-hud_palettes	hud-info	1	log/roadmap/P41/work/hud_palettes/hud-info.json
+hud_palettes	hud-buildings-mode	8	log/roadmap/P41/work8/hud_palettes/hud-buildings-mode.json over log/roadmap/P41/work/hud_palettes/hud-buildings-mode.json
+hud_palettes	hud-course-mode	8	log/roadmap/P41/work8/hud_palettes/hud-course-mode.json over log/roadmap/P41/work/hud_palettes/hud-course-mode.json
+hud_palettes	hud-golfers-mode	8	log/roadmap/P41/work8/hud_palettes/hud-golfers-mode.json over log/roadmap/P41/work3/hud_palettes/hud-golfers-mode.json
+hud_palettes	hud-info	8	log/roadmap/P41/work8/hud_palettes/hud-info.json over log/roadmap/P41/work/hud_palettes/hud-info.json
 hud_palettes	hud-mode-base	4	log/roadmap/P41/work4/hud_palettes/hud-mode-base.json
-hud_palettes	hud-pause	1	log/roadmap/P41/work/hud_palettes/hud-pause.json
-hud_palettes	hud-rotate-left	2	log/roadmap/P41/work2/hud_palettes/hud-rotate-left.json
-hud_palettes	hud-rotate-right	2	log/roadmap/P41/work2/hud_palettes/hud-rotate-right.json
-hud_palettes	hud-tools	1	log/roadmap/P41/work/hud_palettes/hud-tools.json
-hud_palettes	hud-zoom-in	1	log/roadmap/P41/work/hud_palettes/hud-zoom-in.json
-hud_palettes	hud-zoom-out	1	log/roadmap/P41/work/hud_palettes/hud-zoom-out.json
+hud_palettes	hud-pause	9	log/roadmap/P41/work9/hud_palettes/hud-pause_scenes.json (element log/roadmap/P41/work9/hud_palettes/hud-pause.json)
+hud_palettes	hud-rotate-left	8	log/roadmap/P41/work8/hud_palettes/hud-rotate-left.json over log/roadmap/P41/work2/hud_palettes/hud-rotate-left.json
+hud_palettes	hud-rotate-right	8	log/roadmap/P41/work8/hud_palettes/hud-rotate-right.json over log/roadmap/P41/work2/hud_palettes/hud-rotate-right.json
+hud_palettes	hud-tools	8	log/roadmap/P41/work8/hud_palettes/hud-tools.json over log/roadmap/P41/work/hud_palettes/hud-tools.json
+hud_palettes	hud-zoom-in	8	log/roadmap/P41/work8/hud_palettes/hud-zoom-in.json over log/roadmap/P41/work/hud_palettes/hud-zoom-in.json
+hud_palettes	hud-zoom-out	8	log/roadmap/P41/work8/hud_palettes/hud-zoom-out.json over log/roadmap/P41/work/hud_palettes/hud-zoom-out.json
 hud_palettes	tab-elevation	2	log/roadmap/P41/work2/hud_palettes/tab-elevation.json
 hud_palettes	tab-grass	1	log/roadmap/P41/work/hud_palettes/tab-grass.json
 hud_palettes	tab-house	1	log/roadmap/P41/work/hud_palettes/tab-house.json
 hud_palettes	tab-shovel	2	log/roadmap/P41/work2/hud_palettes/tab-shovel.json
-hud_palettes	terrain-hole-button	1	log/roadmap/P41/work/hud_palettes/terrain-hole-button.json
+hud_palettes	terrain-hole-button	8	log/roadmap/P41/work8/hud_palettes/terrain-hole-button.json over log/roadmap/P41/work/hud_palettes/terrain-hole-button.json
 hud_palettes	terrain-palette	1	log/roadmap/P41/work/hud_palettes/terrain-palette.json
-hud_panels	employee-fire	2	log/roadmap/P41/work2/hud_panels/employee-fire.json
-hud_panels	employee-hire	2	log/roadmap/P41/work2/hud_panels/employee-hire.json
-hud_panels	employee-page-left	1	log/roadmap/P41/work/hud_panels/employee-page-left.json
-hud_panels	employee-page-right	1	log/roadmap/P41/work/hud_panels/employee-page-right.json
-hud_panels	employee-panel	2	log/roadmap/P41/work2/hud_panels/employee-panel.json
-hud_panels	employee-pedestal	2	log/roadmap/P41/work2/hud_panels/employee-pedestal.json
-hud_panels	employee-resume	2	log/roadmap/P41/work2/hud_panels/employee-resume.json
-hud_panels	employee-tab-golfer	2	log/roadmap/P41/work2/hud_panels/employee-tab-golfer.json
-hud_panels	employee-thumbs-up	2	log/roadmap/P41/work2/hud_panels/employee-thumbs-up.json
-hud_panels	golfer-action-panel	2	log/roadmap/P41/work2/hud_panels/golfer-action-panel.json
-hud_panels	golfer-club-button	2	log/roadmap/P41/work2/hud_panels/golfer-club-button.json
-hud_panels	golfer-crossed-button	2	log/roadmap/P41/work2/hud_panels/golfer-crossed-button.json
+hud_panels	employee-fire	7	log/roadmap/P41/work7/hud_panels/employee-fire.json
+hud_panels	employee-hire	7	log/roadmap/P41/work7/hud_panels/employee-hire.json
+hud_panels	employee-page-left	7	log/roadmap/P41/work7/hud_panels/employee-page-left.json
+hud_panels	employee-page-right	7	log/roadmap/P41/work7/hud_panels/employee-page-right.json
+hud_panels	employee-panel	7	log/roadmap/P41/work7/hud_panels/employee-panel.json
+hud_panels	employee-pedestal	7	log/roadmap/P41/work7/hud_panels/employee-pedestal.json
+hud_panels	employee-resume	7	log/roadmap/P41/work7/hud_panels/employee-resume.json
+hud_panels	employee-tab-golfer	7	log/roadmap/P41/work7/hud_panels/employee-tab-golfer.json
+hud_panels	employee-thumbs-up	7	log/roadmap/P41/work7/hud_panels/employee-thumbs-up.json
+hud_panels	golfer-action-panel	7	log/roadmap/P41/work7/hud_panels/golfer-action-panel.json
+hud_panels	golfer-club-button	7	log/roadmap/P41/work7/hud_panels/golfer-club-button.json
+hud_panels	golfer-crossed-button	7	log/roadmap/P41/work7/hud_panels/golfer-crossed-button.json
 hud_panels	golfer-info-panel	1	log/roadmap/P41/work/hud_panels/golfer-info-panel.json
-hud_panels	golfer-stats-button	1	log/roadmap/P41/work/hud_panels/golfer-stats-button.json
+hud_panels	golfer-stats-button	8	log/roadmap/P41/work8/hud_panels/golfer-stats-button.json over log/roadmap/P41/work7/hud_panels/golfer-stats-button.json
 hud_panels	golfer-story-band	2	log/roadmap/P41/work2/hud_panels/golfer-story-band.json
-hud_panels	golfer-tab-history	1	log/roadmap/P41/work/hud_panels/golfer-tab-history.json
-hud_panels	golfer-tab-info	1	log/roadmap/P41/work/hud_panels/golfer-tab-info.json
-hud_panels	golfer-tab-mood	2	log/roadmap/P41/work2/hud_panels/golfer-tab-mood.json
-hud_panels	golfer-tab-ok	1	log/roadmap/P41/work/hud_panels/golfer-tab-ok.json
-hud_panels	golfer-tab-photo	2	log/roadmap/P41/work2/hud_panels/golfer-tab-photo.json
-hud_panels	golfer-tab-story	1	log/roadmap/P41/work/hud_panels/golfer-tab-story.json
-hud_panels	golfer-tab-swing	1	log/roadmap/P41/work/hud_panels/golfer-tab-swing.json
-hud_panels	golfer-tab-thought	1	log/roadmap/P41/work/hud_panels/golfer-tab-thought.json
-hud_panels	golfer-trophy-button	3	log/roadmap/P41/work3/hud_panels/golfer-trophy-button--b.json
-hud_panels	joecool-stats-button	1	log/roadmap/P41/work/hud_panels/joecool-stats-button.json
-hud_panels	joecool-tab-staff	4	log/roadmap/P41/work4/hud_panels/joecool-tab-staff.json
+hud_panels	golfer-tab-history	7	log/roadmap/P41/work7/hud_panels/golfer-tab-history.json
+hud_panels	golfer-tab-info	7	log/roadmap/P41/work7/hud_panels/golfer-tab-info.json
+hud_panels	golfer-tab-mood	7	log/roadmap/P41/work7/hud_panels/golfer-tab-mood.json
+hud_panels	golfer-tab-ok	7	log/roadmap/P41/work7/hud_panels/golfer-tab-ok.json
+hud_panels	golfer-tab-photo	9	log/roadmap/P41/work9/hud_panels/golfer-tab-photo.json
+hud_panels	golfer-tab-story	7	log/roadmap/P41/work7/hud_panels/golfer-tab-story.json
+hud_panels	golfer-tab-swing	7	log/roadmap/P41/work7/hud_panels/golfer-tab-swing.json
+hud_panels	golfer-tab-thought	7	log/roadmap/P41/work7/hud_panels/golfer-tab-thought.json
+hud_panels	golfer-trophy-button	7	log/roadmap/P41/work7/hud_panels/golfer-trophy-button.json
+hud_panels	joecool-stats-button	8	log/roadmap/P41/work8/hud_panels/joecool-stats-button.json over log/roadmap/P41/work7/hud_panels/joecool-stats-button.json
+hud_panels	joecool-tab-staff	7	log/roadmap/P41/work7/hud_panels/joecool-tab-staff.json
 hud_panels	match-plate	3	log/roadmap/P41/work3/hud_panels/match-plate.json
 hud_panels	member-ball	1	log/roadmap/P41/work/hud_panels/member-ball.json
 hud_panels	member-bar	2	log/roadmap/P41/work2/hud_panels/member-bar.json
 hud_panels	member-hearts	1	log/roadmap/P41/work/hud_panels/member-hearts.json
 hud_panels	member-mood-faces	4	log/roadmap/P41/work4/hud_panels/member-mood-faces.json
 hud_panels	member-mood-faces-extra	4	log/roadmap/P41/work4/hud_panels/member-mood-faces-extra.json
-hud_panels	member-page-left	2	log/roadmap/P41/work2/hud_panels/member-page-left.json
-hud_panels	member-page-right	2	log/roadmap/P41/work2/hud_panels/member-page-right.json
-hud_panels	member-panel	2	log/roadmap/P41/work2/hud_panels/member-panel.json
+hud_panels	member-page-left	7	log/roadmap/P41/work7/hud_panels/member-page-left.json
+hud_panels	member-page-right	7	log/roadmap/P41/work7/hud_panels/member-page-right.json
+hud_panels	member-panel	7	log/roadmap/P41/work7/hud_panels/member-panel.json
 hud_panels	member-pips	1	log/roadmap/P41/work/hud_panels/member-pips.json
 hud_panels	member-skill-bar	1	log/roadmap/P41/work/hud_panels/member-skill-bar.json
 hud_panels	member-slider	2	log/roadmap/P41/work2/hud_panels/member-slider.json
-hud_panels	shot-shape-flat	2	log/roadmap/P41/work2/hud_panels/shot-shape-flat.json
-hud_panels	shot-shape-high	2	log/roadmap/P41/work2/hud_panels/shot-shape-high.json
-hud_panels	shot-shape-low	2	log/roadmap/P41/work2/hud_panels/shot-shape-low.json
-hud_panels	shot-shape-rising	2	log/roadmap/P41/work2/hud_panels/shot-shape-rising.json
-hud_panels	shot-shape-straight	2	log/roadmap/P41/work2/hud_panels/shot-shape-straight.json
-hud_panels	tab-golfer	2	log/roadmap/P41/work2/hud_panels/tab-golfer.json
-hud_panels	tab-golfer-staff	4	log/roadmap/P41/work4/hud_panels/tab-golfer-staff.json
-hud_panels	tab-golfer-swing	2	log/roadmap/P41/work2/hud_panels/tab-golfer-swing.json
-hud_panels	tab-golfers-group	2	log/roadmap/P41/work2/hud_panels/tab-golfers-group.json
-hud_panels	tab-staff-group	2	log/roadmap/P41/work2/hud_panels/tab-staff-group.json
+hud_panels	shot-shape-flat	7	log/roadmap/P41/work7/hud_panels/shot-shape-flat.json
+hud_panels	shot-shape-high	7	log/roadmap/P41/work7/hud_panels/shot-shape-high.json
+hud_panels	shot-shape-low	7	log/roadmap/P41/work7/hud_panels/shot-shape-low.json
+hud_panels	shot-shape-rising	7	log/roadmap/P41/work7/hud_panels/shot-shape-rising.json
+hud_panels	shot-shape-straight	7	log/roadmap/P41/work7/hud_panels/shot-shape-straight.json
+hud_panels	tab-golfer	7	log/roadmap/P41/work7/hud_panels/tab-golfer.json
+hud_panels	tab-golfer-staff	7	log/roadmap/P41/work7/hud_panels/tab-golfer-staff.json
+hud_panels	tab-golfer-swing	7	log/roadmap/P41/work7/hud_panels/tab-golfer-swing.json
+hud_panels	tab-golfers-group	7	log/roadmap/P41/work7/hud_panels/tab-golfers-group.json
+hud_panels	tab-staff-group	7	log/roadmap/P41/work7/hud_panels/tab-staff-group.json
 marks	course-cash-medal	2	log/roadmap/P41/work2/marks/course-cash-medal.json
 marks	course-fun-medal	3	log/roadmap/P41/work3/marks/course-fun-medal--b.json
 marks	course-skill-medal	2	log/roadmap/P41/work2/marks/course-skill-medal.json
@@ -230,30 +230,30 @@ parent	title-load-button	-	title.py / diff.py / load.py build it (title_geom.jso
 parent	title-play-button	-	title.py / diff.py / load.py build it (title_geom.json, diff_geom.json, load_geom.json)
 parent	title-sandbox-button	-	title.py / diff.py / load.py build it (title_geom.json, diff_geom.json, load_geom.json)
 parent	title-tutorial-button	-	title.py / diff.py / load.py build it (title_geom.json, diff_geom.json, load_geom.json)
-popups	head-select-left	3	log/roadmap/P41/work3/popups/head-select-left.json
+popups	head-select-left	8	log/roadmap/P41/work8/popups/head-select-left.json over log/roadmap/P41/work3/popups/head-select-left.json
 popups	head-select-right	1	log/roadmap/P41/work/popups/head-select-right.json
 popups	head-select-tray	1	log/roadmap/P41/work/popups/head-select-tray.json
-popups	info-button-chart	5	log/roadmap/P41/work5/popups/info-button-chart.json
-popups	info-button-checklist	5	log/roadmap/P41/work5/popups/info-button-checklist.json
-popups	info-button-flag	2	log/roadmap/P41/work2/popups/info-button-flag.json
-popups	info-button-globe	2	log/roadmap/P41/work2/popups/info-button-globe.json
-popups	info-button-money	2	log/roadmap/P41/work2/popups/info-button-money.json
-popups	info-button-notice	5	log/roadmap/P41/work5/popups/info-button-notice.json
-popups	info-button-pair	5	log/roadmap/P41/work5/popups/info-button-pair.json
-popups	info-button-pin	2	log/roadmap/P41/work2/popups/info-button-pin.json
-popups	info-button-tiles	2	log/roadmap/P41/work2/popups/info-button-tiles.json
-popups	info-button-trophy	2	log/roadmap/P41/work2/popups/info-button-trophy.json
+popups	info-button-chart	8	log/roadmap/P41/work8/popups/info-button-chart.json over log/roadmap/P41/work5/popups/info-button-chart.json
+popups	info-button-checklist	8	log/roadmap/P41/work8/popups/info-button-checklist.json over log/roadmap/P41/work5/popups/info-button-checklist.json
+popups	info-button-flag	8	log/roadmap/P41/work8/popups/info-button-flag.json over log/roadmap/P41/work2/popups/info-button-flag.json
+popups	info-button-globe	8	log/roadmap/P41/work8/popups/info-button-globe.json over log/roadmap/P41/work2/popups/info-button-globe.json
+popups	info-button-money	8	log/roadmap/P41/work8/popups/info-button-money.json over log/roadmap/P41/work2/popups/info-button-money.json
+popups	info-button-notice	8	log/roadmap/P41/work8/popups/info-button-notice.json over log/roadmap/P41/work5/popups/info-button-notice.json
+popups	info-button-pair	8	log/roadmap/P41/work8/popups/info-button-pair.json over log/roadmap/P41/work5/popups/info-button-pair.json
+popups	info-button-pin	8	log/roadmap/P41/work8/popups/info-button-pin.json over log/roadmap/P41/work2/popups/info-button-pin.json
+popups	info-button-tiles	8	log/roadmap/P41/work8/popups/info-button-tiles.json over log/roadmap/P41/work2/popups/info-button-tiles.json
+popups	info-button-trophy	8	log/roadmap/P41/work8/popups/info-button-trophy.json over log/roadmap/P41/work2/popups/info-button-trophy.json
 popups	pair-base	2	log/roadmap/P41/work2/popups/pair-base.json
 popups	pair-capsule	1	log/roadmap/P41/work/popups/pair-capsule.json
 popups	pair-ok-button	1	log/roadmap/P41/work/popups/pair-ok-button.json
 popups	pair-title-pill	2	log/roadmap/P41/work2/popups/pair-title-pill.json
 popups	popup-arrow-glyph	1	log/roadmap/P41/work/popups/popup-arrow-glyph.json
-popups	popup-back-bullet	1	log/roadmap/P41/work/popups/popup-back-bullet.json
+popups	popup-back-bullet	8	log/roadmap/P41/work8/popups/popup-back-bullet.json over log/roadmap/P41/work/popups/popup-back-bullet.json
 popups	popup-border	1	log/roadmap/P41/work/popups/popup-border.json
-popups	popup-bullet	1	log/roadmap/P41/work/popups/popup-bullet.json
+popups	popup-bullet	8	log/roadmap/P41/work8/popups/popup-bullet.json over log/roadmap/P41/work/popups/popup-bullet.json
 popups	popup-check-box	2	log/roadmap/P41/work2/popups/popup-check-box.json
 popups	popup-icon-notice	1	log/roadmap/P41/work/popups/popup-icon-notice.json
-popups	popup-ok-check	1	log/roadmap/P41/work/popups/popup-ok-check.json
+popups	popup-ok-check	8	log/roadmap/P41/work8/popups/popup-ok-check.json over log/roadmap/P41/work/popups/popup-ok-check.json
 popups	popup-ok-frame	2	log/roadmap/P41/work2/popups/popup-ok-frame.json
 popups	tacs-note	-	kept as art
 popups	tacs-pins	1	log/roadmap/P41/work/popups/tacs-pins.json
@@ -267,15 +267,15 @@ popups	trans-small-arrows	4	log/roadmap/P41/work4/popups/trans-small-arrows.json
 popups	trans-spinner	2	log/roadmap/P41/work2/popups/trans-spinner.json
 popups	trans-text-field	1	log/roadmap/P41/work/popups/trans-text-field.json
 reports_maps	buyland-backdrop	1	log/roadmap/P41/work/reports_maps/buyland-backdrop.json
-reports_maps	buyland-ball-1	1	log/roadmap/P41/work/reports_maps/buyland-ball-1.json
-reports_maps	buyland-ball-2	1	log/roadmap/P41/work/reports_maps/buyland-ball-2.json
-reports_maps	buyland-ball-3	1	log/roadmap/P41/work/reports_maps/buyland-ball-3.json
-reports_maps	buyland-ball-4	1	log/roadmap/P41/work/reports_maps/buyland-ball-4.json
-reports_maps	buyland-ball-5	1	log/roadmap/P41/work/reports_maps/buyland-ball-5.json
-reports_maps	buyland-ball-6	1	log/roadmap/P41/work/reports_maps/buyland-ball-6.json
-reports_maps	buyland-ball-7	1	log/roadmap/P41/work/reports_maps/buyland-ball-7.json
-reports_maps	buyland-ball-8	1	log/roadmap/P41/work/reports_maps/buyland-ball-8.json
-reports_maps	buyland-ball-9	1	log/roadmap/P41/work/reports_maps/buyland-ball-9.json
+reports_maps	buyland-ball-1	8	log/roadmap/P41/work8/reports_maps/buyland-ball-1.json over log/roadmap/P41/work/reports_maps/buyland-ball-1.json
+reports_maps	buyland-ball-2	8	log/roadmap/P41/work8/reports_maps/buyland-ball-2.json over log/roadmap/P41/work/reports_maps/buyland-ball-2.json
+reports_maps	buyland-ball-3	8	log/roadmap/P41/work8/reports_maps/buyland-ball-3.json over log/roadmap/P41/work/reports_maps/buyland-ball-3.json
+reports_maps	buyland-ball-4	8	log/roadmap/P41/work8/reports_maps/buyland-ball-4.json over log/roadmap/P41/work/reports_maps/buyland-ball-4.json
+reports_maps	buyland-ball-5	8	log/roadmap/P41/work8/reports_maps/buyland-ball-5.json over log/roadmap/P41/work/reports_maps/buyland-ball-5.json
+reports_maps	buyland-ball-6	8	log/roadmap/P41/work8/reports_maps/buyland-ball-6.json over log/roadmap/P41/work/reports_maps/buyland-ball-6.json
+reports_maps	buyland-ball-7	8	log/roadmap/P41/work8/reports_maps/buyland-ball-7.json over log/roadmap/P41/work/reports_maps/buyland-ball-7.json
+reports_maps	buyland-ball-8	8	log/roadmap/P41/work8/reports_maps/buyland-ball-8.json over log/roadmap/P41/work/reports_maps/buyland-ball-8.json
+reports_maps	buyland-ball-9	8	log/roadmap/P41/work8/reports_maps/buyland-ball-9.json over log/roadmap/P41/work/reports_maps/buyland-ball-9.json
 reports_maps	buyland-board	1	log/roadmap/P41/work/reports_maps/buyland-board.json
 reports_maps	buyland-capsules	1	log/roadmap/P41/work/reports_maps/buyland-capsules.json
 reports_maps	buyland-exit	1	log/roadmap/P41/work/reports_maps/buyland-exit.json
@@ -345,3 +345,15 @@ reports_slabs	shortcuts-slab	1	log/roadmap/P41/work/reports_slabs/shortcuts-slab
 reports_slabs	shortcuts-title-plate	1	log/roadmap/P41/work/reports_slabs/shortcuts-title-plate.json
 reports_slabs	tournament-slab	2	log/roadmap/P41/work2/reports_slabs/tournament-slab.json
 reports_slabs	tournament-title-plate	1	log/roadmap/P41/work/reports_slabs/tournament-title-plate.json
+hud_palettes	hud-speed-1x	7	log/roadmap/P41/work7/hud_palettes/hud-speed-1x.json + log/roadmap/P41/work7/hud_palettes/hud-speed-1x-hover.json
+hud_palettes	hud-speed-2x	7	log/roadmap/P41/work7/hud_palettes/hud-speed-2x.json + log/roadmap/P41/work7/hud_palettes/hud-speed-2x-hover.json
+hud_palettes	hud-speed-4x	7	log/roadmap/P41/work7/hud_palettes/hud-speed-4x.json + log/roadmap/P41/work7/hud_palettes/hud-speed-4x-hover.json
+title	diff.easy	8	log/roadmap/P41/work8/title/diff.easy.json
+title	diff.expert	8	log/roadmap/P41/work8/title/diff.expert.json
+title	diff.hard	8	log/roadmap/P41/work8/title/diff.hard.json
+title	diff.medium	8	log/roadmap/P41/work8/title/diff.medium.json
+title	title.champ	8	log/roadmap/P41/work8/title/title.champ.json
+title	title.load	8	log/roadmap/P41/work8/title/title.load.json
+title	title.play	8	log/roadmap/P41/work8/title/title.play.json
+title	title.sandbox	8	log/roadmap/P41/work8/title/title.sandbox.json
+title	title.tutorial	8	log/roadmap/P41/work8/title/title.tutorial.json

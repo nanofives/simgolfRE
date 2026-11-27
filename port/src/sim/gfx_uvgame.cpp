@@ -979,6 +979,29 @@ bool uvg_draw(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y) {
   return ui_draw_uvec(g, ctx, text);
 }
 
+int32_t uvg_find(const char *id, const char *state) {
+  static const std::unordered_map<std::string, int32_t> m = [] {
+    std::unordered_map<std::string, int32_t> r;
+    const int32_t n = static_cast<int32_t>(all_refs().size());
+    for (int32_t i = 0; i < n; ++i) r.emplace(std::string(cut_of(i).id) + '	' + cut_of(i).state, i);
+    return r;
+  }();
+  auto it = m.find(std::string(id) + '	' + state);
+  return it == m.end() ? -1 : it->second;
+}
+
+bool uvg_draw_record(Gfx &g, Ctx &ctx, int32_t i, int32_t dx, int32_t dy) {
+  if (g.ui_pilot == kUiPilotOff || SG_NEGCTL(g_negctl_uvgame) == 3 || i < 0 || i >= uvg_cut_count()) return false;
+  const std::string text = uvg_run_text({i}, dx, dy, nullptr);
+  return ui_draw_uvec(g, ctx, text);
+}
+
+bool uvg_draw_speed(Gfx &g, Ctx &ctx, int32_t speed, bool over) {
+  if (SG_NEGCTL(g_negctl_uvgame) == 10) return false;
+  const char *id = speed >= 4 ? "hud-speed-4x" : speed >= 2 ? "hud-speed-2x" : "hud-speed-1x";
+  return uvg_draw_record(g, ctx, uvg_find(id, over ? "hover" : "idle"), 0, 0);
+}
+
 // ------------------------------------------------------------------------------------------------ test entries
 namespace {
 // uvgame.count(): the number of records
@@ -1108,6 +1131,13 @@ void a_draw_sprite(Ctx &c, const uint32_t *a, Ret &r) {
   const uint32_t args[5] = {a[0], g->root_va(c), a[1], a[2], 0};
   r.set_i32(gfx_drop(c, "Image_draw", args, 5) ? 1 : 0);
 }
+// uvgame.drawSpeed(speed, over): uvg_draw_speed on the root (install78: the speed button's approved scene); returns 1 when it drew
+void a_draw_speed(Ctx &c, const uint32_t *a, Ret &r) {
+  Gfx *g = gfx(c);
+  if (g == nullptr) throw MissingResource{"gfx backend (gfx.attach)"};
+  g->ensure_root(c);
+  r.set_i32(uvg_draw_speed(*g, c, i32(a[0]), a[1] != 0) ? 1 : 0);
+}
 // uvgame.time(i, scale_x1000, reps): the mean wall time of record i's render over its bounds at scale / 1000, microseconds
 void a_time(Ctx &, const uint32_t *a, Ret &r) {
   const std::string t = uvg_run_text({i32(a[0])}, 0, 0);
@@ -1132,6 +1162,7 @@ void a_text_capture(Ctx &c, const uint32_t *a, Ret &r) {
 const FuncDef kFuncs[] = {
     {"uvgame.textCapture", "default", "int", 1, 0, a_text_capture, &g_negctl_uvgame},
     {"uvgame.drawSprite", "default", "int", 4, 0, a_draw_sprite, &g_negctl_uvgame},
+    {"uvgame.drawSpeed", "default", "int", 2, 0, a_draw_speed, &g_negctl_uvgame},
     {"uvgame.time", "default", "int", 3, 0, a_time, &g_negctl_uvgame},
     {"uvgame.sprites", "default", "int", 2, 0, a_sprites, &g_negctl_uvgame},
     {"uvgame.spriteRun", "default", "int", 4, 0, a_sprite_run, &g_negctl_uvgame},

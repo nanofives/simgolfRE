@@ -56,6 +56,7 @@
 #include "commands_internal.h"
 #include "gfx_body.h"
 #include "portsim/sim/gfx_ui.h"  // P41W: ui_wide_overlay
+#include "portsim/sim/gfx_uvgame.h"  // install78: uvg_draw_speed (the speed button's approved scenes)
 #include "portsim/sim/bridge.h"  // P22D fix 2: view_list_columns
 #include "portsim/sim/gfx_scene.h"
 #include "portsim/sim/gfx_text.h"
@@ -1457,8 +1458,12 @@ void b_radial_menu(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     call(g, ctx, "drawPanelBackdrop", {static_cast<uint32_t>(w16(GSO(f_tab_point16_4c7930, 4 * s))),
                                        static_cast<uint32_t>(w16(GSO(f_tab_point16_4c7930, 4 * s + 2)))});
   if (!pause_box.empty()) {  // P33A item 1: the speed button, and its tip after the pause's dwell (frames shown only)
-    speed_button(g, pause_box, g.speed_button);
     const bool over = g.speed_over;  // the host answered the panels' hover read over the button (gfx.h gfx_set_speed_over)
+    // install78 (log/roadmap/P41/install78/notes.md): with a UI theme on, the approved scene hud-speed-<1x|2x|4x> (idle, or hover
+    // while the host reports the cursor over the button) drawn in place: its scenes are in the 800 x 600 root's pixels, where this
+    // button is drawn, so the record goes at no offset, as a UI run of the radial menu's HUD layer. Theme off, no record, or
+    // negative control uvgame 10: the button made from the pause's pixels, as before.
+    if (!uvg_draw_speed(g, ctx, g.speed_button, over)) speed_button(g, pause_box, g.speed_button);
     if (!over) g.speed_hover = 0;
     else if (!g.quiet_frame) ++g.speed_hover;
     if (over && g.speed_hover > 10) gfxt::meter_tip(g, ctx, lang::tr(speed_tip(g.speed_button)), static_cast<int32_t>(kSpeedX), kSpeedTipY);

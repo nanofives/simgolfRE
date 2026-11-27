@@ -393,6 +393,54 @@ def make(sdf, uivec_dir, install, root_of, over555):
             for s in list(states.values()) + [ctl]:
                 s.close()
 
+    # install78 (log/roadmap/P41/install78/notes.md): the speed button (gfx_hud.cpp b_radial_menu) from its approved scenes
+    # hud-speed-<1x|2x|4x> (records on the pseudo sheet @root, screen pixels): theme off and control uvgame 10 draw nothing through
+    # it (the caller keeps the button made from the pause's pixels); theme on draws the record of that speed and state at no offset,
+    # the root = the run's 1x render over what was there, and every speed and state draws differently
+    @need_install
+    def test_game_speed_button(glib, game_records):
+        if glib.exe_load():
+            pytest.skip("no exe image")
+        idx = {(r[2], r[3]): r[0] for r in game_records if r[2].startswith("hud-speed-")}
+        assert len(idx) == 6, sorted(idx)
+        roots = {}
+        for k, (speed, over) in enumerate([(sp, ov) for sp in (1, 2, 4) for ov in (0, 1)]):
+            rid, st = f"hud-speed-{speed}x", "hover" if over else "idle"
+            with _hud_state(glib, None) as s:
+                b = root_of(s)
+                assert s.call("uvgame.drawSpeed", [speed, over]).eax == 0, (speed, over, "theme off drew")
+                assert (root_of(s) == b).all()
+            with _hud_state(glib, 1) as s:
+                glib.negctl("uvgame.render", 10)
+                try:
+                    b = root_of(s)
+                    assert s.call("uvgame.drawSpeed", [speed, over]).eax == 0, (speed, over, "uvgame 10 drew")
+                    assert (root_of(s) == b).all()
+                finally:
+                    glib.negctl_reset()
+            with _hud_state(glib, 1) as s:
+                b1 = root_of(s)
+                assert s.call("uvgame.drawSpeed", [speed, over]).eax == 1, (speed, over)
+                on = root_of(s)
+                prem, x0, y0 = _run_render(s, f"uvg:{idx[(rid, st)]} 0 0")
+            h, w = prem.shape[:2]
+            outside = np.ones(on.shape, bool)
+            outside[y0:y0 + h, x0:x0 + w] = False
+            assert (on[outside] == b1[outside]).all(), (rid, st, "pixels changed outside the record's bounds")
+            want = b1.copy()
+            want[y0:y0 + h, x0:x0 + w] = over555(prem, b1[y0:y0 + h, x0:x0 + w])
+            diff = np.zeros(on.shape, int)
+            for sh in (10, 5, 0):
+                diff = np.maximum(diff, np.abs(((on >> sh) & 31).astype(int) - ((want >> sh) & 31).astype(int)))
+            assert diff.max() <= 1, (rid, st, int(diff.max()))
+            assert 80 <= x0 <= 110 and 570 <= y0 <= 590, (rid, st, x0, y0)   # where gfx_hud.cpp draws the button (105, 590)
+            roots[(speed, over)] = on
+            print(f"[{k + 1}/6] {rid} {st}: off and uvgame 10 draw nothing, on = the record at ({x0}, {y0}) PASS", flush=True)
+        keys = list(roots)
+        for a in range(len(keys)):
+            for b in range(a + 1, len(keys)):
+                assert (roots[keys[a]] != roots[keys[b]]).any(), (keys[a], keys[b], "draw the same")
+
     @need_install
     def test_game_negctl_placement_reads_red(glib):
         if glib.exe_load():

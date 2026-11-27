@@ -5,6 +5,11 @@ hold game art). Mariano judged them over five rounds; the approved scene of an e
 has it (for the three elements approved as "version B" in round 3, that version). A scene is numbers only, no art.
 
 py -3.12 re/tools/uivec/collect_scenes.py      writes the scenes and scenes/manifest.tsv (area, id, round, source file)
+
+ROUNDS stops at round 6 on purpose (install78, 2026-11-27): rounds 7 / 8 / 9 were judged on another board (judge/fb10/judge7) and
+are installed by install78.py on top of these scenes (round 8 is not a scene folder but unified element files turned into scenes).
+This script rebuilds scenes/ from scratch (it also deletes scenes/wide, added by P41W): after running it, restore scenes/wide from
+git and run install78.py again.
 """
 import json
 import os
