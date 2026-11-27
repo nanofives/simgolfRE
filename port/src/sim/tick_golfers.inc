@@ -144,6 +144,32 @@ int Date() { return G<int>(GS(g_date)); }
 Ref<unsigned> GameFlags() { return G<unsigned>(GS(g_flags)); }
 signed char TypeAttr(int t, unsigned off) { return G<signed char>(off + 0x30 * static_cast<unsigned>(t)); }
 
+// FB14 option updateGolfers.teeWaitOffLand (play-test feedback 1 item 14): the direction of the tee-wait step (the golfer stands
+// one tile at -D(dir) from the tee point). The original's step (dir = hole direction + (i & 1)) is kept when canStep allows that
+// step from the tee tile; otherwise the two sides of the tee (hole direction +2 / +6, the golfer's parity picks the first), then
+// the two forward diagonals (+3 / +5); -1 = no free neighbour: the golfer waits on the tee point itself.
+int TeeWaitDir(int i, int hdir, int dd, int tx, int ty) {
+    if (kCanStep(tx, ty, (dd + 4) & 7)) return dd;
+    const int order[4] = {(i & 1) ? 6 : 2, (i & 1) ? 2 : 6, (i & 1) ? 5 : 3, (i & 1) ? 3 : 5};
+    for (int k = 0; k < 4; k++) {
+        const int c = (hdir + order[k]) & 7;
+        if (kCanStep(tx, ty, (c + 4) & 7)) return c;
+    }
+    return -1;
+}
+
+// FB14 option updateGolfers.teeWaitOffLand, the queue offsets: the half-tile moves of the tee target that put a golfer beside or
+// behind its partner (updateGolfers+0x1d93..updateGolfers+0x1db5 and updateGolfers+0x1e05..updateGolfers+0x1e27) have no land test
+// either. A move that stays in the target's tile is kept; one into a neighbour tile is kept when canStep allows that step from the
+// target's tile, otherwise the target stays where it was (the golfer waits on the tee point, stopped by the bump test).
+int TeeTargetStepOk(int bx, int by, int nx, int ny) {
+    const int tx = bx >> 10, ty = by >> 10, ux = nx >> 10, uy = ny >> 10;
+    if (ux == tx && uy == ty) return 1;
+    for (int c = 0; c < 8; c++)
+        if (Dx8(c) == ux - tx && Dy8(c) == uy - ty) return kCanStep(tx, ty, c) ? 1 : 0;
+    return 0;
+}
+
 // strcat as the `repne scasb` / `rep movsd` / `rep movsb` sequences do it (the NUL is copied)
 void AppendAt(unsigned src) { StrCat(kBuf, src); }
 
@@ -630,8 +656,12 @@ int updateGolfers() {
         if (L38 != 0) {                                                                 // updateGolfers+0x179b..updateGolfers+0x17a5
             h = GC(i, (GS(g_golfers) + 33));                                                        // updateGolfers+0x17a7
             int dd = (HB(h, (GS(g_holes) + 1)) + (i & 1)) & 7;                                   // updateGolfers+0x17ae..updateGolfers+0x17c5
-            ebx += -Dx8(dd) << 10;                                                      // updateGolfers+0x17cb..updateGolfers+0x17e1
-            esi += -Dy8(dd) << 10;                                                      // updateGolfers+0x17d1..updateGolfers+0x17e3
+            if (!SG_DEFECT(g_defect_tee_wait_off_land))   // FB14 option updateGolfers.teeWaitOffLand (tick.cpp)
+                dd = TeeWaitDir(i, HB(h, (GS(g_holes) + 1)) & 7, dd, ebx >> 10, esi >> 10);
+            if (dd >= 0) {
+                ebx += -Dx8(dd) << 10;                                                  // updateGolfers+0x17cb..updateGolfers+0x17e1
+                esi += -Dy8(dd) << 10;                                                  // updateGolfers+0x17d1..updateGolfers+0x17e3
+            }
         }
         u = FLAGS(i);                                                                   // updateGolfers+0x17e5
         {
@@ -765,8 +795,9 @@ int updateGolfers() {
                 ((FLAGS(p) & 0x400) == 0 || pb < mb || GB(p, (GS(g_golfers) + 29)) == 0xc)) {      // updateGolfers+0x1d47..updateGolfers+0x1d71
                 L40 = 0;                                                                // updateGolfers+0x1d78
                 int dd = (HB(mb, (GS(g_holes) + 1)) - 1) & 7;                                    // updateGolfers+0x1d73..updateGolfers+0x1d8d
-                ebx += (-Dx8(dd) << 10) / 2;                                            // updateGolfers+0x1d93..updateGolfers+0x1da3
-                esi += (-Dy8(dd) << 10) / 2;                                            // updateGolfers+0x1da5..updateGolfers+0x1db5
+                const int nx = ebx + (-Dx8(dd) << 10) / 2;                              // updateGolfers+0x1d93..updateGolfers+0x1da3
+                const int ny = esi + (-Dy8(dd) << 10) / 2;                              // updateGolfers+0x1da5..updateGolfers+0x1db5
+                if (SG_DEFECT(g_defect_tee_wait_off_land) || TeeTargetStepOk(ebx, esi, nx, ny)) { ebx = nx; esi = ny; }   // FB14
                 FLAGS(i) |= 0x800;                                                      // updateGolfers+0x1db7..updateGolfers+0x1dc0
             }
         }
@@ -775,8 +806,9 @@ int updateGolfers() {
             h = GC(i, (GS(g_golfers) + 33));                                                        // updateGolfers+0x1de2
             L40 = 0;                                                                    // updateGolfers+0x1deb
             int dd = HB(h, (GS(g_holes) + 1)) & 7;                                               // updateGolfers+0x1df8..updateGolfers+0x1dff
-            ebx += (-Dx8(dd) << 10) / 2;                                                // updateGolfers+0x1e05..updateGolfers+0x1e15
-            esi += (-Dy8(dd) << 10) / 2;                                                // updateGolfers+0x1e17..updateGolfers+0x1e27
+            const int nx = ebx + (-Dx8(dd) << 10) / 2;                                  // updateGolfers+0x1e05..updateGolfers+0x1e15
+            const int ny = esi + (-Dy8(dd) << 10) / 2;                                  // updateGolfers+0x1e17..updateGolfers+0x1e27
+            if (SG_DEFECT(g_defect_tee_wait_off_land) || TeeTargetStepOk(ebx, esi, nx, ny)) { ebx = nx; esi = ny; }   // FB14
             FLAGS(i) |= 0x800;                                                          // updateGolfers+0x1e29..updateGolfers+0x1e32
         }
     L_a818:

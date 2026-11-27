@@ -4850,7 +4850,8 @@ void P4_objectLabel(u32 F) {
         StrCat(kBuf, GS(f_strpool_4c68dc));                                             // ML+0x672f..ML+0x6760
         const bool z8 = !SG_DEFECT(g_defect_zoom_in_max4) && G32(GS(g_zoomScale)) == 8;   // P11A: zoom 8 draws it as zoom 4 does
         if (G32(GS(g_zoomScale)) != 4 && !z8) return;                              // ML+0x6753 / ML+0x6762
-        if (((FD(0x28) + G32(GS(g_date))) & 0x30) != 0) return;               // ML+0x6768..ML+0x6776
+        if (SG_DEFECT(g_defect_home_label_blink) &&                           // FB10 mainLoop.homeLabelBlink (tick.cpp): 0 = steady
+            ((FD(0x28) + G32(GS(g_date))) & 0x30) != 0) return;               // ML+0x6768..ML+0x6776
         cc("drawCenteredText2", (int)kBuf, FD(0x148), FD(0x124) - 0xc, (int)0x80007E9F);   // drawCenteredText2 ML+0x6799
         int z = z8 ? 4 : G32(GS(g_zoomScale));                                     // ML+0x679e
         int d = 4 - z;                                                        // ML+0x67ab / ML+0x67b5

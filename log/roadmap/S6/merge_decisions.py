@@ -52,6 +52,12 @@ def main():
         assert r["id"] not in out, r["id"]
         out[r["id"]] = dict(r, verified="device-sink run (S7.12)")
     g15 = {r["id"] for r in g}
+    # FB14 (play-test feedback 1 item 14, log/roadmap/P41/feedback1/item14_notes.md): the tee queue's missing land test, a play row
+    h8, fb = read(S6 / "fb14_decisions.tsv")
+    assert h8 == h6, h8
+    for r in fb:
+        assert r["id"] not in out, r["id"]
+        out[r["id"]] = dict(r, verified="disassembly + port runs (FB14)")
     cols = list(h6) + ["verified", "decision", "profile_fixed", "profile_play"]
     rows = sorted(out.values(), key=lambda r: key(r["id"]))
     # G3 (Mariano, re/roadmap/DECISIONS_PENDING.md): the two hangs become fix, the other 24 ask rows stay keep.

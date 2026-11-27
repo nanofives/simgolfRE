@@ -1062,6 +1062,8 @@ const ProfileMember kPlayProfile[] = {
     {"scenicBridge.twoTile", 0},                 // P39A1: the bridge row's two-tile scenic bridge over water and streams
     {"layPath.stairs", 0},                       // P39A2: a path tile rising 3+ levels along its path is stairs (drawn, no 0x2b thought, x2 price)
     {"layPath.gapBridge", 0},                    // P39A3: the path tool asks to bridge a 1-2 tile gap 3+ levels deep (deck at bank height)
+    {"updateGolfers.teeWaitOffLand", 0},         // FB14 (feedback 1 item 14): golfers waiting for a tee at the land's edge stay on the land
+    {"mainLoop.homeLabelBlink", 0},              // FB10 (feedback 1 item 10): the houses' name labels are drawn every frame
 };
 
 // every switch back to 1, then the profile's members; "" or why it was refused (nothing changed then). The negative control

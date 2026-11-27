@@ -323,6 +323,15 @@ int g_defect_camera_follow_offgrid = 1;
 // the reversal turn (updateGolfers+0x29cf..updateGolfers+0x29e6) and the step overshoot can take a golfer past the edge
 // (log/c3/c3fyl/audit123.md, U1). Fixed (0): the golfer's world position is clamped to 0..0xc7ff after the step.
 int g_defect_golfer_walk_offgrid = 1;
+// updateGolfers.teeWaitOffLand (FB14, model_defects#55, play-test feedback 1 item 14, log/roadmap/P41/feedback1/item14_notes.md):
+// a golfer with no shot yet walks to its hole's tee point; with a golfer ahead it walks one tile further back
+// (updateGolfers+0x17a7..updateGolfers+0x17e3: hole direction + (i & 1)), and the queue offsets move that target half a tile beside
+// or behind its partner (updateGolfers+0x1d93..updateGolfers+0x1db5, updateGolfers+0x1e05..updateGolfers+0x1e27). None of the three
+// tests the land, so on a tee at the land's edge the queue stands off the land. Fixed (0): the waiting tile is used only when canStep
+// allows the step into it from the tee tile, else the golfer waits beside the tee or on the tee point (TeeWaitDir), and an offset
+// into a neighbour tile only when canStep allows it from the target's tile (TeeTargetStepOk, tick_golfers.inc). No RNG draw, no
+// saved state added.
+int g_defect_tee_wait_off_land = 1;
 // P28A (decision G30, model_defects#5 D5, log/roadmap/P28/P28A_notes.md: instruction addresses and evidence per site).
 // updateGolfers.edgeNeighbourType: the ball's four edge-bit neighbour type tests (updateGolfers+0x3daf..updateGolfers+0x3e59)
 // and the four green-neighbour tests (updateGolfers+0x41d9..updateGolfers+0x4246) read tile_type by index with no grid test.
@@ -432,6 +441,11 @@ constexpr int kFarTreeQueueLimit = 0x280;
 //     zoom-8 size); Terrain::setZoomLevel(8) (terrain_gl_setup.cpp) halves level 4's ortho window and keeps level 4's zoom shift
 //     (strip / path / cull windows: a superset of the zoom-8 view); rebuildTileData's start row / column 4 / zoom * 13 uses zoom 4's 13.
 int g_defect_zoom_in_max4 = 1;
+// mainLoop.homeLabelBlink (FB10, model_defects#56, Mariano 2026-11-27 "Fijas en perfil normal", log/roadmap/P41/feedback1/notes.md
+// item 10): P4_objectLabel draws a house's "<name>'s Home" label (kind 5 with an owner, zoom 4 / 8) only when bits 0x30 of
+// ([F+0x28] + g_date) are clear (ML+0x6768..ML+0x6776; [F+0x28] steps by 0xd per object), so each label shows for 16 of every 64
+// date steps. Fixed (0): the label is drawn every frame. Drawing only: nothing in the simulation reads it.
+int g_defect_home_label_blink = 1;
 // mainLoop.toolForcesZoom4 (P11E, Mariano 2026-11-05: the build tools at P11A's zoom 8 too): while a build tool or a selection is
 // held, P4_queueAndSelection stores g_zoomScale = 4 every frame (ML+0x6620 / ML+0x6626), so picking a tool at another zoom returns
 // to 4 and 'z' has no lasting effect while it is held; key 0x78 ('x', zoom out) drops the held tool (ML+0xd35e / ML+0xd363).
@@ -2736,6 +2750,10 @@ const DefectDef kDefects[] = {
      "the camera writers that follow a golfer, walker, ball or photo position (and the hole / object offsets) store no grid bound, "
      "so the view leaves the map; fixed: each clamps the camera tile pair to 0..0x31 like H1's key and edge-pan cases",
      &g_defect_camera_follow_offgrid},
+    {"updateGolfers.teeWaitOffLand", "model_defects#55",
+     "the tee-wait spot one tile behind the tee and the half-tile queue offsets have no land test, so a tee at the land's edge "
+     "queues golfers off the land; fixed: each is used only when canStep allows the step into its tile, else the golfer waits "
+     "beside the tee or on the tee point", &g_defect_tee_wait_off_land},
     {"updateGolfers.walkOffGrid", "P6A",
      "a golfer's walking step has no grid test (reversal turn, step overshoot); fixed: the position is clamped to the grid after the step",
      &g_defect_golfer_walk_offgrid},
@@ -2799,6 +2817,10 @@ const DefectDef kDefects[] = {
      "zooming in stops at g_zoomScale 4 (three levels 1 / 2 / 4); fixed: one level closer, 8 (the course, objects and golfers at "
      "twice zoom 4's size)",
      &g_defect_zoom_in_max4},
+    {"mainLoop.homeLabelBlink", "model_defects#56",
+     "a house's name label is drawn only when bits 0x30 of (its object counter + g_date) are clear, 16 of every 64 date steps; "
+     "fixed: drawn every frame",
+     &g_defect_home_label_blink},
     {"mainLoop.toolForcesZoom4", "P11E",
      "while a build tool or selection is held the zoom is set to 4 every frame, and zooming out drops the tool; fixed: a held tool "
      "keeps every zoom (1, 2, 4, 8) and zooming out never drops it",
