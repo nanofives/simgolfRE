@@ -7,6 +7,8 @@
 #endif
 #include "portsim/sim/gfx_uvgame.h"
 
+#include "portsim/sim/gfx_bthumb.h"   // P41 feedback 1 item 8: the building thumbnails from the world art ("uvg:B" runs)
+
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -793,6 +795,7 @@ std::string uvg_run_text(const std::vector<int32_t> &cuts, int32_t dx, int32_t d
 }
 
 bool uvg_run_bounds(const std::string &text, float &x0, float &y0, float &x1, float &y1) {
+  if (bthumb_is_text(text)) return bthumb_bounds(text, x0, y0, x1, y1);   // P41 feedback 1 item 8 (gfx_bthumb.h)
   Run r;
   if (!parse(text, r)) return false;
   double a, b, c, d;
@@ -805,6 +808,21 @@ bool uvg_run_bounds(const std::string &text, float &x0, float &y0, float &x1, fl
 }
 bool uvg_run_render(const std::string &text, double sx, double sy, double ox, double oy, int32_t px0, int32_t py0, int32_t w, int32_t h,
                     std::vector<float> &prem) {
+  if (bthumb_is_text(text)) {   // P41 feedback 1 item 8 (gfx_bthumb.h): drawn over a cleared target, as the records are
+    prem.assign(static_cast<size_t>(std::max(0, w)) * static_cast<size_t>(std::max(0, h)) * 4u, 0.f);
+    const auto t0 = std::chrono::steady_clock::now();
+    const bool ok = bthumb_render(text, sx, sy, ox, oy, px0, py0, w, h, prem);
+    if (const char *lp = std::getenv("SG_P41G_UILOG")) {   // development: every building thumbnail render (ms, size, scale, text)
+      static std::mutex lmu;
+      std::lock_guard<std::mutex> ll(lmu);
+      if (FILE *lf = std::fopen(lp, "a")) {
+        std::fprintf(lf, "%.3f\t%.2f\tbthumb\t%d\t%d\t%.3f\t%s\n", std::chrono::duration<double>(t0.time_since_epoch()).count(),
+                     std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count(), w, h, sx, text.c_str());
+        std::fclose(lf);
+      }
+    }
+    return ok;
+  }
   Run r;
   if (!parse(text, r)) return false;
   prem.assign(static_cast<size_t>(std::max(0, w)) * static_cast<size_t>(std::max(0, h)) * 4u, 0.f);
@@ -866,6 +884,7 @@ bool uvg_prepare_sheet(Ctx &ctx, const std::string &sheet) {
 
 bool uvg_draw(Gfx &g, Ctx &ctx, const Sprite8 &s, int32_t x, int32_t y) {
   if (g.ui_pilot == kUiPilotOff || SG_NEGCTL(g_negctl_uvgame) == 3 || s.sheet.empty()) return false;
+  if (bthumb_draw(g, ctx, s, x, y)) return true;   // P41 feedback 1 item 8: a building thumbnail from the world art (gfx_bthumb.h)
   std::vector<int32_t> cuts;
   bool piece = false;
   uvg_match(s, cuts, &piece);

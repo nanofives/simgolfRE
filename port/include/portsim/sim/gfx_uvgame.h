@@ -34,6 +34,8 @@
 //   7 (P41 feedback1 item 1) a piece's inner joints as the scene draws them and its crop by pixel centres: each 16 px piece of a
 //     9-slice frame fades out at its own crop edge and some joint pixels belong to no piece, so a frame the game tiles from pieces
 //     shows a light seam at every joint at window scale (the language selector)
+//   8 (P41 feedback1 item 8, gfx_bthumb.h) the building thumbnails' grey filter left out: locked / built ones in full colour
+//   9 (item 8) the building thumbnails drawn from their art (that hook off, the rest of the theme on)
 #ifndef PORTSIM_SIM_GFX_UVGAME_H
 #define PORTSIM_SIM_GFX_UVGAME_H
 
