@@ -318,6 +318,9 @@ gives 100% against our anchors (C4 match evidence), a name or field meaning when
   full output to `log/gates/<run>/`, a PASS / FAIL table on stdout).
 
 ## Standing port rules
+- Win32 is skipped (Mariano, 2026-11-27): no Win32 build, gate or test in checks, briefs or releases; the port ships x64 only.
+  `scripts/gates.py` tiers are x64 (`SG_GATES_WIN32=1` puts the Win32 gates back). The Win32 build is known broken since
+  P38B (two warnings-as-errors); do not spend time on it unless he asks.
 - Never run `pytest port/test` as one process (10-16 GB): one file per process (gates.py or `log/p38/suite_by_file.sh`).
 - Port code cites functions by name: test_static refuses image-range literals, comments included (write flag bits as shifts).
 - MSBuild does not rebuild registry.cpp when `src/sim/modules.inc` changes: touch it. Parallel children build in their own

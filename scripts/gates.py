@@ -12,7 +12,7 @@ Options:
   --tree <dir>     run against a mirror (a copy of the repo, e.g. port/build/I26): cwd = the tree, and the DLL / runner /
                    app env vars point at its port/build/{x64,Win32} (as log/roadmap/merges/I25/env.sh did). Default: this repo,
                    whose libraries the harness finds by itself.
-  --build          build x64 and Win32 (port/test/build.py) in the tree first; a failed build stops the run.
+  --build          build x64 (and Win32 with SG_GATES_WIN32=1; port/test/build.py) in the tree first; a failed build stops the run.
   --out <dir>      default log/gates/<YYYYmmdd-HHMMSS>[-<label>]. Each gate writes <out>/<gate>.log (full output) and, when
                    it makes one, <out>/<gate>.tsv; <out>/summary.tsv holds one row per gate.
   --compare <dir>  an earlier run's out dir: every TSV gate is compared row by row (key = first column(s), compared columns
@@ -83,7 +83,7 @@ def _gates(out: pathlib.Path) -> dict[str, Gate]:
              doc="the app's recorded sessions (hole, saveload, report)"),
         Gate("app_replay_win32", [PY, "-m", "port.test.app_replay", "gate", "--backend", "win32", "--out", t("app_replay_win32")],
              tsv=True, doc="the same on Win32"),
-        Gate("gfx_check", [PY, str(ROOT / "log/roadmap/S3/13_gfx_check.py"), "x64", "win32"], doc="0 duplicate gfx bodies",
+        Gate("gfx_check", [PY, str(ROOT / "log/roadmap/S3/13_gfx_check.py"), "x64"] + (["win32"] if os.environ.get("SG_GATES_WIN32") == "1" else []), doc="0 duplicate gfx bodies",
              grep=r"duplicates \d+"),
         Gate("live_equiv_x64", [PY, "-m", "port.test.live", "equiv", "--all", "--jobs", "3", "--out", t("live_equiv_x64")],
              tsv=True, doc="live core == sg_run_boot"),
@@ -108,12 +108,18 @@ def _gates(out: pathlib.Path) -> dict[str, Gate]:
 
 TIERS = {
     # decision G30 (2026-11-03): the fast gates I25 ran
-    "fast": ["static", "segs_x64", "segs_win32", "boot_x64", "boot_win32", "app_replay_x64", "gfx_check",
+    # Mariano 2026-11-27: Win32 is skipped from now on (the release is x64 only). The *_win32 gates still exist by name and
+    # SG_GATES_WIN32=1 puts them back into the tiers and the --build step.
+    "fast": ["static", "segs_x64", "boot_x64", "app_replay_x64", "gfx_check",
              "t_test_static", "t_test_golfers", "t_test_tick"],
-    "full": ["static", "segs_x64", "segs_win32", "segs_ft_x64", "boot_x64", "boot_win32", "boot_ft_x64",
-             "app_replay_x64", "app_replay_win32", "gfx_check", "live_equiv_x64", "live_equiv_win32", "chain",
-             "census", "census_split", "terrain", "port_suite", "port_suite_w32"],
+    "full": ["static", "segs_x64", "segs_ft_x64", "boot_x64", "boot_ft_x64",
+             "app_replay_x64", "gfx_check", "live_equiv_x64", "chain",
+             "census", "census_split", "terrain", "port_suite"],
 }
+WIN32 = os.environ.get("SG_GATES_WIN32") == "1"
+if WIN32:
+    TIERS["fast"] += ["segs_win32", "boot_win32"]
+    TIERS["full"] += ["segs_win32", "boot_win32", "app_replay_win32", "live_equiv_win32", "port_suite_w32"]
 
 
 def port_files(tree: pathlib.Path) -> list[str]:
@@ -291,7 +297,7 @@ def run_gate(g: Gate, i: int, m: int, a, tree: pathlib.Path, out: pathlib.Path, 
 def build(tree: pathlib.Path, out: pathlib.Path, base_env: dict) -> bool:
     env = dict(os.environ, **base_env)
     env.setdefault("SG_FREETYPE_ROOT", r"C:\Users\maria\vcpkg\installed")
-    for arch in ("x64", "Win32"):
+    for arch in (("x64", "Win32") if WIN32 else ("x64",)):
         log = out / f"build_{arch}.log"
         t0 = time.time()
         with log.open("w", encoding="utf-8") as f:
