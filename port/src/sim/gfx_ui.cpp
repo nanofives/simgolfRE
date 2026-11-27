@@ -23,6 +23,8 @@
 //     edges, the holes Mariano saw
 //   5 (P40E) ui_run_opaque gives null: the peel restores the world under a UI run's whole inside (as before P40E: the smooth scaling
 //     mixes it into the edges of what the game draws over the panel later)
+//   6 (P41 feedback1 item 6, gfx.cpp text_run_end) a UI run drawn again in a later frame at the same box replaces its earlier copy only
+//     when every word under and over it matches (the glyph rule): over the moving world the copies pile up and every publish peels them
 #include <algorithm>
 #include <tuple>
 #include <map>

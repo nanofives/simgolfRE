@@ -55,6 +55,8 @@
 //   11 the composeGolferSprite body composes nothing
 //   12 the addSprite body draws nothing
 //   13 an entry past the golfer table (palette flags & 0x1ff >= 0x19c: updateVipResident's standing figure) draws nothing
+//   14 (P41 feedback1 item 6) the walk-end label guard scans the root around every queued entry, also those that draw no label
+//     (the frame is the same; the sim frame about 45 ms slower on a late save: a speed reference, not a picture control)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -3098,6 +3100,7 @@ thread_local bool g_label_guard = false;  // P26D item 9: set by b_queue_end aro
 
 // drawQueuedSprite's golfer label: after the simulation part built the name in g_textBuffer
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff);
+bool queue_label_drawn(Ctx &ctx, const uint32_t *a, int32_t *golfer);
 void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (g_queue_walk && !SG_DEFECT(g_defect_label_under_sprites)) {  // P22C item 6: drawn at the walk's end (b_queue_end)
     const GameState &gs = ctx.gs();
@@ -3114,8 +3117,13 @@ void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const bool guard = g_label_guard && gi >= 0 && gi < 1024;
   const int32_t gx = guard ? static_cast<int32_t>(ctx.gs().g_spriteAnchorX[static_cast<size_t>(gi)]) : 0;
   const int32_t gy = guard ? static_cast<int32_t>(ctx.gs().g_spriteAnchorY[static_cast<size_t>(gi)]) : 0;
+  // P41 feedback1 item 6: the guard (a 640 x 72 scan of the root) only around a label that is drawn. Every queued sprite (trees,
+  // buildings: about 360 a frame on a late save) passes here at the walk's end and most draw no label; scanning for each cost 48 ms of
+  // every sim frame on Mariano's Jurassic Springs save (sim 8 frames a second). The guard changes no pixel when nothing is drawn, so
+  // the frame is the same. Negative control gfx.scene 14: the scan for every entry (the speed reference)
+  const bool guard_draw = guard && (mode() == 14 || queue_label_drawn(ctx, a, nullptr));
   const auto label = [&](int32_t xoff) {
-    if (guard) {
+    if (guard_draw) {
       g.ensure_root(ctx);
       same_word_guard(g.root, add32(gx, xoff), gy, {0x7fff, 0x7d08}, [&] { queue_label(g, ctx, a, xoff); });
     } else {
@@ -3139,6 +3147,37 @@ void b_queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     label_on_wide(g, *w, band, ax, ay, [&] { label(w->scene_e); });
   }
 }
+// whether queue_label draws entry a[0]'s label (its tests before the drawing; reads only), and the golfer index it names
+bool queue_label_drawn(Ctx &ctx, const uint32_t *a, int32_t *golfer) {
+  const int32_t i = static_cast<int32_t>(a[0]);
+  if (i < 0 || i >= 1024) return false;
+  const GameState &gs = ctx.gs();
+  const size_t k = static_cast<size_t>(i);
+  if (gs.g_spriteShade[k] == 0) return false;
+  const int32_t a8 = static_cast<int32_t>(gs.g_spriteFlags[k]);
+  if (a8 == -1 || !(a8 & 0x100)) return false;
+  const int32_t gi = a8 & 0xff;
+  if (gi == 0xff || gi >= 0x98) return false;
+  if (golfer) *golfer = gi;
+  Memory &m = ctx.mem;
+  const uint32_t rec = state_va(ctx, &GameState::g_golfers) + (u(gi) << 8);
+  bool label = false;
+  if ((gs.g_preferences & 1) && gs.g_zoomScale >= 4) {
+    bool id_ok = m.load<uint8_t>(rec + 0x84) == 0;
+    const int32_t me = gs.f_w_4c2e00[3];
+    if (!id_ok) id_ok = gi == me || gi == (me ^ 1);
+    if (id_ok) {
+      const int8_t c = m.load<int8_t>(rec + 0x1d);
+      if (c >= 6 && c != 0x10) {
+        const uint32_t fl = m.load<uint32_t>(rec + 0x10);
+        if (!(fl & (1u << 29)) || (static_cast<uint8_t>(gs.g_date) & 6))
+          if (!(fl & 0x8000)) label = true;
+      }
+    }
+  }
+  if (!label) label = (gs.g_flags & 0x20) != 0;
+  return label;
+}
 // the label of queue entry a[0], its x moved by xoff (G32: the wide scene)
 void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
   const int32_t i = static_cast<int32_t>(a[0]);
@@ -3156,22 +3195,7 @@ void queue_label(Gfx &g, Ctx &ctx, const uint32_t *a, int32_t xoff) {
   const uint32_t font = (zoom > 4 && SG_DEFECT(g_defect_zoom8_font)) ? state_va(ctx, &GameState::g_font51b360) : state_va(ctx, &GameState::g_fontRef_519fd8);
   const uint32_t root = g.root_va(ctx);
   call_body(g, ctx, "setDrawTarget", {root, font, 0, 0, 0});
-  bool label = false;
-  if ((gs.g_preferences & 1) && zoom >= 4) {
-    bool id_ok = m.load<uint8_t>(rec + 0x84) == 0;
-    const int32_t me = gs.f_w_4c2e00[3];
-    if (!id_ok) id_ok = gi == me || gi == (me ^ 1);
-    if (id_ok) {
-      const int8_t c = m.load<int8_t>(rec + 0x1d);
-      if (c >= 6 && c != 0x10) {
-        const uint32_t fl = m.load<uint32_t>(rec + 0x10);
-        if (!(fl & (1u << 29)) || (static_cast<uint8_t>(gs.g_date) & 6))
-          if (!(fl & 0x8000)) label = true;
-      }
-    }
-  }
-  if (!label) label = (gs.g_flags & 0x20) != 0;
-  if (!label) return;
+  if (!queue_label_drawn(ctx, a, nullptr)) return;
   const uint32_t fl = m.load<uint32_t>(rec + 0x10);
   const uint32_t col = (fl & (1u << 29)) ? 0x80007d08u : 0x80007fffu;
   const int32_t ax = add32(gs.g_spriteAnchorX[k], xoff), ay = gs.g_spriteAnchorY[k];

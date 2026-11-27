@@ -2369,3 +2369,17 @@ transparent key are left out; kept pictures are lifted at first draw (SGA emblem
   Open: Buy Land and the golfer editor not reached in the running app; in-game states verified through the DLL only
   (golfer panel's other tabs, shot shapes, hire / fire, membership icons); not published.
 - Published 2026-11-26: P41 + P41W + P41G in 400c188e (fast check: x64 0 errors, static 7, SMOKE OK, paint 81-100% of the refresh), LAN + GitHub release port-2026-11-26-400c188e.
+
+## P41 feedback 1, items 6 and 7 (2026-11-26; notes log/roadmap/P41/feedback1/notes.md)
+Mariano's play-test of 400c188e on MARIANO-PC (Jurassic Springs, June 2047, 1334 x 750 window): 1.8 fps and the golfers
+member panel drawn twice.
+- 6a (P41): a UI run drawn again in a later publish was never merged with its earlier copy, so copies piled up toward the
+  4,096 cap and every Window::refreshFull peeled all of them (text_publish 154 ms a frame after 80 s). Now it replaces the
+  copy at the same box with the same scene text (gfx.cpp text_run_end, Run::pub; control gfx.ui 6): 10 ms.
+- 6b (port, since P26D item 9): the walk-end guard around golfer labels scanned a 640 x 72 window for every queued sprite
+  (~360 a frame). Now only around labels that are drawn (gfx_scene.cpp queue_label_drawn; control gfx.scene 14):
+  renderSpriteQueue.end 53 -> 11.6 ms a frame.
+- 7: the wide golfer list's added-column layers left their art's UI run visible over the whole panel; each layer's runs
+  now show only in its own columns (gfx_hud.cpp view_panel_wide; control gfx.hud 24).
+  His save, golfers screen: 2.3 -> 10.4-10.9 sim frames/s (theme off 10.8), 59-107 paints/s. Evidence: x64 0 errors,
+  test_static 7, segments x64 205 / 205 (off).

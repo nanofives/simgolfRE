@@ -295,6 +295,7 @@ class Gfx {
       std::vector<uint16_t> before, after;  // the box's words before / after the call
       int64_t seg = -1;                    // the HUD segment it was drawn in, -1 = the base (before the frame's first layer)
       uint64_t frame = 0;                  // P23F fix 3: frame_gen when it was drawn (a run kept from an earlier frame loses ex0 / ex1)
+      uint64_t pub = 0;                    // P41 feedback1 item 6: TextCapture::serial when it was drawn (the publishes before it)
     };
     std::vector<Run> live;                 // on the root and the window targets, oldest first
     std::vector<Run> *sink = nullptr;      // where new runs go (live, or the banner's own list while loading.banner runs)

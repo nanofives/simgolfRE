@@ -52,6 +52,7 @@
 
 namespace portsim {
 
+extern int g_negctl_gfx_ui;  // gfx_ui.cpp (P41 feedback1 item 6: control 6, the UI-run repeat rule)
 std::atomic<int> g_gfx_attached{0};
 
 namespace {
@@ -867,6 +868,7 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   r.info.y1 = y1 + oy;
   r.info.mover = gfx_mover_label();  // P12A fix 2: a golfer name label moves with its figure between game frames
   r.frame = g.text.frame_gen;        // P23F fix 3
+  r.pub = g.text.serial;             // P41 feedback1 item 6
   // P22E item 7 (gfx.h gfx_set_hud_edge): a cursor pass's text on the root whose whole columns the root's edge cut, and whose
   // changed pixels reach that edge's margin: the presenter may draw it past the edge (GfxTextRun::ex0 / ex1)
   if (s.ink && target == 0 && ox == 0 && w == GfxTextRun::kRootW && clip[0] <= 0 && clip[2] >= w) {
@@ -896,11 +898,20 @@ void text_run_end(Gfx &g, Ctx &ctx, TextRunScope &s, const uint16_t *px, int32_t
   // repaints) leaves, once the blend has settled, a run equal to an earlier one in every word of before and after. The earlier
   // copy is removed and the new one kept at the end (its draw position and segment): the peel chain is unchanged (the copy
   // before it ends in the same words) and the list stays bounded.
+  // P41 feedback1 item 6: a UI run (P40 / P41 scene: its text names the scene and its place) drawn again in a LATER frame at the same
+  // box is the same element redrawn. Its earlier copy matched only while the words under its anti-aliased ring stayed the same; over
+  // the moving world (golfers, water) they differ every frame, the old copy still showed (the new one repaints its inside with the
+  // same words), and the copies piled up to kMaxLive: on a busy save every publish peeled hundreds of stale panel runs (text_publish
+  // 150 ms a frame, the sim at 2 frames a second). The earlier copy's peel would also put back an older frame's world. Within one
+  // frame (same publish) the same scene drawn twice is left alone: the wide golfer list draws its panel once per layer on purpose.
+  // Negative control gfx.ui 6: the old rule only.
+  const bool ui_repeat = ui_is_run_face(r.info.face) && SG_NEGCTL(g_negctl_gfx_ui) != 6;
   for (size_t k = sink.size(); k-- > 0;) {
     const Gfx::TextCapture::Run &e = sink[k];
     if (e.info.x0 == r.info.x0 && e.info.y0 == r.info.y0 && e.info.x1 == r.info.x1 && e.info.y1 == r.info.y1 &&
         e.info.x == r.info.x && e.info.y == r.info.y && e.info.colorref == r.info.colorref && e.info.fontref == r.info.fontref &&
-        e.info.target == r.info.target && e.info.text == r.info.text && e.before == r.before && e.after == r.after) {
+        e.info.target == r.info.target && e.info.text == r.info.text &&
+        ((e.before == r.before && e.after == r.after) || (ui_repeat && e.pub != r.pub && e.info.face == r.info.face))) {
       sink.erase(sink.begin() + static_cast<std::ptrdiff_t>(k));
       ++g.text.stats.merged;
       break;

@@ -31,6 +31,8 @@
 //   21 (P26E fix 1) the golfer list's scroll band drawn as the original's (track, bar, arrows) with the switch scrollBarAlways at 0
 //   22 (P26E fix 2) the match scorecard keeps its 18 hole columns with --card-width on
 //   23 (P32B item 2) the match scorecard's names are not clipped to their plates with --plate-clip on
+//   24 (P41 feedback1 item 7) view_panel_wide leaves its temporary drawings' text runs as they were (the art's UI run of the added
+//     column layers shows the whole panel at their shift: the member list drawn twice with the UI theme on)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -2301,15 +2303,52 @@ void view_panel_wide(Gfx &g, Ctx &ctx, size_t pi, int32_t used, std::vector<std:
     g.root.px = frame;
     c.mark = frame;
   };
+  // P41 feedback1 item 7: the text runs of the drawings made here. With the UI theme on the art is a UI run (the whole panel's
+  // scene), and a run keeps its whole box visible whatever this function cuts from its layer's pixels: the presenter drew the art's
+  // scene again at each added layer's shift, a second whole panel right of the first (Mariano's picture: the member list drawn twice),
+  // and the art-only layer B's runs belonged to the layer pushed next at its index (the right end R: the panel once more at E). Now:
+  // B's art runs belong to R and show only in R's right end; the panel's own art runs no longer show in that right end (its pixels
+  // there became the repeated column); an added layer's runs show only in its columns, and its art runs not where the pass below
+  // puts the repeated column over the art's own pixels (the page arrows of the original four columns). Negative control gfx.hud 24:
+  // the runs as before.
+  const bool fix7 = mode() != 24;
+  std::vector<Gfx::TextCapture::Run> &live = g.text.live;
+  std::vector<std::string> art_texts;   // the art's UI run texts (B's)
+  auto is_art = [&](const Gfx::TextCapture::Run &r) {
+    return ui_is_run_face(r.info.face) && std::find(art_texts.begin(), art_texts.end(), r.info.text) != art_texts.end();
+  };
+  auto hide = [&](const std::function<bool(const Gfx::TextCapture::Run &)> &which, const std::function<bool(int32_t, int32_t)> &shown) {
+    if (!fix7) return;
+    for (Gfx::TextCapture::Run &r : live) {
+      if (r.info.target != 0 || !which(r)) continue;
+      std::vector<uint8_t> &v = r.info.vis_layer;
+      const int32_t rw = r.info.x1 - r.info.x0;
+      if (rw <= 0 || v.size() != static_cast<size_t>(rw) * static_cast<size_t>(r.info.y1 - r.info.y0)) continue;
+      for (int32_t y = r.info.y0; y < r.info.y1; ++y)
+        for (int32_t x = r.info.x0; x < r.info.x1; ++x)
+          if (!shown(x, y)) v[static_cast<size_t>(y - r.info.y0) * static_cast<size_t>(rw) + static_cast<size_t>(x - r.info.x0)] = 0;
+    }
+  };
+  auto drop = [&](int64_t seg, bool keep_art) {
+    if (!fix7) return;
+    live.erase(std::remove_if(live.begin(), live.end(),
+                              [&](const Gfx::TextCapture::Run &r) { return r.seg == seg && r.info.target == 0 && !(keep_art && is_art(r)); }),
+               live.end());
+  };
   // the art alone (its pixels and blend records), taken out of the frame's layers again
   gfx_layer_begin(ctx, kGfxLayerPanel);
+  const int64_t seg_b = c.seg;
   art();
   const size_t nb = c.layers.size();
   gfx_layer_end(ctx);
+  for (const Gfx::TextCapture::Run &r : live)
+    if (r.seg == seg_b && r.info.target == 0 && ui_is_run_face(r.info.face)) art_texts.push_back(r.info.text);
   if (c.layers.size() != nb + 1) {
+    drop(seg_b, false);
     restore();
     return;
   }
+  drop(seg_b, true);   // anything but the art's runs
   const GfxHudLayer B = c.layers.back();
   c.layers.pop_back();
   restore();
@@ -2337,24 +2376,38 @@ void view_panel_wide(Gfx &g, Ctx &ctx, size_t pi, int32_t used, std::vector<std:
       if (track || same(p, get(B, x, y))) set(P, x, y, rep);
     }
   }
+  const int32_t ry0 = R.y0, ry1 = R.y1;
+  auto in_end = [&](int32_t x, int32_t y) { return y >= ry0 && y < ry1 && x >= end_x(y); };
+  // the panel's own art runs: not in the right end (R shows it E columns right)
+  hide([&](const Gfx::TextCapture::Run &r) { return r.info.layer == static_cast<int32_t>(pi) && r.seg != seg_b && is_art(r); },
+       [&](int32_t x, int32_t y) { return !in_end(x, y); });
+  // B's art runs: R's, in the right end only
+  hide([&](const Gfx::TextCapture::Run &r) { return r.seg == seg_b; }, in_end);
+  if (fix7)
+    for (Gfx::TextCapture::Run &r : live)
+      if (r.seg == seg_b && r.info.target == 0) r.info.layer = static_cast<int32_t>(c.layers.size());
   c.layers.push_back(std::move(R));
   // the added columns, four per layer
   const int32_t groups = (used + 3) / 4;
   for (int32_t m = 0; m < groups; ++m) {
     const int32_t S = kGroup * (m + 1);
     gfx_layer_begin(ctx, kGfxLayerPanel);
+    const int64_t seg_x = c.seg;
     art();
     for (auto &e : cols)
       if (e.second >= 4 + 4 * m && e.second < 8 + 4 * m && e.second < 4 + used) e.first(S);
     const size_t nx = c.layers.size();
     gfx_layer_end(ctx);
     if (c.layers.size() != nx + 1) {
+      drop(seg_x, false);
       restore();
       continue;
     }
     GfxHudLayer &X = c.layers.back();
     X.shift = S;
     const int32_t lo = 794 + kGroup * m;
+    const int32_t xx0 = X.x0, xy0 = X.y0, xw = X.x1 - X.x0, xh = X.y1 - X.y0;
+    std::vector<uint8_t> art_px(static_cast<size_t>(std::max(0, xw)) * static_cast<size_t>(std::max(0, xh)), 0);  // the art's own pixels
     for (int32_t y = X.y0; y < X.y1; ++y) {
       const int32_t hi = m + 1 == groups ? end_x(y) + E : 794 + kGroup * (m + 1);
       const GfxLayerPx rep = get(B, kRep, y);
@@ -2364,9 +2417,21 @@ void view_panel_wide(Gfx &g, Ctx &ctx, size_t pi, int32_t used, std::vector<std:
           set(X, x, y, GfxLayerPx{});
           continue;
         }
-        if (same(get(X, x, y), get(B, x, y))) set(X, x, y, rep);
+        if (same(get(X, x, y), get(B, x, y))) {
+          set(X, x, y, rep);
+          art_px[static_cast<size_t>(y - xy0) * static_cast<size_t>(xw) + static_cast<size_t>(x - xx0)] = 1;
+        }
       }
     }
+    auto kept_px = [&](int32_t x, int32_t y) {   // the layer still holds its own drawing there (not empty, not the repeated column)
+      if (x < xx0 || y < xy0 || x >= xx0 + xw || y >= xy0 + xh) return false;
+      const int32_t hi = m + 1 == groups ? end_x(y) + E : 794 + kGroup * (m + 1);
+      return x + S >= lo && x + S < hi;
+    };
+    hide([&](const Gfx::TextCapture::Run &r) { return r.seg == seg_x; }, kept_px);
+    hide([&](const Gfx::TextCapture::Run &r) { return r.seg == seg_x && is_art(r); }, [&](int32_t x, int32_t y) {
+      return !(x >= xx0 && y >= xy0 && x < xx0 + xw && y < xy0 + xh && art_px[static_cast<size_t>(y - xy0) * static_cast<size_t>(xw) + static_cast<size_t>(x - xx0)]);
+    });
     restore();
   }
 }
