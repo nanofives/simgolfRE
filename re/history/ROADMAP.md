@@ -2383,3 +2383,6 @@ member panel drawn twice.
   now show only in its own columns (gfx_hud.cpp view_panel_wide; control gfx.hud 24).
   His save, golfers screen: 2.3 -> 10.4-10.9 sim frames/s (theme off 10.8), 59-107 paints/s. Evidence: x64 0 errors,
   test_static 7, segments x64 205 / 205 (off).
+- Published 2026-11-26: items 6 and 7 in 9e61a8c1 (fast check: x64 0 errors, static 7, SMOKE OK on the rerun; the first run read 1 bad verified paint of 720, the known mid-check render race), LAN + GitHub release.
+- Batch 2, items 12 / 3, 1, 9: full wide-backdrop renders are kept per screen and a shown screen's siblings are rendered in the background (routing modes ready 0.4 s after a mode change, Load Game ready from the title: no visible swap, no quick 1x buttons left on screen); the language selector's arrow is drawn (ui_lang_arrow) and its frame pieces follow the presenter's mapping with inner joints sampled half a pixel inside (no horizontal line; control uvgame 7); the elevation palette's three idle pedestals keep their own scenes' keep shapes (no stray rectangle of art).
+  Evidence: x64 0 errors, test_static 7, test_p40_ui_pilot 157, segments x64 205 / 205, app replay 5 / 5, test_p41_uivec 27 / 27.

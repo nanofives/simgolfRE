@@ -17,8 +17,12 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
+#include <memory>
+#include <mutex>
 #include <thread>
+#include <vector>
 
 #include "present.h"
 #include "portsim/sim/gfx_ui.h"
@@ -89,7 +93,33 @@ struct Presenter::WideBd {
   uint64_t serial = 0, job = 0;
   int64_t quick_us = 0, full_us = 0, started_us = 0, full_at_us = 0;
   uint64_t renders = 0;
+  // P41 feedback1 items 3 / 12: full renders kept per screen for the current client (a screen shown again, or rendered in the
+  // background before it is shown, needs no quick render), newest last; and whether the background renderer runs
+  struct Kept {
+    int32_t k = -1;
+    std::shared_ptr<const std::vector<uint32_t>> img;
+  };
+  std::vector<Kept> kept;
+  int32_t kept_cw = 0, kept_ch = 0;
+  Viewport kept_vp;
+  bool prefetching = false;
+  uint64_t kept_hits = 0, prefetched = 0;
 };
+
+namespace {
+constexpr size_t kKeptMax = 8;   // screens kept (a 4K client: 33 MB each)
+bool same_vp(const Viewport &a, const Viewport &b) {
+  return a.origin_x == b.origin_x && a.origin_y == b.origin_y && a.client_w == b.client_w && a.client_h == b.client_h;
+}
+// P41 feedback1: SG_P41W_PREFETCH=0 (development) keeps no renders and renders nothing in the background (as before)
+bool prefetch_on() {
+  static const bool on = [] {
+    const char *e = std::getenv("SG_P41W_PREFETCH");
+    return !(e && e[0] == '0');
+  }();
+  return on;
+}
+}  // namespace
 
 int32_t Presenter::wide_backdrop_screen() const {
   // (a world layer or HUD layers may come with the frame: the golfer editor opens in game, over the course frame's layers; the sim
@@ -111,10 +141,11 @@ uint64_t Presenter::wide_backdrop_serial() const {
 std::string Presenter::wide_backdrop_json() const {
   if (!wbd_) return "{}";
   std::lock_guard<std::mutex> l(wbd_->mu);
-  char b[320];
-  std::snprintf(b, sizeof b, "{\"screen\":\"%s\",\"client\":[%d,%d],\"level\":%d,\"quick_ms\":%.1f,\"full_ms\":%.1f,\"first_full_ms\":%.1f,\"renders\":%llu}",
+  char b[384];
+  std::snprintf(b, sizeof b, "{\"screen\":\"%s\",\"client\":[%d,%d],\"level\":%d,\"quick_ms\":%.1f,\"full_ms\":%.1f,\"first_full_ms\":%.1f,\"renders\":%llu,\"kept_hits\":%llu,\"prefetched\":%llu}",
                 portsim::uw_screen_name(wbd_->k), wbd_->cw, wbd_->ch, wbd_->level, wbd_->quick_us / 1000.0, wbd_->full_us / 1000.0,
-                wbd_->full_at_us > 0 ? (wbd_->full_at_us - wbd_->started_us) / 1000.0 : -1.0, static_cast<unsigned long long>(wbd_->renders));
+                wbd_->full_at_us > 0 ? (wbd_->full_at_us - wbd_->started_us) / 1000.0 : -1.0, static_cast<unsigned long long>(wbd_->renders),
+                static_cast<unsigned long long>(wbd_->kept_hits), static_cast<unsigned long long>(wbd_->prefetched));
   return b;
 }
 
@@ -134,6 +165,55 @@ bool Presenter::wide_backdrop(std::vector<uint32_t> &out, int32_t cw, int32_t ch
   if (!wbd_) wbd_ = std::make_shared<WideBd>();
   std::shared_ptr<WideBd> W = wbd_;
   std::unique_lock<std::mutex> lk(W->mu);
+  // P41 feedback1 items 3 / 12 (Mariano: the routing map's mode buttons pixelated after each mode change, the Load Game backdrop
+  // changing as it loads): a screen's full render took 0.3 s (Load Game) to 1.8 s (a routing-map mode) at 2560 x 1380 and 4.7 s at 4K,
+  // and every change of screen showed the quick render (0.5 px per frame unit, upsampled: the buttons the backdrop places blurred) until
+  // it was in. Now the full renders are kept per screen for the client, and once the shown screen's full render is in, its prepared
+  // siblings (gfx_uvwide.h uw_screen_family: the four modes, the front-end screens) are rendered one after another in the background.
+  auto keep = [](WideBd &B, int32_t kk, int32_t kcw, int32_t kch, const Viewport &kvp, std::shared_ptr<const std::vector<uint32_t>> img) {
+    if (!prefetch_on()) return;
+    if (B.kept_cw != kcw || B.kept_ch != kch || !same_vp(B.kept_vp, kvp)) {
+      B.kept.clear();
+      B.kept_cw = kcw;
+      B.kept_ch = kch;
+      B.kept_vp = kvp;
+    }
+    B.kept.erase(std::remove_if(B.kept.begin(), B.kept.end(), [&](const WideBd::Kept &e) { return e.k == kk; }), B.kept.end());
+    B.kept.push_back({kk, std::move(img)});
+    if (B.kept.size() > kKeptMax) B.kept.erase(B.kept.begin());
+  };
+  // under W->mu: the background renderer for kk's prepared siblings not yet kept (one thread, one screen at a time; it stops when
+  // the client changes); called once kk's full render is in
+  auto prefetch = [keep](std::shared_ptr<WideBd> B, int32_t kk, int32_t kcw, int32_t kch, int32_t rows, const Viewport &kvp) {
+    if (!prefetch_on() || B->prefetching) return;
+    std::vector<int32_t> todo;
+    const int32_t fam = portsim::uw_screen_family(kk);
+    for (int32_t j = 0; j < portsim::uw_screen_count(); ++j) {
+      if (j == kk || fam < 0 || portsim::uw_screen_family(j) != fam || !portsim::uw_prepared(j)) continue;
+      bool have = false;
+      for (const WideBd::Kept &e : B->kept) have = have || e.k == j;
+      if (!have) todo.push_back(j);
+    }
+    if (todo.empty()) return;
+    if (todo.size() > kKeptMax - 1) todo.resize(kKeptMax - 1);
+    B->prefetching = true;
+    std::thread([B, todo, kcw, kch, rows, kvp, keep]() {
+      for (int32_t j : todo) {
+        {
+          std::lock_guard<std::mutex> l(B->mu);
+          if (B->cw != kcw || B->ch != kch || !same_vp(B->vp, kvp)) break;   // the client changed
+        }
+        auto full = std::make_shared<std::vector<uint32_t>>();
+        render_client(j, kcw, kvp, 1.0, kcw, rows, *full);
+        std::lock_guard<std::mutex> l(B->mu);
+        if (B->cw != kcw || B->ch != kch || !same_vp(B->vp, kvp)) break;
+        keep(*B, j, kcw, kch, kvp, full);
+        ++B->prefetched;
+      }
+      std::lock_guard<std::mutex> l(B->mu);
+      B->prefetching = false;
+    }).detach();
+  };
   if (W->k != k || W->cw != cw || W->ch != ch || W->vp.origin_x != vp.origin_x || W->vp.origin_y != vp.origin_y ||
       W->vp.client_w != vp.client_w || W->vp.client_h != vp.client_h) {
     W->k = k;
@@ -144,12 +224,25 @@ bool Presenter::wide_backdrop(std::vector<uint32_t> &out, int32_t cw, int32_t ch
     W->started_us = now_us();
     W->full_at_us = 0;
     const int32_t rows = vp.client_h;
-    if (static_cast<int64_t>(cw) * rows <= kSyncPx) {
+    std::shared_ptr<const std::vector<uint32_t>> have;
+    if (prefetch_on() && W->kept_cw == cw && W->kept_ch == ch && same_vp(W->kept_vp, vp))
+      for (const WideBd::Kept &e : W->kept)
+        if (e.k == k) have = e.img;
+    if (have && have->size() == static_cast<size_t>(cw) * static_cast<size_t>(rows)) {   // kept or rendered in the background
+      W->img = *have;
+      W->full_us = 0;
+      W->full_at_us = now_us();
+      W->level = 2;
+      ++W->kept_hits;
+      prefetch(W, k, cw, ch, rows, vp);
+    } else if (static_cast<int64_t>(cw) * rows <= kSyncPx) {
       const int64_t t0 = now_us();
       render_client(k, cw, vp, 1.0, cw, rows, W->img);
       W->full_us = now_us() - t0;
       W->full_at_us = now_us();
       W->level = 2;
+      keep(*W, k, cw, ch, vp, std::make_shared<const std::vector<uint32_t>>(W->img));
+      prefetch(W, k, cw, ch, rows, vp);
     } else {
       const double sc = static_cast<double>(vp.client_h) / kLogicalH;
       const double f = std::min(1.0, kQuickScale / sc);
@@ -162,13 +255,15 @@ bool Presenter::wide_backdrop(std::vector<uint32_t> &out, int32_t cw, int32_t ch
       W->quick_us = now_us() - t0;
       W->level = 1;
       std::function<void()> rp = repaint_;
-      std::thread([W, job, k, cw, rows, vp, rp]() {
+      std::thread([W, job, k, cw, ch, rows, vp, rp, keep, prefetch]() {
         std::vector<uint32_t> full;
         const int64_t t1 = now_us();
         render_client(k, cw, vp, 1.0, cw, rows, full);
         const int64_t dt = now_us() - t1;
         {
           std::lock_guard<std::mutex> l(W->mu);
+          if (W->cw == cw && W->ch == ch && same_vp(W->vp, vp))   // kept even when the screen changed meanwhile (same client)
+            keep(*W, k, cw, ch, vp, std::make_shared<const std::vector<uint32_t>>(full));
           if (W->job != job) return;   // the screen or the client changed meanwhile
           W->img.swap(full);
           W->level = 2;
@@ -176,6 +271,7 @@ bool Presenter::wide_backdrop(std::vector<uint32_t> &out, int32_t cw, int32_t ch
           W->full_at_us = now_us();
           ++W->serial;
           ++W->renders;
+          prefetch(W, k, cw, ch, rows, vp);
         }
         if (rp) rp();
       }).detach();

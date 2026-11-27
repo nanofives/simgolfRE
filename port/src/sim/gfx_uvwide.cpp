@@ -18,6 +18,7 @@
 #include <cstring>
 #include <map>
 #include <mutex>
+#include <set>
 #include <thread>
 
 #include "gfx_body.h"
@@ -489,6 +490,25 @@ bool uw_pic_origin(int32_t k, int32_t pic, int32_t &x, int32_t &y) {
   return true;
 }
 
+int32_t uw_screen_family(int32_t k) {
+  if (k < 0 || k >= kNumScreens) return -1;
+  const char *n = kScreens[k]->name;
+  if (std::strncmp(n, "route", 5) == 0) return 1;
+  if (std::strcmp(n, "buyland") == 0) return 2;
+  return 0;
+}
+void uw_prepare_family(Ctx &ctx, int32_t k) {
+  const int32_t f = uw_screen_family(k);
+  if (f < 0) return;
+  static std::mutex mu;
+  static std::set<std::pair<int32_t, int32_t>> done;   // (family, negative-control mode)
+  {
+    std::lock_guard<std::mutex> l(mu);
+    if (!done.insert({f, SG_NEGCTL(g_negctl_uvwide)}).second) return;
+  }
+  for (int32_t j = 0; j < kNumScreens; ++j)
+    if (j != k && uw_screen_family(j) == f) uw_prepare(ctx, j);
+}
 bool uw_prepare(Ctx &ctx, int32_t k) {
   if (k < 0 || k >= kNumScreens) return false;
   const UvwScreenDef &S = *kScreens[k];

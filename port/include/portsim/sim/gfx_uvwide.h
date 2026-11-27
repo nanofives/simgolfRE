@@ -55,6 +55,11 @@ bool uw_pic_origin(int32_t k, int32_t pic, int32_t &x, int32_t &y);
 // process; false (and nothing kept) when a sheet cannot be read.
 bool uw_prepare(Ctx &ctx, int32_t k);
 bool uw_prepared(int32_t k);
+// P41 feedback1 items 3 / 12: the screen's family (0 the front end, 1 the routing map's four modes, 2 Buy Land; -1 none). The
+// presenter renders a shown screen's prepared siblings in the background so that opening one shows its full picture at once;
+// uw_prepare_family prepares them (once per family and process: a sheet that cannot be read is not tried every frame).
+int32_t uw_screen_family(int32_t k);
+void uw_prepare_family(Ctx &ctx, int32_t k);
 // the static backdrop's 1x render over the 800 x 600 frame as RGB555 words (the root drawing); null before uw_prepare
 std::shared_ptr<const std::vector<uint16_t>> uw_frame555(int32_t k);
 

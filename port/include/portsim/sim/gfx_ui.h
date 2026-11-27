@@ -189,6 +189,8 @@ bool ui_wide_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a);
 bool ui_wide_overlay(Gfx &g, Ctx &ctx, const uint32_t *a);
 UiScene ui_button_scene(const UiTheme &t, int32_t x, int32_t y, bool hover);
 
+// P41 feedback1 item 1: the language selector's arrow as a UI scene (theme on); false with the theme off (draw the pixels)
+bool ui_lang_arrow(Gfx &g, Ctx &ctx, int32_t ax, int32_t ay);
 }  // namespace portsim
 
 #endif

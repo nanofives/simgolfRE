@@ -516,10 +516,16 @@ void render_cut(int32_t i, const Run &r, double sx, double sy, double ox, double
     cj1 = std::min(cj1, static_cast<int32_t>(std::ceil(c3 * sy + oy - 0.5)));
   }
   if (r.crop) {
-    ci0 = std::max(ci0, static_cast<int32_t>(std::ceil(r.c[0] * sx + ox - 0.5)));
-    ci1 = std::min(ci1, static_cast<int32_t>(std::ceil(r.c[2] * sx + ox - 0.5)));
-    cj0 = std::max(cj0, static_cast<int32_t>(std::ceil(r.c[1] * sy + oy - 0.5)));
-    cj1 = std::min(cj1, static_cast<int32_t>(std::ceil(r.c[3] * sy + oy - 0.5)));
+    // P41 feedback1 item 1: a piece's crop by the presenter's own mapping (a window pixel shows the frame pixel under its left / top
+    // edge: textres.cpp build_render's floor mapping), not by pixel centres. The pieces of a tiled frame partition the window pixels
+    // either way, but with centres a joint lying in the left half of a window pixel gave that pixel to the right piece while the
+    // presenter showed it from the left piece's run: neither drew it (a light seam). The same pixels at scale 1.
+    const bool centres = SG_NEGCTL(g_negctl_uvgame) == 7;
+    const double e = centres ? 0.5 : 0.0;
+    ci0 = std::max(ci0, static_cast<int32_t>(std::ceil(r.c[0] * sx + ox - e)));
+    ci1 = std::min(ci1, static_cast<int32_t>(std::ceil(r.c[2] * sx + ox - e)));
+    cj0 = std::max(cj0, static_cast<int32_t>(std::ceil(r.c[1] * sy + oy - e)));
+    cj1 = std::min(cj1, static_cast<int32_t>(std::ceil(r.c[3] * sy + oy - e)));
   }
   const bool culled = SG_NEGCTL(g_negctl_uvgame) != 4;   // control 4: every layer evaluated at every pixel of its item (no layer boxes)
   const double *LB = culled ? lboxes_of(T, layer_count(i)).data() : nullptr;
@@ -605,6 +611,34 @@ void render_cut(int32_t i, const Run &r, double sx, double sy, double ox, double
       }
     }
   };
+  // P41 feedback1 item 1 (after the rows below): a PIECE run's inner joints. The approved 9-slice scenes lay each 16 x 16 piece out
+  // as its own shape (the sheet's one-pixel gaps between pieces), so a piece fades out at its crop edge; the game tiles the pieces
+  // edge to edge, and at window scale every joint showed a light seam (two partial coverages over the background: up to a quarter of
+  // it shows through). At a crop edge inside the record's cut (a joint, not the frame's outer edge) a target pixel whose centre lies
+  // within half a frame pixel of the edge takes the nearest pixel at least half a frame pixel inside (the piece's edge pixel runs on
+  // to the joint, as the tiled art does). Negative control uvgame 7: the joints as the scene draws them.
+  auto joints = [&]() {
+    if (!r.crop || SG_NEGCTL(g_negctl_uvgame) == 7 || ci1 <= ci0 || cj1 <= cj0) return;
+    const double cut0 = C.x + r.dx, cut1 = C.y + r.dy, cut2 = C.x + C.w + r.dx, cut3 = C.y + C.h + r.dy;
+    const bool jl = r.c[0] > cut0, jr = r.c[2] < cut2, jt = r.c[1] > cut1, jb = r.c[3] < cut3;
+    if (!jl && !jr && !jt && !jb) return;
+    // the first / last target column (row) whose centre lies at least half a frame pixel inside the crop
+    const int32_t xa = std::max(ci0, static_cast<int32_t>(std::ceil((r.c[0] + 0.5) * sx + ox - 0.5)));
+    const int32_t xb = std::min(ci1 - 1, static_cast<int32_t>(std::floor((r.c[2] - 0.5) * sx + ox - 0.5)));
+    const int32_t ya = std::max(cj0, static_cast<int32_t>(std::ceil((r.c[1] + 0.5) * sy + oy - 0.5)));
+    const int32_t yb = std::min(cj1 - 1, static_cast<int32_t>(std::floor((r.c[3] - 0.5) * sy + oy - 0.5)));
+    if (xb < xa || yb < ya) return;
+    auto src_x = [&](int32_t x) { return jl && x < xa ? xa : jr && x > xb ? xb : x; };
+    auto src_y = [&](int32_t y) { return jt && y < ya ? ya : jb && y > yb ? yb : y; };
+    for (int32_t y = cj0; y < cj1; ++y)
+      for (int32_t x = ci0; x < ci1; ++x) {
+        const int32_t u = src_x(x), v = src_y(y);
+        if (u == x && v == y) continue;
+        const float *q = prem.data() + 4 * (static_cast<size_t>(v - py0) * static_cast<size_t>(w) + static_cast<size_t>(u - px0));
+        float *o = prem.data() + 4 * (static_cast<size_t>(y - py0) * static_cast<size_t>(w) + static_cast<size_t>(x - px0));
+        for (int k = 0; k < 4; ++k) o[k] = q[k];
+      }
+  };
   // bands of rows on threads (the same pixels: the grids are the items' boxes in the render window, not the band's). P41G: from 4,096
   // pixels and at least 2 rows a band (was 40,000: a report's 800 x 17 row bands, 20-30 ms each at 1x on the sim thread, ran alone)
   int32_t n = static_cast<int64_t>(w) * h < 4096
@@ -618,6 +652,7 @@ void render_cut(int32_t i, const Run &r, double sx, double sy, double ox, double
     if (t * band < h) ts.emplace_back(rows, py0 + t * band, std::min(py0 + h, py0 + (t + 1) * band));
   rows(py0, std::min(py0 + h, py0 + band));
   for (std::thread &t : ts) t.join();
+  joints();
 }
 
 // fix6_sga.py lift: picture P of record i against the record's items before item `item` at 1x over the frame (wide.under_1x, exactly:

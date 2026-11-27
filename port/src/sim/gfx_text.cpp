@@ -2195,7 +2195,7 @@ void b_lang_selector(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   call(g, ctx, "drawFrameR3", {u(X), u(Y), u(W), u(H), 1});
   call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
   text_surface(g, ctx, kName[cur], X + 0xa, Y + 8, 0x80007fffu);
-  arrow(X + W - 0x14, Y + 0xe, 0x7fff);
+  if (!ui_lang_arrow(g, ctx, X + W - 0x14, Y + 0xe)) arrow(X + W - 0x14, Y + 0xe, 0x7fff);   // P41 feedback1 item 1
   if (a[1] == 1) {
     call(g, ctx, "drawFrameR3", {u(X), u(Y + H), u(W), u(2 * R), 1});
     call(g, ctx, "setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});

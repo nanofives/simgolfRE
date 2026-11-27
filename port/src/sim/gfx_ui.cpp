@@ -2823,6 +2823,7 @@ bool ui_wide_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a) {
   g.root.px = *f;
   g.note_root_write(0, 0, 800, 600);
   g.uw_screen = k;
+  uw_prepare_family(ctx, k);   // P41 feedback1 items 3 / 12: the siblings, for the presenter's background renders
   // every run on the root before this copy is covered by it: dropped (a run of the screen before can match the new backdrop's words
   // by chance and be kept by the peel: the title's Sandbox well, cream in RGB555 as the theme table, showed over it, 2026-11-25)
   std::vector<Gfx::TextCapture::Run> &live = g.text.live;
@@ -2861,6 +2862,7 @@ bool ui_wide_report(Gfx &g, Ctx &ctx, const uint32_t *a) {
       }
     if (x1 > x0 && y1 > y0) g.note_root_write(x0, y0, x1 - x0, y1 - y0);
     g.uw_screen = k;
+    uw_prepare_family(ctx, k);   // P41 feedback1 item 12: the other modes, for the presenter's background renders
     return true;
   }
   if (s.sy != 0) return false;
@@ -3017,6 +3019,53 @@ bool ui_swap(Gfx &g, Ctx &ctx, const char *name, const uint32_t *a, int n) {
     return true;
   }
   return false;
+}
+
+// P41 feedback1 item 1 (gfx_ui.h): the language selector's arrow as a UI scene (gfx_text.cpp b_lang_selector). The pixel arrow (a down
+// triangle 9 px wide and 5 rows, a dark copy one row lower) was 1x pixels the presenter scaled up: soft, its dark row a smudge under it
+// at window scale. The same two triangles here, (ax, ay)-(ax + 9, ay) to the apex (ax + 4.5, ay + 5), as distance fields (exact signed
+// distances at the frame pixel centres, sampled bilinearly: straight edges stay straight at any scale). Theme off: false (the pixels).
+bool ui_lang_arrow(Gfx &g, Ctx &ctx, int32_t ax, int32_t ay) {
+  if (g.ui_pilot == kUiPilotOff) return false;
+  auto tri = [&](float dy) {
+    // the triangle's signed distance (negative inside): minus the smallest of its three edges' inward half-plane distances (exact on
+    // the edges' sides, a little round at the corners)
+    const float x0 = static_cast<float>(ax), y0 = static_cast<float>(ay) + dy, x1 = x0 + 9.f, cx = x0 + 4.5f, cy = y0 + 5.f;
+    auto half = [](float px, float py, float ax_, float ay_, float bx, float by) {   // signed distance from the line a -> b (inside > 0)
+      const float ex = bx - ax_, ey = by - ay_, n = std::sqrt(ex * ex + ey * ey);
+      return ((px - ax_) * ey - (py - ay_) * ex) / n;
+    };
+    constexpr int32_t pad = 4;
+    const int32_t gx0 = ax - pad, gy0 = static_cast<int32_t>(std::floor(y0)) - pad, W = 9 + 2 * pad + 1, H = 5 + 2 * pad + 1;
+    std::vector<float> d(static_cast<size_t>(W) * static_cast<size_t>(H));
+    for (int32_t j = 0; j < H; ++j)
+      for (int32_t i = 0; i < W; ++i) {
+        const float px = gx0 + i + 0.5f, py = gy0 + j + 0.5f;
+        // the edges in the order top (right to left), left side down to the apex, right side back up: inside is positive for all three
+        const float e0 = half(px, py, x1, y0, x0, y0), e1 = half(px, py, x0, y0, cx, cy), e2 = half(px, py, cx, cy, x1, y0);
+        d[static_cast<size_t>(j) * static_cast<size_t>(W) + static_cast<size_t>(i)] = -std::min(e0, std::min(e1, e2));
+      }
+    UiPrim q;
+    q.kind = kUiField;
+    q.x0 = static_cast<float>(gx0);
+    q.y0 = static_cast<float>(gy0);
+    q.x1 = static_cast<float>(gx0 + W);
+    q.y1 = static_cast<float>(gy0 + H);
+    q.field = ui_field_put(W, H, std::move(d));
+    return q;
+  };
+  UiScene s;
+  UiElem shadow = flat(UiRgba{66.f, 66.f, 66.f, 1.f});   // 0x2108, the pixel arrow's dark row colour
+  shadow.prims = {tri(1.f)};
+  UiElem white = flat(UiRgba{255.f, 255.f, 255.f, 1.f});
+  white.prims = {tri(0.f)};
+  s.elems = {shadow, white};
+  s.cx0 = static_cast<float>(ax - 4);
+  s.cy0 = static_cast<float>(ay - 4);
+  s.cx1 = static_cast<float>(ax + 14);
+  s.cy1 = static_cast<float>(ay + 11);
+  draw_scene(g, ctx, s);
+  return true;
 }
 
 }  // namespace portsim
